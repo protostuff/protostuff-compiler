@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package test;
+
+option java_package = "io.protostuff.parser";
+
+message TestMessage {
+    int32 field = 1;
+}
+
+message TestMessage2 {
+    int32 field = 1;
+}
+
+message TestMessage1 {
+    int32 field = 1;
+}
