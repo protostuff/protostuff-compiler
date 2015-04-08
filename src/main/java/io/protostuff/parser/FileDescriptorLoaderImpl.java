@@ -1,8 +1,12 @@
 package io.protostuff.parser;
 
+import io.protostuff.model.Enum;
+import io.protostuff.model.*;
 import io.protostuff.parser.api.FileDescriptorLoader;
-import io.protostuff.proto3.FileDescriptor;
-import org.antlr.v4.runtime.*;
+import org.antlr.v4.runtime.ANTLRErrorListener;
+import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
 import javax.inject.Inject;
 
@@ -12,16 +16,42 @@ import javax.inject.Inject;
 public class FileDescriptorLoaderImpl implements FileDescriptorLoader {
 
     private final ANTLRErrorListener errorListener;
-    private final ANTLRErrorStrategy errorStrategy;
 
     @Inject
-    public FileDescriptorLoaderImpl(ANTLRErrorListener errorListener, ANTLRErrorStrategy errorStrategy) {
+    public FileDescriptorLoaderImpl(ANTLRErrorListener errorListener) {
         this.errorListener = errorListener;
-        this.errorStrategy = errorStrategy;
     }
 
     @Override
-    public FileDescriptor parse(String name, CharStream stream) {
+    public ProtoContext load(String name, CharStream stream) {
+        ProtoContext context = parse(name, stream);
+        if (context == null) {
+            return null;
+        }
+        final Proto proto = context.getProto();
+        walk(proto, (container, type) -> {
+            type.setProto(proto);
+            String prefix = container.getNamespacePrefix();
+            String fullName = prefix + type.getName();
+            type.setFullName(fullName);
+            context.register(fullName, type);
+        });
+        return context;
+    }
+
+    private void walk(UserTypeContainer container, Operation operation) {
+        for (Message message : container.getMessages()) {
+            operation.process(container, message);
+        }
+        for (Enum anEnum : container.getEnums()) {
+            operation.process(container, anEnum);
+        }
+        for (Message message : container.getMessages()) {
+            walk(message, operation);
+        }
+    }
+
+    private ProtoContext parse(String name, CharStream stream) {
         Proto3Lexer lexer = new Proto3Lexer(stream);
         lexer.removeErrorListeners();
         lexer.addErrorListener(errorListener);
@@ -29,29 +59,26 @@ public class FileDescriptorLoaderImpl implements FileDescriptorLoader {
         Proto3Parser parser = new Proto3Parser(tokenStream);
         parser.removeErrorListeners();
         parser.addErrorListener(errorListener);
-//        parser.setErrorHandler(errorStrategy);
-
-        Context context = new Context();
-        parser.addParseListener(new ProtoParseListener(context));
-        parser.addParseListener(new MessageParseListener(context));
-        parser.addParseListener(new EnumParseListener(context));
-        parser.addParseListener(new OptionParseListener(context));
 
         Proto3Parser.ProtoContext tree = parser.proto();
-//        ParseTreeWalker walker = new ParseTreeWalker();
-//        Context context = new Context();
-//        Proto3Listener composite = CompositeParseTreeListenerFactory.create(Proto3Listener.class,
-//                new ProtoParseListener(context),
-//                new MessageParseListener(context),
-//                new EnumParseListener(context),
-//                new OptionParseListener(context)
-//        );
-//        walker.walk(composite, tree);
+        ParseTreeWalker walker = new ParseTreeWalker();
+        ProtoContext context = new ProtoContext(name);
+        Proto3Listener composite = CompositeParseTreeListener.create(Proto3Listener.class,
+                new ProtoParseListener(context),
+                new MessageParseListener(context),
+                new EnumParseListener(context),
+                new OptionParseListener(context)
+        );
+        walker.walk(composite, tree);
         if (parser.getNumberOfSyntaxErrors() > 0) {
-
             return null;
         }
-        return context.getResult();
+
+        return context;
+    }
+
+    interface Operation {
+        void process(UserTypeContainer container, UserType type);
     }
 
 }

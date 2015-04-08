@@ -1,15 +1,15 @@
-package io.protostuff.proto3;
+package io.protostuff.model;
 
 import com.google.common.base.MoreObjects;
 
-import java.util.*;
-
-import static com.google.common.base.Preconditions.checkNotNull;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author Kostiantyn Shchepanovskyi
  */
-public class Enum extends AbstractDescriptor {
+public class Enum extends AbstractUserType {
 
     protected List<EnumConstant> values;
 
@@ -36,9 +36,9 @@ public class Enum extends AbstractDescriptor {
         return MoreObjects.toStringHelper(this)
                 .omitNullValues()
                 .add("name", name)
+                .add("fullName", fullName)
                 .add("values", values)
-                .add("standardOptions", standardOptions)
-                .add("customOptions", customOptions)
+                .add("options", options)
                 .toString();
     }
 

@@ -1,4 +1,4 @@
-package io.protostuff.proto3;
+package io.protostuff.model;
 
 import com.google.common.base.MoreObjects;
 
@@ -33,8 +33,7 @@ public class MessageField extends AbstractDescriptor {
                 .add("name", name)
                 .add("type", type)
                 .add("tag", tag)
-                .add("standardOptions", standardOptions)
-                .add("customOptions", customOptions)
+                .add("options", options)
                 .toString();
     }
 

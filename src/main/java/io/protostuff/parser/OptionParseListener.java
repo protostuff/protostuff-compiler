@@ -1,6 +1,6 @@
 package io.protostuff.parser;
 
-import io.protostuff.proto3.AbstractDescriptor;
+import io.protostuff.model.AbstractDescriptor;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -12,13 +12,13 @@ import java.util.Map;
  */
 public class OptionParseListener extends Proto3BaseListener {
 
-    private final Context context;
+    private final ProtoContext context;
     private final Deque<Map<String, Object>> textFormatStack;
 
     private Map<String, Object> currentTextFormat;
     private Map<String, Object> lastTextFormat;
 
-    public OptionParseListener(Context context) {
+    public OptionParseListener(ProtoContext context) {
         this.context = context;
         this.textFormatStack = new ArrayDeque<>();
     }
@@ -46,22 +46,22 @@ public class OptionParseListener extends Proto3BaseListener {
         }
         Object optionValue = getOptionValue(optionValueContext);
         if (optionType == OptionType.STANDARD) {
-            declaration.addStandardOption(optionName, optionValue);
+            declaration.addOption(optionName, optionValue);
         } else {
             if (optionSubName != null) {
-                Object customOptionValue = declaration.getCustomOption(optionName);
+                Object customOptionValue = declaration.getOption(optionName);
                 Map<String, Object> map;
                 if (customOptionValue instanceof Map) {
                     map = (Map<String, Object>) customOptionValue;
                 } else if (customOptionValue == null) {
                     map = new HashMap<>();
-                    declaration.addCustomOption(optionName, map);
+                    declaration.addOption(optionName, map);
                 } else {
                     throw new IllegalStateException("custom option");
                 }
                 putValue(map, optionSubName, optionValue);
             } else {
-                declaration.addCustomOption(optionName, optionValue);
+                declaration.addOption(optionName, optionValue);
             }
         }
     }

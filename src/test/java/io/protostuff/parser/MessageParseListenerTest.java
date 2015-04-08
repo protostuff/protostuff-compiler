@@ -1,9 +1,9 @@
 package io.protostuff.parser;
 
 import com.google.common.base.Joiner;
-import io.protostuff.proto3.Message;
-import io.protostuff.proto3.MessageField;
-import io.protostuff.proto3.FileDescriptor;
+import io.protostuff.model.Message;
+import io.protostuff.model.MessageField;
+import io.protostuff.model.Proto;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -57,14 +57,14 @@ public class MessageParseListenerTest {
         Proto3Parser parser = new Proto3Parser(tokenStream);
         parser.removeErrorListeners();
         parser.addErrorListener(TestUtils.ERROR_LISTENER);
-        Context context = new Context();
+        ProtoContext context = new ProtoContext("test.proto");
         MessageParseListener messageParseListener = new MessageParseListener(context);
         OptionParseListener optionParseListener = new OptionParseListener(context);
-        FileDescriptor fileDescriptor = new FileDescriptor();
-        context.push(fileDescriptor);
+        Proto proto = new Proto();
+        context.push(proto);
         parser.addParseListener(messageParseListener);
         parser.addParseListener(optionParseListener);
         parser.messageBlock();
-        return fileDescriptor.getMessages().get(0);
+        return proto.getMessages().get(0);
     }
 }

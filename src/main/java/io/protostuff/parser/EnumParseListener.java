@@ -1,17 +1,18 @@
 package io.protostuff.parser;
 
-import io.protostuff.proto3.*;
-import io.protostuff.proto3.Enum;
+import io.protostuff.model.AbstractUserTypeContainer;
+import io.protostuff.model.Enum;
+import io.protostuff.model.EnumConstant;
 
 /**
  * @author Kostiantyn Shchepanovskyi
  */
 public class EnumParseListener extends Proto3BaseListener {
 
-    private final Context context;
+    private final ProtoContext context;
 
 //    private EnumDesPro
-    public EnumParseListener(Context context) {
+public EnumParseListener(ProtoContext context) {
         this.context = context;
     }
 

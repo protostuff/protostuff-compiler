@@ -1,8 +1,9 @@
 package io.protostuff.parser;
 
 import com.google.common.base.Joiner;
-import io.protostuff.proto3.*;
-import io.protostuff.proto3.Enum;
+import io.protostuff.model.Enum;
+import io.protostuff.model.EnumConstant;
+import io.protostuff.model.Proto;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.BailErrorStrategy;
 import org.antlr.v4.runtime.CharStream;
@@ -120,58 +121,58 @@ public class EnumParseListenerTest {
     public void parseEnumWithStandardOption() throws Exception {
         Enum result = parseEnumBlock(ENUM_BLOCK_WITH_STANDARD_OPTION);
         assertEquals("E", result.getName());
-        assertEquals(1, result.getStandardOptions().size());
-        assertEquals(true, result.getStandardOptions().get("deprecated"));
+        assertEquals(1, result.getOptions().size());
+        assertEquals(true, result.getOptions().get("deprecated"));
     }
 
     @Test
      public void parseEnumWithCustomOption() throws Exception {
         Enum result = parseEnumBlock(ENUM_BLOCK_WITH_CUSTOM_OPTIONS);
         assertEquals("E", result.getName());
-        assertEquals(2, result.getCustomOptions().size());
-        assertEquals(42, result.getCustomOptions().get("number"));
-        assertEquals("string", result.getCustomOptions().get("str"));
+        assertEquals(2, result.getOptions().size());
+        assertEquals(42, result.getOptions().get("number"));
+        assertEquals("string", result.getOptions().get("str"));
     }
 
     @Test
     public void parseEnumWithCustomEnumOption() throws Exception {
         Enum result = parseEnumBlock(ENUM_BLOCK_WITH_CUSTOM_ENUM_OPTION);
         assertEquals("E", result.getName());
-        assertEquals(1, result.getCustomOptions().size());
-        assertEquals("V", result.getCustomOptions().get("x"));
+        assertEquals(1, result.getOptions().size());
+        assertEquals("V", result.getOptions().get("x"));
     }
 
     @Test
     public void parseEnumWithCustomComplexOption() throws Exception {
         Enum result = parseEnumBlock(ENUM_BLOCK_WITH_CUSTOM_COMPLEX_OPTIONS);
         assertEquals("E", result.getName());
-        Map<String, Object> customOptions = result.getCustomOptions();
-        assertEquals(1, customOptions.size());
-        assertTrue(customOptions.get("core.foo") instanceof Map);
-        assertEquals(1, ((Map) customOptions.get("core.foo")).get("a"));
-        assertEquals(2, ((Map) customOptions.get("core.foo")).get("b"));
-        assertEquals(3, ((Map)((Map) customOptions.get("core.foo")).get("c")).get("d"));
+        Map<String, Object> Options = result.getOptions();
+        assertEquals(1, Options.size());
+        assertTrue(Options.get("core.foo") instanceof Map);
+        assertEquals(1, ((Map) Options.get("core.foo")).get("a"));
+        assertEquals(2, ((Map) Options.get("core.foo")).get("b"));
+        assertEquals(3, ((Map) ((Map) Options.get("core.foo")).get("c")).get("d"));
     }
 
     @Test
     public void parseEnumWithCustomTextFormatOption() throws Exception {
         Enum result = parseEnumBlock(ENUM_BLOCK_WITH_CUSTOM_TEXT_FORMAT_OPTIONS);
         assertEquals("E", result.getName());
-        Map<String, Object> customOptions = result.getCustomOptions();
-        assertEquals(1, customOptions.size());
-        assertTrue(customOptions.get("core.foo") instanceof Map);
-        assertEquals(1, ((Map) customOptions.get("core.foo")).get("a"));
-        assertEquals(2, ((Map) customOptions.get("core.foo")).get("b"));
-        assertEquals(3, ((Map)((Map) customOptions.get("core.foo")).get("c")).get("d"));
+        Map<String, Object> Options = result.getOptions();
+        assertEquals(1, Options.size());
+        assertTrue(Options.get("core.foo") instanceof Map);
+        assertEquals(1, ((Map) Options.get("core.foo")).get("a"));
+        assertEquals(2, ((Map) Options.get("core.foo")).get("b"));
+        assertEquals(3, ((Map) ((Map) Options.get("core.foo")).get("c")).get("d"));
     }
 
     @Test
     public void parseEnumWithStandardFieldOption() throws Exception {
         Enum result = parseEnumBlock(ENUM_BLOCK_WITH_STANDARD_FIELD_OPTION);
         assertEquals("E", result.getName());
-        assertEquals(0, result.getStandardOptions().size());
-        assertEquals(1, result.getValues().get(0).getStandardOptions().size());
-        assertEquals(true, result.getValues().get(0).getStandardOptions().get("deprecated"));
+        assertEquals(0, result.getOptions().size());
+        assertEquals(1, result.getValues().get(0).getOptions().size());
+        assertEquals(true, result.getValues().get(0).getOptions().get("deprecated"));
     }
 
     private Enum parseEnumBlock(String input) {
@@ -184,14 +185,14 @@ public class EnumParseListenerTest {
         parser.setErrorHandler(new BailErrorStrategy());
         parser.removeErrorListeners();
         parser.addErrorListener(TestUtils.ERROR_LISTENER);
-        Context context = new Context();
-        FileDescriptor fileDescriptor = new FileDescriptor();
-        context.push(fileDescriptor);
+        ProtoContext context = new ProtoContext("test.proto");
+        Proto proto = new Proto();
+        context.push(proto);
         EnumParseListener enumParseListener = new EnumParseListener(context);
         OptionParseListener optionParseListener = new OptionParseListener(context);
         parser.addParseListener(enumParseListener);
         parser.addParseListener(optionParseListener);
         parser.enumBlock();
-        return fileDescriptor.getEnums().get(0);
+        return proto.getEnums().get(0);
     }
 }

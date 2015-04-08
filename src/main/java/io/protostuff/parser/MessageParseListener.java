@@ -1,18 +1,17 @@
 package io.protostuff.parser;
 
-import io.protostuff.proto3.*;
-
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Preconditions.checkState;
+import io.protostuff.model.AbstractUserTypeContainer;
+import io.protostuff.model.Message;
+import io.protostuff.model.MessageField;
 
 /**
  * @author Kostiantyn Shchepanovskyi
  */
 public class MessageParseListener extends Proto3BaseListener {
 
-    private final Context context;
+    private final ProtoContext context;
 
-    public MessageParseListener(Context context) {
+    public MessageParseListener(ProtoContext context) {
         this.context = context;
     }
 

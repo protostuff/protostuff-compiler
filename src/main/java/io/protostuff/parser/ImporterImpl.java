@@ -3,7 +3,6 @@ package io.protostuff.parser;
 import io.protostuff.parser.api.FileDescriptorLoader;
 import io.protostuff.parser.api.Importer;
 import io.protostuff.parser.reader.FileReader;
-import io.protostuff.proto3.FileDescriptor;
 import org.antlr.v4.runtime.CharStream;
 
 import javax.inject.Inject;
@@ -25,11 +24,11 @@ public class ImporterImpl implements Importer {
     }
 
     @Override
-    public FileDescriptor importFile(String fileName) {
+    public ProtoContext importFile(String fileName) {
 
         CharStream stream = reader.read(fileName);
-        FileDescriptor descriptor = loader.parse("", stream);
-        return descriptor;
+        ProtoContext context = loader.load(fileName, stream);
+        return context;
     }
 
 }

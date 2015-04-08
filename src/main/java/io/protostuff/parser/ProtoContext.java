@@ -1,7 +1,8 @@
 package io.protostuff.parser;
 
-import io.protostuff.proto3.AbstractDescriptor;
-import io.protostuff.proto3.FileDescriptor;
+import io.protostuff.model.AbstractDescriptor;
+import io.protostuff.model.Proto;
+import io.protostuff.model.UserType;
 
 import javax.annotation.Nullable;
 import java.util.ArrayDeque;
@@ -9,20 +10,22 @@ import java.util.Deque;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.google.common.base.Preconditions.checkState;
-
 /**
  * @author Kostiantyn Shchepanovskyi
  */
-public class Context {
+public class ProtoContext {
 
-    private final Map<String, AbstractDescriptor> symbolTable;
+    private final Map<String, UserType> symbolTable;
     private final Deque<AbstractDescriptor> declarationStack;
-    private FileDescriptor result;
 
-    public Context() {
+    private final Proto proto;
+
+    public ProtoContext(String name) {
         symbolTable = new HashMap<>();
         declarationStack = new ArrayDeque<>();
+        proto = new Proto();
+        proto.setName(name);
+        push(proto);
     }
 
     @SuppressWarnings("unchecked")
@@ -47,6 +50,12 @@ public class Context {
         return fail(declaration, declarationClass);
     }
 
+    public void register(String fullName, UserType type) {
+        if (symbolTable.containsKey(fullName)) {
+            throw new UnsupportedOperationException("TODO: implement");
+        }
+        symbolTable.put(fullName, type);
+    }
 
     private <T> T fail(Object descriptor, Class<T> targetClass) {
         String source = descriptor.getClass().getSimpleName();
@@ -56,12 +65,8 @@ public class Context {
     }
 
     @Nullable
-    public FileDescriptor getResult() {
-        return result;
+    public Proto getProto() {
+        return proto;
     }
 
-    public void setResult(FileDescriptor result) {
-        checkState(this.result == null);
-        this.result = result;
-    }
 }

@@ -1,14 +1,12 @@
-package io.protostuff.proto3;
+package io.protostuff.model;
 
 import com.google.common.base.MoreObjects;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Enum value (constant).
  *
  * @author Kostiantyn Shchepanovskyi
- * @see io.protostuff.proto3.Enum
+ * @see io.protostuff.model.Enum
  */
 public class EnumConstant extends AbstractDescriptor {
 
@@ -38,8 +36,7 @@ public class EnumConstant extends AbstractDescriptor {
                 .omitNullValues()
                 .add("name", name)
                 .add("value", value)
-                .add("standardOptions", standardOptions)
-                .add("customOptions", customOptions)
+                .add("options", options)
                 .toString();
     }
 

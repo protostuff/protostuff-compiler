@@ -12,7 +12,7 @@ import java.lang.reflect.Method;
 /**
  * @author Kostiantyn Shchepanovskyi
  */
-public class CompositeParseTreeListenerFactory {
+public class CompositeParseTreeListener {
 
     @SafeVarargs
     public static <T extends ParseTreeListener> T create(Class<T> type, T... delegates) {

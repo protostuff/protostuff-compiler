@@ -1,6 +1,6 @@
 package io.protostuff.parser.api;
 
-import io.protostuff.proto3.FileDescriptor;
+import io.protostuff.parser.ProtoContext;
 import org.antlr.v4.runtime.CharStream;
 
 /**
@@ -8,6 +8,6 @@ import org.antlr.v4.runtime.CharStream;
  */
 public interface FileDescriptorLoader {
 
-    FileDescriptor parse(String name, CharStream stream);
+    ProtoContext load(String name, CharStream stream);
 
 }
