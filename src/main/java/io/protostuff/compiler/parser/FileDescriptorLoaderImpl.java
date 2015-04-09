@@ -1,7 +1,7 @@
 package io.protostuff.compiler.parser;
 
-import io.protostuff.compiler.model.Enum;
-import io.protostuff.compiler.model.*;
+import io.protostuff.compiler.model.Proto;
+import io.protostuff.compiler.model.util.ProtoTreeWalker;
 import org.antlr.v4.runtime.ANTLRErrorListener;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -28,7 +28,7 @@ public class FileDescriptorLoaderImpl implements FileDescriptorLoader {
             return null;
         }
         final Proto proto = context.getProto();
-        walk(proto, (container, type) -> {
+        ProtoTreeWalker.DEFAULT.walk(proto, (container, type) -> {
             type.setProto(proto);
             String prefix = container.getNamespacePrefix();
             String fullName = prefix + type.getName();
@@ -38,17 +38,6 @@ public class FileDescriptorLoaderImpl implements FileDescriptorLoader {
         return context;
     }
 
-    private void walk(UserTypeContainer container, Operation operation) {
-        for (Message message : container.getMessages()) {
-            operation.process(container, message);
-        }
-        for (Enum anEnum : container.getEnums()) {
-            operation.process(container, anEnum);
-        }
-        for (Message message : container.getMessages()) {
-            walk(message, operation);
-        }
-    }
 
     private ProtoContext parse(String name, CharStream stream) {
         Proto3Lexer lexer = new Proto3Lexer(stream);
@@ -60,7 +49,6 @@ public class FileDescriptorLoaderImpl implements FileDescriptorLoader {
         parser.addErrorListener(errorListener);
 
         Proto3Parser.ProtoContext tree = parser.proto();
-        ParseTreeWalker walker = new ParseTreeWalker();
         ProtoContext context = new ProtoContext(name);
         Proto3Listener composite = CompositeParseTreeListener.create(Proto3Listener.class,
                 new ProtoParseListener(context),
@@ -68,16 +56,12 @@ public class FileDescriptorLoaderImpl implements FileDescriptorLoader {
                 new EnumParseListener(context),
                 new OptionParseListener(context)
         );
-        walker.walk(composite, tree);
+        ParseTreeWalker.DEFAULT.walk(composite, tree);
         if (parser.getNumberOfSyntaxErrors() > 0) {
             return null;
         }
 
         return context;
-    }
-
-    interface Operation {
-        void process(UserTypeContainer container, UserType type);
     }
 
 }

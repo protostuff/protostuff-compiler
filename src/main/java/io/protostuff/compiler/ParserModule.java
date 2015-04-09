@@ -1,7 +1,8 @@
-package io.protostuff.compiler.parser;
+package io.protostuff.compiler;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
+import io.protostuff.compiler.parser.*;
 import org.antlr.v4.runtime.ANTLRErrorListener;
 import org.antlr.v4.runtime.ANTLRErrorStrategy;
 import org.antlr.v4.runtime.BailErrorStrategy;

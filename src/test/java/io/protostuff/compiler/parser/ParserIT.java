@@ -2,6 +2,7 @@ package io.protostuff.compiler.parser;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import io.protostuff.compiler.ParserModule;
 import io.protostuff.compiler.model.Message;
 import io.protostuff.compiler.model.Proto;
 import org.junit.Before;

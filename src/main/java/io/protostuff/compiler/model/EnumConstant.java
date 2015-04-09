@@ -6,7 +6,7 @@ import com.google.common.base.MoreObjects;
  * Enum value (constant).
  *
  * @author Kostiantyn Shchepanovskyi
- * @see io.protostuff.compiler.model.Enum
+ * @see Enum
  */
 public class EnumConstant extends AbstractDescriptor {
 
