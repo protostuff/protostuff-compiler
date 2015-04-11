@@ -1,6 +1,7 @@
 package io.protostuff.compiler.parser;
 
 import io.protostuff.compiler.model.AbstractDescriptor;
+import io.protostuff.compiler.model.FieldType;
 import io.protostuff.compiler.model.Proto;
 import io.protostuff.compiler.model.UserType;
 import org.slf4j.Logger;
@@ -54,6 +55,9 @@ public class ProtoContext {
         return fail(declaration, declarationClass);
     }
 
+    /**
+     * Register user type in symbol table. Full name should start with ".".
+     */
     public void register(String fullName, UserType type) {
         if (symbolTable.containsKey(fullName)) {
             LOGGER.error("{} already registered", fullName);
@@ -72,4 +76,7 @@ public class ProtoContext {
         return proto;
     }
 
+    public FieldType resolve(String typeName) {
+        return symbolTable.get(typeName);
+    }
 }

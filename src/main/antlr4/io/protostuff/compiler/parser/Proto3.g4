@@ -41,26 +41,13 @@ messageBlockEntry
     : messageField
     | optionEntry
     | messageBlock
+    | enumBlock
     ;
 messageField
     : fieldType NAME ASSIGN INTEGER_VALUE fieldOptions? SEMICOLON
     ;
 fieldType
-    : INT32
-    | INT64
-    | UINT32
-    | UINT64
-    | SINT32
-    | SINT64
-    | FIXED32
-    | FIXED64
-    | SFIXED32
-    | SFIXED64
-    | FLOAT
-    | DOUBLE
-    | BOOL
-    | STRING
-    | BYTES
+    : '.'? declarationRef
     ;
 fieldOptions
     : '[' (option (',' option)* )? ']'
@@ -120,51 +107,6 @@ RETURNS
     ;
 REPEATED
     : 'repeated'
-    ;
-INT32
-    : 'int32'
-    ;
-INT64
-    : 'int64'
-    ;
-UINT32
-    : 'uint32'
-    ;
-UINT64
-    : 'uint64'
-    ;
-SINT32
-    : 'sint32'
-    ;
-SINT64
-    : 'sint64'
-    ;
-FIXED32
-    : 'fixed32'
-    ;
-FIXED64
-    : 'fixed64'
-    ;
-SFIXED32
-    : 'sfixed32'
-    ;
-SFIXED64
-    : 'sfixed64'
-    ;
-FLOAT
-    : 'float'
-    ;
-DOUBLE
-    : 'double'
-    ;
-BOOL
-    : 'bool'
-    ;
-STRING
-    : 'string'
-    ;
-BYTES
-    : 'bytes'
     ;
 COMMENT
     : '/*' .*? '*/' -> skip

@@ -45,7 +45,7 @@ public class MessageParseListener extends Proto3BaseListener {
         Integer tag = Integer.decode(ctx.INTEGER_VALUE().getText());
         messageField.setName(name);
         messageField.setTag(tag);
-        messageField.setType(type);
+        messageField.setTypeName(type);
         message.addField(messageField);
     }
 }

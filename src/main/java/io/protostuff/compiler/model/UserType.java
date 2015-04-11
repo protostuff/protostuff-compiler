@@ -3,7 +3,7 @@ package io.protostuff.compiler.model;
 /**
  * @author Kostiantyn Shchepanovskyi
  */
-public interface UserType {
+public interface UserType extends FieldType {
 
     /**
      * Short name. For example, {@code Baz}

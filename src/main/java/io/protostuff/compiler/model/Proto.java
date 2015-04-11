@@ -82,8 +82,8 @@ public class Proto extends AbstractUserTypeContainer implements UserTypeContaine
     @Override
     public String getNamespacePrefix() {
         if (packageName == null) {
-            return "";
+            return ".";
         }
-        return packageName + ".";
+        return "." + packageName + ".";
     }
 }

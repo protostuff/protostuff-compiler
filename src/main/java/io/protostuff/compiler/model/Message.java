@@ -3,6 +3,7 @@ package io.protostuff.compiler.model;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Preconditions;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -34,6 +35,16 @@ public class Message extends AbstractUserTypeContainer implements UserType, User
             fields = new ArrayList<>();
         }
         fields.add(field);
+    }
+
+    @Nullable
+    public MessageField getField(String name) {
+        for (MessageField field : getFields()) {
+            if (name.equals(field.getName())) {
+                return field;
+            }
+        }
+        return null;
     }
 
     @Override
@@ -93,5 +104,10 @@ public class Message extends AbstractUserTypeContainer implements UserType, User
     @Override
     public void setParent(UserTypeContainer parent) {
         this.parent = parent;
+    }
+
+    @Override
+    public String getReference() {
+        return fullName;
     }
 }

@@ -12,4 +12,5 @@ public interface UserTypeContainer extends MessageContainer, EnumContainer {
      * @return
      */
     String getNamespacePrefix();
+
 }

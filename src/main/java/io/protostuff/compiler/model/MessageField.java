@@ -7,15 +7,16 @@ import com.google.common.base.MoreObjects;
  */
 public class MessageField extends AbstractDescriptor {
 
-    protected String type;
+    protected String typeName;
+    protected FieldType type;
     protected int tag;
 
-    public String getType() {
-        return type;
+    public String getTypeName() {
+        return typeName;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setTypeName(String typeName) {
+        this.typeName = typeName;
     }
 
     public int getTag() {
@@ -26,11 +27,20 @@ public class MessageField extends AbstractDescriptor {
         this.tag = tag;
     }
 
+    public FieldType getType() {
+        return type;
+    }
+
+    public void setType(FieldType type) {
+        this.type = type;
+    }
+
     @Override
     public String toString() {
         return MoreObjects.toStringHelper(this)
                 .omitNullValues()
                 .add("name", name)
+                .add("typeName", typeName)
                 .add("type", type)
                 .add("tag", tag)
                 .add("options", options)

@@ -49,4 +49,9 @@ public class AbstractUserType extends AbstractDescriptor implements UserType {
     public void setParent(UserTypeContainer parent) {
         this.parent = parent;
     }
+
+    @Override
+    public String getReference() {
+        return fullName;
+    }
 }

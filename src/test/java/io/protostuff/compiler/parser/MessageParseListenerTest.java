@@ -37,7 +37,7 @@ public class MessageParseListenerTest {
         assertEquals("A", message.getName());
         assertEquals(1, message.getFields().size());
         MessageField field = message.getFields().get(0);
-        assertEquals("int32", field.getType());
+        assertEquals("int32", field.getTypeName());
         assertEquals("x", field.getName());
         assertEquals(1, field.getTag());
     }

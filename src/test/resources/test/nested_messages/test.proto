@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package test.nested_messages;
+
+message A {
+    message B {
+        message C {
+            message D {
+                enum E {
+                }
+            }
+        }
+    }
+}
+
+enum E1 {
+}
