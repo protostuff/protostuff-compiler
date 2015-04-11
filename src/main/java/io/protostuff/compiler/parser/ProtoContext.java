@@ -3,6 +3,8 @@ package io.protostuff.compiler.parser;
 import io.protostuff.compiler.model.AbstractDescriptor;
 import io.protostuff.compiler.model.Proto;
 import io.protostuff.compiler.model.UserType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
 import java.util.ArrayDeque;
@@ -14,6 +16,8 @@ import java.util.Map;
  * @author Kostiantyn Shchepanovskyi
  */
 public class ProtoContext {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProtoContext.class);
 
     private final Map<String, UserType> symbolTable;
     private final Deque<AbstractDescriptor> declarationStack;
@@ -52,7 +56,7 @@ public class ProtoContext {
 
     public void register(String fullName, UserType type) {
         if (symbolTable.containsKey(fullName)) {
-            throw new UnsupportedOperationException("TODO: implement");
+            LOGGER.error("{} already registered", fullName);
         }
         symbolTable.put(fullName, type);
     }
@@ -64,7 +68,6 @@ public class ProtoContext {
         throw new IllegalStateException(message);
     }
 
-    @Nullable
     public Proto getProto() {
         return proto;
     }

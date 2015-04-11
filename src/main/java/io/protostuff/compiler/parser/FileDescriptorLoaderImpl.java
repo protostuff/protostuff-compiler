@@ -1,6 +1,7 @@
 package io.protostuff.compiler.parser;
 
-import io.protostuff.compiler.model.Proto;
+import io.protostuff.compiler.model.*;
+import io.protostuff.compiler.model.Enum;
 import io.protostuff.compiler.model.util.ProtoTreeWalker;
 import org.antlr.v4.runtime.ANTLRErrorListener;
 import org.antlr.v4.runtime.CharStream;
@@ -8,6 +9,8 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
 import javax.inject.Inject;
+import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -28,16 +31,42 @@ public class FileDescriptorLoaderImpl implements FileDescriptorLoader {
             return null;
         }
         final Proto proto = context.getProto();
-        ProtoTreeWalker.DEFAULT.walk(proto, (container, type) -> {
+
+        List<Message> messages = proto.getMessages();
+        List<io.protostuff.compiler.model.Enum> enums = proto.getEnums();
+
+        Consumer<UserType> rootTypeProcessor = type -> {
             type.setProto(proto);
-            String prefix = container.getNamespacePrefix();
-            String fullName = prefix + type.getName();
+            type.setParent(proto);
+            type.setNested(false);
+            String fullName = proto.getNamespacePrefix() + type.getName();
             type.setFullName(fullName);
             context.register(fullName, type);
-        });
+        };
+
+        messages.forEach(rootTypeProcessor);
+        enums.forEach(rootTypeProcessor);
+
+        messages.forEach(message -> rec(context, message));
+
         return context;
     }
 
+    private void rec(ProtoContext context, UserTypeContainer parent) {
+        List<Message> nestedMessages = parent.getMessages();
+        List<Enum> nestedEnums = parent.getEnums();
+        Consumer<UserType> nestedTypeProcessor = type -> {
+            type.setProto(context.getProto());
+            type.setParent(parent);
+            type.setNested(true);
+            String fullName = parent.getNamespacePrefix() + type.getName();
+            type.setFullName(fullName);
+            context.register(fullName, type);
+        };
+        nestedEnums.forEach(nestedTypeProcessor);
+        nestedMessages.forEach(nestedTypeProcessor);
+        nestedMessages.forEach(message -> rec(context, message));
+    }
 
     private ProtoContext parse(String name, CharStream stream) {
         Proto3Lexer lexer = new Proto3Lexer(stream);

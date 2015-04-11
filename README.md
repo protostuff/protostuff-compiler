@@ -1,4 +1,4 @@
-Protocol Buffers v3 file parser
-===============================
+Protocol Buffers file parser and code generator
+===============================================
 
-Java library for parsing proto3 files. *Under development.*
+*Under development*

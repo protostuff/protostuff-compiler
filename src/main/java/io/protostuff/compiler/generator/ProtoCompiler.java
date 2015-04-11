@@ -7,5 +7,5 @@ import io.protostuff.compiler.model.Proto;
  */
 public interface ProtoCompiler {
 
-    void compiler(Proto proto);
+    void compile(Proto proto);
 }

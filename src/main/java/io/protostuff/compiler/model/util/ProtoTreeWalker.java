@@ -1,9 +1,7 @@
 package io.protostuff.compiler.model.util;
 
+import io.protostuff.compiler.model.*;
 import io.protostuff.compiler.model.Enum;
-import io.protostuff.compiler.model.Message;
-import io.protostuff.compiler.model.UserType;
-import io.protostuff.compiler.model.UserTypeContainer;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -12,19 +10,40 @@ public class ProtoTreeWalker {
 
     public static final ProtoTreeWalker DEFAULT = new ProtoTreeWalker();
 
-    public void walk(UserTypeContainer container, Operation operation) {
-        for (Message message : container.getMessages()) {
-            operation.process(container, message);
-        }
-        for (Enum anEnum : container.getEnums()) {
-            operation.process(container, anEnum);
-        }
-        for (Message message : container.getMessages()) {
-            walk(message, operation);
+    public void walk(Proto proto,
+                     ProtoOperation protoOperation,
+                     MessageOperation messageOperation,
+                     EnumOperation enumOperation) {
+        protoOperation.process(proto);
+        proto.getEnums().forEach(enumOperation::process);
+        proto.getMessages().forEach(messageOperation::process);
+        for (Message message : proto.getMessages()) {
+            walk(message, messageOperation, enumOperation);
         }
     }
 
-    public interface Operation {
-        void process(UserTypeContainer container, UserType type);
+    public void walk(UserTypeContainer container,
+                     MessageOperation messageOperation,
+                     EnumOperation enumOperation) {
+
+        container.getMessages().forEach(messageOperation::process);
+        container.getEnums().forEach(enumOperation::process);
+        for (Message message : container.getMessages()) {
+            walk(message, messageOperation, enumOperation);
+        }
     }
+
+    public interface ProtoOperation {
+        void process(Proto proto);
+    }
+
+    public interface MessageOperation {
+        void process(Message message);
+    }
+
+    public interface EnumOperation {
+        void process(Enum e);
+    }
+
+
 }

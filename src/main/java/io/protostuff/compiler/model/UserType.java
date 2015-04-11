@@ -20,6 +20,13 @@ public interface UserType {
 
     void setFullName(String fullName);
 
+    boolean isNested();
+
+    void setNested(boolean nested);
+
+    UserTypeContainer getParent();
+
+    void setParent(UserTypeContainer parent);
 
 //    @Nullable
 //    Message getParentMessage();

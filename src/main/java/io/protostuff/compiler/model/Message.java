@@ -15,6 +15,8 @@ public class Message extends AbstractUserTypeContainer implements UserType, User
     protected List<MessageField> fields;
     protected Proto proto;
     protected String fullName;
+    protected boolean nested;
+    protected UserTypeContainer parent;
 
     public List<MessageField> getFields() {
         if (fields == null) {
@@ -71,5 +73,25 @@ public class Message extends AbstractUserTypeContainer implements UserType, User
     public String getNamespacePrefix() {
         Preconditions.checkNotNull(fullName, "message is not initialized");
         return fullName + ".";
+    }
+
+    @Override
+    public boolean isNested() {
+        return nested;
+    }
+
+    @Override
+    public void setNested(boolean nested) {
+        this.nested = nested;
+    }
+
+    @Override
+    public UserTypeContainer getParent() {
+        return parent;
+    }
+
+    @Override
+    public void setParent(UserTypeContainer parent) {
+        this.parent = parent;
     }
 }

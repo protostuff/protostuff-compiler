@@ -7,6 +7,8 @@ public class AbstractUserType extends AbstractDescriptor implements UserType {
 
     protected Proto proto;
     protected String fullName;
+    protected boolean nested;
+    protected UserTypeContainer parent;
 
     @Override
     public Proto getProto() {
@@ -26,5 +28,25 @@ public class AbstractUserType extends AbstractDescriptor implements UserType {
     @Override
     public void setFullName(String fullName) {
         this.fullName = fullName;
+    }
+
+    @Override
+    public boolean isNested() {
+        return nested;
+    }
+
+    @Override
+    public void setNested(boolean nested) {
+        this.nested = nested;
+    }
+
+    @Override
+    public UserTypeContainer getParent() {
+        return parent;
+    }
+
+    @Override
+    public void setParent(UserTypeContainer parent) {
+        this.parent = parent;
     }
 }
