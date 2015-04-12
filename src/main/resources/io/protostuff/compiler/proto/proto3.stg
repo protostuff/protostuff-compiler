@@ -1,6 +1,6 @@
+import "io/protostuff/compiler/core.stg"
+
 proto_compiler_enabled(proto) ::= "true"
-message_compiler_enabled(message) ::= "false"
-enum_compiler_enabled(enum) ::= "false"
 
 proto_compiler_output(proto) ::= <<
 <proto.name>
@@ -10,24 +10,20 @@ proto_compiler_template(proto) ::= <<
 <proto:syntax()>
 <proto:package()>
 <proto:imports()>
-
 <proto:messages()>
-
+<proto:enums()>
 >>
 
 syntax(proto) ::= <<
 syntax <proto.syntax>;
-
 >>
 
 package(proto) ::= <<
 package <proto.packageName>;
-
 >>
 
 imports(proto) ::= <<
 <proto.imports:proto_import(); separator="\n">
-
 >>
 
 proto_import(name) ::= <<
@@ -36,7 +32,6 @@ import "<name>";
 
 messages(container) ::= <<
 <container.messages:message(); separator="\n">
-
 >>
 
 message(message) ::= <<
@@ -48,7 +43,6 @@ message <message.name> {
 
 message_fields(message) ::= <<
 <message.fields:message_field(); separator="\n">
-
 >>
 
 message_field(field) ::= <<

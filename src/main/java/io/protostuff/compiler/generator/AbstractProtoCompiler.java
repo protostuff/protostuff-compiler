@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.Consumer;
@@ -57,7 +58,7 @@ public abstract class AbstractProtoCompiler implements ProtoCompiler {
         } catch (Exception e) {
             LOGGER.error("Can not compile {}", proto.getName(), e);
         } finally {
-            fileWriterMap.entrySet().forEach(entry -> {
+            for (Map.Entry<String, Writer> entry : fileWriterMap.entrySet()) {
                 String fileName = entry.getKey();
                 Writer writer = entry.getValue();
                 try {
@@ -65,7 +66,7 @@ public abstract class AbstractProtoCompiler implements ProtoCompiler {
                 } catch (IOException e) {
                     LOGGER.error("Could not close file: {}", fileName, e);
                 }
-            });
+            }
         }
     }
 

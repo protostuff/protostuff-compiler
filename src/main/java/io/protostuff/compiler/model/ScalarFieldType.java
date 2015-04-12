@@ -53,7 +53,7 @@ public interface ScalarFieldType extends FieldType {
     }
 
     /**
-     * Type reference. For scalar types, it returns one of:
+     * Get scalar type by its reference/name. Scalar type names are:
      *
      * <ol>
      *     <li>{@code int32}</li>
@@ -72,9 +72,6 @@ public interface ScalarFieldType extends FieldType {
      *     <li>{@code string}</li>
      *     <li>{@code bytes}</li>
      * </ol>
-     *
-     * For messages, it is full massage name.
-     * For enums, it is full enum name.
      */
     static ScalarFieldType getByName(String name) {
         return Holder.getByName(name);

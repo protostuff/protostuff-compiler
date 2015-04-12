@@ -9,6 +9,9 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Arrays;
+import java.util.Collections;
+
 /**
  * @author Kostiantyn Shchepanovskyi
  */
@@ -39,5 +42,5 @@ public class NameResolutionIT {
         Assert.assertNotNull(c0);
         Assert.assertEquals(field, fieldType, c0.getType().getReference());
     }
-
+    
 }
