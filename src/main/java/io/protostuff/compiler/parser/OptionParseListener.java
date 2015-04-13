@@ -10,7 +10,7 @@ import java.util.Map;
 /**
  * @author Kostiantyn Shchepanovskyi
  */
-public class OptionParseListener extends Proto3BaseListener {
+public class OptionParseListener extends ProtoParserBaseListener {
 
     private final ProtoContext context;
     private final Deque<Map<String, Object>> textFormatStack;
@@ -25,13 +25,13 @@ public class OptionParseListener extends Proto3BaseListener {
 
     @Override
     @SuppressWarnings("unchecked")
-    public void exitOption(Proto3Parser.OptionContext ctx) {
+    public void exitOption(ProtoParser.OptionContext ctx) {
         OptionType optionType;
         String optionSubName = null;
         String optionName;
         AbstractDescriptor declaration = context.peek(AbstractDescriptor.class);
-        Proto3Parser.OptionValueContext optionValueContext = ctx.optionValue();
-        Proto3Parser.OptionNameContext optionNameContext = ctx.optionName();
+        ProtoParser.OptionValueContext optionValueContext = ctx.optionValue();
+        ProtoParser.OptionNameContext optionNameContext = ctx.optionName();
         if (optionNameContext.NAME() != null) {
             optionType = OptionType.STANDARD;
             optionName = optionNameContext.getText();
@@ -66,7 +66,7 @@ public class OptionParseListener extends Proto3BaseListener {
         }
     }
 
-    private Object getOptionValue(Proto3Parser.OptionValueContext optionValueContext) {
+    private Object getOptionValue(ProtoParser.OptionValueContext optionValueContext) {
         Object optionValue;
         if (optionValueContext.BOOLEAN_VALUE() != null) {
             optionValue = Boolean.parseBoolean(optionValueContext.getText());
@@ -104,7 +104,7 @@ public class OptionParseListener extends Proto3BaseListener {
     }
 
     @Override
-    public void enterTextFormat(Proto3Parser.TextFormatContext ctx) {
+    public void enterTextFormat(ProtoParser.TextFormatContext ctx) {
         if (currentTextFormat != null) {
             textFormatStack.push(currentTextFormat);
         }
@@ -112,7 +112,7 @@ public class OptionParseListener extends Proto3BaseListener {
     }
 
     @Override
-    public void exitTextFormat(Proto3Parser.TextFormatContext ctx) {
+    public void exitTextFormat(ProtoParser.TextFormatContext ctx) {
         lastTextFormat = currentTextFormat;
         if (textFormatStack.peek() != null) {
             currentTextFormat = textFormatStack.pop();
@@ -122,7 +122,7 @@ public class OptionParseListener extends Proto3BaseListener {
     }
 
     @Override
-    public void exitTextFormatEntry(Proto3Parser.TextFormatEntryContext ctx) {
+    public void exitTextFormatEntry(ProtoParser.TextFormatEntryContext ctx) {
         String name = ctx.NAME().getText();
         Object optionValue = getOptionValue(ctx.optionValue());
         currentTextFormat.put(name, optionValue);

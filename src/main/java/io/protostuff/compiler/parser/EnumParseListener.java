@@ -7,7 +7,7 @@ import io.protostuff.compiler.model.EnumConstant;
 /**
  * @author Kostiantyn Shchepanovskyi
  */
-public class EnumParseListener extends Proto3BaseListener {
+public class EnumParseListener extends ProtoParserBaseListener {
 
     private final ProtoContext context;
 
@@ -17,13 +17,13 @@ public class EnumParseListener extends Proto3BaseListener {
     }
 
     @Override
-    public void enterEnumBlock(Proto3Parser.EnumBlockContext ctx) {
+    public void enterEnumBlock(ProtoParser.EnumBlockContext ctx) {
         Enum enumBuilder = new Enum();
         context.push(enumBuilder);
     }
 
     @Override
-    public void exitEnumBlock(Proto3Parser.EnumBlockContext ctx) {
+    public void exitEnumBlock(ProtoParser.EnumBlockContext ctx) {
         Enum e = context.pop(Enum.class);
         AbstractUserTypeContainer container = context.peek(AbstractUserTypeContainer.class);
         String name = ctx.NAME().getText();
@@ -32,13 +32,13 @@ public class EnumParseListener extends Proto3BaseListener {
     }
 
     @Override
-    public void enterEnumConstant(Proto3Parser.EnumConstantContext ctx) {
+    public void enterEnumConstant(ProtoParser.EnumConstantContext ctx) {
         EnumConstant enumConstant = new EnumConstant();
         context.push(enumConstant);
     }
 
     @Override
-    public void exitEnumConstant(Proto3Parser.EnumConstantContext ctx) {
+    public void exitEnumConstant(ProtoParser.EnumConstantContext ctx) {
         EnumConstant enumConstant = context.pop(EnumConstant.class);
         Enum e = context.peek(Enum.class);
         String name = ctx.NAME().getText();

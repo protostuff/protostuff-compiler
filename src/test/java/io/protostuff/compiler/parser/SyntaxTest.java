@@ -25,11 +25,11 @@ public class SyntaxTest {
 
     private void parseSyntaxLine(String input) {
         CharStream stream = new ANTLRInputStream(input);
-        Proto3Lexer lexer = new Proto3Lexer(stream);
+        ProtoLexer lexer = new ProtoLexer(stream);
         lexer.removeErrorListeners();
         lexer.addErrorListener(TestUtils.ERROR_LISTENER);
         CommonTokenStream tokenStream = new CommonTokenStream(lexer);
-        Proto3Parser parser = new Proto3Parser(tokenStream);
+        ProtoParser parser = new ProtoParser(tokenStream);
         parser.addErrorListener(TestUtils.ERROR_LISTENER);
         parser.syntax();
     }

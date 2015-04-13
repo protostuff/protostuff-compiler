@@ -35,7 +35,7 @@ public class ParserModule extends AbstractModule {
     }
 
     @Provides
-    Proto3Listener listener() {
+    ProtoParserListener listener() {
         return null;
     }
 

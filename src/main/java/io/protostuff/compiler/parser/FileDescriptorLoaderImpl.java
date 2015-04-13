@@ -125,17 +125,17 @@ public class FileDescriptorLoaderImpl implements FileDescriptorLoader {
     }
 
     private ProtoContext parse(String name, CharStream stream) {
-        Proto3Lexer lexer = new Proto3Lexer(stream);
+        ProtoLexer lexer = new ProtoLexer(stream);
         lexer.removeErrorListeners();
         lexer.addErrorListener(errorListener);
         CommonTokenStream tokenStream = new CommonTokenStream(lexer);
-        Proto3Parser parser = new Proto3Parser(tokenStream);
+        ProtoParser parser = new ProtoParser(tokenStream);
         parser.removeErrorListeners();
         parser.addErrorListener(errorListener);
 
-        Proto3Parser.ProtoContext tree = parser.proto();
+        ProtoParser.ProtoContext tree = parser.proto();
         ProtoContext context = new ProtoContext(name);
-        Proto3Listener composite = CompositeParseTreeListener.create(Proto3Listener.class,
+        ProtoParserListener composite = CompositeParseTreeListener.create(ProtoParserListener.class,
                 new ProtoParseListener(context),
                 new MessageParseListener(context),
                 new EnumParseListener(context),

@@ -7,7 +7,7 @@ import io.protostuff.compiler.model.MessageField;
 /**
  * @author Kostiantyn Shchepanovskyi
  */
-public class MessageParseListener extends Proto3BaseListener {
+public class MessageParseListener extends ProtoParserBaseListener {
 
     private final ProtoContext context;
 
@@ -16,13 +16,13 @@ public class MessageParseListener extends Proto3BaseListener {
     }
 
     @Override
-    public void enterMessageBlock(Proto3Parser.MessageBlockContext ctx) {
+    public void enterMessageBlock(ProtoParser.MessageBlockContext ctx) {
         Message message = new Message();
         context.push(message);
     }
 
     @Override
-    public void exitMessageBlock(Proto3Parser.MessageBlockContext ctx) {
+    public void exitMessageBlock(ProtoParser.MessageBlockContext ctx) {
         Message message = context.pop(Message.class);
         AbstractUserTypeContainer messageParentBuilder = context.peek(AbstractUserTypeContainer.class);
         String name = ctx.NAME().getText();
@@ -31,13 +31,13 @@ public class MessageParseListener extends Proto3BaseListener {
     }
 
     @Override
-    public void enterMessageField(Proto3Parser.MessageFieldContext ctx) {
+    public void enterMessageField(ProtoParser.MessageFieldContext ctx) {
         MessageField messageField = new MessageField();
         context.push(messageField);
     }
 
     @Override
-    public void exitMessageField(Proto3Parser.MessageFieldContext ctx) {
+    public void exitMessageField(ProtoParser.MessageFieldContext ctx) {
         MessageField messageField = context.pop(MessageField.class);
         Message message = context.peek(Message.class);
         String name = ctx.NAME().getText();

@@ -5,7 +5,7 @@ import io.protostuff.compiler.model.Proto;
 /**
  * @author Kostiantyn Shchepanovskyi
  */
-public class ProtoParseListener extends Proto3BaseListener {
+public class ProtoParseListener extends ProtoParserBaseListener {
 
     private final ProtoContext context;
 
@@ -14,7 +14,7 @@ public class ProtoParseListener extends Proto3BaseListener {
     }
 
     @Override
-    public void exitSyntax(Proto3Parser.SyntaxContext ctx) {
+    public void exitSyntax(ProtoParser.SyntaxContext ctx) {
         Proto proto = context.peek(Proto.class);
         String text = ctx.STRING_VALUE().getText();
         String syntax = Util.removeQuotes(text);
@@ -22,14 +22,14 @@ public class ProtoParseListener extends Proto3BaseListener {
     }
 
     @Override
-    public void exitPackageStatement(Proto3Parser.PackageStatementContext ctx) {
+    public void exitPackageStatement(ProtoParser.PackageStatementContext ctx) {
         Proto proto = context.peek(Proto.class);
         String packageName = ctx.declarationRef().getText();
         proto.setPackageName(packageName);
     }
 
     @Override
-    public void exitImportStatement(Proto3Parser.ImportStatementContext ctx) {
+    public void exitImportStatement(ProtoParser.ImportStatementContext ctx) {
         Proto proto = context.peek(Proto.class);
         String text = ctx.STRING_VALUE().getText();
         String fileName = Util.removeQuotes(text);

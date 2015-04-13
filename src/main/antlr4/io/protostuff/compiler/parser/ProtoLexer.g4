@@ -1,83 +1,5 @@
-grammar Proto3;
+lexer grammar ProtoLexer;
 
-proto
-    // syntax should be first statement in the file
-    : syntax? statement*
-    ;
-syntax
-    // only proto3 is supported
-    : SYNTAX ASSIGN STRING_VALUE SEMICOLON
-    ;
-statement
-    : packageStatement
-    | importStatement
-    | optionEntry
-    | enumBlock
-    | messageBlock
-    ;
-packageStatement
-    : PACKAGE declarationRef SEMICOLON
-    ;
-importStatement
-    : IMPORT STRING_VALUE SEMICOLON
-    ;
-optionEntry
-    : OPTION option SEMICOLON
-    ;
-enumBlock
-    : ENUM NAME '{' enumBlockEntry* '}'
-    ;
-enumBlockEntry
-    : enumConstant
-    | optionEntry
-    ;
-enumConstant
-    : NAME ASSIGN INTEGER_VALUE fieldOptions? SEMICOLON
-    ;
-messageBlock
-    : MESSAGE NAME '{' messageBlockEntry* '}'
-    ;
-messageBlockEntry
-    : messageField
-    | optionEntry
-    | messageBlock
-    | enumBlock
-    ;
-messageField
-    : fieldType NAME ASSIGN INTEGER_VALUE fieldOptions? SEMICOLON
-    ;
-fieldType
-    : '.'? declarationRef
-    ;
-fieldOptions
-    : '[' (option (',' option)* )? ']'
-    ;
-option
-    : optionName ASSIGN optionValue
-    ;
-optionName
-    : NAME
-    | customOptionName
-    ;
-customOptionName
-    : '(' declarationRef ')' ('.' declarationRef)?
-    ;
-declarationRef
-    : NAME ('.' NAME)*
-    ;
-optionValue
-    : INTEGER_VALUE
-    | BOOLEAN_VALUE
-    | STRING_VALUE
-    | NAME
-    | textFormat
-    ;
-textFormat
-    : '{' textFormatEntry* '}'
-    ;
-textFormatEntry
-    : NAME ':' optionValue
-    ;
 PACKAGE
     : 'package'
     ;
@@ -116,6 +38,38 @@ LINE_COMMENT
     ;
 WS
     : [ \t\r\n]+ -> skip
+    ;
+LCURLY
+    :   '{'
+    ;
+
+RCURLY
+    :   '}'
+    ;
+
+LPAREN
+    :   '('
+    ;
+
+RPAREN
+    :   ')'
+    ;
+
+LSQUARE
+    :   '['
+    ;
+
+RSQUARE
+    :   ']'
+    ;
+COMMA
+    :   ','
+    ;
+DOT
+    :   '.'
+    ;
+COLON
+    :   ':'
     ;
 SEMICOLON
     : ';'
