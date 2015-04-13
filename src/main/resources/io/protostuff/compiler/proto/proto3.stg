@@ -10,6 +10,7 @@ proto_compiler_template(proto) ::= <<
 <proto:syntax()>
 <proto:package()>
 <proto:imports()>
+<proto:options()>
 <proto:messages()>
 <proto:enums()>
 >>
@@ -30,6 +31,16 @@ proto_import(name) ::= <<
 import "<name>";
 >>
 
+options(container) ::= <<
+<container.options.keys:
+    {key | <option(key=key, value=container.options.(key))>};
+    separator="\n">
+>>
+
+option(key, value) ::= <<
+option <key> = <value>;
+>>
+
 messages(container) ::= <<
 <container.messages:message(); separator="\n">
 >>
@@ -38,6 +49,7 @@ message(message) ::= <<
 message <message.name> {
     <message:message_fields()>
     <message:messages()>
+    <message:enums()>
 }
 >>
 
@@ -47,4 +59,22 @@ message_fields(message) ::= <<
 
 message_field(field) ::= <<
 <field.type> <field.name> = <field.tag>;
+>>
+
+enums(container) ::= <<
+<container.enums:enum(); separator="\n">
+>>
+
+enum(enum) ::= <<
+enum <enum.name> {
+    <enum:enum_values()>
+}
+>>
+
+enum_values(enum) ::= <<
+<enum.values:enum_value(); separator="\n">
+>>
+
+enum_value(value) ::= <<
+<value.name> = <value.value>;
 >>

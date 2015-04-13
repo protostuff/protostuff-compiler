@@ -32,6 +32,11 @@ public class StCompiler extends AbstractProtoCompiler {
             throw new GeneratorException("Template %s is not defined", stName);
         }
         st.add("proto", proto);
+//        try {
+//            st.inspect().waitForClose();
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
         String result = st.render();
         try {
             writer.append(result);

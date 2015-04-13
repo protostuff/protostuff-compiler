@@ -5,6 +5,7 @@ import com.google.inject.Provides;
 import io.protostuff.compiler.generator.OutputStreamFactory;
 import io.protostuff.compiler.generator.ProtoCompiler;
 import io.protostuff.compiler.generator.StCompiler;
+import io.protostuff.compiler.generator.StErrorListener;
 import org.stringtemplate.v4.STGroup;
 import org.stringtemplate.v4.STGroupFile;
 
@@ -36,6 +37,7 @@ public class CompilerModule extends AbstractModule {
             }
         };
         STGroup group = new STGroupFile(templateFileName);
+        group.setListener(new StErrorListener());
         return new StCompiler(group, outputStreamFactory);
     }
 }

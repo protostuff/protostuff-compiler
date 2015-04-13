@@ -2,16 +2,25 @@ syntax = "proto3";
 
 package test.nested_messages;
 
+option java_package = "io.protostuff.compiler.test.nested_messages";
+option (google.protobuf.objectivec_file_options).class_prefix = "LV2";
+
 message A {
+    int32 a = 1;
     message B {
+        int32 b = 1;
         message C {
+            int32 c = 1;
             message D {
+                int32 d = 1;
                 enum E {
+                    X = 0;
                 }
             }
         }
     }
 }
 
-enum E1 {
+enum E {
+    X = 0;
 }

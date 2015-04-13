@@ -7,6 +7,8 @@ import com.google.common.base.MoreObjects;
  */
 public class MessageField extends AbstractDescriptor {
 
+    public static final int MAX_TAG_VALUE = (1 << 29) - 1;
+
     protected String typeName;
     protected FieldType type;
     protected int tag;
