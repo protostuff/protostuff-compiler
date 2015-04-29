@@ -44,10 +44,10 @@ public class NestedMessagesIT {
         assertFalse(a.isNested());
         assertTrue(a.getParent() == proto);
 
-        io.protostuff.compiler.model.Enum e1 = proto.getEnum("E1");
+        io.protostuff.compiler.model.Enum e1 = proto.getEnum("E");
         assertNotNull(e1);
-        assertEquals("E1", e1.getName());
-        assertEquals(".test.nested_messages.E1", e1.getFullName());
+        assertEquals("E", e1.getName());
+        assertEquals(".test.nested_messages.E", e1.getFullName());
         assertTrue(proto == e1.getProto());
         assertFalse(e1.isNested());
         assertTrue(e1.getParent() == proto);
