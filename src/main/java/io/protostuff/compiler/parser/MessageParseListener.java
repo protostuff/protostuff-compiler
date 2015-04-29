@@ -41,7 +41,7 @@ public class MessageParseListener extends ProtoParserBaseListener {
         MessageField messageField = context.pop(MessageField.class);
         Message message = context.peek(Message.class);
         String name = ctx.NAME().getText();
-        String type = ctx.fieldType().getText();
+        String type = ctx.typeReference().getText();
         Integer tag = Integer.decode(ctx.INTEGER_VALUE().getText());
         messageField.setName(name);
         messageField.setTag(tag);

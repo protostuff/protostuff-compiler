@@ -30,6 +30,9 @@ RETURNS
 REPEATED
     : 'repeated'
     ;
+EXTEND
+    : 'extend'
+    ;
 COMMENT
     : '/*' .*? '*/' -> skip
     ;

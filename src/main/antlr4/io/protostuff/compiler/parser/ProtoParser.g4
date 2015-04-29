@@ -38,6 +38,12 @@ enumBlockEntry
 enumConstant
     : NAME ASSIGN INTEGER_VALUE fieldOptions? SEMICOLON
     ;
+extendBlock
+    : EXTEND typeReference LCURLY extendBlockEntry* RCURLY
+    ;
+extendBlockEntry
+    : typeReference NAME ASSIGN INTEGER_VALUE fieldOptions? SEMICOLON
+    ;
 messageBlock
     : MESSAGE NAME LCURLY messageBlockEntry* RCURLY
     ;
@@ -48,9 +54,9 @@ messageBlockEntry
     | enumBlock
     ;
 messageField
-    : fieldType NAME ASSIGN INTEGER_VALUE fieldOptions? SEMICOLON
+    : typeReference NAME ASSIGN INTEGER_VALUE fieldOptions? SEMICOLON
     ;
-fieldType
+typeReference
     : DOT? declarationRef
     ;
 fieldOptions
