@@ -1,5 +1,6 @@
 package io.protostuff.compiler.model;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -11,6 +12,7 @@ public abstract class AbstractUserTypeContainer extends AbstractDescriptor imple
 
     protected List<Message> messages;
     protected List<Enum> enums;
+    protected List<Extension> extensions;
 
     @Override
     public List<Message> getMessages() {
@@ -48,4 +50,19 @@ public abstract class AbstractUserTypeContainer extends AbstractDescriptor imple
         enums.add(e);
     }
 
+    @Override
+    public List<Extension> getExtensions() {
+        if (extensions == null) {
+            return Collections.emptyList();
+        }
+        return extensions;
+    }
+
+    @Override
+    public void addExtension(Extension extension) {
+        if (extensions == null) {
+            extensions = new ArrayList<>();
+        }
+        extensions.add(extension);
+    }
 }

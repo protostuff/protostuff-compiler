@@ -32,12 +32,12 @@ public class FileDescriptorLoaderImpl implements FileDescriptorLoader {
 
         registerUserTypes(context);
 
-        resolveFieldTypes(context);
+        resolveTypeReferences(context);
 
         return context;
     }
 
-    private void resolveFieldTypes(ProtoContext context) {
+    private void resolveTypeReferences(ProtoContext context) {
         Deque<String> scopeLookupList = new ArrayDeque<>();
         String root = ".";
         scopeLookupList.add(root);
@@ -51,44 +51,69 @@ public class FileDescriptorLoaderImpl implements FileDescriptorLoader {
                 root = nextRoot;
             }
         }
-        resolveFieldTypes(context, scopeLookupList, proto);
+        resolveTypeReferences(context, scopeLookupList, proto);
 
     }
 
-    private void resolveFieldTypes(ProtoContext context, Deque<String> scopeLookupList, MessageContainer container) {
+    private void resolveTypeReferences(ProtoContext context, Deque<String> scopeLookupList, UserTypeContainer container) {
+        for (Extension extension : container.getExtensions()) {
+            String extendeeName = extension.getExtendeeName();
+            UserType type = resolveUserTypeReference(context, scopeLookupList, extendeeName);
+            if (!(type instanceof Message)) {
+                throw new ParserException("Can not extend %s: not a message", type.getFullName());
+            }
+            Message extendee = (Message) type;
+            extension.setExtendee(extendee);
+
+            String typeName = extension.getTypeName();
+            FieldType fieldType = resolveTypeReference(context, scopeLookupList, typeName);
+            extension.setType(fieldType);
+        }
+
         for (Message message : container.getMessages()) {
             String root = scopeLookupList.peek();
             scopeLookupList.push(root + message.getName() + ".");
-            for (MessageField field : message.getFields()) {
+            for (Field field : message.getFields()) {
                 String typeName = field.getTypeName();
-                ScalarFieldType scalarFieldType = ScalarFieldType.getByName(typeName);
-                if (scalarFieldType != null) {
-                    field.setType(scalarFieldType);
-                } else if (typeName.startsWith(".")) {
-                    FieldType type = context.resolve(typeName);
-                    if (type != null) {
-                        field.setType(type);
-                    }
-                } else {
-                    for (String scope : scopeLookupList) {
-                        String fullTypeName = scope + typeName;
-                        FieldType type = context.resolve(fullTypeName);
-                        if (type != null) {
-                            field.setType(type);
-                            break;
-                        }
-                    }
-                }
-                if (field.getType() == null) {
-                    String format = "Unresolved reference: '%s %s' in %s";
-                    String fieldName = field.getName();
-                    String messageName = message.getFullName();
-                    throw new ParserException(format, typeName, fieldName, messageName);
-                }
+                FieldType fieldType = resolveTypeReference(context, scopeLookupList, typeName);
+                field.setType(fieldType);
             }
-            resolveFieldTypes(context, scopeLookupList, message);
+            resolveTypeReferences(context, scopeLookupList, message);
             scopeLookupList.pop();
         }
+    }
+
+    private FieldType resolveTypeReference(ProtoContext context, Deque<String> scopeLookupList, String typeName) {
+        ScalarFieldType scalarFieldType = ScalarFieldType.getByName(typeName);
+        if (scalarFieldType != null) {
+            return scalarFieldType;
+        } else {
+            return resolveUserTypeReference(context, scopeLookupList, typeName);
+        }
+    }
+
+    private UserType resolveUserTypeReference(ProtoContext context, Deque<String> scopeLookupList, String typeName) {
+        UserType fieldType = null;
+        if (typeName.startsWith(".")) {
+            UserType type = context.resolve(typeName);
+            if (type != null) {
+                fieldType = type;
+            }
+        } else {
+            for (String scope : scopeLookupList) {
+                String fullTypeName = scope + typeName;
+                UserType type = context.resolve(fullTypeName);
+                if (type != null) {
+                    fieldType = type;
+                    break;
+                }
+            }
+        }
+        if (fieldType == null) {
+            String format = "Unresolved reference: '%s'";
+            throw new ParserException(format, typeName);
+        }
+        return fieldType;
     }
 
     private void registerUserTypes(ProtoContext context) {

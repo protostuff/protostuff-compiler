@@ -5,7 +5,7 @@ import com.google.common.base.MoreObjects;
 /**
  * @author Kostiantyn Shchepanovskyi
  */
-public class MessageField extends AbstractDescriptor {
+public class Field extends AbstractDescriptor {
 
     public static final int MAX_TAG_VALUE = (1 << 29) - 1;
 
@@ -15,7 +15,11 @@ public class MessageField extends AbstractDescriptor {
     protected int tag;
 
     public FieldModifier getModifier() {
-        return modifier;
+        return modifier == null ? FieldModifier.DEFAULT : modifier;
+    }
+
+    public boolean hasModifier() {
+        return modifier != null;
     }
 
     public void setModifier(FieldModifier modifier) {
@@ -53,7 +57,6 @@ public class MessageField extends AbstractDescriptor {
                 .add("name", name)
                 .add("modifier", modifier)
                 .add("typeName", typeName)
-                .add("type", type.getReference())
                 .add("tag", tag)
                 .add("options", options)
                 .toString();

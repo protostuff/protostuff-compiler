@@ -76,7 +76,7 @@ public class ProtoContext {
         return proto;
     }
 
-    public FieldType resolve(String typeName) {
+    public UserType resolve(String typeName) {
         return symbolTable.get(typeName);
     }
 }

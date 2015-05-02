@@ -4,13 +4,10 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import io.protostuff.compiler.ParserModule;
 import io.protostuff.compiler.model.Message;
-import io.protostuff.compiler.model.MessageField;
+import io.protostuff.compiler.model.Field;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.Arrays;
-import java.util.Collections;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -38,7 +35,7 @@ public class NameResolutionIT {
     }
 
     private void checkFieldType(Message a, String field, String fieldType) {
-        MessageField c0 = a.getField(field);
+        Field c0 = a.getField(field);
         Assert.assertNotNull(c0);
         Assert.assertEquals(field, fieldType, c0.getType().getReference());
     }

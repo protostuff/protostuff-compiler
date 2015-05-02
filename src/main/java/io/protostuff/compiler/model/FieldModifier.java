@@ -1,36 +1,24 @@
 package io.protostuff.compiler.model;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 /**
  * @author Kostiantyn Shchepanovskyi
  */
 public enum FieldModifier {
 
-    OPTIONAL("optional"),
-    REQUIRED("required"),
-    REPEATED("repeated");
+    OPTIONAL,
+    REQUIRED,
+    REPEATED;
 
     public static final FieldModifier DEFAULT = OPTIONAL;
 
-    private final String value;
+    private final String text;
 
-    FieldModifier(String value) {
-        this.value = value;
-    }
-
-    public static FieldModifier parse(String s) {
-        checkNotNull(s, "Can not parse field modifier from 'null'");
-        for (FieldModifier m : values()) {
-            if (m.value.equals(s)) {
-                return m;
-            }
-        }
-        throw new IllegalArgumentException("Unknown field modifier: " + s);
+    FieldModifier() {
+        text = super.toString().toLowerCase();
     }
 
     @Override
     public String toString() {
-        return value;
+        return text;
     }
 }

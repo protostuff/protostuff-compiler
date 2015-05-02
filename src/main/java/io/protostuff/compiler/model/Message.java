@@ -13,24 +13,24 @@ import java.util.List;
  */
 public class Message extends AbstractUserTypeContainer implements UserType, UserTypeContainer {
 
-    protected List<MessageField> fields;
+    protected List<Field> fields;
     protected Proto proto;
     protected String fullName;
     protected boolean nested;
     protected UserTypeContainer parent;
 
-    public List<MessageField> getFields() {
+    public List<Field> getFields() {
         if (fields == null) {
             return Collections.emptyList();
         }
         return fields;
     }
 
-    public void setFields(List<MessageField> fields) {
+    public void setFields(List<Field> fields) {
         this.fields = fields;
     }
 
-    public void addField(MessageField field) {
+    public void addField(Field field) {
         if (fields == null) {
             fields = new ArrayList<>();
         }
@@ -38,8 +38,8 @@ public class Message extends AbstractUserTypeContainer implements UserType, User
     }
 
     @Nullable
-    public MessageField getField(String name) {
-        for (MessageField field : getFields()) {
+    public Field getField(String name) {
+        for (Field field : getFields()) {
             if (name.equals(field.getName())) {
                 return field;
             }

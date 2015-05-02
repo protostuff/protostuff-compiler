@@ -13,37 +13,6 @@ import static org.junit.Assert.assertEquals;
  */
 public class FieldModifierTest {
 
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
-
-    @Test
-    public void testParse_optional() throws Exception {
-        assertEquals(OPTIONAL, FieldModifier.parse("optional"));
-    }
-
-    @Test
-    public void testParse_required() throws Exception {
-        assertEquals(REQUIRED, FieldModifier.parse("required"));
-    }
-
-    @Test
-    public void testParse_repeated() throws Exception {
-        assertEquals(REPEATED, FieldModifier.parse("repeated"));
-    }
-
-    @Test
-    public void testParse_unknown() throws Exception {
-        thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("unknown");
-        FieldModifier.parse("unknown");
-    }
-
-    @Test
-    public void testParse_null() throws Exception {
-        thrown.expect(NullPointerException.class);
-        FieldModifier.parse(null);
-    }
-
     @Test
     public void testToString() throws Exception {
         Assert.assertEquals("optional", OPTIONAL.toString());

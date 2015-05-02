@@ -1,9 +1,6 @@
 package io.protostuff.compiler.parser;
 
-import io.protostuff.compiler.model.AbstractUserTypeContainer;
-import io.protostuff.compiler.model.FieldModifier;
-import io.protostuff.compiler.model.Message;
-import io.protostuff.compiler.model.MessageField;
+import io.protostuff.compiler.model.*;
 
 import static io.protostuff.compiler.model.FieldModifier.OPTIONAL;
 import static io.protostuff.compiler.model.FieldModifier.REPEATED;
@@ -37,34 +34,69 @@ public class MessageParseListener extends ProtoParserBaseListener {
 
     @Override
     public void enterMessageField(ProtoParser.MessageFieldContext ctx) {
-        MessageField messageField = new MessageField();
-        context.push(messageField);
+        Field field = new Field();
+        context.push(field);
     }
 
     @Override
     public void exitMessageField(ProtoParser.MessageFieldContext ctx) {
-        MessageField messageField = context.pop(MessageField.class);
+        Field field = context.pop(Field.class);
         Message message = context.peek(Message.class);
-        String name = ctx.fieldName().getText();
+        String name = ctx.name().getText();
         String type = ctx.typeReference().getText();
         Integer tag = Integer.decode(ctx.INTEGER_VALUE().getText());
-        FieldModifier modifier = FieldModifier.DEFAULT;
-        ProtoParser.FieldModifierContext modifierContext = ctx.fieldModifier();
+        updateModifier(ctx.fieldModifier(), field);
+        field.setName(name);
+        field.setTag(tag);
+        field.setTypeName(type);
+        message.addField(field);
+    }
+
+    @Override
+    public void enterExtendBlock(ProtoParser.ExtendBlockContext ctx) {
+    }
+
+    @Override
+    public void exitExtendBlock(ProtoParser.ExtendBlockContext ctx) {
+
+    }
+
+    @Override
+    public void enterExtendBlockEntry(ProtoParser.ExtendBlockEntryContext ctx) {
+        Extension extension = new Extension();
+        context.push(extension);
+    }
+
+    @Override
+    public void exitExtendBlockEntry(ProtoParser.ExtendBlockEntryContext ctx) {
+        Extension extension = context.pop(Extension.class);
+        ProtoParser.ExtendBlockContext extendBlockContext =
+                (ProtoParser.ExtendBlockContext) ctx.getParent();
+        String extendeeName = extendBlockContext.typeReference().getText();
+
+        ExtensionContainer extensionContainer = context.peek(AbstractUserTypeContainer.class);
+        String name = ctx.name().getText();
+        String type = ctx.typeReference().getText();
+        Integer tag = Integer.decode(ctx.INTEGER_VALUE().getText());
+        updateModifier(ctx.fieldModifier(), extension);
+        extension.setExtendeeName(extendeeName);
+        extension.setName(name);
+        extension.setTag(tag);
+        extension.setTypeName(type);
+        extensionContainer.addExtension(extension);
+    }
+
+    private void updateModifier(ProtoParser.FieldModifierContext modifierContext, Field field) {
         if (modifierContext != null) {
             if (modifierContext.OPTIONAL() != null) {
-                modifier = OPTIONAL;
+                field.setModifier(OPTIONAL);
             } else if (modifierContext.REQUIRED() != null) {
-                modifier = REQUIRED;
+                field.setModifier(REQUIRED);
             } else if (modifierContext.REPEATED() != null) {
-                modifier = REPEATED;
+                field.setModifier(REPEATED);
             } else {
                 throw new IllegalStateException("not implemented");
             }
         }
-        messageField.setName(name);
-        messageField.setTag(tag);
-        messageField.setTypeName(type);
-        messageField.setModifier(modifier);
-        message.addField(messageField);
     }
 }

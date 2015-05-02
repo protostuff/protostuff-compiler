@@ -18,6 +18,7 @@ statement
     | optionEntry
     | enumBlock
     | messageBlock
+    | extendBlock
     ;
 packageStatement
     : PACKAGE declarationRef SEMICOLON
@@ -42,7 +43,7 @@ extendBlock
     : EXTEND typeReference LCURLY extendBlockEntry* RCURLY SEMICOLON?
     ;
 extendBlockEntry
-    : typeReference NAME ASSIGN INTEGER_VALUE fieldOptions? SEMICOLON
+    : fieldModifier? typeReference name ASSIGN INTEGER_VALUE fieldOptions? SEMICOLON
     ;
 messageBlock
     : MESSAGE NAME LCURLY messageBlockEntry* RCURLY SEMICOLON?
@@ -53,19 +54,13 @@ messageBlockEntry
     | messageBlock
     | enumBlock
     | messageExtensions
+    | extendBlock
     ;
 messageExtensions
     : EXTENSIONS INTEGER_VALUE TO (INTEGER_VALUE | MAX) SEMICOLON
     ;
 messageField
-    : fieldModifier? typeReference fieldName ASSIGN INTEGER_VALUE fieldOptions? SEMICOLON
-    ;
-fieldName
-    : NAME
-    | PACKAGE
-    | SERVICE
-    | EXTENSION
-    | SYNTAX
+    : fieldModifier? typeReference name ASSIGN INTEGER_VALUE fieldOptions? SEMICOLON
     ;
 fieldModifier
     : OPTIONAL
@@ -89,7 +84,7 @@ customOptionName
     : LPAREN declarationRef RPAREN (DOT declarationRef)?
     ;
 declarationRef
-    : NAME (DOT NAME)*
+    : name (DOT name)*
     ;
 optionValue
     : INTEGER_VALUE
@@ -103,4 +98,13 @@ textFormat
     ;
 textFormatEntry
     : NAME COLON optionValue
+    ;
+name
+    : NAME
+    | PACKAGE
+    | SERVICE
+    | EXTEND
+    | EXTENSIONS
+    | TO
+    | SYNTAX
     ;

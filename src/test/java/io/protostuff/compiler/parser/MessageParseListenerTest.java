@@ -2,7 +2,7 @@ package io.protostuff.compiler.parser;
 
 import com.google.common.base.Joiner;
 import io.protostuff.compiler.model.Message;
-import io.protostuff.compiler.model.MessageField;
+import io.protostuff.compiler.model.Field;
 import io.protostuff.compiler.model.Proto;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CharStream;
@@ -48,7 +48,7 @@ public class MessageParseListenerTest {
         Message message = parseMessage(SIMPLE_MESSAGE);
         assertEquals("A", message.getName());
         assertEquals(1, message.getFields().size());
-        MessageField field = message.getFields().get(0);
+        Field field = message.getFields().get(0);
         assertEquals("int32", field.getTypeName());
         assertEquals("x", field.getName());
         assertEquals(1, field.getTag());
@@ -69,7 +69,7 @@ public class MessageParseListenerTest {
         Message message = parseMessage(SIMPLE_MESSAGE);
         assertEquals("A", message.getName());
         assertEquals(1, message.getFields().size());
-        MessageField field = message.getFields().get(0);
+        Field field = message.getFields().get(0);
         assertEquals("int32", field.getTypeName());
         assertEquals("x", field.getName());
         assertEquals(1, field.getTag());
