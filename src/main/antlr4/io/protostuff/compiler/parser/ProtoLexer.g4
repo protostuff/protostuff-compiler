@@ -15,6 +15,27 @@ OPTION
 MESSAGE
     : 'message'
     ;
+OPTIONAL
+    : 'optional'
+    ;
+REQUIRED
+    : 'required'
+    ;
+REPEATED
+    : 'repeated'
+    ;
+EXTEND
+    : 'extend'
+    ;
+EXTENSIONS
+    : 'extensions'
+    ;
+TO
+    : 'to'
+    ;
+MAX
+    : 'max'
+    ;
 ENUM
     : 'enum'
     ;
@@ -26,12 +47,6 @@ RPC
     ;
 RETURNS
     : 'returns'
-    ;
-REPEATED
-    : 'repeated'
-    ;
-EXTEND
-    : 'extend'
     ;
 COMMENT
     : '/*' .*? '*/' -> skip

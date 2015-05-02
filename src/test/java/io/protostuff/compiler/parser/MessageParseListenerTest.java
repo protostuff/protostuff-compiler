@@ -9,7 +9,11 @@ import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.junit.Test;
 
+import static io.protostuff.compiler.model.FieldModifier.OPTIONAL;
+import static io.protostuff.compiler.model.FieldModifier.REPEATED;
+import static io.protostuff.compiler.model.FieldModifier.REQUIRED;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -19,6 +23,14 @@ public class MessageParseListenerTest {
     public static final String SIMPLE_MESSAGE = Joiner.on('\n').join(
             "message A {",
             "  int32 x = 1;",
+            "}"
+    );
+
+    public static final String MESSAGE_WITH_MODIFIERS = Joiner.on('\n').join(
+            "message A {",
+            "  optional int32 x = 1;",
+            "  required int32 y = 2;",
+            "  repeated int32 z = 3;",
             "}"
     );
 
@@ -33,7 +45,28 @@ public class MessageParseListenerTest {
 
     @Test
     public void parseSimpleMessage() throws Exception {
-        Message message = parseMessages(SIMPLE_MESSAGE);
+        Message message = parseMessage(SIMPLE_MESSAGE);
+        assertEquals("A", message.getName());
+        assertEquals(1, message.getFields().size());
+        MessageField field = message.getFields().get(0);
+        assertEquals("int32", field.getTypeName());
+        assertEquals("x", field.getName());
+        assertEquals(1, field.getTag());
+        assertEquals(OPTIONAL, field.getModifier());
+    }
+
+    @Test
+    @SuppressWarnings("ConstantConditions")
+    public void modifiers() throws Exception {
+        Message message = parseMessage(MESSAGE_WITH_MODIFIERS);
+        assertEquals(OPTIONAL, message.getField("x").getModifier());
+        assertEquals(REQUIRED, message.getField("y").getModifier());
+        assertEquals(REPEATED, message.getField("z").getModifier());
+    }
+
+    @Test
+    public void parseMessageWithFieldModifiers() throws Exception {
+        Message message = parseMessage(SIMPLE_MESSAGE);
         assertEquals("A", message.getName());
         assertEquals(1, message.getFields().size());
         MessageField field = message.getFields().get(0);
@@ -44,11 +77,11 @@ public class MessageParseListenerTest {
 
     @Test
     public void parseEmbeddedMessage() throws Exception {
-        Message message = parseMessages(EMBEDDED_MESSAGE);
+        Message message = parseMessage(EMBEDDED_MESSAGE);
         System.out.println(message);
     }
 
-    private Message parseMessages(String input) {
+    private Message parseMessage(String input) {
         CharStream stream = new ANTLRInputStream(input);
         ProtoLexer lexer = new ProtoLexer(stream);
         lexer.removeErrorListeners();

@@ -9,9 +9,18 @@ public class MessageField extends AbstractDescriptor {
 
     public static final int MAX_TAG_VALUE = (1 << 29) - 1;
 
+    protected FieldModifier modifier;
     protected String typeName;
     protected FieldType type;
     protected int tag;
+
+    public FieldModifier getModifier() {
+        return modifier;
+    }
+
+    public void setModifier(FieldModifier modifier) {
+        this.modifier = modifier;
+    }
 
     public String getTypeName() {
         return typeName;
@@ -42,8 +51,9 @@ public class MessageField extends AbstractDescriptor {
         return MoreObjects.toStringHelper(this)
                 .omitNullValues()
                 .add("name", name)
+                .add("modifier", modifier)
                 .add("typeName", typeName)
-                .add("type", type)
+                .add("type", type.getReference())
                 .add("tag", tag)
                 .add("options", options)
                 .toString();

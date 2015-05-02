@@ -29,7 +29,7 @@ optionEntry
     : OPTION option SEMICOLON
     ;
 enumBlock
-    : ENUM NAME LCURLY enumBlockEntry* RCURLY
+    : ENUM NAME LCURLY enumBlockEntry* RCURLY SEMICOLON?
     ;
 enumBlockEntry
     : enumConstant
@@ -39,22 +39,38 @@ enumConstant
     : NAME ASSIGN INTEGER_VALUE fieldOptions? SEMICOLON
     ;
 extendBlock
-    : EXTEND typeReference LCURLY extendBlockEntry* RCURLY
+    : EXTEND typeReference LCURLY extendBlockEntry* RCURLY SEMICOLON?
     ;
 extendBlockEntry
     : typeReference NAME ASSIGN INTEGER_VALUE fieldOptions? SEMICOLON
     ;
 messageBlock
-    : MESSAGE NAME LCURLY messageBlockEntry* RCURLY
+    : MESSAGE NAME LCURLY messageBlockEntry* RCURLY SEMICOLON?
     ;
 messageBlockEntry
     : messageField
     | optionEntry
     | messageBlock
     | enumBlock
+    | messageExtensions
+    ;
+messageExtensions
+    : EXTENSIONS INTEGER_VALUE TO (INTEGER_VALUE | MAX) SEMICOLON
     ;
 messageField
-    : typeReference NAME ASSIGN INTEGER_VALUE fieldOptions? SEMICOLON
+    : fieldModifier? typeReference fieldName ASSIGN INTEGER_VALUE fieldOptions? SEMICOLON
+    ;
+fieldName
+    : NAME
+    | PACKAGE
+    | SERVICE
+    | EXTENSION
+    | SYNTAX
+    ;
+fieldModifier
+    : OPTIONAL
+    | REQUIRED
+    | REPEATED
     ;
 typeReference
     : DOT? declarationRef
