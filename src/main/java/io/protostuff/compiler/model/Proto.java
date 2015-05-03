@@ -15,6 +15,8 @@ public class Proto extends AbstractUserTypeContainer implements UserTypeContaine
     protected String syntax;
     protected String packageName;
     protected List<String> imports;
+    protected List<String> publicImports;
+    protected List<Service> services;
 
     /**
      * file name, relative to root of source tree
@@ -63,6 +65,42 @@ public class Proto extends AbstractUserTypeContainer implements UserTypeContaine
             imports = new ArrayList<>();
         }
         imports.add(file);
+    }
+
+    public List<String> getPublicImports() {
+        if (publicImports == null) {
+            return Collections.emptyList();
+        }
+        return publicImports;
+    }
+
+    public void setPublicImports(List<String> publicImports) {
+        this.publicImports = publicImports;
+    }
+
+    public void addPublicImport(String file) {
+        if (publicImports == null) {
+            publicImports = new ArrayList<>();
+        }
+        publicImports.add(file);
+    }
+
+    public List<Service> getServices() {
+        if (services == null) {
+            return Collections.emptyList();
+        }
+        return services;
+    }
+
+    public void setServices(List<Service> services) {
+        this.services = services;
+    }
+
+    public void addService(Service service) {
+        if (services == null) {
+            services = new ArrayList<>();
+        }
+        services.add(service);
     }
 
     @Override

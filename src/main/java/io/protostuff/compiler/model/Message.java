@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * @author Kostiantyn Shchepanovskyi
  */
-public class Message extends AbstractUserTypeContainer implements UserType, UserTypeContainer {
+public class Message extends AbstractUserTypeContainer implements UserFieldType, UserTypeContainer {
 
     protected List<Field> fields;
     protected Proto proto;

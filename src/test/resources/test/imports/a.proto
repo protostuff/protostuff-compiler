@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package test.imports;
+
+import "test/imports/b.proto";
+
+message A {
+    B b = 1;
+    C c = 1;
+}

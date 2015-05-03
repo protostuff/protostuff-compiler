@@ -33,6 +33,10 @@ public class ProtoParseListener extends ProtoParserBaseListener {
         Proto proto = context.peek(Proto.class);
         String text = ctx.STRING_VALUE().getText();
         String fileName = Util.removeQuotes(text);
-        proto.addImport(fileName);
+        if (ctx.PUBLIC() == null) {
+            proto.addImport(fileName);
+        } else {
+            proto.addPublicImport(fileName);
+        }
     }
 }

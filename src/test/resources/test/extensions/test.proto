@@ -1,15 +1,30 @@
-syntax = "proto3";
+syntax = "proto2";
 
 package test.extensions;
 
 option java_package = "io.protostuff.parser";
 
 message A {
-    optional int32 x = 1;
+    optional int32 ax = 1;
 
     extensions 10 to max;
+
+    message B {
+        optional int32 bx = 1;
+
+        extensions 10 to 1000;
+    }
+
+    extend B {
+        optional int32 by = 10;
+    }
 }
 
 extend A {
-    optional int32 y = 10;
+    optional int32 ay = 10;
+    optional int32 az = 11;
+}
+
+extend A.B {
+    optional int32 bz = 11;
 }

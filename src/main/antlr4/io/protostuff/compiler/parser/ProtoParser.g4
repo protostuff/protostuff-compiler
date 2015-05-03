@@ -19,12 +19,13 @@ statement
     | enumBlock
     | messageBlock
     | extendBlock
+    | serviceBlock
     ;
 packageStatement
     : PACKAGE declarationRef SEMICOLON
     ;
 importStatement
-    : IMPORT STRING_VALUE SEMICOLON
+    : IMPORT PUBLIC? STRING_VALUE SEMICOLON
     ;
 optionEntry
     : OPTION option SEMICOLON
@@ -44,6 +45,19 @@ extendBlock
     ;
 extendBlockEntry
     : fieldModifier? typeReference name ASSIGN INTEGER_VALUE fieldOptions? SEMICOLON
+    ;
+serviceBlock
+    : SERVICE name LCURLY serviceBlockEntry* RCURLY SEMICOLON?
+    ;
+serviceBlockEntry
+    : rpcMethod
+    | optionEntry
+    ;
+rpcMethod
+    : RPC name LPAREN typeReference RPAREN RETURNS LPAREN typeReference RPAREN rpcMethodOptions? SEMICOLON?
+    ;
+rpcMethodOptions
+    : LCURLY optionEntry* RCURLY
     ;
 messageBlock
     : MESSAGE NAME LCURLY messageBlockEntry* RCURLY SEMICOLON?

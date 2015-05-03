@@ -3,7 +3,7 @@ package io.protostuff.compiler.model;
 /**
  * @author Kostiantyn Shchepanovskyi
  */
-public class AbstractUserType extends AbstractDescriptor implements UserType {
+public class AbstractUserFieldType extends AbstractDescriptor implements UserFieldType {
 
     protected Proto proto;
     protected String fullName;

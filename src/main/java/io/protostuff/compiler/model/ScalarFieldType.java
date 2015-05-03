@@ -9,47 +9,40 @@ import java.util.Map;
  *
  * @author Kostiantyn Shchepanovskyi
  */
-public interface ScalarFieldType extends FieldType {
+public enum ScalarFieldType implements FieldType {
 
-    enum Holder implements ScalarFieldType {
+    INT32,
+    INT64,
+    UINT32,
+    UINT64,
+    SINT32,
+    SINT64,
+    FIXED32,
+    FIXED64,
+    SFIXED32,
+    SFIXED64,
+    FLOAT,
+    DOUBLE,
+    BOOL,
+    STRING,
+    BYTES;
 
-        INT32,
-        INT64,
-        UINT32,
-        UINT64,
-        SINT32,
-        SINT64,
-        FIXED32,
-        FIXED64,
-        SFIXED32,
-        SFIXED64,
-        FLOAT,
-        DOUBLE,
-        BOOL,
-        STRING,
-        BYTES;
+    private static Map<String, ScalarFieldType> map = new HashMap<>();
 
-        private static Map<String, ScalarFieldType> map = new HashMap<>();
-
-        static {
-            for (ScalarFieldType type : values()) {
-                map.put(type.getReference(), type);
-            }
+    static {
+        for (ScalarFieldType type : values()) {
+            map.put(type.getReference(), type);
         }
+    }
 
-        @Override
-        public String getReference() {
-            return name().toLowerCase();
-        }
+    @Override
+    public String getName() {
+        return name().toLowerCase();
+    }
 
-        static ScalarFieldType getByName(String name) {
-            return map.get(name);
-        }
-
-        @Override
-        public String toString() {
-            return getReference();
-        }
+    @Override
+    public String getReference() {
+        return name().toLowerCase();
     }
 
     /**
@@ -73,8 +66,8 @@ public interface ScalarFieldType extends FieldType {
      *     <li>{@code bytes}</li>
      * </ol>
      */
-    static ScalarFieldType getByName(String name) {
-        return Holder.getByName(name);
+    public static ScalarFieldType getByName(String name) {
+        return map.get(name);
     }
 
 }

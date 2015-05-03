@@ -32,6 +32,7 @@ public class ParserModule extends AbstractModule {
         bind(FileDescriptorLoader.class).to(FileDescriptorLoaderImpl.class);
         bind(ANTLRErrorListener.class).to(ParseErrorLogger.class);
         bind(ANTLRErrorStrategy.class).to(BailErrorStrategy.class);
+        bind(ExtensionRegistry.class).to(LocalExtensionRegistry.class);
     }
 
     @Provides

@@ -9,6 +9,9 @@ SYNTAX
 IMPORT
     : 'import'
     ;
+PUBLIC
+    : 'public'
+    ;
 OPTION
     : 'option'
     ;

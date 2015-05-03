@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * @author Kostiantyn Shchepanovskyi
  */
-public class Enum extends AbstractUserType {
+public class Enum extends AbstractUserFieldType {
 
     protected List<EnumConstant> values;
 

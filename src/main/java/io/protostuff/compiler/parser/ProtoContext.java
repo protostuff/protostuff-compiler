@@ -1,33 +1,33 @@
 package io.protostuff.compiler.parser;
 
-import io.protostuff.compiler.model.AbstractDescriptor;
-import io.protostuff.compiler.model.FieldType;
-import io.protostuff.compiler.model.Proto;
-import io.protostuff.compiler.model.UserType;
+import io.protostuff.compiler.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nullable;
-import java.util.ArrayDeque;
-import java.util.Deque;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Kostiantyn Shchepanovskyi
  */
-public class ProtoContext {
+public class ProtoContext implements ExtensionRegistry {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ProtoContext.class);
 
-    private final Map<String, UserType> symbolTable;
+    private final Map<String, Type> symbolTable;
     private final Deque<AbstractDescriptor> declarationStack;
-
     private final Proto proto;
+    private final ExtensionRegistry localExtensionRegistry;
+    private final List<ProtoContext> imports;
+    private final List<ProtoContext> publicImports;
+
+    private boolean initialized;
 
     public ProtoContext(String name) {
+        localExtensionRegistry = new LocalExtensionRegistry();
         symbolTable = new HashMap<>();
         declarationStack = new ArrayDeque<>();
+        imports = new ArrayList<>();
+        publicImports = new ArrayList<>();
         proto = new Proto();
         proto.setName(name);
         push(proto);
@@ -58,7 +58,7 @@ public class ProtoContext {
     /**
      * Register user type in symbol table. Full name should start with ".".
      */
-    public void register(String fullName, UserType type) {
+    public void register(String fullName, Type type) {
         if (symbolTable.containsKey(fullName)) {
             LOGGER.error("{} already registered", fullName);
         }
@@ -76,7 +76,89 @@ public class ProtoContext {
         return proto;
     }
 
-    public UserType resolve(String typeName) {
-        return symbolTable.get(typeName);
+    public <T extends Type> T resolve(String typeName, Class<T> clazz) {
+        Type instance = resolve(typeName);
+        if (instance == null) {
+            return null;
+        }
+        if (clazz.isAssignableFrom(instance.getClass())) {
+            return clazz.cast(instance);
+        } else {
+            throw new ParserException("Type error: %s of type %s can not be cast to %s",
+                    typeName, instance.getClass(), clazz);
+        }
+    }
+
+    public Type resolve(String typeName) {
+        Type local = symbolTable.get(typeName);
+        if (local != null) {
+            return local;
+        }
+        for (ProtoContext importedContext : publicImports) {
+            Type imported = importedContext.resolve(typeName);
+            if (imported != null) {
+                return imported;
+            }
+        }
+        for (ProtoContext importedContext : imports) {
+            Type imported = importedContext.resolveImport(typeName);
+            if (imported != null) {
+                return imported;
+            }
+        }
+        return null;
+    }
+
+    public Type resolveImport(String typeName) {
+        Type local = symbolTable.get(typeName);
+        if (local != null) {
+            return local;
+        }
+        for (ProtoContext importedContext : publicImports) {
+            Type imported = importedContext.resolveImport(typeName);
+            if (imported != null) {
+                return imported;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public void registerExtension(Extension extension) {
+        localExtensionRegistry.registerExtension(extension);
+    }
+
+    @Override
+    public Collection<Extension> getExtensions(String messageName) {
+        return localExtensionRegistry.getExtensions(messageName);
+    }
+
+    @Override
+    public Map<String, Extension> getExtensionMap(String messageName) {
+        return localExtensionRegistry.getExtensionMap(messageName);
+    }
+
+    public boolean isInitialized() {
+        return initialized;
+    }
+
+    public void setInitialized(boolean initialized) {
+        this.initialized = initialized;
+    }
+
+    public List<ProtoContext> getImports() {
+        return imports;
+    }
+
+    public void addImport(ProtoContext importedProto) {
+        imports.add(importedProto);
+    }
+
+    public List<ProtoContext> getPublicImports() {
+        return publicImports;
+    }
+
+    public void addPublicImport(ProtoContext importedProto) {
+        publicImports.add(importedProto);
     }
 }

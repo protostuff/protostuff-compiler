@@ -1,9 +1,15 @@
 package io.protostuff.compiler.model;
 
 /**
+ * Base interface for protocol buffers types that can be used as field type.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
-public interface FieldType {
+public interface FieldType extends Type {
+
+    @Override
+    String getName();
+
     /**
      * Type reference. For scalar types, it returns one of:
      *
@@ -28,5 +34,6 @@ public interface FieldType {
      * For messages, it is full massage name.
      * For enums, it is full enum name.
      */
+    @Override
     String getReference();
 }

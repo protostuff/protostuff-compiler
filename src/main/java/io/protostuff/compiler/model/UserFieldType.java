@@ -3,7 +3,7 @@ package io.protostuff.compiler.model;
 /**
  * @author Kostiantyn Shchepanovskyi
  */
-public interface UserType extends FieldType {
+public interface UserFieldType extends FieldType {
 
     /**
      * Short name. For example, {@code Baz}
@@ -29,12 +29,4 @@ public interface UserType extends FieldType {
 
     void setParent(UserTypeContainer parent);
 
-//    @Nullable
-//    Message getParentMessage();
-
-    /**
-     * Fully qualified name of a message/enum. Includes package, all parent messages chain and
-     * this message name. For example, {@code foo.bar.Message1.Baz}
-     */
-//    String getFullName();
 }
