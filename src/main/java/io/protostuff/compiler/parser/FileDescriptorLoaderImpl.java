@@ -110,9 +110,11 @@ public class FileDescriptorLoaderImpl implements FileDescriptorLoader {
             Message extendee = (Message) type;
             extension.setExtendee(extendee);
 
-            String typeName = extension.getTypeName();
-            FieldType fieldType = resolveFieldType(context, scopeLookupList, typeName);
-            extension.setType(fieldType);
+            for (Field field : extension.getFields()) {
+                String typeName = field.getTypeName();
+                FieldType fieldType = resolveFieldType(context, scopeLookupList, typeName);
+                field.setType(fieldType);
+            }
         }
 
         for (Message message : container.getMessages()) {

@@ -22,7 +22,10 @@ statement
     | serviceBlock
     ;
 packageStatement
-    : PACKAGE declarationRef SEMICOLON
+    : PACKAGE packageName SEMICOLON
+    ;
+packageName
+    : name (DOT name)*
     ;
 importStatement
     : IMPORT PUBLIC? STRING_VALUE SEMICOLON
@@ -44,7 +47,8 @@ extendBlock
     : EXTEND typeReference LCURLY extendBlockEntry* RCURLY SEMICOLON?
     ;
 extendBlockEntry
-    : fieldModifier? typeReference name ASSIGN INTEGER_VALUE fieldOptions? SEMICOLON
+    : field
+    | groupBlock
     ;
 serviceBlock
     : SERVICE name LCURLY serviceBlockEntry* RCURLY SEMICOLON?
@@ -54,7 +58,8 @@ serviceBlockEntry
     | optionEntry
     ;
 rpcMethod
-    : RPC name LPAREN typeReference RPAREN RETURNS LPAREN typeReference RPAREN rpcMethodOptions? SEMICOLON?
+    : RPC name LPAREN typeReference RPAREN 
+      RETURNS LPAREN typeReference RPAREN rpcMethodOptions? SEMICOLON?
     ;
 rpcMethodOptions
     : LCURLY optionEntry* RCURLY
@@ -63,17 +68,39 @@ messageBlock
     : MESSAGE NAME LCURLY messageBlockEntry* RCURLY SEMICOLON?
     ;
 messageBlockEntry
-    : messageField
+    : field
     | optionEntry
     | messageBlock
     | enumBlock
     | messageExtensions
     | extendBlock
+    | groupBlock
+    | oneof
+    ;
+oneof
+    : ONEOF name LCURLY oneofEntry* RCURLY SEMICOLON?
+    ;
+oneofEntry
+    : typeReference name ASSIGN INTEGER_VALUE fieldOptions? SEMICOLON
+    | GROUP name ASSIGN INTEGER_VALUE LCURLY groupBlockEntry* RCURLY SEMICOLON?
+    ;
+groupBlock
+    : fieldModifier GROUP name ASSIGN INTEGER_VALUE 
+      LCURLY groupBlockEntry* RCURLY SEMICOLON?
+    ;
+groupBlockEntry
+    : field
+    | optionEntry
+    | messageBlock
+    | enumBlock
+    | messageExtensions
+    | extendBlock
+    | groupBlock
     ;
 messageExtensions
-    : EXTENSIONS INTEGER_VALUE TO (INTEGER_VALUE | MAX) SEMICOLON
+    : EXTENSIONS INTEGER_VALUE (TO (INTEGER_VALUE | MAX))? SEMICOLON
     ;
-messageField
+field
     : fieldModifier? typeReference name ASSIGN INTEGER_VALUE fieldOptions? SEMICOLON
     ;
 fieldModifier
@@ -82,7 +109,7 @@ fieldModifier
     | REPEATED
     ;
 typeReference
-    : DOT? declarationRef
+    : DOT? name (DOT name)*
     ;
 fieldOptions
     : LSQUARE (option (COMMA option)* )? RSQUARE
@@ -91,17 +118,12 @@ option
     : optionName ASSIGN optionValue
     ;
 optionName
-    : NAME
-    | customOptionName
-    ;
-customOptionName
-    : LPAREN declarationRef RPAREN (DOT declarationRef)?
-    ;
-declarationRef
     : name (DOT name)*
+    | LPAREN typeReference RPAREN (DOT optionName)*    
     ;
 optionValue
     : INTEGER_VALUE
+    | FLOAT_VALUE
     | BOOLEAN_VALUE
     | STRING_VALUE
     | NAME
@@ -110,8 +132,20 @@ optionValue
 textFormat
     : LCURLY textFormatEntry* RCURLY
     ;
+textFormatOptionName
+    : name
+    | LSQUARE typeReference RSQUARE
+    ;
 textFormatEntry
-    : NAME COLON optionValue
+    : textFormatOptionName COLON textFormatOptionValue
+    | textFormatOptionName textFormat
+    ;
+textFormatOptionValue
+    : INTEGER_VALUE
+    | FLOAT_VALUE
+    | BOOLEAN_VALUE
+    | TEXTFORMAT_STRING_VALUE
+    | NAME
     ;
 name
     : NAME

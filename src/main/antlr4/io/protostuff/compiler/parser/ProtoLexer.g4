@@ -18,6 +18,9 @@ OPTION
 MESSAGE
     : 'message'
     ;
+GROUP
+    : 'group'
+    ;
 OPTIONAL
     : 'optional'
     ;
@@ -26,6 +29,9 @@ REQUIRED
     ;
 REPEATED
     : 'repeated'
+    ;
+ONEOF
+    : 'oneof'
     ;
 EXTEND
     : 'extend'
@@ -108,10 +114,36 @@ NAME
 STRING_VALUE
     : '"' ( ESC_SEQ | ~('\\'|'"') )* '"'
     ;
+TEXTFORMAT_STRING_VALUE
+    : '\'' ( ESC_SEQ | ~('\\'|'\'') )* '\''
+    ;
 INTEGER_VALUE
     : DEC_VALUE
     | HEX_VALUE
     | OCT_VALUE
+    ;
+FLOAT_VALUE
+    : EXPONENT
+    | FLOAT
+    | MINUS? INF
+    | NAN
+    ;
+fragment EXPONENT
+    : (FLOAT|DEC_VALUE) EXP DEC_VALUE
+    ;
+fragment FLOAT
+    : MINUS? DIGIT+ '.' DIGIT*     // "0.", "0.123"
+    | MINUS? '.' DIGIT+            // ".123"
+    ;
+fragment INF
+    : 'inf'
+    ;
+fragment NAN 
+    : 'nan'
+    ;
+fragment EXP
+    : 'e'
+    | 'E'
     ;
 fragment DEC_VALUE
     : '0' | MINUS? '1'..'9' '0'..'9'*
@@ -141,7 +173,7 @@ fragment UNDERSCORE
     : '_'
     ;
 fragment ESC_SEQ
-    :   '\\' ('a'|'v'|'b'|'t'|'n'|'f'|'r'|'\"'|'\''|'\\')
+    :   '\\' ('a'|'v'|'b'|'t'|'n'|'f'|'r'|'?'|'\"'|'\''|'\\')
     |   '\\' ('x'|'X') HEX_DIGIT HEX_DIGIT
     |   UNICODE_ESC
     |   OCTAL_ESC

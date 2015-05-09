@@ -24,7 +24,7 @@ public class ProtoParseListener extends ProtoParserBaseListener {
     @Override
     public void exitPackageStatement(ProtoParser.PackageStatementContext ctx) {
         Proto proto = context.peek(Proto.class);
-        String packageName = ctx.declarationRef().getText();
+        String packageName = ctx.packageName().getText();
         proto.setPackageName(packageName);
     }
 

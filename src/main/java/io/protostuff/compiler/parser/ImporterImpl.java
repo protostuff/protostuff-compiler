@@ -36,6 +36,9 @@ public class ImporterImpl implements Importer {
             throw new ParserException("Can not load proto: imports cycle found");
         }
         CharStream stream = reader.read(fileName);
+        if (stream == null) {
+            throw new ParserException("Can not load proto: %s not found", fileName);
+        }
         ProtoContext context = loader.load(fileName, stream);
         cachedImports.put(fileName, context);
         return context;

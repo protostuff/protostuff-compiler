@@ -26,22 +26,22 @@ public class MessageParseListener extends ProtoParserBaseListener {
     @Override
     public void exitMessageBlock(ProtoParser.MessageBlockContext ctx) {
         Message message = context.pop(Message.class);
-        AbstractUserTypeContainer messageParentBuilder = context.peek(AbstractUserTypeContainer.class);
+        MessageContainer container = context.peek(MessageContainer.class);
         String name = ctx.NAME().getText();
         message.setName(name);
-        messageParentBuilder.addMessage(message);
+        container.addMessage(message);
     }
 
     @Override
-    public void enterMessageField(ProtoParser.MessageFieldContext ctx) {
+    public void enterField(ProtoParser.FieldContext ctx) {
         Field field = new Field();
         context.push(field);
     }
 
     @Override
-    public void exitMessageField(ProtoParser.MessageFieldContext ctx) {
+    public void exitField(ProtoParser.FieldContext ctx) {
         Field field = context.pop(Field.class);
-        Message message = context.peek(Message.class);
+        FieldContainer fieldContainer = context.peek(FieldContainer.class);
         String name = ctx.name().getText();
         String type = ctx.typeReference().getText();
         Integer tag = Integer.decode(ctx.INTEGER_VALUE().getText());
@@ -49,41 +49,34 @@ public class MessageParseListener extends ProtoParserBaseListener {
         field.setName(name);
         field.setTag(tag);
         field.setTypeName(type);
-        message.addField(field);
+        fieldContainer.addField(field);
     }
 
     @Override
     public void enterExtendBlock(ProtoParser.ExtendBlockContext ctx) {
-    }
-
-    @Override
-    public void exitExtendBlock(ProtoParser.ExtendBlockContext ctx) {
-
-    }
-
-    @Override
-    public void enterExtendBlockEntry(ProtoParser.ExtendBlockEntryContext ctx) {
         Extension extension = new Extension();
         context.push(extension);
     }
 
     @Override
-    public void exitExtendBlockEntry(ProtoParser.ExtendBlockEntryContext ctx) {
+    public void exitExtendBlock(ProtoParser.ExtendBlockContext ctx) {
         Extension extension = context.pop(Extension.class);
-        ProtoParser.ExtendBlockContext extendBlockContext =
-                (ProtoParser.ExtendBlockContext) ctx.getParent();
-        String extendeeName = extendBlockContext.typeReference().getText();
-
+        String extendeeName = ctx.typeReference().getText();
         ExtensionContainer extensionContainer = context.peek(AbstractUserTypeContainer.class);
-        String name = ctx.name().getText();
-        String type = ctx.typeReference().getText();
-        Integer tag = Integer.decode(ctx.INTEGER_VALUE().getText());
-        updateModifier(ctx.fieldModifier(), extension);
         extension.setExtendeeName(extendeeName);
-        extension.setName(name);
-        extension.setTag(tag);
-        extension.setTypeName(type);
         extensionContainer.addExtension(extension);
+    }
+
+    @Override
+    public void enterGroupBlock(ProtoParser.GroupBlockContext ctx) {
+        Group group = new Group();
+        context.push(group);
+    }
+
+    @Override
+    public void exitGroupBlock(ProtoParser.GroupBlockContext ctx) {
+
+        Group group = context.pop(Group.class);
     }
 
     private void updateModifier(ProtoParser.FieldModifierContext modifierContext, Field field) {

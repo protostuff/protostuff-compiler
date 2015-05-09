@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.SetMultimap;
 import io.protostuff.compiler.model.Extension;
+import io.protostuff.compiler.model.Field;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -38,7 +39,9 @@ public class LocalExtensionRegistry implements ExtensionRegistry {
             Map<String, Extension> map = new HashMap<>();
             Collection<Extension> extensions = getExtensions(messageName);
             for (Extension extension : extensions) {
-                map.put(extension.getName(), extension);
+                for (Field field : extension.getFields()) {
+                    map.put(field.getName(), extension);
+                }
             }
             return map;
         });

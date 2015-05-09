@@ -1,0 +1,23 @@
+syntax = "proto2";
+
+package test.groups;
+
+message A {
+  optional int32 x = 1;
+
+  optional group Group = 2 {
+    
+    optional int32 y = 1;
+    
+    repeated group NestedRepeatedGroup = 2 {
+      optional int32 w = 1;
+      optional int32 z = 2;
+    }
+
+    optional NestedMessage n = 3;
+
+    message NestedMessage {
+      repeated string s = 1;
+    }
+  }
+}

@@ -3,6 +3,7 @@ package io.protostuff.compiler.parser;
 import io.protostuff.compiler.model.AbstractUserTypeContainer;
 import io.protostuff.compiler.model.Enum;
 import io.protostuff.compiler.model.EnumConstant;
+import io.protostuff.compiler.model.EnumContainer;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -25,7 +26,7 @@ public class EnumParseListener extends ProtoParserBaseListener {
     @Override
     public void exitEnumBlock(ProtoParser.EnumBlockContext ctx) {
         Enum e = context.pop(Enum.class);
-        AbstractUserTypeContainer container = context.peek(AbstractUserTypeContainer.class);
+        EnumContainer container = context.peek(EnumContainer.class);
         String name = ctx.NAME().getText();
         e.setName(name);
         container.addEnum(e);

@@ -14,7 +14,7 @@ public class ProtoContext implements ExtensionRegistry {
     private static final Logger LOGGER = LoggerFactory.getLogger(ProtoContext.class);
 
     private final Map<String, Type> symbolTable;
-    private final Deque<AbstractDescriptor> declarationStack;
+    private final Deque<Object> declarationStack;
     private final Proto proto;
     private final ExtensionRegistry localExtensionRegistry;
     private final List<ProtoContext> imports;
@@ -34,21 +34,21 @@ public class ProtoContext implements ExtensionRegistry {
     }
 
     @SuppressWarnings("unchecked")
-    public <T extends AbstractDescriptor> T peek(Class<T> declarationClass) {
-        AbstractDescriptor declaration = declarationStack.peek();
+    public <T> T peek(Class<T> declarationClass) {
+        Object declaration = declarationStack.peek();
         if (declarationClass.isAssignableFrom(declaration.getClass())) {
             return (T) declaration;
         }
         return fail(declaration, declarationClass);
     }
 
-    public void push(AbstractDescriptor declaration) {
+    public void push(Object declaration) {
         declarationStack.push(declaration);
     }
 
     @SuppressWarnings("unchecked")
-    public <T extends AbstractDescriptor> T pop(Class<T> declarationClass) {
-        AbstractDescriptor declaration = declarationStack.pop();
+    public <T> T pop(Class<T> declarationClass) {
+        Object declaration = declarationStack.pop();
         if (declarationClass.isAssignableFrom(declaration.getClass())) {
             return (T) declaration;
         }

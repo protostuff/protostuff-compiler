@@ -11,15 +11,88 @@ import java.util.List;
 /**
  * @author Kostiantyn Shchepanovskyi
  */
-public class Message extends AbstractUserTypeContainer
-        implements UserFieldType, UserTypeContainer, FieldContainer, GroupContainer {
+public class Group extends Field implements FieldContainer, UserFieldType, UserTypeContainer, GroupContainer {
 
+    protected FieldModifier modifier;
+    protected int tag;
     protected List<Field> fields;
-    protected List<Group> groups;
     protected Proto proto;
     protected String fullName;
-    protected boolean nested;
     protected UserTypeContainer parent;
+    protected List<Group> groups;
+
+
+    protected List<Message> messages;
+    protected List<Enum> enums;
+    protected List<Extension> extensions;
+
+    @Override
+    public List<Message> getMessages() {
+        if (messages == null) {
+            return Collections.emptyList();
+        }
+        return messages;
+    }
+
+    @Override
+    public void addMessage(Message message) {
+        if (messages == null) {
+            messages = new ArrayList<>();
+        }
+        messages.add(message);
+    }
+
+    @Override
+    public List<Enum> getEnums() {
+        if (enums == null) {
+            return Collections.emptyList();
+        }
+        return enums;
+    }
+
+    public void setEnums(List<Enum> enums) {
+        this.enums = enums;
+    }
+
+    @Override
+    public void addEnum(Enum e) {
+        if (enums == null) {
+            enums = new ArrayList<>();
+        }
+        enums.add(e);
+    }
+
+    @Override
+    public List<Extension> getExtensions() {
+        if (extensions == null) {
+            return Collections.emptyList();
+        }
+        return extensions;
+    }
+
+    @Override
+    public void addExtension(Extension extension) {
+        if (extensions == null) {
+            extensions = new ArrayList<>();
+        }
+        extensions.add(extension);
+    }
+
+    public FieldModifier getModifier() {
+        return modifier;
+    }
+
+    public void setModifier(FieldModifier modifier) {
+        this.modifier = modifier;
+    }
+
+    public int getTag() {
+        return tag;
+    }
+
+    public void setTag(int tag) {
+        this.tag = tag;
+    }
 
     public List<Field> getFields() {
         if (fields == null) {
@@ -60,16 +133,8 @@ public class Message extends AbstractUserTypeContainer
     }
 
     @Override
-    public String toString() {
-        return MoreObjects.toStringHelper(this)
-                .omitNullValues()
-                .add("name", name)
-                .add("fullName", getFullName())
-                .add("fields", fields)
-                .add("messages", messages)
-                .add("enums", enums)
-                .add("options", options)
-                .toString();
+    public String getReference() {
+        return fullName;
     }
 
     @Override
@@ -93,19 +158,13 @@ public class Message extends AbstractUserTypeContainer
     }
 
     @Override
-    public String getNamespacePrefix() {
-        Preconditions.checkNotNull(fullName, "message is not initialized");
-        return fullName + ".";
-    }
-
-    @Override
     public boolean isNested() {
-        return nested;
+        return true;
     }
 
     @Override
     public void setNested(boolean nested) {
-        this.nested = nested;
+        throw new UnsupportedOperationException("group can not be top-level type");
     }
 
     @Override
@@ -119,8 +178,20 @@ public class Message extends AbstractUserTypeContainer
     }
 
     @Override
-    public String getReference() {
-        return fullName;
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+                .add("name", name)
+                .add("modifier", modifier)
+                .add("tag", tag)
+                .add("fields", fields)
+                .add("options", options)
+                .toString();
+    }
+
+    @Override
+    public String getNamespacePrefix() {
+        Preconditions.checkNotNull(fullName, "message is not initialized");
+        return fullName + ".";
     }
 
     @Override
@@ -143,4 +214,5 @@ public class Message extends AbstractUserTypeContainer
         }
         groups.add(group);
     }
+
 }

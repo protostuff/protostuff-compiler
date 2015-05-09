@@ -1,6 +1,7 @@
 package io.protostuff.compiler.parser;
 
 import io.protostuff.compiler.model.AbstractDescriptor;
+import io.protostuff.compiler.model.OptionValue;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -32,55 +33,41 @@ public class OptionParseListener extends ProtoParserBaseListener {
         AbstractDescriptor declaration = context.peek(AbstractDescriptor.class);
         ProtoParser.OptionValueContext optionValueContext = ctx.optionValue();
         ProtoParser.OptionNameContext optionNameContext = ctx.optionName();
-        if (optionNameContext.NAME() != null) {
+        if (optionNameContext.name().size() == 1) {
             optionType = OptionType.STANDARD;
             optionName = optionNameContext.getText();
-        } else if (optionNameContext.customOptionName() != null) {
-            optionType = OptionType.CUSTOM;
-            optionName = optionNameContext.customOptionName().declarationRef(0).getText();
-            if (optionNameContext.customOptionName().declarationRef(1) != null) {
-                optionSubName = optionNameContext.customOptionName().declarationRef(1).getText();
-            }
         } else {
-            throw new IllegalStateException("option name");
+            optionType = OptionType.CUSTOM;
+            optionName = optionNameContext.getText();
         }
         Object optionValue = getOptionValue(optionValueContext);
         if (optionType == OptionType.STANDARD) {
             declaration.addOption(optionName, optionValue);
         } else {
-            if (optionSubName != null) {
-                Object customOptionValue = declaration.getOption(optionName);
-                Map<String, Object> map;
-                if (customOptionValue instanceof Map) {
-                    map = (Map<String, Object>) customOptionValue;
-                } else if (customOptionValue == null) {
-                    map = new HashMap<>();
-                    declaration.addOption(optionName, map);
-                } else {
-                    throw new IllegalStateException("custom option");
-                }
-                putValue(map, optionSubName, optionValue);
-            } else {
+//            if (optionSubName != null) {
+//                Object customOptionValue = declaration.getOption(optionName);
+//                Map<String, Object> map;
+//                if (customOptionValue instanceof Map) {
+//                    map = (Map<String, Object>) customOptionValue;
+//                } else if (customOptionValue == null) {
+//                    map = new HashMap<>();
+//                    declaration.addOption(optionName, map);
+//                } else {
+//                    throw new IllegalStateException("custom option");
+//                }
+//                putValue(map, optionSubName, optionValue);
+//            } else {
                 declaration.addOption(optionName, optionValue);
-            }
+//            }
         }
     }
 
     private Object getOptionValue(ProtoParser.OptionValueContext optionValueContext) {
         Object optionValue;
-        if (optionValueContext.BOOLEAN_VALUE() != null) {
-            optionValue = Boolean.parseBoolean(optionValueContext.getText());
-        } else if (optionValueContext.INTEGER_VALUE() != null) {
-            optionValue = Integer.decode(optionValueContext.getText());
-        } else if (optionValueContext.STRING_VALUE() != null) {
-            String text = optionValueContext.getText();
-            optionValue = Util.removeQuotes(text);
-        } else if (optionValueContext.NAME() != null) {
-            optionValue = optionValueContext.NAME().getText();
-        } else if (optionValueContext.textFormat() != null) {
+       if (optionValueContext.textFormat() != null) {
             optionValue = lastTextFormat;
         } else {
-            throw new IllegalStateException("Unknown option value type: " + optionValueContext.getText());
+            optionValue = new OptionValue(optionValueContext.getText());
         }
         return optionValue;
     }
@@ -123,9 +110,9 @@ public class OptionParseListener extends ProtoParserBaseListener {
 
     @Override
     public void exitTextFormatEntry(ProtoParser.TextFormatEntryContext ctx) {
-        String name = ctx.NAME().getText();
-        Object optionValue = getOptionValue(ctx.optionValue());
-        currentTextFormat.put(name, optionValue);
+        String name = ctx.textFormatOptionName().getText();
+//        Object optionValue = getOptionValue(ctx.textFormatOptionValue());
+//        currentTextFormat.put(name, optionValue);
     }
 
     private enum OptionType {
