@@ -112,10 +112,8 @@ NAME
     :   (ALPHA | UNDERSCORE) (ALPHA | DIGIT | UNDERSCORE)*
     ;
 STRING_VALUE
-    : '"' ( ESC_SEQ | ~('\\'|'"') )* '"'
-    ;
-TEXTFORMAT_STRING_VALUE
-    : '\'' ( ESC_SEQ | ~('\\'|'\'') )* '\''
+    : DOUBLE_QUOTE_STRING
+    | SINGLE_QUOTE_STRING
     ;
 INTEGER_VALUE
     : DEC_VALUE
@@ -127,6 +125,12 @@ FLOAT_VALUE
     | FLOAT
     | MINUS? INF
     | NAN
+    ;
+fragment DOUBLE_QUOTE_STRING
+    : '"' ( ESC_SEQ | ~('\\'|'"') )* '"'
+    ;
+fragment SINGLE_QUOTE_STRING
+    : '\'' ( ESC_SEQ | ~('\\'|'\'') )* '\''
     ;
 fragment EXPONENT
     : (FLOAT|DEC_VALUE) EXP DEC_VALUE

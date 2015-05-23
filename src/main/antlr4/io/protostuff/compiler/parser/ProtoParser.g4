@@ -144,7 +144,7 @@ textFormatOptionValue
     : INTEGER_VALUE
     | FLOAT_VALUE
     | BOOLEAN_VALUE
-    | TEXTFORMAT_STRING_VALUE
+    | STRING_VALUE
     | NAME
     ;
 name

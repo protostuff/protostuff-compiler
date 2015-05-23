@@ -130,8 +130,8 @@ public class OptionParseListener extends ProtoParserBaseListener {
         } else if (ctx.textFormatOptionValue().INTEGER_VALUE() != null) {
             String text = ctx.textFormatOptionValue().INTEGER_VALUE().getText();
             optionValue = parseInteger(text);
-        } else if (ctx.textFormatOptionValue().TEXTFORMAT_STRING_VALUE() != null) {
-            String text = ctx.textFormatOptionValue().TEXTFORMAT_STRING_VALUE().getText();
+        } else if (ctx.textFormatOptionValue().STRING_VALUE() != null) {
+            String text = ctx.textFormatOptionValue().STRING_VALUE().getText();
             // TODO: unescape
             optionValue = DynamicMessage.Value.create(Util.removeFirstAndLastChar(text));
         } else if (ctx.textFormatOptionValue().NAME() != null) {

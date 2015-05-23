@@ -61,9 +61,13 @@ message_fields(message) ::= <<
 <message.fields:message_field(); separator="\n">
 >>
 
-message_field(field) ::= <<
+message_field(field) ::= <%
+<if(is_repeated.(field.modifier))>
+<field.modifier> <field.type> <field.name> = <field.tag>;
+<else>
 <field.type> <field.name> = <field.tag>;
->>
+<endif>
+%>
 
 enums(container) ::= <<
 <container.enums:enum(); separator="\n">
@@ -82,3 +86,8 @@ enum_values(enum) ::= <<
 enum_value(value) ::= <<
 <value.name> = <value.value>;
 >>
+
+is_repeated ::= [
+    "repeated": true,
+    default: false
+]
