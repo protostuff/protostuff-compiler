@@ -18,7 +18,7 @@ import java.util.Map;
 public abstract class AbstractDescriptor implements OptionContainer {
 
     protected String name;
-    protected Map<String, Object> options;
+    protected DynamicMessage options;
 
     public String getName() {
         return name;
@@ -28,29 +28,13 @@ public abstract class AbstractDescriptor implements OptionContainer {
         this.name = name;
     }
 
+    public AbstractDescriptor() {
+        this.options = new DynamicMessage();
+    }
+
     @Override
-    public Map<String, Object> getOptions() {
-        if (options == null) {
-            return Collections.emptyMap();
-        }
+    public DynamicMessage getOptions() {
         return options;
-    }
-
-    @Override
-    @Nullable
-    public Object getOption(String name) {
-        if (options == null) {
-            return null;
-        }
-        return options.get(name);
-    }
-
-    @Override
-    public void addOption(String name, Object value) {
-        if (options == null) {
-            options = new HashMap<>();
-        }
-        options.put(name, value);
     }
 
 }

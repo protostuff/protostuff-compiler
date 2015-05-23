@@ -8,8 +8,6 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.Map;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -50,8 +48,8 @@ public class ProtoParseListenerTest {
     @Test
     public void parseOptions() throws Exception {
         Proto proto = parseProto(PROTO_WITH_OPTIONS);
-        assertEquals("io.protostuff.test", proto.getOptions().get("java_package"));
-        assertTrue(proto.getOptions().get("google.protobuf.objectivec_file_options") instanceof Map);
+        assertEquals("io.protostuff.test", proto.getOptions().get("java_package").getString());
+        assertEquals("LV2", proto.getOptions().get("(google.protobuf.objectivec_file_options).class_prefix").getString());
     }
 
     private Proto parseProto(String input) {

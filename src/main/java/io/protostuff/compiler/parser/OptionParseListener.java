@@ -1,23 +1,25 @@
 package io.protostuff.compiler.parser;
 
 import io.protostuff.compiler.model.AbstractDescriptor;
-import io.protostuff.compiler.model.OptionValue;
+import io.protostuff.compiler.model.DynamicMessage;
 
+import java.math.BigInteger;
 import java.util.ArrayDeque;
 import java.util.Deque;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author Kostiantyn Shchepanovskyi
  */
 public class OptionParseListener extends ProtoParserBaseListener {
 
+    public static final int HEX = 16;
+    public static final int OCT = 8;
+    public static final int DECIMAL = 10;
     private final ProtoContext context;
-    private final Deque<Map<String, Object>> textFormatStack;
 
-    private Map<String, Object> currentTextFormat;
-    private Map<String, Object> lastTextFormat;
+    private final Deque<DynamicMessage> textFormatStack;
+    private DynamicMessage currentTextFormat;
+    private DynamicMessage lastTextFormat;
 
     public OptionParseListener(ProtoContext context) {
         this.context = context;
@@ -27,67 +29,69 @@ public class OptionParseListener extends ProtoParserBaseListener {
     @Override
     @SuppressWarnings("unchecked")
     public void exitOption(ProtoParser.OptionContext ctx) {
-        OptionType optionType;
-        String optionSubName = null;
         String optionName;
         AbstractDescriptor declaration = context.peek(AbstractDescriptor.class);
         ProtoParser.OptionValueContext optionValueContext = ctx.optionValue();
-        ProtoParser.OptionNameContext optionNameContext = ctx.optionName();
-        if (optionNameContext.name().size() == 1) {
-            optionType = OptionType.STANDARD;
-            optionName = optionNameContext.getText();
-        } else {
-            optionType = OptionType.CUSTOM;
-            optionName = optionNameContext.getText();
-        }
-        Object optionValue = getOptionValue(optionValueContext);
-        if (optionType == OptionType.STANDARD) {
-            declaration.addOption(optionName, optionValue);
-        } else {
-//            if (optionSubName != null) {
-//                Object customOptionValue = declaration.getOption(optionName);
-//                Map<String, Object> map;
-//                if (customOptionValue instanceof Map) {
-//                    map = (Map<String, Object>) customOptionValue;
-//                } else if (customOptionValue == null) {
-//                    map = new HashMap<>();
-//                    declaration.addOption(optionName, map);
-//                } else {
-//                    throw new IllegalStateException("custom option");
-//                }
-//                putValue(map, optionSubName, optionValue);
-//            } else {
-                declaration.addOption(optionName, optionValue);
-//            }
-        }
+        optionName = ctx.optionName().getText();
+        DynamicMessage.Value optionValue = getOptionValue(optionValueContext);
+        declaration.getOptions().set(optionName, optionValue);
     }
 
-    private Object getOptionValue(ProtoParser.OptionValueContext optionValueContext) {
-        Object optionValue;
-       if (optionValueContext.textFormat() != null) {
-            optionValue = lastTextFormat;
+    private DynamicMessage.Value getOptionValue(ProtoParser.OptionValueContext optionValueContext) {
+        DynamicMessage.Value optionValue;
+        if (optionValueContext.textFormat() != null) {
+            optionValue = DynamicMessage.Value.create(lastTextFormat);
+        } else if (optionValueContext.BOOLEAN_VALUE() != null) {
+            String text = optionValueContext.BOOLEAN_VALUE().getText();
+            boolean value = Boolean.parseBoolean(text);
+            optionValue = DynamicMessage.Value.create(value);
+        } else if (optionValueContext.INTEGER_VALUE() != null) {
+            String text = optionValueContext.INTEGER_VALUE().getText();
+            optionValue = parseInteger(text);
+        } else if (optionValueContext.STRING_VALUE() != null) {
+            String text = optionValueContext.STRING_VALUE().getText();
+            // TODO: unescape
+            optionValue = DynamicMessage.Value.create(Util.removeFirstAndLastChar(text));
+        } else if (optionValueContext.NAME() != null) {
+            String text = optionValueContext.NAME().getText();
+            optionValue = DynamicMessage.Value.create(text);
+        } else if (optionValueContext.FLOAT_VALUE() != null) {
+            String text = optionValueContext.FLOAT_VALUE().getText();
+            double value;
+            if ("inf".equals(text)) {
+                value = Double.POSITIVE_INFINITY;
+            } else if ("-inf".equals(text)) {
+                value = Double.NEGATIVE_INFINITY;
+            } else {
+                value = Double.parseDouble(text);
+            }
+            optionValue = DynamicMessage.Value.create(value);
         } else {
-            optionValue = new OptionValue(optionValueContext.getText());
+            throw new IllegalStateException();
         }
         return optionValue;
     }
 
-    @SuppressWarnings("unchecked")
-    private void putValue(Map<String, Object> map, String name, Object value) {
-        int dotIndex = name.indexOf('.');
-        if (dotIndex == -1) {
-            map.put(name, value);
-        } else {
-            String prefix = name.substring(0, dotIndex);
-            Map<String, Object> node;
-            if (map.containsKey(prefix)) {
-                node = (Map<String, Object>) map.get(prefix);
+    private DynamicMessage.Value parseInteger(String text) {
+        long value;
+        try {
+            value = Long.decode(text);
+        } catch (NumberFormatException e) {
+            // For values like "FFFFFFFFFFFFFFFF" - valid unsigned int64 in hex
+            // but Long.decode gives NumberFormatException (but we should
+            // accept such numbers according to protobuf spec - )
+            if (text.startsWith("0x")) {
+                BigInteger num = new BigInteger(text.substring(2), HEX);
+                value = num.longValue();
+            } else if (text.startsWith("0")) {
+                BigInteger num = new BigInteger(text.substring(1), OCT);
+                value = num.longValue();
             } else {
-                node = new HashMap<>();
-                map.put(prefix, node);
+                BigInteger num = new BigInteger(text, DECIMAL);
+                value = num.longValue();
             }
-            putValue(node, name.substring(dotIndex + 1, name.length()), value);
         }
+        return DynamicMessage.Value.create(value);
     }
 
     @Override
@@ -95,7 +99,7 @@ public class OptionParseListener extends ProtoParserBaseListener {
         if (currentTextFormat != null) {
             textFormatStack.push(currentTextFormat);
         }
-        currentTextFormat = new HashMap<>();
+        currentTextFormat = new DynamicMessage();
     }
 
     @Override
@@ -111,12 +115,36 @@ public class OptionParseListener extends ProtoParserBaseListener {
     @Override
     public void exitTextFormatEntry(ProtoParser.TextFormatEntryContext ctx) {
         String name = ctx.textFormatOptionName().getText();
-//        Object optionValue = getOptionValue(ctx.textFormatOptionValue());
-//        currentTextFormat.put(name, optionValue);
+        DynamicMessage.Value value = getTextFormatOptionValue(ctx);
+        currentTextFormat.set(name, value);
     }
 
-    private enum OptionType {
-        STANDARD,
-        CUSTOM
+    private DynamicMessage.Value getTextFormatOptionValue(ProtoParser.TextFormatEntryContext ctx) {
+        DynamicMessage.Value optionValue;
+        if (ctx.textFormat() != null) {
+            optionValue = DynamicMessage.Value.create(lastTextFormat);
+        } else if (ctx.textFormatOptionValue().BOOLEAN_VALUE() != null) {
+            String text = ctx.textFormatOptionValue().BOOLEAN_VALUE().getText();
+            boolean value = Boolean.parseBoolean(text);
+            optionValue = DynamicMessage.Value.create(value);
+        } else if (ctx.textFormatOptionValue().INTEGER_VALUE() != null) {
+            String text = ctx.textFormatOptionValue().INTEGER_VALUE().getText();
+            optionValue = parseInteger(text);
+        } else if (ctx.textFormatOptionValue().TEXTFORMAT_STRING_VALUE() != null) {
+            String text = ctx.textFormatOptionValue().TEXTFORMAT_STRING_VALUE().getText();
+            // TODO: unescape
+            optionValue = DynamicMessage.Value.create(Util.removeFirstAndLastChar(text));
+        } else if (ctx.textFormatOptionValue().NAME() != null) {
+            String text = ctx.textFormatOptionValue().NAME().getText();
+            optionValue = DynamicMessage.Value.create(text);
+        } else if (ctx.textFormatOptionValue().FLOAT_VALUE() != null) {
+            String text = ctx.textFormatOptionValue().FLOAT_VALUE().getText();
+            double value = Double.parseDouble(text);
+            optionValue = DynamicMessage.Value.create(value);
+        } else {
+            throw new IllegalStateException();
+        }
+        return optionValue;
     }
+
 }

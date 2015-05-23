@@ -8,11 +8,8 @@ import java.util.Map;
  */
 public interface OptionContainer {
 
-    Map<String, Object> getOptions();
+    DynamicMessage getOptions();
 
-    @Nullable
-    Object getOption(String name);
-
-    void addOption(String name, Object value);
+//    void addRawOption(String name, String value);
 
 }

@@ -1,4 +1,5 @@
 import "io/protostuff/compiler/core.stg"
+import "io/protostuff/compiler/proto/TextFormat.stg"
 
 proto_compiler_enabled(proto) ::= "true"
 
@@ -16,7 +17,7 @@ proto_compiler_template(proto) ::= <<
 >>
 
 syntax(proto) ::= <<
-syntax <proto.syntax>;
+syntax = "<proto.syntax>";
 >>
 
 package(proto) ::= <<
@@ -33,12 +34,15 @@ import "<name>";
 
 options(container) ::= <<
 <container.options.keys:
-    {key | <option(key=key, value=container.options.(key))>};
-    separator="\n">
+    {key | <option(key=key, value=container.options.(key))>}; separator="\n">
 >>
 
 option(key, value) ::= <<
-option <key> = <value>;
+<if(value.messageType)><\\>
+option <key> = <value:text_format()>;<\\>
+<else><\\>
+option <key> = <value>;<\\>
+<endif>
 >>
 
 messages(container) ::= <<

@@ -16,26 +16,15 @@ public class Util {
     public static final char QUOTE = '"';
 
     /**
-     * Remove quotes from given string and return result.
-     * If given string is not quoted, then it is returned as is.
-     * If quotes are not first and last characters in the string,
-     * then only text that is between quotes is returned.
+     * Remove first and last character from given string and return result.
      *
      * @param text given string
-     * @return given string without quotes
+     * @return substring of given string - without first and last characters
      */
-    public static String removeQuotes(String text) {
+    public static String removeFirstAndLastChar(String text) {
         Preconditions.checkNotNull(text, "text can not be null");
         int n = text.length();
-        int a = 0;
-        int b = n-1;
-        while (a < n && text.charAt(a) != QUOTE) a++;
-        while (b >= 0 && text.charAt(b) != QUOTE) b--;
-        if (a >= b) {
-            // no quotes
-            return text;
-        }
-        return text.substring(a+1, b);
+        return text.substring(1, n-1);
     }
 
     /**

@@ -1,0 +1,30 @@
+
+text_format(value) ::= <<
+<if(value.messageType)><\\>
+{
+    <value.message.keys: { key | <print_field(name=key, value=value.message.(key))>}; separator="\n"> 
+}<\\>
+<else><\\>
+<value:text_format_value()><\\>
+<endif>
+>>
+
+text_format_value(value) ::= <%
+<if(value.stringType)>
+'<value.string>'
+<elseif(value.integerType)>
+<value>
+<elseif(value.booleanType)>
+<value>
+<else>
+<value>
+<endif>
+%>
+
+print_field(name, value) ::= <%
+<if(value.messageType)>
+<name> <value:text_format()>
+<else>
+<name>: <value:text_format()>
+<endif>
+%>

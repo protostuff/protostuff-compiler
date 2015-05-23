@@ -17,7 +17,7 @@ public class ProtoParseListener extends ProtoParserBaseListener {
     public void exitSyntax(ProtoParser.SyntaxContext ctx) {
         Proto proto = context.peek(Proto.class);
         String text = ctx.STRING_VALUE().getText();
-        String syntax = Util.removeQuotes(text);
+        String syntax = Util.removeFirstAndLastChar(text);
         proto.setSyntax(syntax);
     }
 
@@ -32,7 +32,7 @@ public class ProtoParseListener extends ProtoParserBaseListener {
     public void exitImportStatement(ProtoParser.ImportStatementContext ctx) {
         Proto proto = context.peek(Proto.class);
         String text = ctx.STRING_VALUE().getText();
-        String fileName = Util.removeQuotes(text);
+        String fileName = Util.removeFirstAndLastChar(text);
         if (ctx.PUBLIC() == null) {
             proto.addImport(fileName);
         } else {

@@ -1,5 +1,7 @@
 package io.protostuff.compiler.model;
 
+import com.google.common.base.MoreObjects;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -70,4 +72,8 @@ public enum ScalarFieldType implements FieldType {
         return map.get(name);
     }
 
+    @Override
+    public String toString() {
+        return getName();
+    }
 }
