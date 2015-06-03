@@ -1,22 +1,14 @@
-
+module_compiler_enabled(module) ::= "false"
 proto_compiler_enabled(proto) ::= "false"
 message_compiler_enabled(message) ::= "false"
 enum_compiler_enabled(enum) ::= "false"
 
-proto_compiler_output(proto) ::= <<
->>
+module_compiler_output(module) ::= ""
+proto_compiler_output(proto) ::= ""
+message_compiler_output(message) ::= ""
+enum_compiler_output(enum) ::= ""
 
-message_compiler_output(message) ::= <<
->>
-
-enum_compiler_output(enum) ::= <<
->>
-
-proto_compiler_template(proto) ::= <<
->>
-
-message_compiler_template(message) ::= <<
->>
-
-enum_compiler_template(enum) ::= <<
->>
+module_compiler_template(module) ::= ""
+proto_compiler_template(proto) ::= ""
+message_compiler_template(message) ::= ""
+enum_compiler_template(enum) ::= ""

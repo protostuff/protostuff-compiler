@@ -1,5 +1,6 @@
 package io.protostuff.compiler.generator;
 
+import io.protostuff.compiler.model.Module;
 import io.protostuff.compiler.model.Proto;
 
 /**
@@ -7,5 +8,5 @@ import io.protostuff.compiler.model.Proto;
  */
 public interface ProtoCompiler {
 
-    void compile(Proto proto);
+    void compile(Module module);
 }

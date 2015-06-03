@@ -29,7 +29,16 @@ public abstract class AbstractProtoCompiler implements ProtoCompiler {
     }
 
     @Override
-    public void compile(Proto proto) {
+    public void compile(Module module) {
+        if (canProcess(module)) {
+            LOGGER.info("Compile module: {}", module.getName());
+            String outputFileName = getOutputFileName(module);
+            Writer writer = getWriter(outputFileName);
+            compile(module, writer);
+        }
+    }
+
+    private void compile(Proto proto) {
         try {
             List<Message> messages = proto.getMessages();
             List<io.protostuff.compiler.model.Enum> enums = proto.getEnums();
@@ -78,14 +87,17 @@ public abstract class AbstractProtoCompiler implements ProtoCompiler {
                         });
     }
 
+    protected abstract void compile(Module module, Writer writer);
     protected abstract void compile(Proto proto, Writer writer);
     protected abstract void compile(Message message, Writer writer);
     protected abstract void compile(Enum anEnum, Writer writer);
 
+    protected abstract boolean canProcess(Module module);
     protected abstract boolean canProcess(Proto proto);
     protected abstract boolean canProcess(Message message);
     protected abstract boolean canProcess(Enum anEnum);
 
+    protected abstract String getOutputFileName(Module module);
     protected abstract String getOutputFileName(Proto proto);
     protected abstract String getOutputFileName(Message message);
     protected abstract String getOutputFileName(Enum anEnum);

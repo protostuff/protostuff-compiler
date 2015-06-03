@@ -11,20 +11,18 @@ import io.protostuff.compiler.parser.ProtoContext;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
 /**
  * @author Kostiantyn Shchepanovskyi
  */
-public class StCompilerIT {
+public class ProtodocStCompilerIT {
+
     private Injector injector;
 
     @Before
     public void setUp() throws Exception {
         injector = Guice.createInjector(
                 new ParserModule(),
-                new CompilerModule("io/protostuff/compiler/proto/proto3.stg"));
+                new CompilerModule("io/protostuff/compiler/protodoc/tree.stg"));
     }
 
     @Test

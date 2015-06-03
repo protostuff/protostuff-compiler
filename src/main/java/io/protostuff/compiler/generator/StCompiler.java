@@ -1,7 +1,9 @@
 package io.protostuff.compiler.generator;
 
-import io.protostuff.compiler.model.*;
 import io.protostuff.compiler.model.Enum;
+import io.protostuff.compiler.model.Message;
+import io.protostuff.compiler.model.Module;
+import io.protostuff.compiler.model.Proto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.stringtemplate.v4.ST;
@@ -9,34 +11,63 @@ import org.stringtemplate.v4.STGroup;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author Kostiantyn Shchepanovskyi
  */
 public class StCompiler extends AbstractProtoCompiler {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(StCompiler.class);
+    public static final String MODULE = "module";
+    public static final String MODULE_COMPILER_ENABLED = "module_compiler_enabled";
+    public static final String MODULE_COMPILER_TEMPLATE = "module_compiler_template";
+    public static final String MODULE_COMPILER_OUTPUT = "module_compiler_output";
 
+    public static final String PROTO = "proto";
+    public static final String PROTO_COMPILER_ENABLED = "proto_compiler_enabled";
+    public static final String PROTO_COMPILER_TEMPLATE = "proto_compiler_template";
+    public static final String PROTO_COMPILER_OUTPUT = "proto_compiler_output";
+
+    public static final String MESSAGE = "message";
+    public static final String MESSAGE_COMPILER_ENABLED = "message_compiler_enabled";
+    public static final String MESSAGE_COMPILER_OUTPUT = "message_compiler_output";
+
+    public static final String ENUM = "enum";
+    public static final String ENUM_COMPILER_ENABLED = "enum_compiler_enabled";
+    public static final String ENUM_COMPILER_OUTPUT = "enum_compiler_output";
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(StCompiler.class);
     private final STGroup stGroup;
+
     public StCompiler(STGroup group, OutputStreamFactory outputStreamFactory) {
         super(outputStreamFactory);
         this.stGroup = group;
     }
 
     @Override
-    protected void compile(Proto proto, Writer writer) {
-        String stName = "proto_compiler_template";
+    protected void compile(Module module, Writer writer) {
+        String stName = MODULE_COMPILER_TEMPLATE;
         ST st = stGroup.getInstanceOf(stName);
         if (st == null) {
             throw new GeneratorException("Template %s is not defined", stName);
         }
-        st.add("proto", proto);
-//        try {
-//            st.inspect().waitForClose();
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
+        st.add(MODULE, module);
+        String result = st.render();
+        try {
+            writer.append(result);
+            writer.flush();
+        } catch (IOException e) {
+            throw new GeneratorException("Can not write file: %s", e.getMessage());
+        }
+    }
+
+    @Override
+    protected void compile(Proto proto, Writer writer) {
+        String stName = PROTO_COMPILER_TEMPLATE;
+        ST st = stGroup.getInstanceOf(stName);
+        if (st == null) {
+            throw new GeneratorException("Template %s is not defined", stName);
+        }
+        st.add(PROTO, proto);
         String result = st.render();
         try {
             writer.append(result);
@@ -56,33 +87,43 @@ public class StCompiler extends AbstractProtoCompiler {
     }
 
     @Override
+    protected boolean canProcess(Module module) {
+        return getBoolean(MODULE_COMPILER_ENABLED, MODULE, module);
+    }
+
+    @Override
     protected boolean canProcess(Proto proto) {
-        return getBoolean("proto_compiler_enabled", "proto", proto);
+        return getBoolean(PROTO_COMPILER_ENABLED, PROTO, proto);
     }
 
     @Override
     protected boolean canProcess(Message message) {
-        return getBoolean("message_compiler_enabled", "message", message);
+        return getBoolean(MESSAGE_COMPILER_ENABLED, MESSAGE, message);
     }
 
     @Override
     protected boolean canProcess(Enum anEnum) {
-        return getBoolean("enum_compiler_enabled", "enum", anEnum);
+        return getBoolean(ENUM_COMPILER_ENABLED, ENUM, anEnum);
+    }
+
+    @Override
+    protected String getOutputFileName(Module module) {
+        return getString(MODULE_COMPILER_OUTPUT, MODULE, module);
     }
 
     @Override
     protected String getOutputFileName(Proto proto) {
-        return getString("proto_compiler_output", "proto", proto);
+        return getString(PROTO_COMPILER_OUTPUT, PROTO, proto);
     }
 
     @Override
     protected String getOutputFileName(Message message) {
-        return getString("message_compiler_output", "message", message);
+        return getString(MESSAGE_COMPILER_OUTPUT, MESSAGE, message);
     }
 
     @Override
     protected String getOutputFileName(Enum anEnum) {
-        return getString("enum_compiler_output", "enum", anEnum);
+        return getString(ENUM_COMPILER_OUTPUT, ENUM, anEnum);
     }
 
     private boolean getBoolean(String stName, String arg, Object value) {

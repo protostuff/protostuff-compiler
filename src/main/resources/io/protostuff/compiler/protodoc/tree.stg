@@ -1,0 +1,23 @@
+module_compiler_enabled(module) ::= "true"
+module_compiler_output(module) ::= "tree.json"
+module_compiler_template(module) ::= <<
+[
+    <module.protos:proto_template()>
+]
+>>
+
+proto_template(proto) ::= <<
+text: "<proto.name>",
+nodes: [
+    <proto.messages:message_template()>
+]
+>>
+
+message_template(message) ::= <<
+text: "<message.name>"<\\>
+<if(first(message.messages))>,
+nodes: [
+    <message.messages:message_template()>
+]
+<endif>
+>>
