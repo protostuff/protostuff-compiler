@@ -24,7 +24,7 @@ public class Group extends Field implements FieldContainer, UserFieldType, UserT
 
     protected List<Message> messages;
     protected List<Enum> enums;
-    protected List<Extension> extensions;
+    protected List<Extension> declaredExtensions;
 
     @Override
     public List<Message> getMessages() {
@@ -63,19 +63,19 @@ public class Group extends Field implements FieldContainer, UserFieldType, UserT
     }
 
     @Override
-    public List<Extension> getExtensions() {
-        if (extensions == null) {
+    public List<Extension> getDeclaredExtensions() {
+        if (declaredExtensions == null) {
             return Collections.emptyList();
         }
-        return extensions;
+        return declaredExtensions;
     }
 
     @Override
-    public void addExtension(Extension extension) {
-        if (extensions == null) {
-            extensions = new ArrayList<>();
+    public void addDeclaredExtension(Extension extension) {
+        if (declaredExtensions == null) {
+            declaredExtensions = new ArrayList<>();
         }
-        extensions.add(extension);
+        declaredExtensions.add(extension);
     }
 
     public FieldModifier getModifier() {
@@ -189,7 +189,7 @@ public class Group extends Field implements FieldContainer, UserFieldType, UserT
     }
 
     @Override
-    public String getNamespacePrefix() {
+    public String getNamespace() {
         Preconditions.checkNotNull(fullName, "message is not initialized");
         return fullName + ".";
     }

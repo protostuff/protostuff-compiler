@@ -16,15 +16,15 @@ message A {
     }
 
     extend B {
-        optional int32 by = 10;
+        optional int32 by = 52;
     }
 }
 
 extend A {
-    optional int32 ay = 10;
-    optional int32 az = 11;
+    optional int32 ay = 42;
+    optional int32 az = 43;
 }
 
 extend A.B {
-    optional int32 bz = 11;
+    optional int32 bz = 53;
 }

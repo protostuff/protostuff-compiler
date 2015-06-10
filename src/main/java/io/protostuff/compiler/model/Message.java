@@ -20,6 +20,7 @@ public class Message extends AbstractUserTypeContainer
     protected String fullName;
     protected boolean nested;
     protected UserTypeContainer parent;
+    protected List<Extension> extensions;
 
     public List<Field> getFields() {
         if (fields == null) {
@@ -93,7 +94,7 @@ public class Message extends AbstractUserTypeContainer
     }
 
     @Override
-    public String getNamespacePrefix() {
+    public String getNamespace() {
         Preconditions.checkNotNull(fullName, "message is not initialized");
         return fullName + ".";
     }
@@ -142,5 +143,41 @@ public class Message extends AbstractUserTypeContainer
             groups = new ArrayList<>();
         }
         groups.add(group);
+    }
+
+    public List<Extension> getExtensions() {
+        if (extensions == null) {
+            return Collections.emptyList();
+        }
+        return extensions;
+    }
+
+    public void setExtensions(List<Extension> extensions) {
+        this.extensions = extensions;
+    }
+
+    public void addExtension(Extension extension) {
+        if (extensions == null) {
+            extensions = new ArrayList<>();
+        }
+        extensions.add(extension);
+    }
+
+    @Nullable
+    public Field getExtensionField(String fullExtensionFieldName) {
+        for (Extension extension : getExtensions()) {
+            for (Field field : extension.getFields()) {
+                String fullFieldName = getFullExtensionFieldName(extension, field);
+                if (fullFieldName.equals(fullExtensionFieldName)) {
+                    return field;
+                }
+            }
+        }
+        return null;
+    }
+
+    private String getFullExtensionFieldName(Extension extension, Field field) {
+        String namespace = extension.getNamespace();
+        return namespace + field.getName();
     }
 }

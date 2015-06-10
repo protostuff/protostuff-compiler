@@ -18,6 +18,16 @@ public class Extension implements FieldContainer, GroupContainer {
     protected List<Field> fields;
     protected List<Group> groups;
 
+    protected String namespace;
+
+    public String getNamespace() {
+        return namespace;
+    }
+
+    public void setNamespace(String namespace) {
+        this.namespace = namespace;
+    }
+
     public String getExtendeeName() {
         return extendeeName;
     }

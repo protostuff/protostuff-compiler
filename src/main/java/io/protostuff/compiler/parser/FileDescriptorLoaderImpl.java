@@ -53,9 +53,11 @@ public class FileDescriptorLoaderImpl implements FileDescriptorLoader {
     }
 
     private void registerExtensions(ProtoContext context, UserTypeContainer container) {
-        List<Extension> extensions = container.getExtensions();
+        List<Extension> extensions = container.getDeclaredExtensions();
         for (Extension extension : extensions) {
             context.registerExtension(extension);
+            String parentNamespace = container.getNamespace();
+            extension.setNamespace(parentNamespace);
         }
         for (Message message : container.getMessages()) {
             registerExtensions(context, message);
@@ -101,7 +103,7 @@ public class FileDescriptorLoaderImpl implements FileDescriptorLoader {
     }
 
     private void resolveTypeReferences(ProtoContext context, Deque<String> scopeLookupList, UserTypeContainer container) {
-        for (Extension extension : container.getExtensions()) {
+        for (Extension extension : container.getDeclaredExtensions()) {
             String extendeeName = extension.getExtendeeName();
             UserFieldType type = resolveUserType(context, scopeLookupList, extendeeName);
             if (!(type instanceof Message)) {
@@ -109,7 +111,7 @@ public class FileDescriptorLoaderImpl implements FileDescriptorLoader {
             }
             Message extendee = (Message) type;
             extension.setExtendee(extendee);
-
+            extendee.addExtension(extension);
             for (Field field : extension.getFields()) {
                 String typeName = field.getTypeName();
                 FieldType fieldType = resolveFieldType(context, scopeLookupList, typeName);
@@ -170,7 +172,7 @@ public class FileDescriptorLoaderImpl implements FileDescriptorLoader {
             type.setProto(proto);
             type.setParent(proto);
             type.setNested(false);
-            String fullName = proto.getNamespacePrefix() + type.getName();
+            String fullName = proto.getNamespace() + type.getName();
             type.setFullName(fullName);
             context.register(fullName, type);
         }
@@ -180,7 +182,7 @@ public class FileDescriptorLoaderImpl implements FileDescriptorLoader {
             type.setProto(proto);
             type.setParent(proto);
             type.setNested(false);
-            String fullName = proto.getNamespacePrefix() + type.getName();
+            String fullName = proto.getNamespace() + type.getName();
             type.setFullName(fullName);
             context.register(fullName, type);
         }
@@ -188,7 +190,7 @@ public class FileDescriptorLoaderImpl implements FileDescriptorLoader {
         List<Service> services = proto.getServices();
         for (Service type : services) {
             type.setProto(proto);
-            String fullName = proto.getNamespacePrefix() + type.getName();
+            String fullName = proto.getNamespace() + type.getName();
             type.setFullName(fullName);
             context.register(fullName, type);
         }
@@ -206,7 +208,7 @@ public class FileDescriptorLoaderImpl implements FileDescriptorLoader {
             type.setProto(context.getProto());
             type.setParent(parent);
             type.setNested(true);
-            String fullName = parent.getNamespacePrefix() + type.getName();
+            String fullName = parent.getNamespace() + type.getName();
             type.setFullName(fullName);
             context.register(fullName, type);
         };

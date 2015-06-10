@@ -45,7 +45,7 @@ public class LocalFileReader implements FileReader {
             } else if (!Files.isDirectory(path)) {
                 LOGGER.warn("'{}' is not directory", path);
             }
-            // todo: should we use wrong paths? this behavior is copied from 'protoc' - it just shows warning
+            // todo: should we use not existing paths? this behavior is copied from 'protoc' - it just shows warning
             result.add(path);
         }
         return result;

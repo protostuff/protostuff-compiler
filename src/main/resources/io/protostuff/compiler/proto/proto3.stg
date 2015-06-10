@@ -87,7 +87,4 @@ enum_value(value) ::= <<
 <value.name> = <value.value>;
 >>
 
-is_repeated ::= [
-    "repeated": true,
-    default: false
-]
+

@@ -1,6 +1,5 @@
 package io.protostuff.compiler.model;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -8,7 +7,7 @@ import java.util.List;
  */
 public interface ExtensionContainer {
 
-    List<Extension> getExtensions();
+    List<Extension> getDeclaredExtensions();
 
-    void addExtension(Extension extension);
+    void addDeclaredExtension(Extension extension);
 }

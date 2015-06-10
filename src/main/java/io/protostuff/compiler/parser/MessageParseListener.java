@@ -64,7 +64,7 @@ public class MessageParseListener extends ProtoParserBaseListener {
         String extendeeName = ctx.typeReference().getText();
         ExtensionContainer extensionContainer = context.peek(AbstractUserTypeContainer.class);
         extension.setExtendeeName(extendeeName);
-        extensionContainer.addExtension(extension);
+        extensionContainer.addDeclaredExtension(extension);
     }
 
     @Override

@@ -12,3 +12,10 @@ module_compiler_template(module) ::= ""
 proto_compiler_template(proto) ::= ""
 message_compiler_template(message) ::= ""
 enum_compiler_template(enum) ::= ""
+
+// common functions
+
+is_repeated ::= [
+    "repeated": true,
+    default: false
+]
