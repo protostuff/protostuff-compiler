@@ -72,7 +72,7 @@ messageBlockEntry
     | optionEntry
     | messageBlock
     | enumBlock
-    | messageExtensions
+    | extensions
     | extendBlock
     | groupBlock
     | oneof
@@ -93,12 +93,19 @@ groupBlockEntry
     | optionEntry
     | messageBlock
     | enumBlock
-    | messageExtensions
+    | extensions
     | extendBlock
     | groupBlock
     ;
-messageExtensions
-    : EXTENSIONS INTEGER_VALUE (TO (INTEGER_VALUE | MAX))? SEMICOLON
+extensions
+    : EXTENSIONS from (TO to)? SEMICOLON
+    ;
+from
+    : INTEGER_VALUE
+    ;
+to
+    : INTEGER_VALUE
+    | MAX
     ;
 field
     : fieldModifier? typeReference name ASSIGN INTEGER_VALUE fieldOptions? SEMICOLON

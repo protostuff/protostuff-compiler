@@ -18,19 +18,18 @@ public class FileDescriptorLoaderImpl implements FileDescriptorLoader {
 
     private final ANTLRErrorListener errorListener;
     private final Importer importer;
+    private final Set<Validator> validators;
 
     @Inject
-    public FileDescriptorLoaderImpl(Importer importer, ANTLRErrorListener errorListener) {
+    public FileDescriptorLoaderImpl(Importer importer, ANTLRErrorListener errorListener, Set<Validator> validators) {
         this.errorListener = errorListener;
         this.importer = importer;
+        this.validators = validators;
     }
 
     @Override
     public ProtoContext load(String name, CharStream stream) {
         ProtoContext context = parse(name, stream);
-        if (context == null) {
-            return null;
-        }
 
         for (String anImport : context.getProto().getPublicImports()) {
             ProtoContext importedContext = importer.importFile(anImport);
@@ -47,6 +46,10 @@ public class FileDescriptorLoaderImpl implements FileDescriptorLoader {
         resolveTypeReferences(context);
 
         registerExtensions(context, context.getProto());
+
+        for (Validator validator : validators) {
+            validator.validate(context);
+        }
 
         context.setInitialized(true);
         return context;
@@ -236,10 +239,11 @@ public class FileDescriptorLoaderImpl implements FileDescriptorLoader {
                 new ServiceParseListener(context)
         );
         ParseTreeWalker.DEFAULT.walk(composite, tree);
-        if (parser.getNumberOfSyntaxErrors() > 0) {
-            return null;
+        int numberOfSyntaxErrors = parser.getNumberOfSyntaxErrors();
+        if (numberOfSyntaxErrors > 0) {
+            String format = "Could not parse %s: %d syntax errors found";
+            throw new ParserException(format, name, numberOfSyntaxErrors);
         }
-
         return context;
     }
 

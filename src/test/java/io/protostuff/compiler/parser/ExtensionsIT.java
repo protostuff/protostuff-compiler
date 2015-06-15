@@ -6,7 +6,9 @@ import io.protostuff.compiler.ParserModule;
 import io.protostuff.compiler.model.*;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import java.util.List;
 import java.util.Map;
@@ -17,6 +19,8 @@ import static org.junit.Assert.*;
  * @author Kostiantyn Shchepanovskyi
  */
 public class ExtensionsIT {
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
     private Injector injector;
 
     @Before
@@ -25,9 +29,9 @@ public class ExtensionsIT {
     }
 
     @Test
-    public void test() throws Exception {
+    public void testBasicExtensions() throws Exception {
         Importer importer = injector.getInstance(Importer.class);
-        ProtoContext context = importer.importFile("test/extensions/test.proto");
+        ProtoContext context = importer.importFile("test/extensions/extensions_sample.proto");
         Proto proto = context.getProto();
 
         Message a = proto.getMessage("A");
@@ -43,6 +47,11 @@ public class ExtensionsIT {
         assertEquals(ScalarFieldType.INT32, az.getType());
         assertEquals(43, az.getTag());
 
+        assertEquals(1, a.getExtensionRanges().size());
+        ExtensionRange aRange = a.getExtensionRanges().get(0);
+        assertEquals(10, aRange.getMin());
+        assertEquals(Field.MAX_TAG_VALUE, aRange.getMax());
+
         Message b = a.getMessage("B");
         assertNotNull(b);
         Assert.assertEquals(2, b.getExtensions().size());
@@ -54,6 +63,19 @@ public class ExtensionsIT {
         assertNotNull(bz);
         assertEquals(ScalarFieldType.INT32, bz.getType());
         assertEquals(53, bz.getTag());
+
+        assertEquals(1, b.getExtensionRanges().size());
+        ExtensionRange bRange = b.getExtensionRanges().get(0);
+        assertEquals(10, bRange.getMin());
+        assertEquals(1000, bRange.getMax());
+
     }
 
+    @Test
+    public void tagOutOfRange() throws Exception {
+        Importer importer = injector.getInstance(Importer.class);
+        thrown.expect(ParserException.class);
+        thrown.expectMessage("Extension '.test.extensions.invalid.e' tag=9 is out of allowed range");
+        importer.importFile("test/extensions/invalid/extensions_tag_out_of_range.proto");
+    }
 }

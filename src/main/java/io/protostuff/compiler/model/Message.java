@@ -21,6 +21,7 @@ public class Message extends AbstractUserTypeContainer
     protected boolean nested;
     protected UserTypeContainer parent;
     protected List<Extension> extensions;
+    protected List<ExtensionRange> extensionRanges;
 
     public List<Field> getFields() {
         if (fields == null) {
@@ -179,5 +180,23 @@ public class Message extends AbstractUserTypeContainer
     private String getFullExtensionFieldName(Extension extension, Field field) {
         String namespace = extension.getNamespace();
         return namespace + field.getName();
+    }
+
+    public List<ExtensionRange> getExtensionRanges() {
+        if (extensionRanges == null) {
+            return Collections.emptyList();
+        }
+        return extensionRanges;
+    }
+
+    public void setExtensionRanges(List<ExtensionRange> extensionRanges) {
+        this.extensionRanges = extensionRanges;
+    }
+
+    public void addExtensionRange(ExtensionRange range) {
+        if (extensionRanges == null) {
+            extensionRanges = new ArrayList<>();
+        }
+        extensionRanges.add(range);
     }
 }

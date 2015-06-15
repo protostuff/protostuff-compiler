@@ -11,6 +11,8 @@ import static io.protostuff.compiler.model.FieldModifier.REQUIRED;
  */
 public class MessageParseListener extends ProtoParserBaseListener {
 
+    public static final String MAX = "max";
+
     private final ProtoContext context;
 
     public MessageParseListener(ProtoContext context) {
@@ -77,6 +79,22 @@ public class MessageParseListener extends ProtoParserBaseListener {
     public void exitGroupBlock(ProtoParser.GroupBlockContext ctx) {
 
         Group group = context.pop(Group.class);
+    }
+
+    @Override
+    public void exitExtensions(ProtoParser.ExtensionsContext ctx) {
+        String fromString = ctx.from().getText();
+        String toString = ctx.to() == null ? fromString : ctx.to().getText();
+        int from = Integer.decode(fromString);
+        int to;
+        if (MAX.equals(toString)) {
+            to = Field.MAX_TAG_VALUE;
+        } else {
+            to = Integer.decode(toString);
+        }
+        Message message = context.peek(Message.class);
+        ExtensionRange range = new ExtensionRange(from, to);
+        message.addExtensionRange(range);
     }
 
     private void updateModifier(ProtoParser.FieldModifierContext modifierContext, Field field) {
