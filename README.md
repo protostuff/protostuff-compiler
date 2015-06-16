@@ -6,10 +6,10 @@ Protocol Buffers file parser and code generator
 Short-term Targets
 ------------------
 
-1. \[parser\] Full compatibility with `proto3`
-2. \[parser\] Compatibility with `proto2`
-3. \[code-generator\] `proto3` template: proto-to-proto transformation, at this level it should be self-test
-4. \[code-generator\] `java_nano` template: produce same output as `protoc --java_out=...`
+1. \[parser\] Full compatibility with `proto3`.
+2. \[parser\] Partial compatibility with `proto2`.
+3. \[code-generator\] `proto3` template: proto-to-proto transformation, as a self-test
+4. \[code-generator\] `java_nano` template: produce same output as `protoc --javanano_out=...`
 5. Maven plugin
 
 Long-term Targets
