@@ -1,6 +1,7 @@
 package io.protostuff.compiler.parser;
 
 import io.protostuff.compiler.model.*;
+import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,14 +23,16 @@ public class ProtoContext implements ExtensionRegistry {
 
     private boolean initialized;
 
-    public ProtoContext(String name) {
+    public ProtoContext(String filename) {
         localExtensionRegistry = new LocalExtensionRegistry();
         symbolTable = new HashMap<>();
         declarationStack = new ArrayDeque<>();
         imports = new ArrayList<>();
         publicImports = new ArrayList<>();
         proto = new Proto();
-        proto.setName(name);
+        proto.setFilename(filename);
+        String shortFilename = FilenameUtils.getName(filename);
+        proto.setName(FilenameUtils.removeExtension(shortFilename));
         push(proto);
     }
 
@@ -161,4 +164,5 @@ public class ProtoContext implements ExtensionRegistry {
     public void addPublicImport(ProtoContext importedProto) {
         publicImports.add(importedProto);
     }
+
 }

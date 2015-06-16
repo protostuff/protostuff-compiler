@@ -1,23 +1,24 @@
 package io.protostuff.compiler.parser;
 
 import io.protostuff.compiler.model.Proto;
+import io.protostuff.compiler.model.Syntax;
 
 /**
  * @author Kostiantyn Shchepanovskyi
  */
-public class ProtoParseListener extends ProtoParserBaseListener {
-
-    private final ProtoContext context;
+public class ProtoParseListener extends AbstractProtoParsetListener {
 
     public ProtoParseListener(ProtoContext context) {
-        this.context = context;
+        super(context);
     }
 
     @Override
     public void exitSyntax(ProtoParser.SyntaxContext ctx) {
         Proto proto = context.peek(Proto.class);
         String text = ctx.STRING_VALUE().getText();
-        String syntax = Util.removeFirstAndLastChar(text);
+        String value = Util.removeFirstAndLastChar(text);
+        Syntax syntax = new Syntax(value);
+        syntax.setSourceCodeLocation(getSourceCodeLocation(ctx));
         proto.setSyntax(syntax);
     }
 

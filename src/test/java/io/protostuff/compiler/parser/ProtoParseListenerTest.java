@@ -9,6 +9,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -39,7 +40,8 @@ public class ProtoParseListenerTest {
     @Test
     public void parseSyntaxPackageImports() throws Exception {
         Proto proto = parseProto(PROTO_WITH_SYNTAX_PACKAGE_IMPORTS);
-        assertEquals("proto3", proto.getSyntax());
+        assertNotNull("proto3", proto.getSyntax());
+        assertEquals("proto3", proto.getSyntax().getValue());
         assertEquals("pt.test", proto.getPackageName());
         assertEquals("foo.proto", proto.getImports().get(0));
         assertEquals("bar/baz.proto", proto.getImports().get(1));

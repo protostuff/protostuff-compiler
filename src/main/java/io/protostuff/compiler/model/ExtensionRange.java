@@ -7,7 +7,8 @@ import com.google.common.base.MoreObjects;
  *
  * @author Kostiantyn Shchepanovskyi
  */
-public class ExtensionRange {
+public class ExtensionRange extends AbstractElement {
+
     private final int min;
     private final int max;
 

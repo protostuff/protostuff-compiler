@@ -1,6 +1,7 @@
 package io.protostuff.compiler.parser;
 
 import io.protostuff.compiler.model.*;
+import org.antlr.v4.runtime.ParserRuleContext;
 
 import static io.protostuff.compiler.model.FieldModifier.OPTIONAL;
 import static io.protostuff.compiler.model.FieldModifier.REPEATED;
@@ -9,14 +10,12 @@ import static io.protostuff.compiler.model.FieldModifier.REQUIRED;
 /**
  * @author Kostiantyn Shchepanovskyi
  */
-public class MessageParseListener extends ProtoParserBaseListener {
+public class MessageParseListener extends AbstractProtoParsetListener {
 
     public static final String MAX = "max";
 
-    private final ProtoContext context;
-
     public MessageParseListener(ProtoContext context) {
-        this.context = context;
+        super(context);
     }
 
     @Override
@@ -31,6 +30,7 @@ public class MessageParseListener extends ProtoParserBaseListener {
         MessageContainer container = context.peek(MessageContainer.class);
         String name = ctx.NAME().getText();
         message.setName(name);
+        message.setSourceCodeLocation(getSourceCodeLocation(ctx));
         container.addMessage(message);
     }
 
@@ -51,6 +51,7 @@ public class MessageParseListener extends ProtoParserBaseListener {
         field.setName(name);
         field.setTag(tag);
         field.setTypeName(type);
+        field.setSourceCodeLocation(getSourceCodeLocation(ctx));
         fieldContainer.addField(field);
     }
 
@@ -66,6 +67,7 @@ public class MessageParseListener extends ProtoParserBaseListener {
         String extendeeName = ctx.typeReference().getText();
         ExtensionContainer extensionContainer = context.peek(AbstractUserTypeContainer.class);
         extension.setExtendeeName(extendeeName);
+        extension.setSourceCodeLocation(getSourceCodeLocation(ctx));
         extensionContainer.addDeclaredExtension(extension);
     }
 
@@ -77,8 +79,8 @@ public class MessageParseListener extends ProtoParserBaseListener {
 
     @Override
     public void exitGroupBlock(ProtoParser.GroupBlockContext ctx) {
-
         Group group = context.pop(Group.class);
+        group.setSourceCodeLocation(getSourceCodeLocation(ctx));
     }
 
     @Override
@@ -94,6 +96,7 @@ public class MessageParseListener extends ProtoParserBaseListener {
         }
         Message message = context.peek(Message.class);
         ExtensionRange range = new ExtensionRange(from, to);
+        range.setSourceCodeLocation(getSourceCodeLocation(ctx));
         message.addExtensionRange(range);
     }
 

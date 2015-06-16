@@ -7,11 +7,10 @@ import io.protostuff.compiler.model.ServiceMethod;
 /**
  * @author Kostiantyn Shchepanovskyi
  */
-public class ServiceParseListener extends ProtoParserBaseListener {
-    private final ProtoContext context;
+public class ServiceParseListener extends AbstractProtoParsetListener {
 
     public ServiceParseListener(ProtoContext context) {
-        this.context = context;
+        super(context);
     }
 
     @Override
@@ -26,6 +25,7 @@ public class ServiceParseListener extends ProtoParserBaseListener {
         Proto proto = context.peek(Proto.class);
         String name = ctx.name().getText();
         service.setName(name);
+        service.setSourceCodeLocation(getSourceCodeLocation(ctx));
         proto.addService(service);
     }
 
@@ -45,6 +45,7 @@ public class ServiceParseListener extends ProtoParserBaseListener {
         method.setName(name);
         method.setArgTypeName(arg);
         method.setReturnTypeName(ret);
+        method.setSourceCodeLocation(getSourceCodeLocation(ctx));
         service.addMethod(method);
     }
 }

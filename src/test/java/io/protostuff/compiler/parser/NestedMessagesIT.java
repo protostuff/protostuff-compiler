@@ -32,8 +32,10 @@ public class NestedMessagesIT {
         ProtoContext context = importer.importFile("test/nested_messages/test.proto");
         Proto proto = context.getProto();
         assertNotNull(proto);
-        assertEquals("test/nested_messages/test.proto", proto.getName());
-        assertEquals("proto3", proto.getSyntax());
+        assertEquals("test/nested_messages/test.proto", proto.getFilename());
+        assertEquals("test", proto.getName());
+        assertNotNull(proto.getSyntax());
+        assertEquals("proto3", proto.getSyntax().getValue());
         assertEquals("test.nested_messages", proto.getPackageName());
 
         Message a = proto.getMessage("A");

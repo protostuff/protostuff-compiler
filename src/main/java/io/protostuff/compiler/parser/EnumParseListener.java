@@ -8,13 +8,10 @@ import io.protostuff.compiler.model.EnumContainer;
 /**
  * @author Kostiantyn Shchepanovskyi
  */
-public class EnumParseListener extends ProtoParserBaseListener {
+public class EnumParseListener extends AbstractProtoParsetListener {
 
-    private final ProtoContext context;
-
-    //    private EnumDesPro
     public EnumParseListener(ProtoContext context) {
-        this.context = context;
+        super(context);
     }
 
     @Override
@@ -29,6 +26,7 @@ public class EnumParseListener extends ProtoParserBaseListener {
         EnumContainer container = context.peek(EnumContainer.class);
         String name = ctx.NAME().getText();
         e.setName(name);
+        e.setSourceCodeLocation(getSourceCodeLocation(ctx));
         container.addEnum(e);
     }
 
@@ -46,6 +44,7 @@ public class EnumParseListener extends ProtoParserBaseListener {
         int number = Integer.decode(ctx.INTEGER_VALUE().getText());
         enumConstant.setName(name);
         enumConstant.setValue(number);
+        enumConstant.setSourceCodeLocation(getSourceCodeLocation(ctx));
         e.addValue(enumConstant);
     }
 

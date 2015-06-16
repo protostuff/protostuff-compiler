@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * @author Kostiantyn Shchepanovskyi
  */
-public class Extension implements FieldContainer, GroupContainer {
+public class Extension extends AbstractElement implements FieldContainer, GroupContainer {
 
     protected String extendeeName;
     protected Message extendee;

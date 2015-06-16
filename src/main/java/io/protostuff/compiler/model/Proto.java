@@ -12,14 +12,26 @@ import java.util.List;
  */
 public class Proto extends AbstractUserTypeContainer implements UserTypeContainer {
 
-    protected String syntax;
+    protected String filename;
+    protected Syntax syntax;
     protected String packageName;
     protected List<String> imports;
     protected List<String> publicImports;
     protected List<Service> services;
 
     /**
-     * file name, relative to root of source tree
+     * Full filename (including path, relative to root of source tree)
+     */
+    public String getFilename() {
+        return filename;
+    }
+
+    public void setFilename(String filename) {
+        this.filename = filename;
+    }
+
+    /**
+     * Filename without extension
      */
     @Override
     public String getName() {
@@ -32,11 +44,11 @@ public class Proto extends AbstractUserTypeContainer implements UserTypeContaine
     }
 
     @Nullable
-    public String getSyntax() {
+    public Syntax getSyntax() {
         return syntax;
     }
 
-    public void setSyntax(String syntax) {
+    public void setSyntax(Syntax syntax) {
         this.syntax = syntax;
     }
 

@@ -1,24 +1,24 @@
 package io.protostuff.compiler.model;
 
-import javax.annotation.Nullable;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * Base class for all protocol buffer descriptors:
  * <ol>
- *     <li>message</li>
- *     <li>enum</li>
- *     <li>service</li>
- *     <li>method</li>
+ * <li>message</li>
+ * <li>enum</li>
+ * <li>service</li>
+ * <li>method</li>
  * </ol>
+ *
  * @author Kostiantyn Shchepanovskyi
  */
-public abstract class AbstractDescriptor implements OptionContainer {
+public abstract class AbstractDescriptor extends AbstractElement implements Descriptor {
 
     protected String name;
     protected DynamicMessage options;
+
+    public AbstractDescriptor() {
+        this.options = new DynamicMessage();
+    }
 
     public String getName() {
         return name;
@@ -26,10 +26,6 @@ public abstract class AbstractDescriptor implements OptionContainer {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public AbstractDescriptor() {
-        this.options = new DynamicMessage();
     }
 
     @Override

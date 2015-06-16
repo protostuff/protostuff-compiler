@@ -220,7 +220,7 @@ public class FileDescriptorLoaderImpl implements FileDescriptorLoader {
         nestedMessages.forEach(message -> registerNestedUserTypes(context, message));
     }
 
-    private ProtoContext parse(String name, CharStream stream) {
+    private ProtoContext parse(String filename, CharStream stream) {
         ProtoLexer lexer = new ProtoLexer(stream);
         lexer.removeErrorListeners();
         lexer.addErrorListener(errorListener);
@@ -230,7 +230,7 @@ public class FileDescriptorLoaderImpl implements FileDescriptorLoader {
         parser.addErrorListener(errorListener);
 
         ProtoParser.ProtoContext tree = parser.proto();
-        ProtoContext context = new ProtoContext(name);
+        ProtoContext context = new ProtoContext(filename);
         ProtoParserListener composite = CompositeParseTreeListener.create(ProtoParserListener.class,
                 new ProtoParseListener(context),
                 new MessageParseListener(context),
@@ -242,7 +242,7 @@ public class FileDescriptorLoaderImpl implements FileDescriptorLoader {
         int numberOfSyntaxErrors = parser.getNumberOfSyntaxErrors();
         if (numberOfSyntaxErrors > 0) {
             String format = "Could not parse %s: %d syntax errors found";
-            throw new ParserException(format, name, numberOfSyntaxErrors);
+            throw new ParserException(format, filename, numberOfSyntaxErrors);
         }
         return context;
     }
