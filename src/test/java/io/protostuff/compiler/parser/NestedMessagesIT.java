@@ -2,9 +2,7 @@ package io.protostuff.compiler.parser;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import io.protostuff.compiler.CompilerModule;
 import io.protostuff.compiler.ParserModule;
-import io.protostuff.compiler.generator.ProtoCompiler;
 import io.protostuff.compiler.model.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,7 +34,7 @@ public class NestedMessagesIT {
         assertEquals("test", proto.getName());
         assertNotNull(proto.getSyntax());
         assertEquals("proto3", proto.getSyntax().getValue());
-        assertEquals("test.nested_messages", proto.getPackageName());
+        assertEquals("test.nested_messages", proto.getPackage().getValue());
 
         Message a = proto.getMessage("A");
         assertNotNull(a);

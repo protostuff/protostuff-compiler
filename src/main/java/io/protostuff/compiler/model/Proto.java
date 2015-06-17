@@ -14,7 +14,7 @@ public class Proto extends AbstractUserTypeContainer implements UserTypeContaine
 
     protected String filename;
     protected Syntax syntax;
-    protected String packageName;
+    protected Package aPackage;
     protected List<Import> imports;
     protected List<Service> services;
 
@@ -42,8 +42,10 @@ public class Proto extends AbstractUserTypeContainer implements UserTypeContaine
         super.setName(name);
     }
 
-    @Nullable
     public Syntax getSyntax() {
+        if (syntax == null) {
+            return Syntax.DEFAULT;
+        }
         return syntax;
     }
 
@@ -51,13 +53,23 @@ public class Proto extends AbstractUserTypeContainer implements UserTypeContaine
         this.syntax = syntax;
     }
 
-    @Nullable
-    public String getPackageName() {
-        return packageName;
+    public boolean isSyntaxSet() {
+        return syntax != null;
     }
 
-    public void setPackageName(String packageName) {
-        this.packageName = packageName;
+    public Package getPackage() {
+        if (aPackage == null) {
+            return Package.DEFAULT;
+        }
+        return aPackage;
+    }
+
+    public void setPackage(Package aPackage) {
+        this.aPackage = aPackage;
+    }
+
+    public boolean isPackageSet() {
+        return aPackage != null;
     }
 
     public List<Import> getImports() {
@@ -106,9 +118,9 @@ public class Proto extends AbstractUserTypeContainer implements UserTypeContaine
 
     @Override
     public String getNamespace() {
-        if (packageName == null) {
+        if (aPackage == null) {
             return ".";
         }
-        return "." + packageName + ".";
+        return "." + aPackage.getValue() + ".";
     }
 }

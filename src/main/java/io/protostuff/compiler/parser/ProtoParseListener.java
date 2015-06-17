@@ -1,8 +1,7 @@
 package io.protostuff.compiler.parser;
 
-import io.protostuff.compiler.model.Import;
-import io.protostuff.compiler.model.Proto;
-import io.protostuff.compiler.model.Syntax;
+import io.protostuff.compiler.model.*;
+import io.protostuff.compiler.model.Package;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -27,7 +26,9 @@ public class ProtoParseListener extends AbstractProtoParsetListener {
     public void exitPackageStatement(ProtoParser.PackageStatementContext ctx) {
         Proto proto = context.peek(Proto.class);
         String packageName = ctx.packageName().getText();
-        proto.setPackageName(packageName);
+        Package aPackage = new Package(packageName);
+        aPackage.setSourceCodeLocation(getSourceCodeLocation(ctx));
+        proto.setPackage(aPackage);
     }
 
     @Override

@@ -32,17 +32,18 @@ public class ProtoParseListenerTest {
     @Test
     public void parseEmptyFile() throws Exception {
         Proto proto = parseProto("");
-        Assert.assertNull(proto.getSyntax());
-        Assert.assertNull(proto.getPackageName());
+        Assert.assertFalse(proto.isSyntaxSet());
+        Assert.assertFalse(proto.isPackageSet());
         assertEquals(0, proto.getImports().size());
     }
 
     @Test
     public void parseSyntaxPackageImports() throws Exception {
         Proto proto = parseProto(PROTO_WITH_SYNTAX_PACKAGE_IMPORTS);
-        assertNotNull("proto3", proto.getSyntax());
         assertEquals("proto3", proto.getSyntax().getValue());
-        assertEquals("pt.test", proto.getPackageName());
+        assertEquals(1, proto.getSyntax().getSourceCodeLocation().getLine());
+        assertEquals("pt.test", proto.getPackage().getValue());
+        assertEquals(2, proto.getPackage().getSourceCodeLocation().getLine());
         assertEquals("foo.proto", proto.getImports().get(0).getValue());
         assertEquals("bar/baz.proto", proto.getImports().get(1).getValue());
     }

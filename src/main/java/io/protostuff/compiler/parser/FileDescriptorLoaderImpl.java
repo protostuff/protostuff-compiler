@@ -2,6 +2,7 @@ package io.protostuff.compiler.parser;
 
 import io.protostuff.compiler.model.*;
 import io.protostuff.compiler.model.Enum;
+import io.protostuff.compiler.model.Package;
 import org.antlr.v4.runtime.ANTLRErrorListener;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -71,9 +72,9 @@ public class FileDescriptorLoaderImpl implements FileDescriptorLoader {
         String root = ".";
         scopeLookupList.add(root);
         Proto proto = context.getProto();
-        String packageName = proto.getPackageName();
-        if (packageName != null) {
-            String[] split = packageName.split("\\.");
+        Package aPackage = proto.getPackage();
+        if (aPackage != null) {
+            String[] split = aPackage.getValue().split("\\.");
             for (String s : split) {
                 String nextRoot = root + s + ".";
                 scopeLookupList.push(nextRoot);
