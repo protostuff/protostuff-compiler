@@ -6,7 +6,9 @@ import io.protostuff.compiler.ParserModule;
 import io.protostuff.compiler.model.Service;
 import io.protostuff.compiler.model.ServiceMethod;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import static org.junit.Assert.assertEquals;
 
@@ -15,16 +17,19 @@ import static org.junit.Assert.assertEquals;
  */
 public class ServiceIT {
 
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
     private Injector injector;
+    private Importer importer;
 
     @Before
     public void setUp() throws Exception {
         injector = Guice.createInjector(new ParserModule());
+        importer = injector.getInstance(Importer.class);
     }
 
     @Test
-    public void test() throws Exception {
-        Importer importer = injector.getInstance(Importer.class);
+    public void testSample() throws Exception {
         ProtoContext context = importer.importFile("protostuff_unittest/services_sample.proto");
 
         Service service = context.resolve(".protostuff_unittest.SearchService", Service.class);
@@ -36,5 +41,21 @@ public class ServiceIT {
         assertEquals("search", method.getName());
         assertEquals(".protostuff_unittest.SearchRequest", method.getArgType().getReference());
         assertEquals(".protostuff_unittest.SearchResponse", method.getReturnType().getReference());
+    }
+
+    @Test
+    public void badArgumentType() throws Exception {
+        thrown.expect(ParserException.class);
+        thrown.expectMessage("Cannot use 'Enum' as a service method argument type: not a message " +
+                "[protostuff_unittest/services_bad_arg_type.proto:7]");
+        importer.importFile("protostuff_unittest/services_bad_arg_type.proto");
+    }
+
+    @Test
+    public void badReturnType() throws Exception {
+        thrown.expect(ParserException.class);
+        thrown.expectMessage("Cannot use 'Enum' as a service method return type: not a message " +
+                "[protostuff_unittest/services_bad_return_type.proto:7]");
+        importer.importFile("protostuff_unittest/services_bad_return_type.proto");
     }
 }

@@ -21,15 +21,16 @@ public class ExtensionsIT {
     @Rule
     public ExpectedException thrown = ExpectedException.none();
     private Injector injector;
+    private Importer importer;
 
     @Before
     public void setUp() throws Exception {
         injector = Guice.createInjector(new ParserModule());
+        importer = injector.getInstance(Importer.class);
     }
 
     @Test
     public void testBasicExtensions() throws Exception {
-        Importer importer = injector.getInstance(Importer.class);
         ProtoContext context = importer.importFile("protostuff_unittest/extensions_sample.proto");
         Proto proto = context.getProto();
 
@@ -71,10 +72,17 @@ public class ExtensionsIT {
 
     @Test
     public void tagOutOfRange() throws Exception {
-        Importer importer = injector.getInstance(Importer.class);
         thrown.expect(ParserException.class);
-        thrown.expectMessage("Extension '.protostuff_unittest.e' tag=9 is out of allowed range " +
-                "[protostuff_unittest/extensions_tag_out_of_range.proto:9]");
+        thrown.expectMessage("Extension field 'e' tag=9 is out of allowed range " +
+                "[protostuff_unittest/extensions_tag_out_of_range.proto:10]");
         importer.importFile("protostuff_unittest/extensions_tag_out_of_range.proto");
+    }
+
+    @Test
+    public void badExtendeeType() throws Exception {
+        thrown.expect(ParserException.class);
+        thrown.expectMessage("Cannot extend 'A': not a message " +
+                "[protostuff_unittest/extensions_bad_extendee.proto:9]");
+        importer.importFile("protostuff_unittest/extensions_bad_extendee.proto");
     }
 }

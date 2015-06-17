@@ -38,9 +38,8 @@ public class ExtensionValidator implements Validator {
                     }
                 }
                 if (!inRange) {
-                    String format = "Extension '%s%s' tag=%d is out of allowed range [%s:%d]";
-                    SourceCodeLocation source = extension.getSourceCodeLocation();
-                    throw new ParserException(format, extension.getNamespace(), field.getName(), tag, source.getFile(), source.getLine());
+                    String format = "Extension field '%s' tag=%d is out of allowed range";
+                    throw new ParserException(field, format, field.getName(), tag);
                 }
             }
         }

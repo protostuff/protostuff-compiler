@@ -86,16 +86,18 @@ public class FileDescriptorLoaderImpl implements FileDescriptorLoader {
 
             for (ServiceMethod method : service.getMethods()) {
                 String argTypeName = method.getArgTypeName();
-                FieldType argType = resolveFieldType(context, scopeLookupList, argTypeName);
+                FieldType argType = resolveFieldType(method, context, scopeLookupList, argTypeName);
                 if (!(argType instanceof Message)) {
-                    throw new ParserException("Can not use %s as a service argument: not a message", argType.getReference());
+                    String format = "Cannot use '%s' as a service method argument type: not a message";
+                    throw new ParserException(method, format, argType.getName());
                 }
                 method.setArgType((Message) argType);
 
                 String returnTypeName = method.getReturnTypeName();
-                FieldType returnType = resolveFieldType(context, scopeLookupList, returnTypeName);
+                FieldType returnType = resolveFieldType(method, context, scopeLookupList, returnTypeName);
                 if (!(returnType instanceof Message)) {
-                    throw new ParserException("Can not use %s as a service return value: not a message", returnType.getReference());
+                    String format = "Cannot use '%s' as a service method return type: not a message";
+                    throw new ParserException(method, format, returnType.getName());
                 }
                 method.setReturnType((Message) returnType);
             }
@@ -108,16 +110,16 @@ public class FileDescriptorLoaderImpl implements FileDescriptorLoader {
     private void resolveTypeReferences(ProtoContext context, Deque<String> scopeLookupList, UserTypeContainer container) {
         for (Extension extension : container.getDeclaredExtensions()) {
             String extendeeName = extension.getExtendeeName();
-            UserFieldType type = resolveUserType(context, scopeLookupList, extendeeName);
+            UserFieldType type = resolveUserType(extension, context, scopeLookupList, extendeeName);
             if (!(type instanceof Message)) {
-                throw new ParserException("Can not extend %s: not a message", type.getFullName());
+                throw new ParserException(extension, "Cannot extend '%s': not a message", type.getName());
             }
             Message extendee = (Message) type;
             extension.setExtendee(extendee);
             extendee.addExtension(extension);
             for (Field field : extension.getFields()) {
                 String typeName = field.getTypeName();
-                FieldType fieldType = resolveFieldType(context, scopeLookupList, typeName);
+                FieldType fieldType = resolveFieldType(field, context, scopeLookupList, typeName);
                 field.setType(fieldType);
             }
         }
@@ -127,7 +129,7 @@ public class FileDescriptorLoaderImpl implements FileDescriptorLoader {
             scopeLookupList.push(root + message.getName() + ".");
             for (Field field : message.getFields()) {
                 String typeName = field.getTypeName();
-                FieldType fieldType = resolveFieldType(context, scopeLookupList, typeName);
+                FieldType fieldType = resolveFieldType(field, context, scopeLookupList, typeName);
                 field.setType(fieldType);
             }
             resolveTypeReferences(context, scopeLookupList, message);
@@ -135,16 +137,16 @@ public class FileDescriptorLoaderImpl implements FileDescriptorLoader {
         }
     }
 
-    private FieldType resolveFieldType(ProtoContext context, Deque<String> scopeLookupList, String typeName) {
+    private FieldType resolveFieldType(Element source, ProtoContext context, Deque<String> scopeLookupList, String typeName) {
         ScalarFieldType scalarFieldType = ScalarFieldType.getByName(typeName);
         if (scalarFieldType != null) {
             return scalarFieldType;
         } else {
-            return resolveUserType(context, scopeLookupList, typeName);
+            return resolveUserType(source, context, scopeLookupList, typeName);
         }
     }
 
-    private UserFieldType resolveUserType(ProtoContext context, Deque<String> scopeLookupList, String typeName) {
+    private UserFieldType resolveUserType(Element source, ProtoContext context, Deque<String> scopeLookupList, String typeName) {
         UserFieldType fieldType = null;
         if (typeName.startsWith(".")) {
             UserFieldType type = (UserFieldType)context.resolve(typeName);
@@ -163,7 +165,7 @@ public class FileDescriptorLoaderImpl implements FileDescriptorLoader {
         }
         if (fieldType == null) {
             String format = "Unresolved reference: '%s'";
-            throw new ParserException(format, typeName);
+            throw new ParserException(source, format, typeName);
         }
         return fieldType;
     }

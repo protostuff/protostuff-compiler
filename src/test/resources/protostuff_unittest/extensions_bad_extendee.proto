@@ -1,0 +1,11 @@
+syntax = "proto2";
+
+package protostuff_unittest;
+
+enum A {
+
+}
+
+extend A {
+    optional int32 e = 9;
+}
