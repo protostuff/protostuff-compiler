@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package test.nested_messages;
+package protostuff_unittest;
 
 option java_package = "io.protostuff.compiler.test.nested_messages";
 option (google.protobuf.objectivec_file_options).class_prefix = "LV2";

@@ -14,7 +14,7 @@ public class ClasspathFileReaderTest {
     @Test
     public void testRead() throws Exception {
         ClasspathFileReader reader = new ClasspathFileReader();
-        CharStream a = reader.read("test/nested_messages/test.proto");
+        CharStream a = reader.read("protostuff_unittest/messages_sample.proto");
         CharStream b = reader.read("this_file_does_not_exist.proto");
         assertNotNull(a);
         assertNull(b);

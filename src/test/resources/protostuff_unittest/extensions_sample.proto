@@ -1,6 +1,6 @@
 syntax = "proto2";
 
-package test.extensions;
+package protostuff_unittest;
 
 option java_package = "io.protostuff.parser";
 

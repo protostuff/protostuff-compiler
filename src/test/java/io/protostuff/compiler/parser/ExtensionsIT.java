@@ -11,7 +11,6 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.Assert.*;
 
@@ -31,18 +30,18 @@ public class ExtensionsIT {
     @Test
     public void testBasicExtensions() throws Exception {
         Importer importer = injector.getInstance(Importer.class);
-        ProtoContext context = importer.importFile("test/extensions/extensions_sample.proto");
+        ProtoContext context = importer.importFile("protostuff_unittest/extensions_sample.proto");
         Proto proto = context.getProto();
 
         Message a = proto.getMessage("A");
         assertNotNull(a);
         List<Extension> extensions = a.getExtensions();
         Assert.assertEquals(1, extensions.size());
-        Field ay = a.getExtensionField(".test.extensions.ay");
+        Field ay = a.getExtensionField(".protostuff_unittest.ay");
         assertNotNull(ay);
         assertEquals(ScalarFieldType.INT32, ay.getType());
         assertEquals(42, ay.getTag());
-        Field az = a.getExtensionField(".test.extensions.az");
+        Field az = a.getExtensionField(".protostuff_unittest.az");
         assertNotNull(az);
         assertEquals(ScalarFieldType.INT32, az.getType());
         assertEquals(43, az.getTag());
@@ -55,11 +54,11 @@ public class ExtensionsIT {
         Message b = a.getMessage("B");
         assertNotNull(b);
         Assert.assertEquals(2, b.getExtensions().size());
-        Field by = b.getExtensionField(".test.extensions.A.by");
+        Field by = b.getExtensionField(".protostuff_unittest.A.by");
         assertNotNull(by);
         assertEquals(ScalarFieldType.INT32, by.getType());
         assertEquals(52, by.getTag());
-        Field bz = b.getExtensionField(".test.extensions.bz");
+        Field bz = b.getExtensionField(".protostuff_unittest.bz");
         assertNotNull(bz);
         assertEquals(ScalarFieldType.INT32, bz.getType());
         assertEquals(53, bz.getTag());
@@ -68,14 +67,14 @@ public class ExtensionsIT {
         ExtensionRange bRange = b.getExtensionRanges().get(0);
         assertEquals(10, bRange.getMin());
         assertEquals(1000, bRange.getMax());
-
     }
 
     @Test
     public void tagOutOfRange() throws Exception {
         Importer importer = injector.getInstance(Importer.class);
         thrown.expect(ParserException.class);
-        thrown.expectMessage("Extension '.test.extensions.invalid.e' tag=9 is out of allowed range");
-        importer.importFile("test/extensions/invalid/extensions_tag_out_of_range.proto");
+        thrown.expectMessage("Extension '.protostuff_unittest.e' tag=9 is out of allowed range " +
+                "[protostuff_unittest/extensions_tag_out_of_range.proto:9]");
+        importer.importFile("protostuff_unittest/extensions_tag_out_of_range.proto");
     }
 }

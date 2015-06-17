@@ -4,7 +4,6 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import io.protostuff.compiler.ParserModule;
 import io.protostuff.compiler.model.Import;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -25,13 +24,13 @@ public class ImportsIT {
     @Test
     public void test() throws Exception {
         Importer importer = injector.getInstance(Importer.class);
-        ProtoContext context = importer.importFile("test/imports/a.proto");
+        ProtoContext context = importer.importFile("protostuff_unittest/imports_a.proto");
         Import anImport = context.getProto().getImports().get(0);
-        assertEquals("test/imports/a.proto", anImport.getSourceCodeLocation().getFile());
+        assertEquals("protostuff_unittest/imports_a.proto", anImport.getSourceCodeLocation().getFile());
         assertEquals(5, anImport.getSourceCodeLocation().getLine());
-        assertNotNull(context.resolve(".test.imports.A"));
-        assertNotNull(context.resolve(".test.imports.B"));
-        assertNotNull(context.resolve(".test.imports.C"));
-        assertNull(context.resolve(".test.imports.D"));
+        assertNotNull(context.resolve(".protostuff_unittest.A"));
+        assertNotNull(context.resolve(".protostuff_unittest.B"));
+        assertNotNull(context.resolve(".protostuff_unittest.C"));
+        assertNull(context.resolve(".protostuff_unittest.D"));
     }
 }

@@ -5,7 +5,6 @@ import com.google.inject.Injector;
 import io.protostuff.compiler.ParserModule;
 import io.protostuff.compiler.model.Service;
 import io.protostuff.compiler.model.ServiceMethod;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -26,16 +25,16 @@ public class ServiceIT {
     @Test
     public void test() throws Exception {
         Importer importer = injector.getInstance(Importer.class);
-        ProtoContext context = importer.importFile("test/services/test.proto");
+        ProtoContext context = importer.importFile("protostuff_unittest/services_sample.proto");
 
-        Service service = context.resolve(".test.services.SearchService", Service.class);
+        Service service = context.resolve(".protostuff_unittest.SearchService", Service.class);
 
         assertEquals("SearchService", service.getName());
         assertEquals(1, service.getMethods().size());
         ServiceMethod method = service.getMethods().get(0);
 
         assertEquals("search", method.getName());
-        assertEquals(".test.services.SearchRequest", method.getArgType().getReference());
-        assertEquals(".test.services.SearchResponse", method.getReturnType().getReference());
+        assertEquals(".protostuff_unittest.SearchRequest", method.getArgType().getReference());
+        assertEquals(".protostuff_unittest.SearchResponse", method.getReturnType().getReference());
     }
 }

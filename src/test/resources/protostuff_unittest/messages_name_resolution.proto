@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package test.name_resolution;
+package protostuff_unittest;
 
 option java_package = "io.protostuff.parser";
 
@@ -21,12 +21,11 @@ message A {
     int32 x = 1;
 
     // fully-qualified name
-    .test.name_resolution.A.B.C c0 = 10;
+    .protostuff_unittest.A.B.C c0 = 10;
 
     // all following names are also valid
-    test.name_resolution.A.B.C c1 = 11;
-    name_resolution.A.B.C c2 = 12;
-    A.B.C c3 = 13;
+    protostuff_unittest.A.B.C c1 = 11;
+    A.B.C c2 = 12;
     B.C c4 = 14;
 
     message B {

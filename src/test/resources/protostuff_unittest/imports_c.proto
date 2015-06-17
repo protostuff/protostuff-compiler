@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package protostuff_unittest;
+
+import "protostuff_unittest/imports_d.proto";
+
+message C {
+    D d = 1;
+}

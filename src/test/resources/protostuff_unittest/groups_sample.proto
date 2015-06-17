@@ -1,6 +1,6 @@
 syntax = "proto2";
 
-package test.groups;
+package protostuff_unittest;
 
 message A {
   optional int32 x = 1;

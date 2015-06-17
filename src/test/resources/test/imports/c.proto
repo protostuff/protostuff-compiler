@@ -1,9 +1,0 @@
-syntax = "proto3";
-
-package test.imports;
-
-import "test/imports/d.proto";
-
-message C {
-    D d = 1;
-}

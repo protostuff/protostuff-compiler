@@ -30,7 +30,7 @@ public class StCompilerIT {
     @Test
     public void test() throws Exception {
         Importer importer = injector.getInstance(Importer.class);
-        ProtoContext context = importer.importFile("test/nested_messages/test.proto");
+        ProtoContext context = importer.importFile("protostuff_unittest/messages_sample.proto");
         Proto proto = context.getProto();
         ProtoCompiler compiler = injector.getInstance(ProtoCompiler.class);
         compiler.compile(new Module(proto));

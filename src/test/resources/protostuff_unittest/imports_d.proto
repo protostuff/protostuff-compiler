@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package test.imports;
+package protostuff_unittest;
 
 message D {
     int32 x = 1;

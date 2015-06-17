@@ -24,14 +24,13 @@ public class NameResolutionIT {
     @Test
     public void test() throws Exception {
         Importer importer = injector.getInstance(Importer.class);
-        ProtoContext context = importer.importFile("test/name_resolution/test.proto");
+        ProtoContext context = importer.importFile("protostuff_unittest/messages_name_resolution.proto");
         Message a = context.getProto().getMessage("A");
         Assert.assertNotNull(a);
-        checkFieldType(a, "c0", ".test.name_resolution.A.B.C");
-        checkFieldType(a, "c1", ".test.name_resolution.A.B.C");
-        checkFieldType(a, "c2", ".test.name_resolution.A.B.C");
-        checkFieldType(a, "c3", ".test.name_resolution.A.B.C");
-        checkFieldType(a, "c4", ".test.name_resolution.A.B.C");
+        checkFieldType(a, "c0", ".protostuff_unittest.A.B.C");
+        checkFieldType(a, "c1", ".protostuff_unittest.A.B.C");
+        checkFieldType(a, "c2", ".protostuff_unittest.A.B.C");
+        checkFieldType(a, "c4", ".protostuff_unittest.A.B.C");
     }
 
     private void checkFieldType(Message a, String field, String fieldType) {

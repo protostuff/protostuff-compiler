@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package test.services;
+package protostuff_unittest;
 
 service SearchService {
     rpc search(SearchRequest) returns (SearchResponse);
