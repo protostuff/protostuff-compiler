@@ -1,5 +1,6 @@
 package io.protostuff.compiler.parser;
 
+import io.protostuff.compiler.model.Import;
 import io.protostuff.compiler.model.Proto;
 import io.protostuff.compiler.model.Syntax;
 
@@ -34,10 +35,8 @@ public class ProtoParseListener extends AbstractProtoParsetListener {
         Proto proto = context.peek(Proto.class);
         String text = ctx.STRING_VALUE().getText();
         String fileName = Util.removeFirstAndLastChar(text);
-        if (ctx.PUBLIC() == null) {
-            proto.addImport(fileName);
-        } else {
-            proto.addPublicImport(fileName);
-        }
+        Import anImport = new Import(fileName, ctx.PUBLIC() != null);
+        anImport.setSourceCodeLocation(getSourceCodeLocation(ctx));
+        proto.addImport(anImport);
     }
 }

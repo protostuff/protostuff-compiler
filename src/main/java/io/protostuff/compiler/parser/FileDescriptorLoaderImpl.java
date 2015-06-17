@@ -31,14 +31,13 @@ public class FileDescriptorLoaderImpl implements FileDescriptorLoader {
     public ProtoContext load(String name, CharStream stream) {
         ProtoContext context = parse(name, stream);
 
-        for (String anImport : context.getProto().getPublicImports()) {
-            ProtoContext importedContext = importer.importFile(anImport);
-            context.addPublicImport(importedContext);
-        }
-
-        for (String anImport : context.getProto().getImports()) {
-            ProtoContext importedContext = importer.importFile(anImport);
-            context.addImport(importedContext);
+        for (Import anImport : context.getProto().getImports()) {
+            ProtoContext importedContext = importer.importFile(anImport.getValue());
+            if (anImport.isPublic()) {
+                context.addPublicImport(importedContext);
+            } else {
+                context.addImport(importedContext);
+            }
         }
 
         registerUserTypes(context);

@@ -15,8 +15,7 @@ public class Proto extends AbstractUserTypeContainer implements UserTypeContaine
     protected String filename;
     protected Syntax syntax;
     protected String packageName;
-    protected List<String> imports;
-    protected List<String> publicImports;
+    protected List<Import> imports;
     protected List<Service> services;
 
     /**
@@ -61,40 +60,22 @@ public class Proto extends AbstractUserTypeContainer implements UserTypeContaine
         this.packageName = packageName;
     }
 
-    public List<String> getImports() {
+    public List<Import> getImports() {
         if (imports == null) {
             return Collections.emptyList();
         }
         return imports;
     }
 
-    public void setImports(List<String> imports) {
+    public void setImports(List<Import> imports) {
         this.imports = imports;
     }
 
-    public void addImport(String file) {
+    public void addImport(Import anImport) {
         if (imports == null) {
             imports = new ArrayList<>();
         }
-        imports.add(file);
-    }
-
-    public List<String> getPublicImports() {
-        if (publicImports == null) {
-            return Collections.emptyList();
-        }
-        return publicImports;
-    }
-
-    public void setPublicImports(List<String> publicImports) {
-        this.publicImports = publicImports;
-    }
-
-    public void addPublicImport(String file) {
-        if (publicImports == null) {
-            publicImports = new ArrayList<>();
-        }
-        publicImports.add(file);
+        imports.add(anImport);
     }
 
     public List<Service> getServices() {
@@ -119,13 +100,7 @@ public class Proto extends AbstractUserTypeContainer implements UserTypeContaine
     public String toString() {
         return MoreObjects.toStringHelper(this)
                 .omitNullValues()
-                .add("name", getName())
-                .add("syntax", syntax)
-                .add("package", packageName)
-                .add("imports", imports)
-                .add("messages", getMessages())
-                .add("enums", getEnums())
-                .add("options", getOptions())
+                .add("filename", filename)
                 .toString();
     }
 

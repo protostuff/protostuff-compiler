@@ -43,8 +43,8 @@ public class ProtoParseListenerTest {
         assertNotNull("proto3", proto.getSyntax());
         assertEquals("proto3", proto.getSyntax().getValue());
         assertEquals("pt.test", proto.getPackageName());
-        assertEquals("foo.proto", proto.getImports().get(0));
-        assertEquals("bar/baz.proto", proto.getImports().get(1));
+        assertEquals("foo.proto", proto.getImports().get(0).getValue());
+        assertEquals("bar/baz.proto", proto.getImports().get(1).getValue());
     }
 
     @Test
