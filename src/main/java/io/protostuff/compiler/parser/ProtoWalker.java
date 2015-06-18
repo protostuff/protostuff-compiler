@@ -17,7 +17,7 @@ public class ProtoWalker {
     private final ProtoContext context;
     private final Proto proto;
 
-    private final List<Consumer<Message>> messageProcessors = new ArrayList<>();
+    private final List<Processor<Message>> messageProcessors = new ArrayList<>();
 
     public ProtoWalker(ProtoContext protoContext) {
         this.context = protoContext;
@@ -28,7 +28,7 @@ public class ProtoWalker {
         return new ProtoWalker(proto);
     }
 
-    public ProtoWalker onMessage(Consumer<Message> processor) {
+    public ProtoWalker onMessage(Processor<Message> processor) {
         messageProcessors.add(processor);
         return this;
     }
@@ -38,11 +38,17 @@ public class ProtoWalker {
     }
 
     private void walk(UserTypeContainer container) {
-        for (Consumer<Message> messageProcessor : messageProcessors) {
+        for (Processor<Message> messageProcessor : messageProcessors) {
             List<Message> messages = container.getMessages();
-            messages.forEach(messageProcessor::accept);
+            for (Message message : messages) {
+                messageProcessor.run(context, message);
+            }
         }
     }
 
 
+    public interface Processor<T> {
+
+        void run(ProtoContext context, T t);
+    }
 }

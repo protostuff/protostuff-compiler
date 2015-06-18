@@ -1,8 +1,9 @@
 package io.protostuff.compiler.parser;
 
-import io.protostuff.compiler.model.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import io.protostuff.compiler.model.Extension;
+import io.protostuff.compiler.model.ExtensionRange;
+import io.protostuff.compiler.model.Field;
+import io.protostuff.compiler.model.Message;
 
 import java.util.List;
 
@@ -13,8 +14,6 @@ import java.util.List;
  */
 public class ExtensionValidator implements Validator {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ExtensionValidator.class);
-
     @Override
     public void validate(ProtoContext protoContext) {
         ProtoWalker.newInstance(protoContext)
@@ -22,7 +21,7 @@ public class ExtensionValidator implements Validator {
                 .walk();
     }
 
-    public void checkExtensionTagsAreInRange(Message message) {
+    public void checkExtensionTagsAreInRange(ProtoContext context, Message message) {
         List<Extension> extensions = message.getExtensions();
         List<ExtensionRange> ranges = message.getExtensionRanges();
         for (Extension extension : extensions) {

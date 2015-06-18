@@ -7,5 +7,5 @@ package io.protostuff.compiler.parser;
  */
 public interface Validator {
 
-    void validate(ProtoContext proto);
+    void validate(ProtoContext context);
 }
