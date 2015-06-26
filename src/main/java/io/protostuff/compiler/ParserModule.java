@@ -37,6 +37,7 @@ public class ParserModule extends AbstractModule {
 
         Multibinder<Validator> uriBinder = Multibinder.newSetBinder(binder(), Validator.class);
         uriBinder.addBinding().to(ExtensionValidator.class);
+        uriBinder.addBinding().to(CustomOptionsValidator.class);
     }
 
     @Provides

@@ -1,22 +1,38 @@
 package io.protostuff.compiler.model;
 
 import com.google.common.base.MoreObjects;
+import io.protostuff.compiler.parser.ProtoContext;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Kostiantyn Shchepanovskyi
  */
 public class Proto extends AbstractUserTypeContainer implements UserTypeContainer {
 
+    protected ProtoContext context;
     protected String filename;
     protected Syntax syntax;
     protected Package aPackage;
     protected List<Import> imports;
     protected List<Service> services;
+
+    public ProtoContext getContext() {
+        return context;
+    }
+
+    public void setContext(ProtoContext context) {
+        this.context = context;
+    }
+
+    @Override
+    public DescriptorType getDescriptorType() {
+        return DescriptorType.PROTO;
+    }
 
     /**
      * Full filename (including path, relative to root of source tree)
@@ -77,6 +93,13 @@ public class Proto extends AbstractUserTypeContainer implements UserTypeContaine
             return Collections.emptyList();
         }
         return imports;
+    }
+
+    public List<Import> getPublicImports() {
+        return getImports()
+                .stream()
+                .filter(Import::isPublic)
+                .collect(Collectors.toList());
     }
 
     public void setImports(List<Import> imports) {

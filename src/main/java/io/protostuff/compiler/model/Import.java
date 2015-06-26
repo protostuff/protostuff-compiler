@@ -11,6 +11,7 @@ public final class Import extends AbstractElement {
 
     private final String value;
     private final boolean aPublic;
+    private Proto proto;
 
     public Import(String value, boolean aPublic) {
         this.value = value;
@@ -23,6 +24,14 @@ public final class Import extends AbstractElement {
 
     public boolean isPublic() {
         return aPublic;
+    }
+
+    public Proto getProto() {
+        return proto;
+    }
+
+    public void setProto(Proto proto) {
+        this.proto = proto;
     }
 
     @Override

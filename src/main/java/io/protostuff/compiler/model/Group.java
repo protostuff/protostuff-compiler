@@ -27,6 +27,11 @@ public class Group extends Field implements FieldContainer, UserFieldType, UserT
     protected List<Extension> declaredExtensions;
 
     @Override
+    public DescriptorType getDescriptorType() {
+        return DescriptorType.GROUP;
+    }
+
+    @Override
     public List<Message> getMessages() {
         if (messages == null) {
             return Collections.emptyList();

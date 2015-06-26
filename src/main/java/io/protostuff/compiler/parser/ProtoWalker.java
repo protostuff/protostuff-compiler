@@ -17,6 +17,7 @@ public class ProtoWalker {
     private final ProtoContext context;
     private final Proto proto;
 
+    private final List<Processor<Proto>> protoProcessors = new ArrayList<>();
     private final List<Processor<Message>> messageProcessors = new ArrayList<>();
 
     public ProtoWalker(ProtoContext protoContext) {
@@ -28,12 +29,20 @@ public class ProtoWalker {
         return new ProtoWalker(proto);
     }
 
+    public ProtoWalker onProto(Processor<Proto> processor) {
+        protoProcessors.add(processor);
+        return this;
+    }
+
     public ProtoWalker onMessage(Processor<Message> processor) {
         messageProcessors.add(processor);
         return this;
     }
 
     public void walk() {
+        for (Processor<Proto> protoProcessor : protoProcessors) {
+            protoProcessor.run(context, proto);
+        }
         walk(proto);
     }
 

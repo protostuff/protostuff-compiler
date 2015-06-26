@@ -11,12 +11,15 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import java.util.List;
+import java.util.Map;
+import java.util.function.BiFunction;
 
 import static org.junit.Assert.*;
 
 /**
  * @author Kostiantyn Shchepanovskyi
  */
+@SuppressWarnings("ConstantConditions")
 public class ExtensionsIT {
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -33,37 +36,31 @@ public class ExtensionsIT {
     public void testBasicExtensions() throws Exception {
         ProtoContext context = importer.importFile("protostuff_unittest/extensions_sample.proto");
         Proto proto = context.getProto();
+        ExtensionRegistry er = context.getExtensionRegistry();
 
-        Message a = proto.getMessage("A");
-        assertNotNull(a);
-        List<Extension> extensions = a.getExtensions();
-        Assert.assertEquals(1, extensions.size());
-        Field ay = a.getExtensionField(".protostuff_unittest.ay");
-        assertNotNull(ay);
+        Message a = context.resolve(Message.class, ".protostuff_unittest.A");
+        Map<String, Field> aFields = er.getExtensionFields(a);
+        Assert.assertEquals(2, aFields.size());
+        Field ay = aFields.get(".protostuff_unittest.ay");
         assertEquals(ScalarFieldType.INT32, ay.getType());
         assertEquals(42, ay.getTag());
-        Field az = a.getExtensionField(".protostuff_unittest.az");
-        assertNotNull(az);
+        Field az = aFields.get(".protostuff_unittest.az");
         assertEquals(ScalarFieldType.INT32, az.getType());
         assertEquals(43, az.getTag());
-
         assertEquals(1, a.getExtensionRanges().size());
         ExtensionRange aRange = a.getExtensionRanges().get(0);
         assertEquals(10, aRange.getMin());
         assertEquals(Field.MAX_TAG_VALUE, aRange.getMax());
 
-        Message b = a.getMessage("B");
-        assertNotNull(b);
-        Assert.assertEquals(2, b.getExtensions().size());
-        Field by = b.getExtensionField(".protostuff_unittest.A.by");
-        assertNotNull(by);
+        Message b = context.resolve(Message.class, ".protostuff_unittest.A.B");
+        Map<String, Field> bFields = er.getExtensionFields(b);
+        Assert.assertEquals(2, bFields.size());
+        Field by = bFields.get(".protostuff_unittest.A.by");
         assertEquals(ScalarFieldType.INT32, by.getType());
         assertEquals(52, by.getTag());
-        Field bz = b.getExtensionField(".protostuff_unittest.bz");
-        assertNotNull(bz);
+        Field bz = bFields.get(".protostuff_unittest.bz");
         assertEquals(ScalarFieldType.INT32, bz.getType());
         assertEquals(53, bz.getTag());
-
         assertEquals(1, b.getExtensionRanges().size());
         ExtensionRange bRange = b.getExtensionRanges().get(0);
         assertEquals(10, bRange.getMin());

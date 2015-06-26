@@ -39,6 +39,7 @@ public class FileDescriptorLoaderImpl implements FileDescriptorLoader {
             } else {
                 context.addImport(importedContext);
             }
+            anImport.setProto(importedContext.getProto());
         }
 
         registerUserTypes(context);
@@ -56,9 +57,10 @@ public class FileDescriptorLoaderImpl implements FileDescriptorLoader {
     }
 
     private void registerExtensions(ProtoContext context, UserTypeContainer container) {
+        ExtensionRegistry extensionRegistry = context.getExtensionRegistry();
         List<Extension> extensions = container.getDeclaredExtensions();
         for (Extension extension : extensions) {
-            context.registerExtension(extension);
+            extensionRegistry.registerExtension(extension);
             String parentNamespace = container.getNamespace();
             extension.setNamespace(parentNamespace);
         }
@@ -108,6 +110,7 @@ public class FileDescriptorLoaderImpl implements FileDescriptorLoader {
     }
 
     private void resolveTypeReferences(ProtoContext context, Deque<String> scopeLookupList, UserTypeContainer container) {
+        ExtensionRegistry extensionRegistry = context.getExtensionRegistry();
         for (Extension extension : container.getDeclaredExtensions()) {
             String extendeeName = extension.getExtendeeName();
             UserFieldType type = resolveUserType(extension, context, scopeLookupList, extendeeName);
@@ -116,12 +119,12 @@ public class FileDescriptorLoaderImpl implements FileDescriptorLoader {
             }
             Message extendee = (Message) type;
             extension.setExtendee(extendee);
-            extendee.addExtension(extension);
             for (Field field : extension.getFields()) {
                 String typeName = field.getTypeName();
                 FieldType fieldType = resolveFieldType(field, context, scopeLookupList, typeName);
                 field.setType(fieldType);
             }
+            extensionRegistry.registerExtension(extension);
         }
 
         for (Message message : container.getMessages()) {

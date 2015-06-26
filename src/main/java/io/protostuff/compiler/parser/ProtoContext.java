@@ -10,30 +10,35 @@ import java.util.*;
 /**
  * @author Kostiantyn Shchepanovskyi
  */
-public class ProtoContext implements ExtensionRegistry {
+public class ProtoContext {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ProtoContext.class);
 
     private final Map<String, Type> symbolTable;
     private final Deque<Object> declarationStack;
     private final Proto proto;
-    private final ExtensionRegistry localExtensionRegistry;
+    private final ExtensionRegistry extensionRegistry;
     private final List<ProtoContext> imports;
     private final List<ProtoContext> publicImports;
 
     private boolean initialized;
 
     public ProtoContext(String filename) {
-        localExtensionRegistry = new LocalExtensionRegistry();
         symbolTable = new HashMap<>();
         declarationStack = new ArrayDeque<>();
         imports = new ArrayList<>();
         publicImports = new ArrayList<>();
         proto = new Proto();
+        proto.setContext(this);
         proto.setFilename(filename);
-        String shortFilename = FilenameUtils.getName(filename);
-        proto.setName(FilenameUtils.removeExtension(shortFilename));
+        proto.setName(getFilenameWithoutExtension(filename));
         push(proto);
+        extensionRegistry = new ProtoExtensionRegistry(this);
+    }
+
+    private String getFilenameWithoutExtension(String filename) {
+        String shortFilename = FilenameUtils.getName(filename);
+        return FilenameUtils.removeExtension(shortFilename);
     }
 
     @SuppressWarnings("unchecked")
@@ -92,19 +97,31 @@ public class ProtoContext implements ExtensionRegistry {
         }
     }
 
-    public Type resolve(String typeName) {
-        Type local = symbolTable.get(typeName);
+    @SuppressWarnings("unchecked")
+    public <T extends Type> T resolve(Class<T> typeClass, String fullName) {
+        Type result = resolve(fullName);
+        if (result == null) {
+            return null;
+        }
+        if (typeClass.isAssignableFrom(result.getClass())) {
+            return (T) result;
+        }
+        throw new ClassCastException(result.getClass() + " cannot be cast to " + typeClass);
+    }
+
+    public Type resolve(String fullName) {
+        Type local = symbolTable.get(fullName);
         if (local != null) {
             return local;
         }
         for (ProtoContext importedContext : publicImports) {
-            Type imported = importedContext.resolve(typeName);
+            Type imported = importedContext.resolve(fullName);
             if (imported != null) {
                 return imported;
             }
         }
         for (ProtoContext importedContext : imports) {
-            Type imported = importedContext.resolveImport(typeName);
+            Type imported = importedContext.resolveImport(fullName);
             if (imported != null) {
                 return imported;
             }
@@ -124,21 +141,6 @@ public class ProtoContext implements ExtensionRegistry {
             }
         }
         return null;
-    }
-
-    @Override
-    public void registerExtension(Extension extension) {
-        localExtensionRegistry.registerExtension(extension);
-    }
-
-    @Override
-    public Collection<Extension> getExtensions(String messageName) {
-        return localExtensionRegistry.getExtensions(messageName);
-    }
-
-    @Override
-    public Map<String, Extension> getExtensionMap(String messageName) {
-        return localExtensionRegistry.getExtensionMap(messageName);
     }
 
     public boolean isInitialized() {
@@ -163,6 +165,10 @@ public class ProtoContext implements ExtensionRegistry {
 
     public void addPublicImport(ProtoContext importedProto) {
         publicImports.add(importedProto);
+    }
+
+    public ExtensionRegistry getExtensionRegistry() {
+        return extensionRegistry;
     }
 
 }

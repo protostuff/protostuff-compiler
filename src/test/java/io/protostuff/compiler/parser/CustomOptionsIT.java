@@ -12,19 +12,15 @@ import java.util.Map;
 /**
  * @author Kostiantyn Shchepanovskyi
  */
-public class CustomOptionsIT {
-    private Injector injector;
-
-    @Before
-    public void setUp() throws Exception {
-        injector = Guice.createInjector(new ParserModule());
-    }
+public class CustomOptionsIT extends AbstractParserTest {
 
     @Test
     public void test() throws Exception {
-        Importer importer = injector.getInstance(Importer.class);
-        ProtoContext context = importer.importFile("protobuf_unittest/unittest_custom_options.proto");
-        System.out.println(context.getProto());
+        importer.importFile("protobuf_unittest/unittest_custom_options.proto");
     }
 
+    @Test
+    public void testValidator() throws Exception {
+        importer.importFile("protostuff_unittest/options_sample.proto");
+    }
 }

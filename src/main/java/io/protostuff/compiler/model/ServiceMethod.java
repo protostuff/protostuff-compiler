@@ -13,6 +13,11 @@ public class ServiceMethod extends AbstractDescriptor {
     private String returnTypeName;
     private Message returnType;
 
+    @Override
+    public DescriptorType getDescriptorType() {
+        return DescriptorType.SERVICE_METHOD;
+    }
+
     public String getArgTypeName() {
         return argTypeName;
     }

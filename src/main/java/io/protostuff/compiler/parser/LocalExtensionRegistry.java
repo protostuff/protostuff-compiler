@@ -15,17 +15,16 @@ import java.util.concurrent.ConcurrentMap;
 /**
  * @author Kostiantyn Shchepanovskyi
  */
-public class LocalExtensionRegistry implements ExtensionRegistry {
+public class LocalExtensionRegistry extends AbstractExtensionRegistry {
 
     private final SetMultimap<String, Extension> extensions = HashMultimap.create();
-    private final ConcurrentMap<String, Map<String, Extension>> mapCache = new ConcurrentHashMap<>();
+
 
     @Override
     public void registerExtension(Extension extension) {
         String fullName = extension.getExtendee().getFullName();
         Preconditions.checkNotNull(fullName);
         extensions.put(fullName, extension);
-        mapCache.remove(fullName);
     }
 
     @Override
@@ -33,17 +32,4 @@ public class LocalExtensionRegistry implements ExtensionRegistry {
         return extensions.get(messageName);
     }
 
-    @Override
-    public Map<String, Extension> getExtensionMap(String messageName) {
-        return mapCache.computeIfAbsent(messageName, s -> {
-            Map<String, Extension> map = new HashMap<>();
-            Collection<Extension> extensions = getExtensions(messageName);
-            for (Extension extension : extensions) {
-                for (Field field : extension.getFields()) {
-                    map.put(field.getName(), extension);
-                }
-            }
-            return map;
-        });
-    }
 }

@@ -42,4 +42,8 @@ public class Enum extends AbstractUserFieldType {
                 .toString();
     }
 
+    @Override
+    public DescriptorType getDescriptorType() {
+        return DescriptorType.ENUM;
+    }
 }

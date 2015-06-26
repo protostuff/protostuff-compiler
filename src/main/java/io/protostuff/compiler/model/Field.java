@@ -62,4 +62,8 @@ public class Field extends AbstractDescriptor {
                 .toString();
     }
 
+    @Override
+    public DescriptorType getDescriptorType() {
+        return DescriptorType.MESSAGE_FIELD;
+    }
 }

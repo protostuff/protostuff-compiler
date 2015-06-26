@@ -19,6 +19,11 @@ public class EnumConstant extends AbstractDescriptor {
         return super.getName();
     }
 
+    @Override
+    public DescriptorType getDescriptorType() {
+        return DescriptorType.MESSAGE;
+    }
+
     /**
      * Returns numeric value of this enum constant that is used in serialized form.
      */

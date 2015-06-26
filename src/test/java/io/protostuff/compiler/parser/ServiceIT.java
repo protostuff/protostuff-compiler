@@ -15,18 +15,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * @author Kostiantyn Shchepanovskyi
  */
-public class ServiceIT {
-
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
-    private Injector injector;
-    private Importer importer;
-
-    @Before
-    public void setUp() throws Exception {
-        injector = Guice.createInjector(new ParserModule());
-        importer = injector.getInstance(Importer.class);
-    }
+public class ServiceIT extends AbstractParserTest {
 
     @Test
     public void testSample() throws Exception {

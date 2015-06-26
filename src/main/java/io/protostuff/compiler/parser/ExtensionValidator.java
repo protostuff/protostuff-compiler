@@ -5,6 +5,7 @@ import io.protostuff.compiler.model.ExtensionRange;
 import io.protostuff.compiler.model.Field;
 import io.protostuff.compiler.model.Message;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -22,7 +23,8 @@ public class ExtensionValidator implements Validator {
     }
 
     public void checkExtensionTagsAreInRange(ProtoContext context, Message message) {
-        List<Extension> extensions = message.getExtensions();
+        ExtensionRegistry extensionRegistry = context.getExtensionRegistry();
+        Collection<Extension> extensions = extensionRegistry.getExtensions(message);
         List<ExtensionRange> ranges = message.getExtensionRanges();
         for (Extension extension : extensions) {
             List<Field> fields = extension.getFields();

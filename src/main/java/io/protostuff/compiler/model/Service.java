@@ -15,6 +15,11 @@ public class Service extends AbstractDescriptor implements Type {
     private String fullName;
     private List<ServiceMethod> methods;
 
+    @Override
+    public DescriptorType getDescriptorType() {
+        return DescriptorType.SERVICE;
+    }
+
     public Proto getProto() {
         return proto;
     }
