@@ -13,10 +13,10 @@ import java.util.List;
  *
  * @author Kostiantyn Shchepanovskyi
  */
-public class ExtensionValidator implements Validator {
+public class ExtensionsPostProcessor implements ProtoPostProcessor {
 
     @Override
-    public void validate(ProtoContext protoContext) {
+    public void process(ProtoContext protoContext) {
         ProtoWalker.newInstance(protoContext)
                 .onMessage(this::checkExtensionTagsAreInRange)
                 .walk();

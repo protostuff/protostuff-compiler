@@ -10,12 +10,12 @@ import org.slf4j.LoggerFactory;
 /**
  * @author Kostiantyn Shchepanovskyi
  */
-public class CustomOptionsValidator implements Validator {
+public class CustomOptionsPostProcessor implements ProtoPostProcessor {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CustomOptionsValidator.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CustomOptionsPostProcessor.class);
 
     @Override
-    public void validate(ProtoContext context) {
+    public void process(ProtoContext context) {
         ProtoWalker.newInstance(context)
                 .onProto(this::checkOptions)
                 .onMessage(this::checkOptions)

@@ -35,9 +35,9 @@ public class ParserModule extends AbstractModule {
         bind(ANTLRErrorStrategy.class).to(BailErrorStrategy.class);
         bind(ExtensionRegistry.class).to(LocalExtensionRegistry.class);
 
-        Multibinder<Validator> uriBinder = Multibinder.newSetBinder(binder(), Validator.class);
-        uriBinder.addBinding().to(ExtensionValidator.class);
-        uriBinder.addBinding().to(CustomOptionsValidator.class);
+        Multibinder<ProtoPostProcessor> uriBinder = Multibinder.newSetBinder(binder(), ProtoPostProcessor.class);
+        uriBinder.addBinding().to(ExtensionsPostProcessor.class);
+        uriBinder.addBinding().to(CustomOptionsPostProcessor.class);
     }
 
     @Provides

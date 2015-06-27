@@ -19,13 +19,13 @@ public class FileDescriptorLoaderImpl implements FileDescriptorLoader {
 
     private final ANTLRErrorListener errorListener;
     private final Importer importer;
-    private final Set<Validator> validators;
+    private final Set<ProtoPostProcessor> postProcessors;
 
     @Inject
-    public FileDescriptorLoaderImpl(Importer importer, ANTLRErrorListener errorListener, Set<Validator> validators) {
+    public FileDescriptorLoaderImpl(Importer importer, ANTLRErrorListener errorListener, Set<ProtoPostProcessor> postProcessors) {
         this.errorListener = errorListener;
         this.importer = importer;
-        this.validators = validators;
+        this.postProcessors = postProcessors;
     }
 
     @Override
@@ -48,8 +48,8 @@ public class FileDescriptorLoaderImpl implements FileDescriptorLoader {
 
         registerExtensions(context, context.getProto());
 
-        for (Validator validator : validators) {
-            validator.validate(context);
+        for (ProtoPostProcessor postProcessor : postProcessors) {
+            postProcessor.process(context);
         }
 
         context.setInitialized(true);
