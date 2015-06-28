@@ -82,7 +82,7 @@ public class DynamicMessage implements Map<String, DynamicMessage.Value>{
                     msg = val.getMessage();
                 } else {
                     msg = new DynamicMessage();
-                    fields.put(key, Value.create(msg));
+                    fields.put(key, Value.createMessage(msg));
                 }
                 msg.set(rest, value);
             } else {
@@ -216,6 +216,10 @@ public class DynamicMessage implements Map<String, DynamicMessage.Value>{
         return map.entrySet();
     }
 
+    public Set<Entry<Key, Value>> getFields() {
+        return fields.entrySet();
+    }
+
     public static class Key {
         private final String name;
         private final boolean extension;
@@ -280,6 +284,8 @@ public class DynamicMessage implements Map<String, DynamicMessage.Value>{
         private final String enumName;
         private final DynamicMessage message;
 
+        private FieldType fieldType;
+
         private Value(Type type, Object value) {
             this.type = type;
             boolean b = false;
@@ -318,24 +324,32 @@ public class DynamicMessage implements Map<String, DynamicMessage.Value>{
             this.message = m;
         }
 
-        public static Value create(String value) {
+        public Type getType() {
+            return type;
+        }
+
+        public static Value createString(String value) {
             return new Value(Type.STRING, value);
         }
 
-        public static Value create(boolean value) {
+        public static Value createBoolean(boolean value) {
             return new Value(Type.BOOLEAN, value);
         }
 
-        public static Value create(long value) {
+        public static Value createInteger(long value) {
             return new Value(Type.INTEGER, value);
         }
 
-        public static Value create(DynamicMessage value) {
+        public static Value createMessage(DynamicMessage value) {
             return new Value(Type.MESSAGE, value);
         }
 
-        public static Value create(double value) {
+        public static Value createFloat(double value) {
             return new Value(Type.FLOAT, value);
+        }
+
+        public static Value createEnum(String value) {
+            return new Value(Type.ENUM, value);
         }
 
         @Override
@@ -357,6 +371,7 @@ public class DynamicMessage implements Map<String, DynamicMessage.Value>{
                     throw new IllegalStateException(String.valueOf(type));
             }
         }
+
 
         public boolean getBoolean() {
             Preconditions.checkState(isBooleanType(), "%s is not a boolean", this);
@@ -395,6 +410,16 @@ public class DynamicMessage implements Map<String, DynamicMessage.Value>{
         public boolean isStringType() {
             return type == Type.STRING;
         }
+
+        public String getEnumName() {
+            Preconditions.checkState(isEnumType(), "%s is not a enum", this);
+            return enumName;
+        }
+
+        public boolean isEnumType() {
+            return type == Type.ENUM;
+        }
+
 
 
         public DynamicMessage getMessage() {

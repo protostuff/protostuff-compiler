@@ -4,7 +4,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import static io.protostuff.compiler.model.DynamicMessage.Value.create;
+import static io.protostuff.compiler.model.DynamicMessage.Value.createString;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -20,13 +20,13 @@ public class DynamicMessageTest {
 
     @Test
     public void testSimpleKeyValue() throws Exception {
-        m.set("key", create("value"));
+        m.set("key", createString("value"));
         Assert.assertEquals("value", m.get("key").getString());
     }
 
     @Test
     public void testFieldOfField() throws Exception {
-        m.set("key.subkey", create("value"));
+        m.set("key.subkey", createString("value"));
         Assert.assertEquals("value", m.get("key.subkey").getString());
         DynamicMessage n = m.get("key").getMessage();
         Assert.assertEquals("value", n.get("subkey").getString());
@@ -34,13 +34,13 @@ public class DynamicMessageTest {
 
     @Test
     public void testExtensionKeyValue() throws Exception {
-        m.set("(.io.protostuff.key)", create("value"));
+        m.set("(.io.protostuff.key)", createString("value"));
         Assert.assertEquals("value", m.get("(.io.protostuff.key)").getString());
     }
 
     @Test
     public void testExtensionFieldOfField() throws Exception {
-        m.set("key.(.io.protostuff.subkey)", create("value"));
+        m.set("key.(.io.protostuff.subkey)", createString("value"));
         Assert.assertEquals("value", m.get("key.(.io.protostuff.subkey)").getString());
         DynamicMessage n = m.get("key").getMessage();
         Assert.assertEquals("value", n.get("(.io.protostuff.subkey)").getString());
@@ -48,7 +48,7 @@ public class DynamicMessageTest {
 
     @Test
     public void testFieldOfExtensionField() throws Exception {
-        m.set("(.io.protostuff.key).subkey", create("value"));
+        m.set("(.io.protostuff.key).subkey", createString("value"));
         Assert.assertEquals("value", m.get("(.io.protostuff.key).subkey").getString());
         DynamicMessage n = m.get("(.io.protostuff.key)").getMessage();
         Assert.assertEquals("value", n.get("subkey").getString());

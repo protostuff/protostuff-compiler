@@ -137,7 +137,7 @@ public class EnumParseListenerTest {
     public void parseEnumWithCustomEnumOption() throws Exception {
         Enum result = parseEnumBlock(ENUM_BLOCK_WITH_CUSTOM_ENUM_OPTION);
         assertEquals("E", result.getName());
-        assertEquals("V", result.getOptions().get("(x)").getString());
+        assertEquals("V", result.getOptions().get("(x)").getEnumName());
     }
 
     @Test
