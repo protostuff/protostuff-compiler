@@ -1,7 +1,5 @@
-Protocol Buffers file parser and code generator
-===============================================
-
-Status: under development
+Protocol Buffers parser and code generator
+------------------------------------------
 
 [![Build Status](https://travis-ci.org/kshchepanovskyi/proto-compiler.svg?branch=master)](https://travis-ci.org/kshchepanovskyi/proto-compiler)
 
