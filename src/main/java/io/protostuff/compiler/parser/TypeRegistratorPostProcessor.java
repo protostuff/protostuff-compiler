@@ -1,6 +1,7 @@
 package io.protostuff.compiler.parser;
 
 import io.protostuff.compiler.model.Enum;
+import io.protostuff.compiler.model.Map;
 import io.protostuff.compiler.model.Message;
 import io.protostuff.compiler.model.Proto;
 import io.protostuff.compiler.model.Service;
@@ -29,6 +30,11 @@ public class TypeRegistratorPostProcessor implements ProtoContextPostProcessor {
             String fullName = proto.getNamespace() + type.getName();
             type.setFullName(fullName);
             context.register(fullName, type);
+            for (Map map : type.getMaps()) {
+                map.setProto(proto);
+                map.setParent(type);
+                map.setFullName(type.getNamespace() + map.getName());
+            }
         }
 
         List<io.protostuff.compiler.model.Enum> enums = proto.getEnums();
@@ -66,6 +72,13 @@ public class TypeRegistratorPostProcessor implements ProtoContextPostProcessor {
         };
         nestedEnums.forEach(nestedTypeProcessor);
         nestedMessages.forEach(nestedTypeProcessor);
-        nestedMessages.forEach(message -> registerNestedUserTypes(context, message));
+        nestedMessages.forEach(message -> {
+            for (Map map : message.getMaps()) {
+                map.setProto(message.getProto());
+                map.setParent(message);
+                map.setFullName(message.getNamespace() + map.getName());
+            }
+            registerNestedUserTypes(context, message);
+        });
     }
 }

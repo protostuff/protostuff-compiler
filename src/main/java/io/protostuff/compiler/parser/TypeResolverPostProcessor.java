@@ -5,6 +5,7 @@ import io.protostuff.compiler.model.Extension;
 import io.protostuff.compiler.model.Field;
 import io.protostuff.compiler.model.FieldContainer;
 import io.protostuff.compiler.model.FieldType;
+import io.protostuff.compiler.model.Map;
 import io.protostuff.compiler.model.Message;
 import io.protostuff.compiler.model.Oneof;
 import io.protostuff.compiler.model.Proto;
@@ -21,6 +22,8 @@ import java.util.Deque;
  * @author Kostiantyn Shchepanovskyi
  */
 public class TypeResolverPostProcessor implements ProtoContextPostProcessor {
+
+    public static final String ILLEGAL_KEY_TYPE = "Illegal key type: %s";
 
     @Override
     public void process(ProtoContext context) {
@@ -91,6 +94,26 @@ public class TypeResolverPostProcessor implements ProtoContextPostProcessor {
             for (Oneof oneof : message.getOneofs()) {
                 updateFieldTypes(context, scopeLookupList, oneof);
             }
+            for (Map map : message.getMaps()) {
+                String keyTypeName = map.getKeyTypeName();
+                FieldType keyType = resolveFieldType(map, context, scopeLookupList, keyTypeName);
+                if (keyType instanceof ScalarFieldType) {
+                    ScalarFieldType scalarFieldType = (ScalarFieldType) keyType;
+                    if (scalarFieldType == ScalarFieldType.FLOAT
+                            || scalarFieldType == ScalarFieldType.DOUBLE
+                            || scalarFieldType == ScalarFieldType.BYTES) {
+                        throw new ParserException(map, ILLEGAL_KEY_TYPE, keyType.getName());
+                    }
+                    map.setKeyType(scalarFieldType);
+                } else {
+                    throw new ParserException(map, ILLEGAL_KEY_TYPE, keyType.getName());
+                }
+
+                String valueTypeName = map.getValueTypeName();
+                FieldType valueType = resolveFieldType(map, context, scopeLookupList, valueTypeName);
+                map.setValueType(valueType);
+            }
+
             resolveTypeReferences(context, scopeLookupList, message);
             scopeLookupList.pop();
         }
@@ -98,9 +121,13 @@ public class TypeResolverPostProcessor implements ProtoContextPostProcessor {
 
     private void updateFieldTypes(ProtoContext context, Deque<String> scopeLookupList, FieldContainer fieldContainer) {
         for (Field field : fieldContainer.getFields()) {
-            String typeName = field.getTypeName();
-            FieldType fieldType = resolveFieldType(field, context, scopeLookupList, typeName);
-            field.setType(fieldType);
+            // check if field type isn't already set
+            // for map fields it is set by parser
+            if (field.getType() == null) {
+                String typeName = field.getTypeName();
+                FieldType fieldType = resolveFieldType(field, context, scopeLookupList, typeName);
+                field.setType(fieldType);
+            }
         }
     }
 

@@ -8,6 +8,7 @@ import io.protostuff.compiler.model.Field;
 import io.protostuff.compiler.model.FieldContainer;
 import io.protostuff.compiler.model.Group;
 import io.protostuff.compiler.model.GroupContainer;
+import io.protostuff.compiler.model.Map;
 import io.protostuff.compiler.model.Message;
 import io.protostuff.compiler.model.MessageContainer;
 import io.protostuff.compiler.model.Oneof;
@@ -142,6 +143,34 @@ public class MessageParseListener extends AbstractProtoParsetListener {
         group.setSourceCodeLocation(getSourceCodeLocation(ctx));
         GroupContainer container = context.peek(GroupContainer.class);
         container.addGroup(group);
+    }
+
+    @Override
+    public void enterMap(ProtoParser.MapContext ctx) {
+        Field field = new Field();
+        context.push(field);
+    }
+
+    @Override
+    public void exitMap(ProtoParser.MapContext ctx) {
+        Field field = context.pop(Field.class);
+        Message message = context.peek(Message.class);
+        String name = ctx.name().getText();
+        String keyType = ctx.mapKey().getText();
+        String valueType = ctx.mapValue().getText();
+        Map map = new Map();
+        map.setName(name);
+        map.setSourceCodeLocation(getSourceCodeLocation(ctx));
+        map.setKeyTypeName(keyType);
+        map.setValueTypeName(valueType);
+        Integer tag = Integer.decode(ctx.tag().getText());
+        field.setName(name);
+        field.setTag(tag);
+        field.setTypeName(name);
+        field.setType(map);
+        field.setSourceCodeLocation(getSourceCodeLocation(ctx));
+        message.addField(field);
+        message.addMap(map);
     }
 
     @Override

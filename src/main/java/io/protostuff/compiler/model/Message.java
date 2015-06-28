@@ -17,9 +17,10 @@ public class Message extends AbstractUserTypeContainer
     protected List<Field> fields;
     protected List<Group> groups;
     protected List<Oneof> oneofs;
+    protected List<Map> maps;
     protected Proto proto;
     protected String fullName;
-    protected boolean nested;
+
     protected UserTypeContainer parent;
     protected List<ExtensionRange> extensionRanges;
 
@@ -46,7 +47,6 @@ public class Message extends AbstractUserTypeContainer
         fields.add(field);
     }
 
-    @Nullable
     public Field getField(String name) {
         for (Field field : getFields()) {
             if (name.equals(field.getName())) {
@@ -64,6 +64,33 @@ public class Message extends AbstractUserTypeContainer
             }
         }
         return null;
+    }
+
+    public List<Map> getMaps() {
+        if (maps == null) {
+            return Collections.emptyList();
+        }
+        return maps;
+    }
+
+    public Map getMap(String name) {
+        for (Map map : getMaps()) {
+            if (map.getName().equals(name)) {
+                return map;
+            }
+        }
+        return null;
+    }
+
+    public void setMaps(List<Map> maps) {
+        this.maps = maps;
+    }
+
+    public void addMap(Map map) {
+        if (maps == null) {
+            maps = new ArrayList<>();
+        }
+        maps.add(map);
     }
 
     public List<Oneof> getOneofs() {

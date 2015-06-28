@@ -57,6 +57,9 @@ RPC
 RETURNS
     : 'returns'
     ;
+MAP
+    : 'map'
+    ;
 COMMENT
     : '/*' .*? '*/' -> skip
     ;
@@ -88,6 +91,12 @@ LSQUARE
 
 RSQUARE
     :   ']'
+    ;
+LT
+    :   '<'
+    ;
+GT
+    :   '>'
     ;
 COMMA
     :   ','

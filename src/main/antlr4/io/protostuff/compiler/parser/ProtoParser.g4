@@ -76,6 +76,7 @@ messageBlockEntry
     | extendBlock
     | groupBlock
     | oneof
+    | map
     ;
 oneof
     : ONEOF name LCURLY oneofEntry* RCURLY SEMICOLON?
@@ -89,6 +90,18 @@ oneofField
     ;
 oneofGroup
     : GROUP name ASSIGN INTEGER_VALUE LCURLY groupBlockEntry* RCURLY SEMICOLON?
+    ;
+map
+    : MAP LT mapKey COMMA mapValue GT name ASSIGN tag fieldOptions? SEMICOLON
+    ;
+mapKey
+    : typeReference
+    ;
+mapValue
+    : typeReference
+    ;
+tag
+    : INTEGER_VALUE
     ;
 groupBlock
     : fieldModifier GROUP name ASSIGN INTEGER_VALUE 
@@ -168,4 +181,5 @@ name
     | EXTENSIONS
     | TO
     | SYNTAX
+    | MAP
     ;
