@@ -9,6 +9,7 @@ import io.protostuff.compiler.generator.StErrorListener;
 import org.stringtemplate.v4.STGroup;
 import org.stringtemplate.v4.STGroupFile;
 
+import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 
 /**
@@ -29,15 +30,9 @@ public class CompilerModule extends AbstractModule {
 
     @Provides
     ProtoCompiler compiler() {
-        OutputStreamFactory outputStreamFactory = new OutputStreamFactory() {
-
-            @Override
-            public OutputStream createStream(String location) {
-                return System.out;
-            }
-        };
         STGroup group = new STGroupFile(templateFileName);
         group.setListener(new StErrorListener());
-        return new StCompiler(group, outputStreamFactory);
+        // TODO change output stream factory
+        return new StCompiler(group, location -> new ByteArrayOutputStream());
     }
 }

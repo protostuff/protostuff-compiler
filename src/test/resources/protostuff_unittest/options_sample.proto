@@ -11,7 +11,7 @@ option (protostuff_unittest.b) = "B";
 option (.protostuff_unittest.c) = "C";
 
 extend google.protobuf.FileOptions {
-    string a = 1;
-    string b = 2;
-    string c = 3;
+    string a = 1001;
+    string b = 1002;
+    string c = 1003;
 }

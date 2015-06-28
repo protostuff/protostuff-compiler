@@ -78,7 +78,6 @@ public class MessageParseListenerTest {
     @Test
     public void parseEmbeddedMessage() throws Exception {
         Message message = parseMessage(EMBEDDED_MESSAGE);
-        System.out.println(message);
     }
 
     private Message parseMessage(String input) {

@@ -81,8 +81,14 @@ oneof
     : ONEOF name LCURLY oneofEntry* RCURLY SEMICOLON?
     ;
 oneofEntry
+    : oneofField
+    | oneofGroup
+    ;
+oneofField
     : typeReference name ASSIGN INTEGER_VALUE fieldOptions? SEMICOLON
-    | GROUP name ASSIGN INTEGER_VALUE LCURLY groupBlockEntry* RCURLY SEMICOLON?
+    ;
+oneofGroup
+    : GROUP name ASSIGN INTEGER_VALUE LCURLY groupBlockEntry* RCURLY SEMICOLON?
     ;
 groupBlock
     : fieldModifier GROUP name ASSIGN INTEGER_VALUE 

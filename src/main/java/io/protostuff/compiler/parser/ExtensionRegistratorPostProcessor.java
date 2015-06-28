@@ -1,32 +1,25 @@
 package io.protostuff.compiler.parser;
 
-import io.protostuff.compiler.model.Extension;
-import io.protostuff.compiler.model.ExtensionRange;
-import io.protostuff.compiler.model.Field;
-import io.protostuff.compiler.model.Message;
+import io.protostuff.compiler.model.*;
 
-import java.util.Collection;
 import java.util.List;
 
 /**
- * Extensions validator
- *
  * @author Kostiantyn Shchepanovskyi
  */
-public class ExtensionsPostProcessor implements ProtoPostProcessor {
+public class ExtensionRegistratorPostProcessor implements ProtoContextPostProcessor {
 
     @Override
-    public void process(ProtoContext protoContext) {
-        ProtoWalker.newInstance(protoContext)
-                .onMessage(this::checkExtensionTagsAreInRange)
-                .walk();
+    public void process(ProtoContext context) {
+        registerExtensions(context, context.getProto());
     }
 
-    public void checkExtensionTagsAreInRange(ProtoContext context, Message message) {
+    private void registerExtensions(ProtoContext context, UserTypeContainer container) {
         ExtensionRegistry extensionRegistry = context.getExtensionRegistry();
-        Collection<Extension> extensions = extensionRegistry.getExtensions(message);
-        List<ExtensionRange> ranges = message.getExtensionRanges();
+        List<Extension> extensions = container.getDeclaredExtensions();
         for (Extension extension : extensions) {
+            Message extendee = extension.getExtendee();
+            List<ExtensionRange> ranges = extendee.getExtensionRanges();
             List<Field> fields = extension.getFields();
             for (Field field : fields) {
                 int tag = field.getTag();
@@ -43,6 +36,13 @@ public class ExtensionsPostProcessor implements ProtoPostProcessor {
                     throw new ParserException(field, format, field.getName(), tag);
                 }
             }
+            String parentNamespace = container.getNamespace();
+            extension.setNamespace(parentNamespace);
+            extensionRegistry.registerExtension(extension);
+        }
+        for (Message message : container.getMessages()) {
+            registerExtensions(context, message);
         }
     }
+
 }

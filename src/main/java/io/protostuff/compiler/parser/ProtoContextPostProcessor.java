@@ -5,7 +5,7 @@ package io.protostuff.compiler.parser;
  *
  * @author Kostiantyn Shchepanovskyi
  */
-public interface ProtoPostProcessor {
+public interface ProtoContextPostProcessor {
 
     void process(ProtoContext context);
 }

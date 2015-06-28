@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Provider;
-import java.util.List;
 import java.util.Map;
 
 import static io.protostuff.compiler.parser.DefaultDescriptorProtoProvider.DESCRIPTOR_PROTO;
@@ -16,7 +15,7 @@ import static io.protostuff.compiler.parser.DefaultDescriptorProtoProvider.DESCR
 /**
  * @author Kostiantyn Shchepanovskyi
  */
-public class OptionsPostProcessor implements ProtoPostProcessor {
+public class OptionsPostProcessor implements ProtoContextPostProcessor {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OptionsPostProcessor.class);
 

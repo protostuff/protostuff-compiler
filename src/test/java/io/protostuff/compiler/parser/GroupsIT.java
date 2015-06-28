@@ -22,6 +22,5 @@ public class GroupsIT {
     public void test() throws Exception {
         Importer importer = injector.getInstance(Importer.class);
         ProtoContext context = importer.importFile("protostuff_unittest/groups_sample.proto");
-        System.out.println(context.getProto());
     }
 }

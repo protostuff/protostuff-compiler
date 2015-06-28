@@ -16,6 +16,7 @@ public class Message extends AbstractUserTypeContainer
 
     protected List<Field> fields;
     protected List<Group> groups;
+    protected List<Oneof> oneofs;
     protected Proto proto;
     protected String fullName;
     protected boolean nested;
@@ -60,6 +61,33 @@ public class Message extends AbstractUserTypeContainer
         for (Field field : getFields()) {
             if (tag == field.getTag()) {
                 return field;
+            }
+        }
+        return null;
+    }
+
+    public List<Oneof> getOneofs() {
+        if (oneofs == null) {
+            return Collections.emptyList();
+        }
+        return oneofs;
+    }
+
+    public void setOneofs(List<Oneof> oneofs) {
+        this.oneofs = oneofs;
+    }
+
+    public void addOneof(Oneof oneof) {
+        if (oneofs == null) {
+            oneofs = new ArrayList<>();
+        }
+        oneofs.add(oneof);
+    }
+
+    public Oneof getOneof(String name) {
+        for (Oneof oneof : getOneofs()) {
+            if (name.equals(oneof.getName())) {
+                return oneof;
             }
         }
         return null;

@@ -22,6 +22,5 @@ public class GenericIT {
     public void test() throws Exception {
         Importer importer = injector.getInstance(Importer.class);
         ProtoContext context = importer.importFile("protobuf_unittest/unittest.proto");
-        System.out.println(context.getProto());
     }
 }

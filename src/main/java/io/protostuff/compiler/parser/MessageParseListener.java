@@ -81,6 +81,58 @@ public class MessageParseListener extends AbstractProtoParsetListener {
     public void exitGroupBlock(ProtoParser.GroupBlockContext ctx) {
         Group group = context.pop(Group.class);
         group.setSourceCodeLocation(getSourceCodeLocation(ctx));
+        GroupContainer container = context.peek(GroupContainer.class);
+        container.addGroup(group);
+    }
+
+    @Override
+    public void enterOneof(ProtoParser.OneofContext ctx) {
+        Oneof oneof = new Oneof();
+        context.push(oneof);
+    }
+
+    @Override
+    public void exitOneof(ProtoParser.OneofContext ctx) {
+        Oneof oneof = context.pop(Oneof.class);
+        Message message = context.peek(Message.class);
+        oneof.setName(ctx.name().getText());
+        oneof.setSourceCodeLocation(getSourceCodeLocation(ctx));
+        oneof.setParent(message);
+        message.addOneof(oneof);
+    }
+
+    @Override
+    public void enterOneofField(ProtoParser.OneofFieldContext ctx) {
+        Field field = new Field();
+        context.push(field);
+    }
+
+    @Override
+    public void exitOneofField(ProtoParser.OneofFieldContext ctx) {
+        Field field = context.pop(Field.class);
+        FieldContainer fieldContainer = context.peek(FieldContainer.class);
+        String name = ctx.name().getText();
+        String type = ctx.typeReference().getText();
+        Integer tag = Integer.decode(ctx.INTEGER_VALUE().getText());
+        field.setName(name);
+        field.setTag(tag);
+        field.setTypeName(type);
+        field.setSourceCodeLocation(getSourceCodeLocation(ctx));
+        fieldContainer.addField(field);
+    }
+
+    @Override
+    public void enterOneofGroup(ProtoParser.OneofGroupContext ctx) {
+        Group group = new Group();
+        context.push(group);
+    }
+
+    @Override
+    public void exitOneofGroup(ProtoParser.OneofGroupContext ctx) {
+        Group group = context.pop(Group.class);
+        group.setSourceCodeLocation(getSourceCodeLocation(ctx));
+        GroupContainer container = context.peek(GroupContainer.class);
+        container.addGroup(group);
     }
 
     @Override

@@ -19,10 +19,10 @@ public class FileDescriptorLoaderImpl implements FileDescriptorLoader {
 
     private final ANTLRErrorListener errorListener;
     private final Importer importer;
-    private final Set<ProtoPostProcessor> postProcessors;
+    private final Set<ProtoContextPostProcessor> postProcessors;
 
     @Inject
-    public FileDescriptorLoaderImpl(Importer importer, ANTLRErrorListener errorListener, Set<ProtoPostProcessor> postProcessors) {
+    public FileDescriptorLoaderImpl(Importer importer, ANTLRErrorListener errorListener, Set<ProtoContextPostProcessor> postProcessors) {
         this.errorListener = errorListener;
         this.importer = importer;
         this.postProcessors = postProcessors;
@@ -42,187 +42,12 @@ public class FileDescriptorLoaderImpl implements FileDescriptorLoader {
             anImport.setProto(importedContext.getProto());
         }
 
-        registerUserTypes(context);
-
-        resolveTypeReferences(context);
-
-        registerExtensions(context, context.getProto());
-
-        for (ProtoPostProcessor postProcessor : postProcessors) {
+        for (ProtoContextPostProcessor postProcessor : postProcessors) {
             postProcessor.process(context);
         }
 
         context.setInitialized(true);
         return context;
-    }
-
-    private void registerExtensions(ProtoContext context, UserTypeContainer container) {
-        ExtensionRegistry extensionRegistry = context.getExtensionRegistry();
-        List<Extension> extensions = container.getDeclaredExtensions();
-        for (Extension extension : extensions) {
-            extensionRegistry.registerExtension(extension);
-            String parentNamespace = container.getNamespace();
-            extension.setNamespace(parentNamespace);
-        }
-        for (Message message : container.getMessages()) {
-            registerExtensions(context, message);
-        }
-    }
-
-    private void resolveTypeReferences(ProtoContext context) {
-        Deque<String> scopeLookupList = new ArrayDeque<>();
-        String root = ".";
-        scopeLookupList.add(root);
-        Proto proto = context.getProto();
-        Package aPackage = proto.getPackage();
-        if (aPackage != null) {
-            String[] split = aPackage.getValue().split("\\.");
-            for (String s : split) {
-                String nextRoot = root + s + ".";
-                scopeLookupList.push(nextRoot);
-                root = nextRoot;
-            }
-        }
-
-        for (Service service : proto.getServices()) {
-
-            for (ServiceMethod method : service.getMethods()) {
-                String argTypeName = method.getArgTypeName();
-                FieldType argType = resolveFieldType(method, context, scopeLookupList, argTypeName);
-                if (!(argType instanceof Message)) {
-                    String format = "Cannot use '%s' as a service method argument type: not a message";
-                    throw new ParserException(method, format, argType.getName());
-                }
-                method.setArgType((Message) argType);
-
-                String returnTypeName = method.getReturnTypeName();
-                FieldType returnType = resolveFieldType(method, context, scopeLookupList, returnTypeName);
-                if (!(returnType instanceof Message)) {
-                    String format = "Cannot use '%s' as a service method return type: not a message";
-                    throw new ParserException(method, format, returnType.getName());
-                }
-                method.setReturnType((Message) returnType);
-            }
-        }
-
-        resolveTypeReferences(context, scopeLookupList, proto);
-
-    }
-
-    private void resolveTypeReferences(ProtoContext context, Deque<String> scopeLookupList, UserTypeContainer container) {
-        ExtensionRegistry extensionRegistry = context.getExtensionRegistry();
-        for (Extension extension : container.getDeclaredExtensions()) {
-            String extendeeName = extension.getExtendeeName();
-            UserFieldType type = resolveUserType(extension, context, scopeLookupList, extendeeName);
-            if (!(type instanceof Message)) {
-                throw new ParserException(extension, "Cannot extend '%s': not a message", type.getName());
-            }
-            Message extendee = (Message) type;
-            extension.setExtendee(extendee);
-            for (Field field : extension.getFields()) {
-                String typeName = field.getTypeName();
-                FieldType fieldType = resolveFieldType(field, context, scopeLookupList, typeName);
-                field.setType(fieldType);
-            }
-            extensionRegistry.registerExtension(extension);
-        }
-
-        for (Message message : container.getMessages()) {
-            String root = scopeLookupList.peek();
-            scopeLookupList.push(root + message.getName() + ".");
-            for (Field field : message.getFields()) {
-                String typeName = field.getTypeName();
-                FieldType fieldType = resolveFieldType(field, context, scopeLookupList, typeName);
-                field.setType(fieldType);
-            }
-            resolveTypeReferences(context, scopeLookupList, message);
-            scopeLookupList.pop();
-        }
-    }
-
-    private FieldType resolveFieldType(Element source, ProtoContext context, Deque<String> scopeLookupList, String typeName) {
-        ScalarFieldType scalarFieldType = ScalarFieldType.getByName(typeName);
-        if (scalarFieldType != null) {
-            return scalarFieldType;
-        } else {
-            return resolveUserType(source, context, scopeLookupList, typeName);
-        }
-    }
-
-    private UserFieldType resolveUserType(Element source, ProtoContext context, Deque<String> scopeLookupList, String typeName) {
-        UserFieldType fieldType = null;
-        if (typeName.startsWith(".")) {
-            UserFieldType type = (UserFieldType)context.resolve(typeName);
-            if (type != null) {
-                fieldType = type;
-            }
-        } else {
-            for (String scope : scopeLookupList) {
-                String fullTypeName = scope + typeName;
-                UserFieldType type = (UserFieldType)context.resolve(fullTypeName);
-                if (type != null) {
-                    fieldType = type;
-                    break;
-                }
-            }
-        }
-        if (fieldType == null) {
-            String format = "Unresolved reference: '%s'";
-            throw new ParserException(source, format, typeName);
-        }
-        return fieldType;
-    }
-
-    private void registerUserTypes(ProtoContext context) {
-        final Proto proto = context.getProto();
-        List<Message> messages = proto.getMessages();
-        for (Message type : messages) {
-            type.setProto(proto);
-            type.setParent(proto);
-            type.setNested(false);
-            String fullName = proto.getNamespace() + type.getName();
-            type.setFullName(fullName);
-            context.register(fullName, type);
-        }
-
-        List<Enum> enums = proto.getEnums();
-        for (Enum type : enums) {
-            type.setProto(proto);
-            type.setParent(proto);
-            type.setNested(false);
-            String fullName = proto.getNamespace() + type.getName();
-            type.setFullName(fullName);
-            context.register(fullName, type);
-        }
-
-        List<Service> services = proto.getServices();
-        for (Service type : services) {
-            type.setProto(proto);
-            String fullName = proto.getNamespace() + type.getName();
-            type.setFullName(fullName);
-            context.register(fullName, type);
-        }
-
-        for (Message message : messages) {
-            registerNestedUserTypes(context, message);
-        }
-
-    }
-
-    private void registerNestedUserTypes(ProtoContext context, UserTypeContainer parent) {
-        List<Message> nestedMessages = parent.getMessages();
-        List<Enum> nestedEnums = parent.getEnums();
-        Consumer<UserFieldType> nestedTypeProcessor = type -> {
-            type.setProto(context.getProto());
-            type.setParent(parent);
-            type.setNested(true);
-            String fullName = parent.getNamespace() + type.getName();
-            type.setFullName(fullName);
-            context.register(fullName, type);
-        };
-        nestedEnums.forEach(nestedTypeProcessor);
-        nestedMessages.forEach(nestedTypeProcessor);
-        nestedMessages.forEach(message -> registerNestedUserTypes(context, message));
     }
 
     private ProtoContext parse(String filename, CharStream stream) {

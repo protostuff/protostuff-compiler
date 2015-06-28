@@ -9,7 +9,6 @@ import org.antlr.v4.runtime.ANTLRErrorListener;
 import org.antlr.v4.runtime.ANTLRErrorStrategy;
 import org.antlr.v4.runtime.BailErrorStrategy;
 
-import javax.inject.Named;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
@@ -41,16 +40,13 @@ public class ParserModule extends AbstractModule {
         bind(ProtoContext.class)
                 .annotatedWith(Names.named(DESCRIPTOR_PROTO))
                 .toProvider(DefaultDescriptorProtoProvider.class);
-        Multibinder<ProtoPostProcessor> uriBinder = Multibinder.newSetBinder(binder(), ProtoPostProcessor.class);
-        uriBinder.addBinding().to(ExtensionsPostProcessor.class);
-        uriBinder.addBinding().to(OptionsPostProcessor.class);
-    }
 
-
-
-    @Provides
-    ProtoParserListener listener() {
-        return null;
+        Multibinder<ProtoContextPostProcessor> postProcessors = Multibinder
+                .newSetBinder(binder(), ProtoContextPostProcessor.class);
+        postProcessors.addBinding().to(TypeRegistratorPostProcessor.class);
+        postProcessors.addBinding().to(TypeResolverPostProcessor.class);
+        postProcessors.addBinding().to(ExtensionRegistratorPostProcessor.class);
+        postProcessors.addBinding().to(OptionsPostProcessor.class);
     }
 
     @Provides
