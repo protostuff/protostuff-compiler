@@ -2,6 +2,7 @@ package io.protostuff.compiler.parser;
 
 import io.protostuff.compiler.model.AbstractDescriptor;
 import io.protostuff.compiler.model.DynamicMessage;
+import io.protostuff.compiler.model.SourceCodeLocation;
 
 import java.math.BigInteger;
 import java.util.ArrayDeque;
@@ -10,19 +11,18 @@ import java.util.Deque;
 /**
  * @author Kostiantyn Shchepanovskyi
  */
-public class OptionParseListener extends ProtoParserBaseListener {
+public class OptionParseListener extends AbstractProtoParsetListener {
 
     public static final int HEX = 16;
     public static final int OCT = 8;
     public static final int DECIMAL = 10;
-    private final ProtoContext context;
 
     private final Deque<DynamicMessage> textFormatStack;
     private DynamicMessage currentTextFormat;
     private DynamicMessage lastTextFormat;
 
     public OptionParseListener(ProtoContext context) {
-        this.context = context;
+        super(context);
         this.textFormatStack = new ArrayDeque<>();
     }
 
@@ -34,27 +34,29 @@ public class OptionParseListener extends ProtoParserBaseListener {
         ProtoParser.OptionValueContext optionValueContext = ctx.optionValue();
         optionName = ctx.optionName().getText();
         DynamicMessage.Value optionValue = getOptionValue(optionValueContext);
-        declaration.getOptions().set(optionName, optionValue);
+        SourceCodeLocation sourceCodeLocation = getSourceCodeLocation(optionValueContext);
+        declaration.getOptions().set(sourceCodeLocation, optionName, optionValue);
     }
 
     private DynamicMessage.Value getOptionValue(ProtoParser.OptionValueContext optionValueContext) {
         DynamicMessage.Value optionValue;
+        SourceCodeLocation sourceCodeLocation = getSourceCodeLocation(optionValueContext);
         if (optionValueContext.textFormat() != null) {
-            optionValue = DynamicMessage.Value.createMessage(lastTextFormat);
+            optionValue = DynamicMessage.Value.createMessage(sourceCodeLocation, lastTextFormat);
         } else if (optionValueContext.BOOLEAN_VALUE() != null) {
             String text = optionValueContext.BOOLEAN_VALUE().getText();
             boolean value = Boolean.parseBoolean(text);
-            optionValue = DynamicMessage.Value.createBoolean(value);
+            optionValue = DynamicMessage.Value.createBoolean(sourceCodeLocation, value);
         } else if (optionValueContext.INTEGER_VALUE() != null) {
             String text = optionValueContext.INTEGER_VALUE().getText();
-            optionValue = parseInteger(text);
+            optionValue = parseInteger(sourceCodeLocation, text);
         } else if (optionValueContext.STRING_VALUE() != null) {
             String text = optionValueContext.STRING_VALUE().getText();
             // TODO: unescape
-            optionValue = DynamicMessage.Value.createString(Util.removeFirstAndLastChar(text));
+            optionValue = DynamicMessage.Value.createString(sourceCodeLocation, Util.removeFirstAndLastChar(text));
         } else if (optionValueContext.NAME() != null) {
             String text = optionValueContext.NAME().getText();
-            optionValue = DynamicMessage.Value.createEnum(text);
+            optionValue = DynamicMessage.Value.createEnum(sourceCodeLocation, text);
         } else if (optionValueContext.FLOAT_VALUE() != null) {
             String text = optionValueContext.FLOAT_VALUE().getText();
             double value;
@@ -65,14 +67,14 @@ public class OptionParseListener extends ProtoParserBaseListener {
             } else {
                 value = Double.parseDouble(text);
             }
-            optionValue = DynamicMessage.Value.createFloat(value);
+            optionValue = DynamicMessage.Value.createFloat(sourceCodeLocation, value);
         } else {
             throw new IllegalStateException();
         }
         return optionValue;
     }
 
-    private DynamicMessage.Value parseInteger(String text) {
+    private DynamicMessage.Value parseInteger(SourceCodeLocation sourceCodeLocation, String text) {
         long value;
         try {
             value = Long.decode(text);
@@ -91,7 +93,7 @@ public class OptionParseListener extends ProtoParserBaseListener {
                 value = num.longValue();
             }
         }
-        return DynamicMessage.Value.createInteger(value);
+        return DynamicMessage.Value.createInteger(sourceCodeLocation, value);
     }
 
     @Override
@@ -116,31 +118,32 @@ public class OptionParseListener extends ProtoParserBaseListener {
     public void exitTextFormatEntry(ProtoParser.TextFormatEntryContext ctx) {
         String name = ctx.textFormatOptionName().getText();
         DynamicMessage.Value value = getTextFormatOptionValue(ctx);
-        currentTextFormat.set(name, value);
+        currentTextFormat.set(getSourceCodeLocation(ctx), name, value);
     }
 
     private DynamicMessage.Value getTextFormatOptionValue(ProtoParser.TextFormatEntryContext ctx) {
         DynamicMessage.Value optionValue;
+        SourceCodeLocation sourceCodeLocation = getSourceCodeLocation(ctx);
         if (ctx.textFormat() != null) {
-            optionValue = DynamicMessage.Value.createMessage(lastTextFormat);
+            optionValue = DynamicMessage.Value.createMessage(sourceCodeLocation, lastTextFormat);
         } else if (ctx.textFormatOptionValue().BOOLEAN_VALUE() != null) {
             String text = ctx.textFormatOptionValue().BOOLEAN_VALUE().getText();
             boolean value = Boolean.parseBoolean(text);
-            optionValue = DynamicMessage.Value.createBoolean(value);
+            optionValue = DynamicMessage.Value.createBoolean(sourceCodeLocation, value);
         } else if (ctx.textFormatOptionValue().INTEGER_VALUE() != null) {
             String text = ctx.textFormatOptionValue().INTEGER_VALUE().getText();
-            optionValue = parseInteger(text);
+            optionValue = parseInteger(sourceCodeLocation, text);
         } else if (ctx.textFormatOptionValue().STRING_VALUE() != null) {
             String text = ctx.textFormatOptionValue().STRING_VALUE().getText();
             // TODO: unescape
-            optionValue = DynamicMessage.Value.createString(Util.removeFirstAndLastChar(text));
+            optionValue = DynamicMessage.Value.createString(sourceCodeLocation, Util.removeFirstAndLastChar(text));
         } else if (ctx.textFormatOptionValue().NAME() != null) {
             String text = ctx.textFormatOptionValue().NAME().getText();
-            optionValue = DynamicMessage.Value.createEnum(text);
+            optionValue = DynamicMessage.Value.createEnum(sourceCodeLocation, text);
         } else if (ctx.textFormatOptionValue().FLOAT_VALUE() != null) {
             String text = ctx.textFormatOptionValue().FLOAT_VALUE().getText();
             double value = Double.parseDouble(text);
-            optionValue = DynamicMessage.Value.createFloat(value);
+            optionValue = DynamicMessage.Value.createFloat(sourceCodeLocation, value);
         } else {
             throw new IllegalStateException();
         }

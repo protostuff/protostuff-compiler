@@ -61,6 +61,10 @@ public class DynamicMessage implements Map<String, DynamicMessage.Value>{
     }
 
     public void set(String name, Value value) {
+        set(SourceCodeLocation.UNKNOWN, name, value);
+    }
+
+    public void set(SourceCodeLocation sourceCodeLocation, String name, Value value) {
         if (name.length() > 1) {
             int dot;
             if (name.charAt(0) == LPAREN) {
@@ -77,14 +81,14 @@ public class DynamicMessage implements Map<String, DynamicMessage.Value>{
                 if (fields.containsKey(key)) {
                     Value val = fields.get(key);
                     if (!val.isMessageType()) {
-                        throw new ParserException("Can not assign option value: type error");
+                        throw new ParserException(value, "Can not assign option value: type error");
                     }
                     msg = val.getMessage();
                 } else {
                     msg = new DynamicMessage();
-                    fields.put(key, Value.createMessage(msg));
+                    fields.put(key, Value.createMessage(sourceCodeLocation, msg));
                 }
-                msg.set(rest, value);
+                msg.set(sourceCodeLocation, rest, value);
             } else {
                 Key key = createKey(name);
                 set(key, value);
@@ -100,7 +104,7 @@ public class DynamicMessage implements Map<String, DynamicMessage.Value>{
             // merge
             Value prevValue = fields.get(key);
             if (!prevValue.isMessageType()) {
-                throw new ParserException("Can not set option: %s", key);
+                throw new ParserException(value, "Can not set '%s': incompatible type", key);
             }
             DynamicMessage prevMessage = prevValue.getMessage();
             DynamicMessage message = value.getMessage();
@@ -274,7 +278,7 @@ public class DynamicMessage implements Map<String, DynamicMessage.Value>{
         }
     }
 
-    public static class Value {
+    public static class Value extends AbstractElement {
 
         private final Type type;
         private final boolean bool;
@@ -286,7 +290,8 @@ public class DynamicMessage implements Map<String, DynamicMessage.Value>{
 
         private FieldType fieldType;
 
-        private Value(Type type, Object value) {
+        private Value(SourceCodeLocation sourceCodeLocation, Type type, Object value) {
+            this.sourceCodeLocation = sourceCodeLocation;
             this.type = type;
             boolean b = false;
             double f = 0.;
@@ -329,27 +334,51 @@ public class DynamicMessage implements Map<String, DynamicMessage.Value>{
         }
 
         public static Value createString(String value) {
-            return new Value(Type.STRING, value);
+            return new Value(SourceCodeLocation.UNKNOWN, Type.STRING, value);
+        }
+
+        public static Value createString(SourceCodeLocation sourceCodeLocation, String value) {
+            return new Value(sourceCodeLocation, Type.STRING, value);
         }
 
         public static Value createBoolean(boolean value) {
-            return new Value(Type.BOOLEAN, value);
+            return new Value(SourceCodeLocation.UNKNOWN, Type.BOOLEAN, value);
+        }
+
+        public static Value createBoolean(SourceCodeLocation sourceCodeLocation, boolean value) {
+            return new Value(sourceCodeLocation, Type.BOOLEAN, value);
         }
 
         public static Value createInteger(long value) {
-            return new Value(Type.INTEGER, value);
+            return new Value(SourceCodeLocation.UNKNOWN, Type.INTEGER, value);
+        }
+
+        public static Value createInteger(SourceCodeLocation sourceCodeLocation, long value) {
+            return new Value(sourceCodeLocation, Type.INTEGER, value);
         }
 
         public static Value createMessage(DynamicMessage value) {
-            return new Value(Type.MESSAGE, value);
+            return new Value(SourceCodeLocation.UNKNOWN, Type.MESSAGE, value);
+        }
+
+        public static Value createMessage(SourceCodeLocation sourceCodeLocation, DynamicMessage value) {
+            return new Value(sourceCodeLocation, Type.MESSAGE, value);
         }
 
         public static Value createFloat(double value) {
-            return new Value(Type.FLOAT, value);
+            return new Value(SourceCodeLocation.UNKNOWN, Type.FLOAT, value);
+        }
+
+        public static Value createFloat(SourceCodeLocation sourceCodeLocation, double value) {
+            return new Value(sourceCodeLocation, Type.FLOAT, value);
         }
 
         public static Value createEnum(String value) {
-            return new Value(Type.ENUM, value);
+            return new Value(SourceCodeLocation.UNKNOWN, Type.ENUM, value);
+        }
+
+        public static Value createEnum(SourceCodeLocation sourceCodeLocation, String value) {
+            return new Value(sourceCodeLocation, Type.ENUM, value);
         }
 
         @Override

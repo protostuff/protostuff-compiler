@@ -61,7 +61,7 @@ public class OptionsPostProcessor implements ProtoPostProcessor {
                 String fieldName = key.getName();
                 Field field = sourceMessage.getField(fieldName);
                 if (field == null) {
-                    throw new ParserException("Illegal option: %s", fieldName);
+                    throw new ParserException(value, "Unknown option: %s", fieldName);
                 }
                 checkFieldValue(field, value);
             }
@@ -72,7 +72,7 @@ public class OptionsPostProcessor implements ProtoPostProcessor {
         FieldType fieldType = field.getType();
         DynamicMessage.Value.Type valueType = value.getType();
         if (!isAssignableFrom(fieldType, valueType)) {
-            throw new ParserException("Can not assign %s to %s: incompatible types", valueType, fieldType);
+            throw new ParserException(value, "Can not assign %s to %s: incompatible types", valueType, fieldType);
         }
     }
 
