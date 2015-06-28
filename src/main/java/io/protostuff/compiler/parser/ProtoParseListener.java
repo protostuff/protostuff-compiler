@@ -1,7 +1,9 @@
 package io.protostuff.compiler.parser;
 
-import io.protostuff.compiler.model.*;
+import io.protostuff.compiler.model.Import;
 import io.protostuff.compiler.model.Package;
+import io.protostuff.compiler.model.Proto;
+import io.protostuff.compiler.model.Syntax;
 
 /**
  * @author Kostiantyn Shchepanovskyi

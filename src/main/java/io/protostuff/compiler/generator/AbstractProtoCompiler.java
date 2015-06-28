@@ -1,17 +1,21 @@
 package io.protostuff.compiler.generator;
 
-import io.protostuff.compiler.model.*;
 import io.protostuff.compiler.model.Enum;
-import io.protostuff.compiler.model.util.ProtoTreeWalker;
+import io.protostuff.compiler.model.Message;
+import io.protostuff.compiler.model.Module;
+import io.protostuff.compiler.model.Proto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import java.util.function.Consumer;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -81,25 +85,34 @@ public abstract class AbstractProtoCompiler implements ProtoCompiler {
 
     private Writer getWriter(String outputFileName) {
         return fileWriterMap.computeIfAbsent(outputFileName, s -> {
-                            OutputStream outputStream = outputStreamFactory.createStream(s);
-                            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream);
-                            return new BufferedWriter(outputStreamWriter);
-                        });
+            OutputStream outputStream = outputStreamFactory.createStream(s);
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream);
+            return new BufferedWriter(outputStreamWriter);
+        });
     }
 
     protected abstract void compile(Module module, Writer writer);
+
     protected abstract void compile(Proto proto, Writer writer);
+
     protected abstract void compile(Message message, Writer writer);
+
     protected abstract void compile(Enum anEnum, Writer writer);
 
     protected abstract boolean canProcess(Module module);
+
     protected abstract boolean canProcess(Proto proto);
+
     protected abstract boolean canProcess(Message message);
+
     protected abstract boolean canProcess(Enum anEnum);
 
     protected abstract String getOutputFileName(Module module);
+
     protected abstract String getOutputFileName(Proto proto);
+
     protected abstract String getOutputFileName(Message message);
+
     protected abstract String getOutputFileName(Enum anEnum);
 
 }

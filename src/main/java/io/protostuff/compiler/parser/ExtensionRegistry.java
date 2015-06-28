@@ -5,7 +5,6 @@ import io.protostuff.compiler.model.Field;
 import io.protostuff.compiler.model.Message;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 
 /**

@@ -9,11 +9,11 @@ public interface FieldContainer {
 
     List<Field> getFields();
 
+    void setFields(List<Field> fields);
+
     Field getField(String name);
 
     Field getField(int tag);
-
-    void setFields(List<Field> fields);
 
     void addField(Field field);
 }

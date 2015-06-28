@@ -3,7 +3,6 @@ package io.protostuff.compiler.model;
 import com.google.common.base.MoreObjects;
 import io.protostuff.compiler.parser.ProtoContext;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -95,15 +94,15 @@ public class Proto extends AbstractUserTypeContainer implements UserTypeContaine
         return imports;
     }
 
+    public void setImports(List<Import> imports) {
+        this.imports = imports;
+    }
+
     public List<Import> getPublicImports() {
         return getImports()
                 .stream()
                 .filter(Import::isPublic)
                 .collect(Collectors.toList());
-    }
-
-    public void setImports(List<Import> imports) {
-        this.imports = imports;
     }
 
     public void addImport(Import anImport) {

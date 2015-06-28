@@ -1,8 +1,5 @@
 package io.protostuff.compiler.model;
 
-import javax.annotation.Nullable;
-import java.util.Map;
-
 /**
  * @author Kostiantyn Shchepanovskyi
  */

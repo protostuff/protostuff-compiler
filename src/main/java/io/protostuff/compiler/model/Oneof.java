@@ -2,7 +2,6 @@ package io.protostuff.compiler.model;
 
 import com.google.common.base.MoreObjects;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

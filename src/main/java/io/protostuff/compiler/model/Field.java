@@ -18,12 +18,12 @@ public class Field extends AbstractDescriptor {
         return modifier == null ? FieldModifier.DEFAULT : modifier;
     }
 
-    public boolean hasModifier() {
-        return modifier != null;
-    }
-
     public void setModifier(FieldModifier modifier) {
         this.modifier = modifier;
+    }
+
+    public boolean hasModifier() {
+        return modifier != null;
     }
 
     public String getTypeName() {

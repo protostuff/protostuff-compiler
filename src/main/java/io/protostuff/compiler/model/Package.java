@@ -1,7 +1,5 @@
 package io.protostuff.compiler.model;
 
-import com.google.common.base.MoreObjects;
-
 import java.util.Objects;
 
 /**

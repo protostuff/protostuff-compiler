@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 /**
  * @author Kostiantyn Shchepanovskyi
  */
-public class DynamicMessage implements Map<String, DynamicMessage.Value>{
+public class DynamicMessage implements Map<String, DynamicMessage.Value> {
 
     public static final char LPAREN = '(';
     public static final char RPAREN = ')';
@@ -329,10 +329,6 @@ public class DynamicMessage implements Map<String, DynamicMessage.Value>{
             this.message = m;
         }
 
-        public Type getType() {
-            return type;
-        }
-
         public static Value createString(String value) {
             return new Value(SourceCodeLocation.UNKNOWN, Type.STRING, value);
         }
@@ -379,6 +375,10 @@ public class DynamicMessage implements Map<String, DynamicMessage.Value>{
 
         public static Value createEnum(SourceCodeLocation sourceCodeLocation, String value) {
             return new Value(sourceCodeLocation, Type.ENUM, value);
+        }
+
+        public Type getType() {
+            return type;
         }
 
         @Override
@@ -448,7 +448,6 @@ public class DynamicMessage implements Map<String, DynamicMessage.Value>{
         public boolean isEnumType() {
             return type == Type.ENUM;
         }
-
 
 
         public DynamicMessage getMessage() {

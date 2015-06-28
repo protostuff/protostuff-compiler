@@ -1,11 +1,17 @@
 package io.protostuff.compiler.parser;
 
-import io.protostuff.compiler.model.*;
+import io.protostuff.compiler.model.Proto;
+import io.protostuff.compiler.model.Type;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Deque;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Kostiantyn Shchepanovskyi

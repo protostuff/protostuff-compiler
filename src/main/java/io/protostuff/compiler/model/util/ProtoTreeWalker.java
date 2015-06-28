@@ -1,7 +1,9 @@
 package io.protostuff.compiler.model.util;
 
-import io.protostuff.compiler.model.*;
 import io.protostuff.compiler.model.Enum;
+import io.protostuff.compiler.model.Message;
+import io.protostuff.compiler.model.Proto;
+import io.protostuff.compiler.model.UserTypeContainer;
 
 /**
  * @author Kostiantyn Shchepanovskyi

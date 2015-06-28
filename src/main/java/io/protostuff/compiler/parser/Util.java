@@ -24,14 +24,13 @@ public class Util {
     public static String removeFirstAndLastChar(String text) {
         Preconditions.checkNotNull(text, "text can not be null");
         int n = text.length();
-        return text.substring(1, n-1);
+        return text.substring(1, n - 1);
     }
 
     /**
      * Returns file name by given absolute or relative file location.
      */
-    public static String getFileName(String fullPath)
-    {
+    public static String getFileName(String fullPath) {
         Preconditions.checkNotNull(fullPath, "path can not be null");
         int winDelimiterPos = fullPath.lastIndexOf(WINDOWS_DELIMITER);
         int linDelimiterPos = fullPath.lastIndexOf(LINUX_DELIMITER);

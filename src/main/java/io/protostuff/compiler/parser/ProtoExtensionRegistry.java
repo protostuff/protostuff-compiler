@@ -1,11 +1,13 @@
 package io.protostuff.compiler.parser;
 
 import io.protostuff.compiler.model.Extension;
-import io.protostuff.compiler.model.Field;
 import io.protostuff.compiler.model.Import;
 import io.protostuff.compiler.model.Proto;
 
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Deque;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -16,8 +18,8 @@ public final class ProtoExtensionRegistry extends AbstractExtensionRegistry {
 
     private final ExtensionRegistry localExtensionRegistry;
     private final ProtoContext context;
-    private Proto proto;
     private final ConcurrentMap<String, Collection<Extension>> extensionCache = new ConcurrentHashMap<>();
+    private Proto proto;
 
     public ProtoExtensionRegistry(ProtoContext context) {
         this.context = context;

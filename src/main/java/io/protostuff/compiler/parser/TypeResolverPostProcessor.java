@@ -1,6 +1,18 @@
 package io.protostuff.compiler.parser;
 
-import io.protostuff.compiler.model.*;
+import io.protostuff.compiler.model.Element;
+import io.protostuff.compiler.model.Extension;
+import io.protostuff.compiler.model.Field;
+import io.protostuff.compiler.model.FieldContainer;
+import io.protostuff.compiler.model.FieldType;
+import io.protostuff.compiler.model.Message;
+import io.protostuff.compiler.model.Oneof;
+import io.protostuff.compiler.model.Proto;
+import io.protostuff.compiler.model.ScalarFieldType;
+import io.protostuff.compiler.model.Service;
+import io.protostuff.compiler.model.ServiceMethod;
+import io.protostuff.compiler.model.UserFieldType;
+import io.protostuff.compiler.model.UserTypeContainer;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -12,7 +24,7 @@ public class TypeResolverPostProcessor implements ProtoContextPostProcessor {
 
     @Override
     public void process(ProtoContext context) {
-            resolveTypeReferences(context);
+        resolveTypeReferences(context);
     }
 
     private void resolveTypeReferences(ProtoContext context) {
@@ -104,14 +116,14 @@ public class TypeResolverPostProcessor implements ProtoContextPostProcessor {
     private UserFieldType resolveUserType(Element source, ProtoContext context, Deque<String> scopeLookupList, String typeName) {
         UserFieldType fieldType = null;
         if (typeName.startsWith(".")) {
-            UserFieldType type = (UserFieldType)context.resolve(typeName);
+            UserFieldType type = (UserFieldType) context.resolve(typeName);
             if (type != null) {
                 fieldType = type;
             }
         } else {
             for (String scope : scopeLookupList) {
                 String fullTypeName = scope + typeName;
-                UserFieldType type = (UserFieldType)context.resolve(fullTypeName);
+                UserFieldType type = (UserFieldType) context.resolve(fullTypeName);
                 if (type != null) {
                     fieldType = type;
                     break;

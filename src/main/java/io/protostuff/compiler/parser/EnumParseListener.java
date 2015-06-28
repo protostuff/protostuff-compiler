@@ -1,6 +1,5 @@
 package io.protostuff.compiler.parser;
 
-import io.protostuff.compiler.model.AbstractUserTypeContainer;
 import io.protostuff.compiler.model.Enum;
 import io.protostuff.compiler.model.EnumConstant;
 import io.protostuff.compiler.model.EnumContainer;

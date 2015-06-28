@@ -1,7 +1,5 @@
 package io.protostuff.compiler.model;
 
-import java.util.List;
-
 /**
  * Base interface for all proto elements.
  *

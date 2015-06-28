@@ -1,7 +1,14 @@
 package io.protostuff.compiler.parser;
 
-import io.protostuff.compiler.model.*;
+import io.protostuff.compiler.model.Descriptor;
+import io.protostuff.compiler.model.DescriptorType;
+import io.protostuff.compiler.model.DynamicMessage;
 import io.protostuff.compiler.model.Enum;
+import io.protostuff.compiler.model.Field;
+import io.protostuff.compiler.model.FieldType;
+import io.protostuff.compiler.model.Group;
+import io.protostuff.compiler.model.Message;
+import io.protostuff.compiler.model.ScalarFieldType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

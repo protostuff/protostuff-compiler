@@ -1,16 +1,13 @@
 package io.protostuff.compiler.parser;
 
-import io.protostuff.compiler.model.*;
-import io.protostuff.compiler.model.Enum;
-import io.protostuff.compiler.model.Package;
+import io.protostuff.compiler.model.Import;
 import org.antlr.v4.runtime.ANTLRErrorListener;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
 import javax.inject.Inject;
-import java.util.*;
-import java.util.function.Consumer;
+import java.util.Set;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -60,6 +57,11 @@ public class FileDescriptorLoaderImpl implements FileDescriptorLoader {
         parser.addErrorListener(errorListener);
 
         ProtoParser.ProtoContext tree = parser.proto();
+        int numberOfSyntaxErrors = parser.getNumberOfSyntaxErrors();
+        if (numberOfSyntaxErrors > 0) {
+            String format = "Could not parse %s: %d syntax errors found";
+            throw new ParserException(format, filename, numberOfSyntaxErrors);
+        }
         ProtoContext context = new ProtoContext(filename);
         ProtoParserListener composite = CompositeParseTreeListener.create(ProtoParserListener.class,
                 new ProtoParseListener(context),
@@ -69,11 +71,6 @@ public class FileDescriptorLoaderImpl implements FileDescriptorLoader {
                 new ServiceParseListener(context)
         );
         ParseTreeWalker.DEFAULT.walk(composite, tree);
-        int numberOfSyntaxErrors = parser.getNumberOfSyntaxErrors();
-        if (numberOfSyntaxErrors > 0) {
-            String format = "Could not parse %s: %d syntax errors found";
-            throw new ParserException(format, filename, numberOfSyntaxErrors);
-        }
         return context;
     }
 

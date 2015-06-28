@@ -4,10 +4,8 @@ import io.protostuff.compiler.model.Message;
 import io.protostuff.compiler.model.Proto;
 import io.protostuff.compiler.model.UserTypeContainer;
 
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
 /**
  * @author Kostiantyn Shchepanovskyi
