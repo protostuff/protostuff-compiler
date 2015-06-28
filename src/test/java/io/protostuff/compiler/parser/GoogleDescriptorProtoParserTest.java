@@ -11,7 +11,7 @@ import org.junit.Test;
 /**
  * @author Kostiantyn Shchepanovskyi
  */
-public class GoogleProtobufDescriptorIT {
+public class GoogleDescriptorProtoParserTest {
     private Injector injector;
 
     @Before

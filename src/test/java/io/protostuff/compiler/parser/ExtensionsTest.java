@@ -20,7 +20,7 @@ import static org.junit.Assert.*;
  * @author Kostiantyn Shchepanovskyi
  */
 @SuppressWarnings("ConstantConditions")
-public class ExtensionsIT {
+public class ExtensionsTest {
     @Rule
     public ExpectedException thrown = ExpectedException.none();
     private Injector injector;

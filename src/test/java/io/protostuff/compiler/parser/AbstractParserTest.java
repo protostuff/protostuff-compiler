@@ -27,7 +27,7 @@ public abstract class AbstractParserTest {
 
     public void initLogger() {
         System.setProperty("org.slf4j.simpleLogger.logFile", "System.out");
-        System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "trace");
+        System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "error");
         System.setProperty("org.slf4j.simpleLogger.showThreadName", "false");
         System.setProperty("org.slf4j.simpleLogger.showShortLogName", "true");
         System.setProperty("org.slf4j.simpleLogger.levelInBrackets", "true");

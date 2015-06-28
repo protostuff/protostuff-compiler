@@ -17,7 +17,7 @@ import static org.junit.Assert.assertNotNull;
 /**
  * @author Kostiantyn Shchepanovskyi
  */
-public class StCompilerIT {
+public class StCompilerTest {
     private Injector injector;
 
     @Before

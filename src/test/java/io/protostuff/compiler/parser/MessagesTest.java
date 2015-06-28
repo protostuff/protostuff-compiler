@@ -16,7 +16,7 @@ import static org.junit.Assert.*;
  *
  * @author Kostiantyn Shchepanovskyi
  */
-public class MessagesIT {
+public class MessagesTest {
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();

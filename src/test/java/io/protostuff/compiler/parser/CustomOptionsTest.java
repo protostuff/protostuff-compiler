@@ -12,7 +12,7 @@ import java.util.Map;
 /**
  * @author Kostiantyn Shchepanovskyi
  */
-public class CustomOptionsIT extends AbstractParserTest {
+public class CustomOptionsTest extends AbstractParserTest {
 
     @Test
     public void test() throws Exception {

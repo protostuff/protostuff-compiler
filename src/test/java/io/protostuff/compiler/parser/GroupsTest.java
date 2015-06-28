@@ -9,7 +9,7 @@ import org.junit.Test;
 /**
  * @author Kostiantyn Shchepanovskyi
  */
-public class GroupsIT {
+public class GroupsTest {
 
     private Injector injector;
 

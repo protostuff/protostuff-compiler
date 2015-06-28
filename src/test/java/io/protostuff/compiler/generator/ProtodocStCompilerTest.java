@@ -14,7 +14,7 @@ import org.junit.Test;
 /**
  * @author Kostiantyn Shchepanovskyi
  */
-public class ProtodocStCompilerIT {
+public class ProtodocStCompilerTest {
 
     private Injector injector;
 

@@ -15,7 +15,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * @author Kostiantyn Shchepanovskyi
  */
-public class ServiceIT extends AbstractParserTest {
+public class ServiceTest extends AbstractParserTest {
 
     @Test
     public void testSample() throws Exception {

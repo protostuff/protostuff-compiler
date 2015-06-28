@@ -15,7 +15,7 @@ import static org.junit.Assert.*;
  *
  * @author Kostiantyn Shchepanovskyi
  */
-public class NestedMessagesIT {
+public class NestedMessagesTest {
 
     private Injector injector;
 

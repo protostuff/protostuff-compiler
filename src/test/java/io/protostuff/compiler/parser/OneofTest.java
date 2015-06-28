@@ -7,7 +7,7 @@ import org.junit.Test;
 /**
  * @author Kostiantyn Shchepanovskyi
  */
-public class OneofIT extends AbstractParserTest {
+public class OneofTest extends AbstractParserTest {
 
     @Test
     public void testSample() throws Exception {

@@ -12,7 +12,7 @@ import static org.junit.Assert.*;
 /**
  * @author Kostiantyn Shchepanovskyi
  */
-public class ImportsIT {
+public class ImportsTest {
 
     private Injector injector;
 

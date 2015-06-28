@@ -9,7 +9,7 @@ import org.junit.Test;
 /**
  * @author Kostiantyn Shchepanovskyi
  */
-public class GenericIT {
+public class GoogleUnittestProtoParserTest {
 
     private Injector injector;
 

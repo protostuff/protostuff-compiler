@@ -12,7 +12,7 @@ import org.junit.Test;
 /**
  * @author Kostiantyn Shchepanovskyi
  */
-public class NameResolutionIT {
+public class NameResolutionTest {
 
     private Injector injector;
 
