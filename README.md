@@ -1,7 +1,9 @@
 Protocol Buffers file parser and code generator
 ===============================================
 
-*Under development*
+Status: under development
+
+[![Build Status](https://travis-ci.org/kshchepanovskyi/proto-compiler.svg?branch=master)](https://travis-ci.org/kshchepanovskyi/proto-compiler)
 
 Short-term Targets
 ------------------
@@ -16,3 +18,10 @@ Long-term Targets
 -----------------
 
 1. Extensible plugin system that enable code generation for any language
+
+Build
+-----
+
+```
+mvn clean install
+```
