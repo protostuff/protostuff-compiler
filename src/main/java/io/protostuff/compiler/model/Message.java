@@ -133,16 +133,6 @@ public class Message extends AbstractUserTypeContainer
     }
 
     @Override
-    public boolean isNested() {
-        return nested;
-    }
-
-    @Override
-    public void setNested(boolean nested) {
-        this.nested = nested;
-    }
-
-    @Override
     public UserTypeContainer getParent() {
         return parent;
     }

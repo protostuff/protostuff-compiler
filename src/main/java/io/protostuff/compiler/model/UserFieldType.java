@@ -20,11 +20,6 @@ public interface UserFieldType extends FieldType {
 
     void setFullName(String fullName);
 
-    // TODO: isNested can be removed: all messages that are not children of proto are nested
-    boolean isNested();
-
-    void setNested(boolean nested);
-
     UserTypeContainer getParent();
 
     void setParent(UserTypeContainer parent);

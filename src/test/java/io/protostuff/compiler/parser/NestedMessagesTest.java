@@ -41,7 +41,6 @@ public class NestedMessagesTest {
         assertEquals("A", a.getName());
         assertEquals(".protostuff_unittest.A", a.getFullName());
         assertTrue(proto == a.getProto());
-        assertFalse(a.isNested());
         assertTrue(a.getParent() == proto);
 
         io.protostuff.compiler.model.Enum e1 = proto.getEnum("E");
@@ -49,7 +48,6 @@ public class NestedMessagesTest {
         assertEquals("E", e1.getName());
         assertEquals(".protostuff_unittest.E", e1.getFullName());
         assertTrue(proto == e1.getProto());
-        assertFalse(e1.isNested());
         assertTrue(e1.getParent() == proto);
 
         Message b = a.getMessage("B");
@@ -57,7 +55,6 @@ public class NestedMessagesTest {
         assertEquals("B", b.getName());
         assertEquals(".protostuff_unittest.A.B", b.getFullName());
         assertTrue(proto == b.getProto());
-        assertTrue(b.isNested());
         assertTrue(b.getParent() == a);
 
         Message c = b.getMessage("C");
@@ -65,7 +62,6 @@ public class NestedMessagesTest {
         assertEquals("C", c.getName());
         assertEquals(".protostuff_unittest.A.B.C", c.getFullName());
         assertTrue(proto == c.getProto());
-        assertTrue(c.isNested());
         assertTrue(c.getParent() == b);
 
         Message d = c.getMessage("D");
@@ -73,7 +69,6 @@ public class NestedMessagesTest {
         assertEquals("D", d.getName());
         assertEquals(".protostuff_unittest.A.B.C.D", d.getFullName());
         assertTrue(proto == d.getProto());
-        assertTrue(d.isNested());
         assertTrue(d.getParent() == c);
 
         io.protostuff.compiler.model.Enum e = d.getEnum("E");
@@ -81,7 +76,6 @@ public class NestedMessagesTest {
         assertEquals("E", e.getName());
         assertEquals(".protostuff_unittest.A.B.C.D.E", e.getFullName());
         assertTrue(proto == e.getProto());
-        assertTrue(e.isNested());
         assertTrue(e.getParent() == d);
     }
 }

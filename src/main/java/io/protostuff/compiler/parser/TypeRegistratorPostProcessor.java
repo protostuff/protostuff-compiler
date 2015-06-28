@@ -22,7 +22,6 @@ public class TypeRegistratorPostProcessor implements ProtoContextPostProcessor {
         for (Message type : messages) {
             type.setProto(proto);
             type.setParent(proto);
-            type.setNested(false);
             String fullName = proto.getNamespace() + type.getName();
             type.setFullName(fullName);
             context.register(fullName, type);
@@ -32,7 +31,6 @@ public class TypeRegistratorPostProcessor implements ProtoContextPostProcessor {
         for (Enum type : enums) {
             type.setProto(proto);
             type.setParent(proto);
-            type.setNested(false);
             String fullName = proto.getNamespace() + type.getName();
             type.setFullName(fullName);
             context.register(fullName, type);
@@ -58,7 +56,6 @@ public class TypeRegistratorPostProcessor implements ProtoContextPostProcessor {
         Consumer<UserFieldType> nestedTypeProcessor = type -> {
             type.setProto(context.getProto());
             type.setParent(parent);
-            type.setNested(true);
             String fullName = parent.getNamespace() + type.getName();
             type.setFullName(fullName);
             context.register(fullName, type);

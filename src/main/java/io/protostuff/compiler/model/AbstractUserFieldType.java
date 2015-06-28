@@ -7,7 +7,6 @@ public abstract class AbstractUserFieldType extends AbstractDescriptor implement
 
     protected Proto proto;
     protected String fullName;
-    protected boolean nested;
     protected UserTypeContainer parent;
 
     @Override
@@ -28,16 +27,6 @@ public abstract class AbstractUserFieldType extends AbstractDescriptor implement
     @Override
     public void setFullName(String fullName) {
         this.fullName = fullName;
-    }
-
-    @Override
-    public boolean isNested() {
-        return nested;
-    }
-
-    @Override
-    public void setNested(boolean nested) {
-        this.nested = nested;
     }
 
     @Override

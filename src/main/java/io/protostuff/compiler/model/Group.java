@@ -163,16 +163,6 @@ public class Group extends Field implements FieldContainer, UserFieldType, UserT
     }
 
     @Override
-    public boolean isNested() {
-        return true;
-    }
-
-    @Override
-    public void setNested(boolean nested) {
-        throw new UnsupportedOperationException("group can not be top-level type");
-    }
-
-    @Override
     public UserTypeContainer getParent() {
         return parent;
     }
