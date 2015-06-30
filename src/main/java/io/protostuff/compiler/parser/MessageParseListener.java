@@ -12,6 +12,7 @@ import io.protostuff.compiler.model.Map;
 import io.protostuff.compiler.model.Message;
 import io.protostuff.compiler.model.MessageContainer;
 import io.protostuff.compiler.model.Oneof;
+import org.antlr.v4.runtime.BufferedTokenStream;
 
 import static io.protostuff.compiler.model.FieldModifier.OPTIONAL;
 import static io.protostuff.compiler.model.FieldModifier.REPEATED;
@@ -20,12 +21,12 @@ import static io.protostuff.compiler.model.FieldModifier.REQUIRED;
 /**
  * @author Kostiantyn Shchepanovskyi
  */
-public class MessageParseListener extends AbstractProtoParsetListener {
+public class MessageParseListener extends AbstractProtoParserListener {
 
     public static final String MAX = "max";
 
-    public MessageParseListener(ProtoContext context) {
-        super(context);
+    public MessageParseListener(BufferedTokenStream tokens, ProtoContext context) {
+        super(tokens, context);
     }
 
     @Override
@@ -42,6 +43,7 @@ public class MessageParseListener extends AbstractProtoParsetListener {
         message.setName(name);
         message.setSourceCodeLocation(getSourceCodeLocation(ctx));
         container.addMessage(message);
+        attachComments(ctx, message, false);
     }
 
     @Override
@@ -63,6 +65,7 @@ public class MessageParseListener extends AbstractProtoParsetListener {
         field.setTypeName(type);
         field.setSourceCodeLocation(getSourceCodeLocation(ctx));
         fieldContainer.addField(field);
+        attachComments(ctx, field, true);
     }
 
     @Override
@@ -109,6 +112,7 @@ public class MessageParseListener extends AbstractProtoParsetListener {
         oneof.setSourceCodeLocation(getSourceCodeLocation(ctx));
         oneof.setParent(message);
         message.addOneof(oneof);
+        attachComments(ctx, oneof, false);
     }
 
     @Override
@@ -129,6 +133,7 @@ public class MessageParseListener extends AbstractProtoParsetListener {
         field.setTypeName(type);
         field.setSourceCodeLocation(getSourceCodeLocation(ctx));
         fieldContainer.addField(field);
+        attachComments(ctx, field, true);
     }
 
     @Override
@@ -171,6 +176,7 @@ public class MessageParseListener extends AbstractProtoParsetListener {
         field.setSourceCodeLocation(getSourceCodeLocation(ctx));
         message.addField(field);
         message.addMap(map);
+        attachComments(ctx, field, true);
     }
 
     @Override

@@ -65,8 +65,8 @@ public class ProtoParseListenerTest {
         parser.removeErrorListeners();
         parser.addErrorListener(TestUtils.ERROR_LISTENER);
         ProtoContext context = new ProtoContext("test.proto");
-        ProtoParseListener protoParseListener = new ProtoParseListener(context);
-        OptionParseListener optionParseListener = new OptionParseListener(context);
+        ProtoParseListener protoParseListener = new ProtoParseListener(tokenStream, context);
+        OptionParseListener optionParseListener = new OptionParseListener(tokenStream, context);
         parser.addParseListener(protoParseListener);
         parser.addParseListener(optionParseListener);
         parser.proto();

@@ -48,6 +48,15 @@ public class Service extends AbstractDescriptor implements Type {
         return methods;
     }
 
+    public ServiceMethod getMethod(String name) {
+        for (ServiceMethod serviceMethod : getMethods()) {
+            if (serviceMethod.getName().equals(name)) {
+                return serviceMethod;
+            }
+        }
+        return null;
+    }
+
     public void setMethods(List<ServiceMethod> methods) {
         this.methods = methods;
     }
@@ -68,6 +77,5 @@ public class Service extends AbstractDescriptor implements Type {
                 .add("options", options)
                 .toString();
     }
-
 
 }

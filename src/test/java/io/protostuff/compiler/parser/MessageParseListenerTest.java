@@ -90,8 +90,8 @@ public class MessageParseListenerTest {
         parser.removeErrorListeners();
         parser.addErrorListener(TestUtils.ERROR_LISTENER);
         ProtoContext context = new ProtoContext("test.proto");
-        MessageParseListener messageParseListener = new MessageParseListener(context);
-        OptionParseListener optionParseListener = new OptionParseListener(context);
+        MessageParseListener messageParseListener = new MessageParseListener(tokenStream, context);
+        OptionParseListener optionParseListener = new OptionParseListener(tokenStream, context);
         Proto proto = new Proto();
         context.push(proto);
         parser.addParseListener(messageParseListener);

@@ -2,6 +2,7 @@ package io.protostuff.compiler.parser;
 
 import io.protostuff.compiler.model.Import;
 import org.antlr.v4.runtime.ANTLRErrorListener;
+import org.antlr.v4.runtime.BufferedTokenStream;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
@@ -64,11 +65,11 @@ public class FileDescriptorLoaderImpl implements FileDescriptorLoader {
         }
         ProtoContext context = new ProtoContext(filename);
         ProtoParserListener composite = CompositeParseTreeListener.create(ProtoParserListener.class,
-                new ProtoParseListener(context),
-                new MessageParseListener(context),
-                new EnumParseListener(context),
-                new OptionParseListener(context),
-                new ServiceParseListener(context)
+                new ProtoParseListener(tokenStream, context),
+                new MessageParseListener(tokenStream, context),
+                new EnumParseListener(tokenStream, context),
+                new OptionParseListener(tokenStream, context),
+                new ServiceParseListener(tokenStream, context)
         );
         ParseTreeWalker.DEFAULT.walk(composite, tree);
         return context;

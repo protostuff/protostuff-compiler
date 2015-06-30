@@ -187,8 +187,8 @@ public class EnumParseListenerTest {
         ProtoContext context = new ProtoContext("test.proto");
         Proto proto = new Proto();
         context.push(proto);
-        EnumParseListener enumParseListener = new EnumParseListener(context);
-        OptionParseListener optionParseListener = new OptionParseListener(context);
+        EnumParseListener enumParseListener = new EnumParseListener(tokenStream, context);
+        OptionParseListener optionParseListener = new OptionParseListener(tokenStream, context);
         parser.addParseListener(enumParseListener);
         parser.addParseListener(optionParseListener);
         parser.enumBlock();

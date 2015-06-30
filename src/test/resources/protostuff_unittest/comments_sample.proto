@@ -1,0 +1,59 @@
+syntax = "proto3";
+
+package protostuff_unittest;
+
+// Message comment
+message Message {
+
+    // leading field comment
+    int32 a = 1;
+    int32 b = 2; // trailing field comment
+
+    // leading map field comment
+    map<int32, int32> m1 = 3;
+    map<int32, int32> m2 = 4; // trailing map field comment
+
+    // Oneof comment
+    oneof Oneof {
+        // leading oneof field comment
+        int32 x = 5;
+        int32 y = 6; // trailing oneof field comment
+    }
+}
+
+// Enum comment
+enum Enum {
+    // leading enum constant comment
+    A = 1;
+    B = 2; // trailing enum constant comment
+}
+
+// Service comment
+service Service {
+    // leading rpc method comment
+    rpc a (Message) returns (Message);
+    rpc b (Message) returns (Message); // trailing rpc method comment
+}
+
+// line 1
+// line 2
+message CommonLeadingWhitespace {
+
+}
+
+// line 1
+//   line 2
+message CommonLeadingWhitespace_andIndentation {
+
+}
+
+//line 1
+//line 2
+message NoWhitespace {
+
+}
+
+//
+message EmptyComment {
+
+}

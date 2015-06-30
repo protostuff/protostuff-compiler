@@ -3,14 +3,16 @@ package io.protostuff.compiler.parser;
 import io.protostuff.compiler.model.Proto;
 import io.protostuff.compiler.model.Service;
 import io.protostuff.compiler.model.ServiceMethod;
+import org.antlr.v4.runtime.BufferedTokenStream;
 
 /**
  * @author Kostiantyn Shchepanovskyi
  */
-public class ServiceParseListener extends AbstractProtoParsetListener {
+public class ServiceParseListener extends AbstractProtoParserListener {
 
-    public ServiceParseListener(ProtoContext context) {
-        super(context);
+
+    protected ServiceParseListener(BufferedTokenStream tokens, ProtoContext context) {
+        super(tokens, context);
     }
 
     @Override
@@ -27,6 +29,7 @@ public class ServiceParseListener extends AbstractProtoParsetListener {
         service.setName(name);
         service.setSourceCodeLocation(getSourceCodeLocation(ctx));
         proto.addService(service);
+        attachComments(ctx, service, false);
     }
 
     @Override
@@ -47,5 +50,6 @@ public class ServiceParseListener extends AbstractProtoParsetListener {
         method.setReturnTypeName(ret);
         method.setSourceCodeLocation(getSourceCodeLocation(ctx));
         service.addMethod(method);
+        attachComments(ctx, method, true);
     }
 }

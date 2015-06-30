@@ -3,14 +3,15 @@ package io.protostuff.compiler.parser;
 import io.protostuff.compiler.model.Enum;
 import io.protostuff.compiler.model.EnumConstant;
 import io.protostuff.compiler.model.EnumContainer;
+import org.antlr.v4.runtime.BufferedTokenStream;
 
 /**
  * @author Kostiantyn Shchepanovskyi
  */
-public class EnumParseListener extends AbstractProtoParsetListener {
+public class EnumParseListener extends AbstractProtoParserListener {
 
-    public EnumParseListener(ProtoContext context) {
-        super(context);
+    protected EnumParseListener(BufferedTokenStream tokens, ProtoContext context) {
+        super(tokens, context);
     }
 
     @Override
@@ -27,6 +28,7 @@ public class EnumParseListener extends AbstractProtoParsetListener {
         e.setName(name);
         e.setSourceCodeLocation(getSourceCodeLocation(ctx));
         container.addEnum(e);
+        attachComments(ctx, e, false);
     }
 
     @Override
@@ -45,6 +47,7 @@ public class EnumParseListener extends AbstractProtoParsetListener {
         enumConstant.setValue(number);
         enumConstant.setSourceCodeLocation(getSourceCodeLocation(ctx));
         e.addValue(enumConstant);
+        attachComments(ctx, enumConstant, true);
     }
 
 }

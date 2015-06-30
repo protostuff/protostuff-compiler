@@ -3,6 +3,7 @@ package io.protostuff.compiler.parser;
 import io.protostuff.compiler.model.AbstractDescriptor;
 import io.protostuff.compiler.model.DynamicMessage;
 import io.protostuff.compiler.model.SourceCodeLocation;
+import org.antlr.v4.runtime.BufferedTokenStream;
 
 import java.math.BigInteger;
 import java.util.ArrayDeque;
@@ -11,20 +12,20 @@ import java.util.Deque;
 /**
  * @author Kostiantyn Shchepanovskyi
  */
-public class OptionParseListener extends AbstractProtoParsetListener {
+public class OptionParseListener extends AbstractProtoParserListener {
 
     public static final int HEX = 16;
     public static final int OCT = 8;
     public static final int DECIMAL = 10;
 
-    private final Deque<DynamicMessage> textFormatStack;
+    private final Deque<DynamicMessage> textFormatStack = new ArrayDeque<>();
     private DynamicMessage currentTextFormat;
     private DynamicMessage lastTextFormat;
 
-    public OptionParseListener(ProtoContext context) {
-        super(context);
-        this.textFormatStack = new ArrayDeque<>();
+    protected OptionParseListener(BufferedTokenStream tokens, ProtoContext context) {
+        super(tokens, context);
     }
+
 
     @Override
     @SuppressWarnings("unchecked")

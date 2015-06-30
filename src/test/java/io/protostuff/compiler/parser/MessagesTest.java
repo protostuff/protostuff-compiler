@@ -16,18 +16,7 @@ import static org.junit.Assert.*;
  *
  * @author Kostiantyn Shchepanovskyi
  */
-public class MessagesTest {
-
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
-    private Injector injector;
-    private Importer importer;
-
-    @Before
-    public void setUp() throws Exception {
-        injector = Guice.createInjector(new ParserModule());
-        importer = injector.getInstance(Importer.class);
-    }
+public class MessagesTest extends AbstractParserTest {
 
     @Test
     public void unresolvedFieldType() throws Exception {
@@ -36,4 +25,5 @@ public class MessagesTest {
                 "[protostuff_unittest/messages_unresolved_field_type.proto:6]");
         importer.importFile("protostuff_unittest/messages_unresolved_field_type.proto");
     }
+
 }

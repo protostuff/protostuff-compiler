@@ -4,14 +4,15 @@ import io.protostuff.compiler.model.Import;
 import io.protostuff.compiler.model.Package;
 import io.protostuff.compiler.model.Proto;
 import io.protostuff.compiler.model.Syntax;
+import org.antlr.v4.runtime.BufferedTokenStream;
 
 /**
  * @author Kostiantyn Shchepanovskyi
  */
-public class ProtoParseListener extends AbstractProtoParsetListener {
+public class ProtoParseListener extends AbstractProtoParserListener {
 
-    public ProtoParseListener(ProtoContext context) {
-        super(context);
+    protected ProtoParseListener(BufferedTokenStream tokens, ProtoContext context) {
+        super(tokens, context);
     }
 
     @Override
