@@ -50,6 +50,9 @@ public class ProtoContext {
     @SuppressWarnings("unchecked")
     public <T> T peek(Class<T> declarationClass) {
         Object declaration = declarationStack.peek();
+        if (declaration == null) {
+            throw new IllegalStateException("Declaration stack is empty");
+        }
         if (declarationClass.isAssignableFrom(declaration.getClass())) {
             return (T) declaration;
         }
