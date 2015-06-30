@@ -22,7 +22,6 @@ public class DynamicMessage implements Map<String, DynamicMessage.Value> {
     public static final char DOT = '.';
 
     private final Map<Key, Value> fields;
-    private Message type;
 
     public DynamicMessage() {
         this.fields = new HashMap<>();
@@ -137,7 +136,6 @@ public class DynamicMessage implements Map<String, DynamicMessage.Value> {
     @Override
     public String toString() {
         return MoreObjects.toStringHelper(this)
-                .add("type", type)
                 .add("fields", fields)
                 .toString();
     }
@@ -287,8 +285,6 @@ public class DynamicMessage implements Map<String, DynamicMessage.Value> {
         private final String string;
         private final String enumName;
         private final DynamicMessage message;
-
-        private FieldType fieldType;
 
         private Value(SourceCodeLocation sourceCodeLocation, Type type, Object value) {
             this.sourceCodeLocation = sourceCodeLocation;

@@ -13,8 +13,6 @@ import java.util.List;
  */
 public class Group extends Field implements FieldContainer, UserFieldType, UserTypeContainer, GroupContainer {
 
-    protected FieldModifier modifier;
-    protected int tag;
     protected List<Field> fields;
     protected Proto proto;
     protected String fullName;
@@ -81,22 +79,6 @@ public class Group extends Field implements FieldContainer, UserFieldType, UserT
             declaredExtensions = new ArrayList<>();
         }
         declaredExtensions.add(extension);
-    }
-
-    public FieldModifier getModifier() {
-        return modifier;
-    }
-
-    public void setModifier(FieldModifier modifier) {
-        this.modifier = modifier;
-    }
-
-    public int getTag() {
-        return tag;
-    }
-
-    public void setTag(int tag) {
-        this.tag = tag;
     }
 
     public List<Field> getFields() {

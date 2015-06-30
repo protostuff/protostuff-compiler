@@ -71,7 +71,6 @@ public class TypeResolverPostProcessor implements ProtoContextPostProcessor {
     }
 
     private void resolveTypeReferences(ProtoContext context, Deque<String> scopeLookupList, UserTypeContainer container) {
-        ExtensionRegistry extensionRegistry = context.getExtensionRegistry();
         for (Extension extension : container.getDeclaredExtensions()) {
             String extendeeName = extension.getExtendeeName();
             UserFieldType type = resolveUserType(extension, context, scopeLookupList, extendeeName);

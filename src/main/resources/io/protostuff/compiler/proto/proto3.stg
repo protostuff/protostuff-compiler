@@ -21,7 +21,7 @@ syntax = "<proto.syntax>";
 >>
 
 package(proto) ::= <<
-package <proto.packageName>;
+package <proto.package>;
 >>
 
 imports(proto) ::= <<
