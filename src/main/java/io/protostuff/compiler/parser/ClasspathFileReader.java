@@ -25,7 +25,11 @@ public class ClasspathFileReader implements FileReader {
     @Override
     public CharStream read(String name) {
         try {
-            URL resource = Thread.currentThread().getContextClassLoader().getResource(name);
+            ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+            if (classLoader == null) {
+                throw new IllegalStateException("Can not obtain classloader instance from current thread");
+            }
+            URL resource = classLoader.getResource(name);
             if (resource != null) {
                 return readFromURI(resource.toURI());
             }
