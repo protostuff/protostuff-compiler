@@ -20,6 +20,10 @@ public class Enum extends AbstractUserFieldType {
         return values;
     }
 
+    public void setValues(List<EnumConstant> values) {
+        this.values = values;
+    }
+
     public EnumConstant getValue(String name) {
         for (EnumConstant enumConstant : getValues()) {
             if (enumConstant.getName().equals(name)) {
@@ -27,10 +31,6 @@ public class Enum extends AbstractUserFieldType {
             }
         }
         return null;
-    }
-
-    public void setValues(List<EnumConstant> values) {
-        this.values = values;
     }
 
     public void addValue(EnumConstant value) {

@@ -3,11 +3,14 @@ package io.protostuff.compiler.parser;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import io.protostuff.compiler.ParserModule;
-import io.protostuff.compiler.model.*;
+import io.protostuff.compiler.model.Message;
+import io.protostuff.compiler.model.Proto;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Test for nested messages and enums.

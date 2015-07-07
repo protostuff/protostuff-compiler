@@ -48,6 +48,10 @@ public class Service extends AbstractDescriptor implements Type {
         return methods;
     }
 
+    public void setMethods(List<ServiceMethod> methods) {
+        this.methods = methods;
+    }
+
     public ServiceMethod getMethod(String name) {
         for (ServiceMethod serviceMethod : getMethods()) {
             if (serviceMethod.getName().equals(name)) {
@@ -55,10 +59,6 @@ public class Service extends AbstractDescriptor implements Type {
             }
         }
         return null;
-    }
-
-    public void setMethods(List<ServiceMethod> methods) {
-        this.methods = methods;
     }
 
     public void addMethod(ServiceMethod method) {

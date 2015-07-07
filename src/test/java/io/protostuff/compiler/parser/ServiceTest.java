@@ -1,14 +1,8 @@
 package io.protostuff.compiler.parser;
 
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import io.protostuff.compiler.ParserModule;
 import io.protostuff.compiler.model.Service;
 import io.protostuff.compiler.model.ServiceMethod;
-import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import static org.junit.Assert.assertEquals;
 

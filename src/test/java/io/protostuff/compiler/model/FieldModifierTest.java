@@ -1,12 +1,11 @@
 package io.protostuff.compiler.model;
 
 import org.junit.Assert;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
-import static io.protostuff.compiler.model.FieldModifier.*;
-import static org.junit.Assert.assertEquals;
+import static io.protostuff.compiler.model.FieldModifier.OPTIONAL;
+import static io.protostuff.compiler.model.FieldModifier.REPEATED;
+import static io.protostuff.compiler.model.FieldModifier.REQUIRED;
 
 /**
  * @author Kostiantyn Shchepanovskyi

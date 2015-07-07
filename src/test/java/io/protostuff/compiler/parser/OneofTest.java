@@ -1,6 +1,9 @@
 package io.protostuff.compiler.parser;
 
-import io.protostuff.compiler.model.*;
+import io.protostuff.compiler.model.Field;
+import io.protostuff.compiler.model.Message;
+import io.protostuff.compiler.model.Oneof;
+import io.protostuff.compiler.model.ScalarFieldType;
 import org.junit.Assert;
 import org.junit.Test;
 

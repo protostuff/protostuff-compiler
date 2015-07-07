@@ -3,7 +3,6 @@ package io.protostuff.compiler.model;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Preconditions;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -73,6 +72,10 @@ public class Message extends AbstractUserTypeContainer
         return maps;
     }
 
+    public void setMaps(List<Map> maps) {
+        this.maps = maps;
+    }
+
     public Map getMap(String name) {
         for (Map map : getMaps()) {
             if (map.getName().equals(name)) {
@@ -80,10 +83,6 @@ public class Message extends AbstractUserTypeContainer
             }
         }
         return null;
-    }
-
-    public void setMaps(List<Map> maps) {
-        this.maps = maps;
     }
 
     public void addMap(Map map) {

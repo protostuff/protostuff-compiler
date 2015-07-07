@@ -117,7 +117,6 @@ public class EnumParseListenerTest {
     }
 
 
-
     @Test
     public void parseEnumWithStandardOption() throws Exception {
         Enum result = parseEnumBlock(ENUM_BLOCK_WITH_STANDARD_OPTION);

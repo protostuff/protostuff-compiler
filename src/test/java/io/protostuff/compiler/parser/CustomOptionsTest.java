@@ -1,13 +1,6 @@
 package io.protostuff.compiler.parser;
 
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import io.protostuff.compiler.ParserModule;
-import io.protostuff.compiler.model.Extension;
-import org.junit.Before;
 import org.junit.Test;
-
-import java.util.Map;
 
 /**
  * @author Kostiantyn Shchepanovskyi

@@ -1,8 +1,8 @@
 package io.protostuff.compiler.parser;
 
 import com.google.common.base.Joiner;
-import io.protostuff.compiler.model.Message;
 import io.protostuff.compiler.model.Field;
+import io.protostuff.compiler.model.Message;
 import io.protostuff.compiler.model.Proto;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CharStream;
@@ -13,7 +13,6 @@ import static io.protostuff.compiler.model.FieldModifier.OPTIONAL;
 import static io.protostuff.compiler.model.FieldModifier.REPEATED;
 import static io.protostuff.compiler.model.FieldModifier.REQUIRED;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 /**
  * @author Kostiantyn Shchepanovskyi
