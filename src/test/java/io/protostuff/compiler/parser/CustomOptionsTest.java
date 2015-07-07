@@ -15,12 +15,21 @@ import java.util.Map;
 public class CustomOptionsTest extends AbstractParserTest {
 
     @Test
-    public void test() throws Exception {
+    public void googleUnitTest() throws Exception {
         importer.importFile("protobuf_unittest/unittest_custom_options.proto");
     }
 
     @Test
-    public void testValidator() throws Exception {
+    public void sample() throws Exception {
         importer.importFile("protostuff_unittest/options_sample.proto");
     }
+
+    @Test
+    public void invalidStandardOptionType() throws Exception {
+        thrown.expect(ParserException.class);
+        thrown.expectMessage("Cannot assign string to bool: incompatible types " +
+                "[protostuff_unittest/options_illegal_type.proto:7]");
+        importer.importFile("protostuff_unittest/options_illegal_type.proto");
+    }
+
 }

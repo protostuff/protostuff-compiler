@@ -2,8 +2,6 @@ syntax = "proto3";
 
 package protostuff_unittest;
 
-option java_package = "io.protostuff.parser";
-
 // Type name resolution in the protocol buffer language works like C++: first
 // the innermost scope is searched, then the next-innermost, and so on, with
 // each package considered to be "inner" to its parent package. A leading '.'

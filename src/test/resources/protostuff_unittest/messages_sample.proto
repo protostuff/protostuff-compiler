@@ -2,9 +2,6 @@ syntax = "proto3";
 
 package protostuff_unittest;
 
-option java_package = "io.protostuff.compiler.test.nested_messages";
-option (google.protobuf.objectivec_file_options).class_prefix = "LV2";
-
 message A {
     repeated int32 a = 1;
     message B {

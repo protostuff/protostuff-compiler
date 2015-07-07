@@ -2,8 +2,6 @@ syntax = "proto2";
 
 package protostuff_unittest;
 
-option java_package = "io.protostuff.parser";
-
 message A {
     optional int32 ax = 1;
 

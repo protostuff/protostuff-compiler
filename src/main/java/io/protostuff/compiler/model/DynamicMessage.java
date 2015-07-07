@@ -461,7 +461,13 @@ public class DynamicMessage implements Map<String, DynamicMessage.Value> {
             FLOAT,
             STRING,
             ENUM,
-            MESSAGE
+            MESSAGE;
+
+
+            @Override
+            public String toString() {
+                return name().toLowerCase();
+            }
         }
     }
 }

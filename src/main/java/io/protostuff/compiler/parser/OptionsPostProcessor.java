@@ -52,11 +52,6 @@ public class OptionsPostProcessor implements ProtoContextPostProcessor {
         LOGGER.trace("processing class={} name={}", descriptorClassName, descriptorName);
         Message sourceMessage = findSourceMessage(context, descriptor.getDescriptorType());
 
-        if (sourceMessage == null) {
-            // embedded descriptor.proto is not yet loaded
-            return;
-        }
-
         for (Map.Entry<DynamicMessage.Key, DynamicMessage.Value> entry : options.getFields()) {
             DynamicMessage.Key key = entry.getKey();
             DynamicMessage.Value value = entry.getValue();
@@ -78,7 +73,7 @@ public class OptionsPostProcessor implements ProtoContextPostProcessor {
         FieldType fieldType = field.getType();
         DynamicMessage.Value.Type valueType = value.getType();
         if (!isAssignableFrom(fieldType, valueType)) {
-            throw new ParserException(value, "Can not assign %s to %s: incompatible types", valueType, fieldType);
+            throw new ParserException(value, "Cannot assign %s to %s: incompatible types", valueType, fieldType);
         }
     }
 
