@@ -119,15 +119,15 @@ public class TypeResolverPostProcessor implements ProtoContextPostProcessor {
     }
 
     private void updateFieldTypes(ProtoContext context, Deque<String> scopeLookupList, FieldContainer fieldContainer) {
-        for (Field field : fieldContainer.getFields()) {
-            // check if field type isn't already set
-            // for map fields it is set by parser
-            if (field.getType() == null) {
-                String typeName = field.getTypeName();
-                FieldType fieldType = resolveFieldType(field, context, scopeLookupList, typeName);
-                field.setType(fieldType);
-            }
-        }
+        // check if field type isn't already set
+        fieldContainer.getFields()
+                .stream()
+                .filter(field -> field.getType() == null) // for map fields it is set by parser
+                .forEach(field -> {
+                    String typeName = field.getTypeName();
+                    FieldType fieldType = resolveFieldType(field, context, scopeLookupList, typeName);
+                    field.setType(fieldType);
+                });
     }
 
     private FieldType resolveFieldType(Element source, ProtoContext context, Deque<String> scopeLookupList, String typeName) {

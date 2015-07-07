@@ -8,6 +8,7 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
 import javax.inject.Inject;
+import java.util.Iterator;
 import java.util.Set;
 
 /**
@@ -16,34 +17,19 @@ import java.util.Set;
 public class FileDescriptorLoaderImpl implements FileDescriptorLoader {
 
     private final ANTLRErrorListener errorListener;
-    private final Importer importer;
+
     private final Set<ProtoContextPostProcessor> postProcessors;
 
     @Inject
-    public FileDescriptorLoaderImpl(Importer importer, ANTLRErrorListener errorListener, Set<ProtoContextPostProcessor> postProcessors) {
+    public FileDescriptorLoaderImpl(ANTLRErrorListener errorListener, Set<ProtoContextPostProcessor> postProcessors) {
         this.errorListener = errorListener;
-        this.importer = importer;
         this.postProcessors = postProcessors;
     }
 
     @Override
     public ProtoContext load(String name, CharStream stream) {
         ProtoContext context = parse(name, stream);
-
-        for (Import anImport : context.getProto().getImports()) {
-            ProtoContext importedContext = importer.importFile(anImport.getValue());
-            if (anImport.isPublic()) {
-                context.addPublicImport(importedContext);
-            } else {
-                context.addImport(importedContext);
-            }
-            anImport.setProto(importedContext.getProto());
-        }
-
-        for (ProtoContextPostProcessor postProcessor : postProcessors) {
-            postProcessor.process(context);
-        }
-
+        postProcessors.forEach(p -> p.process(context));
         context.setInitialized(true);
         return context;
     }

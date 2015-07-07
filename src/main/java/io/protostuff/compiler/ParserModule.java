@@ -13,6 +13,7 @@ import io.protostuff.compiler.parser.FileDescriptorLoaderImpl;
 import io.protostuff.compiler.parser.FileReader;
 import io.protostuff.compiler.parser.Importer;
 import io.protostuff.compiler.parser.ImporterImpl;
+import io.protostuff.compiler.parser.ImportsPostProcessor;
 import io.protostuff.compiler.parser.LocalFileReader;
 import io.protostuff.compiler.parser.OptionsPostProcessor;
 import io.protostuff.compiler.parser.ParseErrorLogger;
@@ -57,6 +58,7 @@ public class ParserModule extends AbstractModule {
 
         Multibinder<ProtoContextPostProcessor> postProcessors = Multibinder
                 .newSetBinder(binder(), ProtoContextPostProcessor.class);
+        postProcessors.addBinding().to(ImportsPostProcessor.class);
         postProcessors.addBinding().to(TypeRegistratorPostProcessor.class);
         postProcessors.addBinding().to(TypeResolverPostProcessor.class);
         postProcessors.addBinding().to(ExtensionRegistratorPostProcessor.class);
