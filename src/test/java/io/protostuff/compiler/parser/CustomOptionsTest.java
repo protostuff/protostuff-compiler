@@ -18,11 +18,27 @@ public class CustomOptionsTest extends AbstractParserTest {
     }
 
     @Test
+    public void invalidStandardOption() throws Exception {
+        thrown.expect(ParserException.class);
+        thrown.expectMessage("Unknown option: 'non_existing_option' " +
+                "[protostuff_unittest/options_illegal_standard_option.proto:7]");
+        importer.importFile("protostuff_unittest/options_illegal_standard_option.proto");
+    }
+
+    @Test
     public void invalidStandardOptionType() throws Exception {
         thrown.expect(ParserException.class);
-        thrown.expectMessage("Cannot assign string to bool: incompatible types " +
+        thrown.expectMessage("Cannot set option 'deprecated': expected bool value " +
                 "[protostuff_unittest/options_illegal_type.proto:7]");
         importer.importFile("protostuff_unittest/options_illegal_type.proto");
+    }
+
+    @Test
+    public void invalidStandardEnumOptionType() throws Exception {
+        thrown.expect(ParserException.class);
+        thrown.expectMessage("Cannot set option 'optimize_for': expected enum = [SPEED, LITE_RUNTIME, CODE_SIZE] " +
+                "[protostuff_unittest/options_illegal_enum_name.proto:7]");
+        importer.importFile("protostuff_unittest/options_illegal_enum_name.proto");
     }
 
 }

@@ -5,6 +5,8 @@ import com.google.common.base.MoreObjects;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -18,6 +20,15 @@ public class Enum extends AbstractUserFieldType {
             return Collections.emptyList();
         }
         return values;
+    }
+
+    public Set<String> getValueNames() {
+        if (values == null) {
+            return Collections.emptySet();
+        }
+        return values.stream()
+                .map(EnumConstant::getName)
+                .collect(Collectors.toSet());
     }
 
     public void setValues(List<EnumConstant> values) {

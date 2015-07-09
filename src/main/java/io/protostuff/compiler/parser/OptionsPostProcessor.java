@@ -16,6 +16,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Provider;
 import java.util.Map;
+import java.util.Set;
 
 import static io.protostuff.compiler.parser.DefaultDescriptorProtoProvider.DESCRIPTOR_PROTO;
 
@@ -62,7 +63,7 @@ public class OptionsPostProcessor implements ProtoContextPostProcessor {
                 String fieldName = key.getName();
                 Field field = sourceMessage.getField(fieldName);
                 if (field == null) {
-                    throw new ParserException(value, "Unknown option: %s", fieldName);
+                    throw new ParserException(value, "Unknown option: '%s'", fieldName);
                 }
                 checkFieldValue(field, value);
             }
@@ -70,51 +71,58 @@ public class OptionsPostProcessor implements ProtoContextPostProcessor {
     }
 
     private void checkFieldValue(Field field, DynamicMessage.Value value) {
+        String fieldName = field.getName();
         FieldType fieldType = field.getType();
         DynamicMessage.Value.Type valueType = value.getType();
-        if (!isAssignableFrom(fieldType, valueType)) {
-            throw new ParserException(value, "Cannot assign %s to %s: incompatible types", valueType, fieldType);
+        if (fieldType instanceof ScalarFieldType) {
+            if (!isAssignableFrom((ScalarFieldType) fieldType, valueType)) {
+                throw new ParserException(value, "Cannot set option '%s': expected %s value", fieldName, fieldType);
+            }
+        } else if (fieldType instanceof Enum) {
+            Enum anEnum = (Enum) fieldType;
+            Set<String> allowedNames = anEnum.getValueNames();
+            if (valueType != DynamicMessage.Value.Type.ENUM
+                    || !allowedNames.contains(value.getEnumName())) {
+                throw new ParserException(value, "Cannot set option '%s': expected enum = %s", fieldName, allowedNames);
+            }
+        } else if (fieldType instanceof Message || fieldType instanceof Group) {
+            if (valueType != DynamicMessage.Value.Type.MESSAGE) {
+                throw new ParserException(value, "Cannot set option '%s': expected message value", fieldName);
+            }
+        } else {
+            throw new IllegalStateException("Unknown field type: " + fieldType);
         }
     }
 
-    private boolean isAssignableFrom(FieldType fieldType, DynamicMessage.Value.Type valueType) {
-        if (fieldType instanceof ScalarFieldType) {
-            ScalarFieldType target = (ScalarFieldType) fieldType;
-            switch (target) {
-                case INT32:
-                case INT64:
-                case UINT32:
-                case UINT64:
-                case SINT32:
-                case SINT64:
-                case FIXED32:
-                case FIXED64:
-                case SFIXED32:
-                case SFIXED64:
-                    // TODO check if value fits into target type
-                    return valueType == DynamicMessage.Value.Type.INTEGER;
-                case FLOAT:
-                case DOUBLE:
-                    // TODO check if value fits into target type
-                    return valueType == DynamicMessage.Value.Type.INTEGER
-                            || valueType == DynamicMessage.Value.Type.FLOAT;
-                case BOOL:
-                    return valueType == DynamicMessage.Value.Type.BOOLEAN;
-                case STRING:
-                    return valueType == DynamicMessage.Value.Type.STRING;
-                case BYTES:
-                    return valueType == DynamicMessage.Value.Type.STRING;
-                default:
-                    throw new IllegalStateException("Unknown field type: " + target);
-            }
-        } else if (fieldType instanceof Enum) {
-            return valueType == DynamicMessage.Value.Type.ENUM;
-        } else if (fieldType instanceof Message) {
-            return valueType == DynamicMessage.Value.Type.MESSAGE;
-        } else if (fieldType instanceof Group) {
-            return valueType == DynamicMessage.Value.Type.MESSAGE;
+    private boolean isAssignableFrom(ScalarFieldType target, DynamicMessage.Value.Type valueType) {
+
+        switch (target) {
+            case INT32:
+            case INT64:
+            case UINT32:
+            case UINT64:
+            case SINT32:
+            case SINT64:
+            case FIXED32:
+            case FIXED64:
+            case SFIXED32:
+            case SFIXED64:
+                // TODO check if value fits into target type
+                return valueType == DynamicMessage.Value.Type.INTEGER;
+            case FLOAT:
+            case DOUBLE:
+                // TODO check if value fits into target type
+                return valueType == DynamicMessage.Value.Type.INTEGER
+                        || valueType == DynamicMessage.Value.Type.FLOAT;
+            case BOOL:
+                return valueType == DynamicMessage.Value.Type.BOOLEAN;
+            case STRING:
+                return valueType == DynamicMessage.Value.Type.STRING;
+            case BYTES:
+                return valueType == DynamicMessage.Value.Type.STRING;
+            default:
+                throw new IllegalStateException("Unknown field type: " + target);
         }
-        throw new IllegalStateException("Unknown field type: " + fieldType);
     }
 
     private Message findSourceMessage(ProtoContext context, DescriptorType type) {
