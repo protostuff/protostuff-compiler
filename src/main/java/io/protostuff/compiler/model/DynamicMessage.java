@@ -278,6 +278,7 @@ public class DynamicMessage implements Map<String, DynamicMessage.Value> {
 
     public static class Value extends AbstractElement {
 
+        private final Element parent;
         private final Type type;
         private final boolean bool;
         private final long number;
@@ -286,7 +287,8 @@ public class DynamicMessage implements Map<String, DynamicMessage.Value> {
         private final String enumName;
         private final DynamicMessage message;
 
-        private Value(SourceCodeLocation sourceCodeLocation, Type type, Object value) {
+        private Value(SourceCodeLocation sourceCodeLocation, Type type, Object value, Element parent) {
+            this.parent = parent;
             this.sourceCodeLocation = sourceCodeLocation;
             this.type = type;
             boolean b = false;
@@ -325,52 +327,57 @@ public class DynamicMessage implements Map<String, DynamicMessage.Value> {
             this.message = m;
         }
 
+        @Override
+        public Element getParent() {
+            return parent;
+        }
+
         public static Value createString(String value) {
-            return new Value(SourceCodeLocation.UNKNOWN, Type.STRING, value);
+            return new Value(SourceCodeLocation.UNKNOWN, Type.STRING, value, null);
         }
 
         public static Value createString(SourceCodeLocation sourceCodeLocation, String value) {
-            return new Value(sourceCodeLocation, Type.STRING, value);
+            return new Value(sourceCodeLocation, Type.STRING, value, null);
         }
 
         public static Value createBoolean(boolean value) {
-            return new Value(SourceCodeLocation.UNKNOWN, Type.BOOLEAN, value);
+            return new Value(SourceCodeLocation.UNKNOWN, Type.BOOLEAN, value, null);
         }
 
         public static Value createBoolean(SourceCodeLocation sourceCodeLocation, boolean value) {
-            return new Value(sourceCodeLocation, Type.BOOLEAN, value);
+            return new Value(sourceCodeLocation, Type.BOOLEAN, value, null);
         }
 
         public static Value createInteger(long value) {
-            return new Value(SourceCodeLocation.UNKNOWN, Type.INTEGER, value);
+            return new Value(SourceCodeLocation.UNKNOWN, Type.INTEGER, value, null);
         }
 
         public static Value createInteger(SourceCodeLocation sourceCodeLocation, long value) {
-            return new Value(sourceCodeLocation, Type.INTEGER, value);
+            return new Value(sourceCodeLocation, Type.INTEGER, value, null);
         }
 
         public static Value createMessage(DynamicMessage value) {
-            return new Value(SourceCodeLocation.UNKNOWN, Type.MESSAGE, value);
+            return new Value(SourceCodeLocation.UNKNOWN, Type.MESSAGE, value, null);
         }
 
         public static Value createMessage(SourceCodeLocation sourceCodeLocation, DynamicMessage value) {
-            return new Value(sourceCodeLocation, Type.MESSAGE, value);
+            return new Value(sourceCodeLocation, Type.MESSAGE, value, null);
         }
 
         public static Value createFloat(double value) {
-            return new Value(SourceCodeLocation.UNKNOWN, Type.FLOAT, value);
+            return new Value(SourceCodeLocation.UNKNOWN, Type.FLOAT, value, null);
         }
 
         public static Value createFloat(SourceCodeLocation sourceCodeLocation, double value) {
-            return new Value(sourceCodeLocation, Type.FLOAT, value);
+            return new Value(sourceCodeLocation, Type.FLOAT, value, null);
         }
 
         public static Value createEnum(String value) {
-            return new Value(SourceCodeLocation.UNKNOWN, Type.ENUM, value);
+            return new Value(SourceCodeLocation.UNKNOWN, Type.ENUM, value, null);
         }
 
         public static Value createEnum(SourceCodeLocation sourceCodeLocation, String value) {
-            return new Value(sourceCodeLocation, Type.ENUM, value);
+            return new Value(sourceCodeLocation, Type.ENUM, value, null);
         }
 
         public Type getType() {

@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * @author Kostiantyn Shchepanovskyi
  */
-public class AbstractElement implements Element {
+public abstract class AbstractElement implements Element {
     protected SourceCodeLocation sourceCodeLocation;
     protected List<String> comments;
 

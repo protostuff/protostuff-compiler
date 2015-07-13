@@ -7,12 +7,19 @@ import java.util.Objects;
  */
 public class Package extends AbstractElement {
 
-    public static final Package DEFAULT = new Package("");
+    public static final Package DEFAULT = new Package(null, "");
 
+    private final Proto parent;
     private final String value;
 
-    public Package(String value) {
+    public Package(Proto parent, String value) {
+        this.parent = parent;
         this.value = value;
+    }
+
+    @Override
+    public Proto getParent() {
+        return parent;
     }
 
     public String getValue() {

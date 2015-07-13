@@ -7,12 +7,19 @@ import java.util.Objects;
  */
 public final class Syntax extends AbstractElement {
 
-    public static final Syntax DEFAULT = new Syntax("proto2");
+    public static final Syntax DEFAULT = new Syntax(null, "proto2");
 
+    private final Proto parent;
     private final String value;
 
-    public Syntax(String value) {
+    public Syntax(Proto parent, String value) {
+        this.parent = parent;
         this.value = value;
+    }
+
+    @Override
+    public Proto getParent() {
+        return parent;
     }
 
     public String getValue() {

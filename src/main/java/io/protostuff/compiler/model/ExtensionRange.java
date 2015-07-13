@@ -9,12 +9,19 @@ import com.google.common.base.MoreObjects;
  */
 public class ExtensionRange extends AbstractElement {
 
+    private final Message parent;
     private final int min;
     private final int max;
 
-    public ExtensionRange(int min, int max) {
+    public ExtensionRange(Message parent, int min, int max) {
+        this.parent = parent;
         this.min = min;
         this.max = max;
+    }
+
+    @Override
+    public Message getParent() {
+        return parent;
     }
 
     public int getMin() {

@@ -13,5 +13,4 @@ public interface Descriptor extends Element {
 
     DescriptorType getDescriptorType();
 
-    Element getParent();
 }

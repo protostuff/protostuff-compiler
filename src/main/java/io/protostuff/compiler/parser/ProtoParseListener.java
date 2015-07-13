@@ -20,7 +20,7 @@ public class ProtoParseListener extends AbstractProtoParserListener {
         Proto proto = context.peek(Proto.class);
         String text = ctx.STRING_VALUE().getText();
         String value = Util.removeFirstAndLastChar(text);
-        Syntax syntax = new Syntax(value);
+        Syntax syntax = new Syntax(proto, value);
         syntax.setSourceCodeLocation(getSourceCodeLocation(ctx));
         proto.setSyntax(syntax);
     }
@@ -29,7 +29,7 @@ public class ProtoParseListener extends AbstractProtoParserListener {
     public void exitPackageStatement(ProtoParser.PackageStatementContext ctx) {
         Proto proto = context.peek(Proto.class);
         String packageName = ctx.packageName().getText();
-        Package aPackage = new Package(packageName);
+        Package aPackage = new Package(proto, packageName);
         aPackage.setSourceCodeLocation(getSourceCodeLocation(ctx));
         proto.setPackage(aPackage);
     }
@@ -39,7 +39,7 @@ public class ProtoParseListener extends AbstractProtoParserListener {
         Proto proto = context.peek(Proto.class);
         String text = ctx.STRING_VALUE().getText();
         String fileName = Util.removeFirstAndLastChar(text);
-        Import anImport = new Import(fileName, ctx.PUBLIC() != null);
+        Import anImport = new Import(proto, fileName, ctx.PUBLIC() != null);
         anImport.setSourceCodeLocation(getSourceCodeLocation(ctx));
         proto.addImport(anImport);
     }

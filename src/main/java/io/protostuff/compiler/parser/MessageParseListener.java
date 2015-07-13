@@ -208,7 +208,7 @@ public class MessageParseListener extends AbstractProtoParserListener {
             to = Integer.decode(toString);
         }
         Message message = context.peek(Message.class);
-        ExtensionRange range = new ExtensionRange(from, to);
+        ExtensionRange range = new ExtensionRange(message, from, to);
         range.setSourceCodeLocation(getSourceCodeLocation(ctx));
         message.addExtensionRange(range);
     }

@@ -7,13 +7,20 @@ import java.util.Objects;
  */
 public final class Import extends AbstractElement {
 
+    private final Proto parent;
     private final String value;
     private final boolean aPublic;
     private Proto proto;
 
-    public Import(String value, boolean aPublic) {
+    public Import(Proto parent, String value, boolean aPublic) {
+        this.parent = parent;
         this.value = value;
         this.aPublic = aPublic;
+    }
+
+    @Override
+    public Proto getParent() {
+        return parent;
     }
 
     public String getValue() {

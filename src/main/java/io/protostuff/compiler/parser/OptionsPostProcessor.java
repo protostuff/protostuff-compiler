@@ -3,6 +3,7 @@ package io.protostuff.compiler.parser;
 import io.protostuff.compiler.model.Descriptor;
 import io.protostuff.compiler.model.DescriptorType;
 import io.protostuff.compiler.model.DynamicMessage;
+import io.protostuff.compiler.model.Element;
 import io.protostuff.compiler.model.Enum;
 import io.protostuff.compiler.model.Field;
 import io.protostuff.compiler.model.FieldContainer;
@@ -10,6 +11,7 @@ import io.protostuff.compiler.model.FieldType;
 import io.protostuff.compiler.model.Group;
 import io.protostuff.compiler.model.Message;
 import io.protostuff.compiler.model.ScalarFieldType;
+import io.protostuff.compiler.model.UserTypeContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,7 +63,8 @@ public class OptionsPostProcessor implements ProtoContextPostProcessor {
             DynamicMessage.Key key = entry.getKey();
             DynamicMessage.Value value = entry.getValue();
             if (key.isExtension()) {
-
+                Element tmp = owningDescriptor;
+                while (!(tmp instanceof UserTypeContainer)) tmp = tmp.getParent();
                 // TODO check extension
             } else {
                 // check standard option
