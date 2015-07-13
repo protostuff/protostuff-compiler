@@ -12,6 +12,21 @@ public class EnumConstant extends AbstractDescriptor {
 
     protected int value;
 
+    private Enum parent;
+
+    public EnumConstant(Enum parent) {
+        this.parent = parent;
+    }
+
+    @Override
+    public Enum getParent() {
+        return parent;
+    }
+
+    public void setParent(Enum parent) {
+        this.parent = parent;
+    }
+
     /**
      * Returns name of this enum constant (human-readable string).
      */

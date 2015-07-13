@@ -11,7 +11,7 @@ import java.util.List;
  * @author Kostiantyn Shchepanovskyi
  */
 public class Message extends AbstractUserTypeContainer
-        implements UserFieldType, UserTypeContainer, FieldContainer, GroupContainer {
+        implements UserType, UserTypeContainer, FieldContainer, GroupContainer {
 
     protected List<Field> fields;
     protected List<Group> groups;
@@ -20,8 +20,11 @@ public class Message extends AbstractUserTypeContainer
     protected Proto proto;
     protected String fullName;
 
-    protected UserTypeContainer parent;
     protected List<ExtensionRange> extensionRanges;
+
+    public Message(UserTypeContainer parent) {
+        super(parent);
+    }
 
     @Override
     public DescriptorType getDescriptorType() {
@@ -156,16 +159,6 @@ public class Message extends AbstractUserTypeContainer
     public String getNamespace() {
         Preconditions.checkNotNull(fullName, "message is not initialized");
         return fullName + ".";
-    }
-
-    @Override
-    public UserTypeContainer getParent() {
-        return parent;
-    }
-
-    @Override
-    public void setParent(UserTypeContainer parent) {
-        this.parent = parent;
     }
 
     @Override

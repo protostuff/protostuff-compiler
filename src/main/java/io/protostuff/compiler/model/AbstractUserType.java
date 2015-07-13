@@ -3,11 +3,15 @@ package io.protostuff.compiler.model;
 /**
  * @author Kostiantyn Shchepanovskyi
  */
-public abstract class AbstractUserFieldType extends AbstractDescriptor implements UserFieldType {
+public abstract class AbstractUserType extends AbstractDescriptor implements UserType {
 
     protected Proto proto;
     protected String fullName;
-    protected UserTypeContainer parent;
+    protected final UserTypeContainer parent;
+
+    public AbstractUserType(UserTypeContainer parent) {
+        this.parent = parent;
+    }
 
     @Override
     public Proto getProto() {
@@ -32,11 +36,6 @@ public abstract class AbstractUserFieldType extends AbstractDescriptor implement
     @Override
     public UserTypeContainer getParent() {
         return parent;
-    }
-
-    @Override
-    public void setParent(UserTypeContainer parent) {
-        this.parent = parent;
     }
 
     @Override

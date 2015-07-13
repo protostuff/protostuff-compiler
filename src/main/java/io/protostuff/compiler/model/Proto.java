@@ -20,6 +20,11 @@ public class Proto extends AbstractUserTypeContainer implements UserTypeContaine
     protected List<Import> imports;
     protected List<Service> services;
 
+    public Proto() {
+        // proto does not have parent
+        super(null);
+    }
+
     public ProtoContext getContext() {
         return context;
     }

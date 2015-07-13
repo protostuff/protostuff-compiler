@@ -13,6 +13,17 @@ public class ServiceMethod extends AbstractDescriptor {
     private String returnTypeName;
     private Message returnType;
 
+    private final Service parent;
+
+    public ServiceMethod(Service parent) {
+        this.parent = parent;
+    }
+
+    @Override
+    public Service getParent() {
+        return parent;
+    }
+
     @Override
     public DescriptorType getDescriptorType() {
         return DescriptorType.SERVICE_METHOD;

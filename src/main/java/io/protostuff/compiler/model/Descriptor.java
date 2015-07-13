@@ -12,4 +12,6 @@ public interface Descriptor extends Element {
     DynamicMessage getOptions();
 
     DescriptorType getDescriptorType();
+
+    Element getParent();
 }

@@ -17,7 +17,8 @@ public class ServiceParseListener extends AbstractProtoParserListener {
 
     @Override
     public void enterServiceBlock(ProtoParser.ServiceBlockContext ctx) {
-        Service service = new Service();
+        Proto parent = context.peek(Proto.class);
+        Service service = new Service(parent);
         context.push(service);
     }
 
@@ -34,7 +35,8 @@ public class ServiceParseListener extends AbstractProtoParserListener {
 
     @Override
     public void enterRpcMethod(ProtoParser.RpcMethodContext ctx) {
-        ServiceMethod method = new ServiceMethod();
+        Service parent = context.peek(Service.class);
+        ServiceMethod method = new ServiceMethod(parent);
         context.push(method);
     }
 

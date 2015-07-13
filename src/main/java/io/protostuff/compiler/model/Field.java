@@ -14,6 +14,21 @@ public class Field extends AbstractDescriptor {
     protected FieldType type;
     protected int tag;
 
+    private FieldContainer parent;
+
+    public Field(FieldContainer parent) {
+        this.parent = parent;
+    }
+
+    @Override
+    public FieldContainer getParent() {
+        return parent;
+    }
+
+    public void setParent(Message parent) {
+        this.parent = parent;
+    }
+
     public FieldModifier getModifier() {
         return modifier == null ? FieldModifier.DEFAULT : modifier;
     }

@@ -3,6 +3,7 @@ package io.protostuff.compiler.parser;
 import io.protostuff.compiler.model.Enum;
 import io.protostuff.compiler.model.EnumConstant;
 import io.protostuff.compiler.model.EnumContainer;
+import io.protostuff.compiler.model.UserTypeContainer;
 import org.antlr.v4.runtime.BufferedTokenStream;
 
 /**
@@ -16,7 +17,8 @@ public class EnumParseListener extends AbstractProtoParserListener {
 
     @Override
     public void enterEnumBlock(ProtoParser.EnumBlockContext ctx) {
-        Enum enumBuilder = new Enum();
+        UserTypeContainer parent = context.peek(UserTypeContainer.class);
+        Enum enumBuilder = new Enum(parent);
         context.push(enumBuilder);
     }
 
@@ -33,7 +35,8 @@ public class EnumParseListener extends AbstractProtoParserListener {
 
     @Override
     public void enterEnumConstant(ProtoParser.EnumConstantContext ctx) {
-        EnumConstant enumConstant = new EnumConstant();
+        Enum parent = context.peek(Enum.class);
+        EnumConstant enumConstant = new EnumConstant(parent);
         context.push(enumConstant);
     }
 

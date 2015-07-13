@@ -12,7 +12,7 @@ import io.protostuff.compiler.model.Proto;
 import io.protostuff.compiler.model.ScalarFieldType;
 import io.protostuff.compiler.model.Service;
 import io.protostuff.compiler.model.ServiceMethod;
-import io.protostuff.compiler.model.UserFieldType;
+import io.protostuff.compiler.model.UserType;
 import io.protostuff.compiler.model.UserTypeContainer;
 
 import java.util.ArrayDeque;
@@ -73,7 +73,7 @@ public class TypeResolverPostProcessor implements ProtoContextPostProcessor {
     private void resolveTypeReferences(ProtoContext context, Deque<String> scopeLookupList, UserTypeContainer container) {
         for (Extension extension : container.getDeclaredExtensions()) {
             String extendeeName = extension.getExtendeeName();
-            UserFieldType type = resolveUserType(extension, context, scopeLookupList, extendeeName);
+            UserType type = resolveUserType(extension, context, scopeLookupList, extendeeName);
             if (!(type instanceof Message)) {
                 throw new ParserException(extension, "Cannot extend '%s': not a message", type.getName());
             }
@@ -139,17 +139,17 @@ public class TypeResolverPostProcessor implements ProtoContextPostProcessor {
         }
     }
 
-    private UserFieldType resolveUserType(Element source, ProtoContext context, Deque<String> scopeLookupList, String typeName) {
-        UserFieldType fieldType = null;
+    private UserType resolveUserType(Element source, ProtoContext context, Deque<String> scopeLookupList, String typeName) {
+        UserType fieldType = null;
         if (typeName.startsWith(".")) {
-            UserFieldType type = (UserFieldType) context.resolve(typeName);
+            UserType type = (UserType) context.resolve(typeName);
             if (type != null) {
                 fieldType = type;
             }
         } else {
             for (String scope : scopeLookupList) {
                 String fullTypeName = scope + typeName;
-                UserFieldType type = (UserFieldType) context.resolve(fullTypeName);
+                UserType type = (UserType) context.resolve(fullTypeName);
                 if (type != null) {
                     fieldType = type;
                     break;

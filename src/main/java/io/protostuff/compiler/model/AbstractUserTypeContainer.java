@@ -12,6 +12,15 @@ public abstract class AbstractUserTypeContainer extends AbstractDescriptor imple
     protected List<Message> messages;
     protected List<Enum> enums;
     protected List<Extension> declaredExtensions;
+    protected final UserTypeContainer parent;
+
+    public AbstractUserTypeContainer(UserTypeContainer parent) {
+        this.parent = parent;
+    }
+
+    public UserTypeContainer getParent() {
+        return parent;
+    }
 
     @Override
     public List<Message> getMessages() {

@@ -13,11 +13,15 @@ public class Oneof extends AbstractElement implements FieldContainer, GroupConta
 
     protected String name;
 
-    protected Message parent;
+    protected final Message parent;
     protected List<Field> fields;
     protected List<Group> groups;
 
     protected String namespace;
+
+    public Oneof(Message parent) {
+        this.parent = parent;
+    }
 
 
     public String getName() {
@@ -30,10 +34,6 @@ public class Oneof extends AbstractElement implements FieldContainer, GroupConta
 
     public Message getParent() {
         return parent;
-    }
-
-    public void setParent(Message parent) {
-        this.parent = parent;
     }
 
     public String getNamespace() {

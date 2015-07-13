@@ -3,12 +3,21 @@ package io.protostuff.compiler.model;
 /**
  * @author Kostiantyn Shchepanovskyi
  */
-public class Map extends AbstractUserFieldType {
+public class Map extends AbstractUserType {
 
     private String keyTypeName;
     private String valueTypeName;
     private ScalarFieldType keyType;
     private Type valueType;
+
+    public Map(Message parent) {
+        super(parent);
+    }
+
+    @Override
+    public Message getParent() {
+        return (Message) super.getParent();
+    }
 
     @Override
     public DescriptorType getDescriptorType() {

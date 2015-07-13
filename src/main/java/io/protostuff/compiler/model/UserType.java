@@ -3,7 +3,7 @@ package io.protostuff.compiler.model;
 /**
  * @author Kostiantyn Shchepanovskyi
  */
-public interface UserFieldType extends FieldType {
+public interface UserType extends Descriptor, FieldType {
 
     /**
      * Short name. For example, {@code Baz}
@@ -21,7 +21,5 @@ public interface UserFieldType extends FieldType {
     void setFullName(String fullName);
 
     UserTypeContainer getParent();
-
-    void setParent(UserTypeContainer parent);
 
 }

@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * @author Kostiantyn Shchepanovskyi
  */
-public interface FieldContainer {
+public interface FieldContainer extends Element {
 
     List<Field> getFields();
 

@@ -11,9 +11,13 @@ import java.util.stream.Collectors;
 /**
  * @author Kostiantyn Shchepanovskyi
  */
-public class Enum extends AbstractUserFieldType {
+public class Enum extends AbstractUserType {
 
     protected List<EnumConstant> values;
+
+    public Enum(UserTypeContainer parent) {
+        super(parent);
+    }
 
     public List<EnumConstant> getValues() {
         if (values == null) {

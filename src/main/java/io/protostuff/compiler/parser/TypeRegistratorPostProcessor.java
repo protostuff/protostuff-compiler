@@ -5,7 +5,7 @@ import io.protostuff.compiler.model.Map;
 import io.protostuff.compiler.model.Message;
 import io.protostuff.compiler.model.Proto;
 import io.protostuff.compiler.model.Service;
-import io.protostuff.compiler.model.UserFieldType;
+import io.protostuff.compiler.model.UserType;
 import io.protostuff.compiler.model.UserTypeContainer;
 
 import java.util.List;
@@ -26,13 +26,11 @@ public class TypeRegistratorPostProcessor implements ProtoContextPostProcessor {
         List<Message> messages = proto.getMessages();
         for (Message type : messages) {
             type.setProto(proto);
-            type.setParent(proto);
             String fullName = proto.getNamespace() + type.getName();
             type.setFullName(fullName);
             context.register(fullName, type);
             for (Map map : type.getMaps()) {
                 map.setProto(proto);
-                map.setParent(type);
                 map.setFullName(type.getNamespace() + map.getName());
             }
         }
@@ -40,7 +38,6 @@ public class TypeRegistratorPostProcessor implements ProtoContextPostProcessor {
         List<io.protostuff.compiler.model.Enum> enums = proto.getEnums();
         for (Enum type : enums) {
             type.setProto(proto);
-            type.setParent(proto);
             String fullName = proto.getNamespace() + type.getName();
             type.setFullName(fullName);
             context.register(fullName, type);
@@ -63,9 +60,8 @@ public class TypeRegistratorPostProcessor implements ProtoContextPostProcessor {
     private void registerNestedUserTypes(ProtoContext context, UserTypeContainer parent) {
         List<Message> nestedMessages = parent.getMessages();
         List<Enum> nestedEnums = parent.getEnums();
-        Consumer<UserFieldType> nestedTypeProcessor = type -> {
+        Consumer<UserType> nestedTypeProcessor = type -> {
             type.setProto(context.getProto());
-            type.setParent(parent);
             String fullName = parent.getNamespace() + type.getName();
             type.setFullName(fullName);
             context.register(fullName, type);
@@ -75,7 +71,6 @@ public class TypeRegistratorPostProcessor implements ProtoContextPostProcessor {
         nestedMessages.forEach(message -> {
             for (Map map : message.getMaps()) {
                 map.setProto(message.getProto());
-                map.setParent(message);
                 map.setFullName(message.getNamespace() + map.getName());
             }
             registerNestedUserTypes(context, message);

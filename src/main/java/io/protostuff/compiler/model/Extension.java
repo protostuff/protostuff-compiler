@@ -20,6 +20,16 @@ public class Extension extends AbstractElement implements FieldContainer, GroupC
 
     protected String namespace;
 
+    private final UserTypeContainer parent;
+
+    public Extension(UserTypeContainer parent) {
+        this.parent = parent;
+    }
+
+    public UserTypeContainer getParent() {
+        return parent;
+    }
+
     public String getNamespace() {
         return namespace;
     }

@@ -5,6 +5,7 @@ import io.protostuff.compiler.model.DescriptorType;
 import io.protostuff.compiler.model.DynamicMessage;
 import io.protostuff.compiler.model.Enum;
 import io.protostuff.compiler.model.Field;
+import io.protostuff.compiler.model.FieldContainer;
 import io.protostuff.compiler.model.FieldType;
 import io.protostuff.compiler.model.Group;
 import io.protostuff.compiler.model.Message;
@@ -37,12 +38,12 @@ public class OptionsPostProcessor implements ProtoContextPostProcessor {
     @Override
     public void process(ProtoContext context) {
         ProtoWalker.newInstance(context)
-                .onProto(this::checkOptions)
-                .onMessage(this::checkOptions)
+                .onProto(this::processOptions)
+                .onMessage(this::processOptions)
                 .walk();
     }
 
-    private void checkOptions(ProtoContext context, Descriptor descriptor) {
+    private void processOptions(ProtoContext context, Descriptor descriptor) {
         DynamicMessage options = descriptor.getOptions();
         if (options.isEmpty()) {
             // nothing to check - skip this message
@@ -52,30 +53,35 @@ public class OptionsPostProcessor implements ProtoContextPostProcessor {
         String descriptorName = descriptor.getName();
         LOGGER.trace("processing class={} name={}", descriptorClassName, descriptorName);
         Message sourceMessage = findSourceMessage(context, descriptor.getDescriptorType());
+        processOptions(context, sourceMessage, descriptor, options);
+    }
 
+    private void processOptions(ProtoContext context, FieldContainer optionsType, Descriptor owningDescriptor, DynamicMessage options) {
         for (Map.Entry<DynamicMessage.Key, DynamicMessage.Value> entry : options.getFields()) {
             DynamicMessage.Key key = entry.getKey();
             DynamicMessage.Value value = entry.getValue();
             if (key.isExtension()) {
+
                 // TODO check extension
             } else {
                 // check standard option
                 String fieldName = key.getName();
-                Field field = sourceMessage.getField(fieldName);
+                Field field = optionsType.getField(fieldName);
                 if (field == null) {
                     throw new ParserException(value, "Unknown option: '%s'", fieldName);
                 }
-                checkFieldValue(field, value);
+                checkFieldValue(context, owningDescriptor, field, value);
             }
         }
     }
 
-    private void checkFieldValue(Field field, DynamicMessage.Value value) {
+    private void checkFieldValue(ProtoContext context, Descriptor descriptor, Field field, DynamicMessage.Value value) {
         String fieldName = field.getName();
         FieldType fieldType = field.getType();
         DynamicMessage.Value.Type valueType = value.getType();
         if (fieldType instanceof ScalarFieldType) {
-            if (!isAssignableFrom((ScalarFieldType) fieldType, valueType)) {
+            ScalarFieldType scalarFieldType = (ScalarFieldType) fieldType;
+            if (!isAssignableFrom(scalarFieldType, valueType)) {
                 throw new ParserException(value, "Cannot set option '%s': expected %s value", fieldName, fieldType);
             }
         } else if (fieldType instanceof Enum) {
@@ -85,10 +91,12 @@ public class OptionsPostProcessor implements ProtoContextPostProcessor {
                     || !allowedNames.contains(value.getEnumName())) {
                 throw new ParserException(value, "Cannot set option '%s': expected enum = %s", fieldName, allowedNames);
             }
-        } else if (fieldType instanceof Message || fieldType instanceof Group) {
+        } else if (fieldType instanceof Message) {
             if (valueType != DynamicMessage.Value.Type.MESSAGE) {
                 throw new ParserException(value, "Cannot set option '%s': expected message value", fieldName);
             }
+            FieldContainer message = (FieldContainer) fieldType;
+            processOptions(context, message, descriptor, value.getMessage());
         } else {
             throw new IllegalStateException("Unknown field type: " + fieldType);
         }

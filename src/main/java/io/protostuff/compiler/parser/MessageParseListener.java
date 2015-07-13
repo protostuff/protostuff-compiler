@@ -1,6 +1,7 @@
 package io.protostuff.compiler.parser;
 
 import io.protostuff.compiler.model.AbstractUserTypeContainer;
+import io.protostuff.compiler.model.Element;
 import io.protostuff.compiler.model.Extension;
 import io.protostuff.compiler.model.ExtensionContainer;
 import io.protostuff.compiler.model.ExtensionRange;
@@ -12,6 +13,7 @@ import io.protostuff.compiler.model.Map;
 import io.protostuff.compiler.model.Message;
 import io.protostuff.compiler.model.MessageContainer;
 import io.protostuff.compiler.model.Oneof;
+import io.protostuff.compiler.model.UserTypeContainer;
 import org.antlr.v4.runtime.BufferedTokenStream;
 
 import static io.protostuff.compiler.model.FieldModifier.OPTIONAL;
@@ -31,7 +33,8 @@ public class MessageParseListener extends AbstractProtoParserListener {
 
     @Override
     public void enterMessageBlock(ProtoParser.MessageBlockContext ctx) {
-        Message message = new Message();
+        UserTypeContainer parent = context.peek(UserTypeContainer.class);
+        Message message = new Message(parent);
         context.push(message);
     }
 
@@ -48,7 +51,8 @@ public class MessageParseListener extends AbstractProtoParserListener {
 
     @Override
     public void enterField(ProtoParser.FieldContext ctx) {
-        Field field = new Field();
+        FieldContainer parent = context.peek(FieldContainer.class);
+        Field field = new Field(parent);
         context.push(field);
     }
 
@@ -70,7 +74,8 @@ public class MessageParseListener extends AbstractProtoParserListener {
 
     @Override
     public void enterExtendBlock(ProtoParser.ExtendBlockContext ctx) {
-        Extension extension = new Extension();
+        UserTypeContainer parent = context.peek(UserTypeContainer.class);
+        Extension extension = new Extension(parent);
         context.push(extension);
     }
 
@@ -86,8 +91,17 @@ public class MessageParseListener extends AbstractProtoParserListener {
 
     @Override
     public void enterGroupBlock(ProtoParser.GroupBlockContext ctx) {
-        Group group = new Group();
-        context.push(group);
+        Element parent = context.peek(Element.class);
+        if (parent instanceof Extension) {
+            // hack: use extension's parent
+            Group group = new Group(((Extension)parent).getParent());
+            context.push(group);
+        } else if (parent instanceof UserTypeContainer) {
+            Group group = new Group(((UserTypeContainer)parent));
+            context.push(group);
+        } else {
+            throw new IllegalStateException();
+        }
     }
 
     @Override
@@ -100,7 +114,8 @@ public class MessageParseListener extends AbstractProtoParserListener {
 
     @Override
     public void enterOneof(ProtoParser.OneofContext ctx) {
-        Oneof oneof = new Oneof();
+        Message parent = context.peek(Message.class);
+        Oneof oneof = new Oneof(parent);
         context.push(oneof);
     }
 
@@ -110,14 +125,14 @@ public class MessageParseListener extends AbstractProtoParserListener {
         Message message = context.peek(Message.class);
         oneof.setName(ctx.name().getText());
         oneof.setSourceCodeLocation(getSourceCodeLocation(ctx));
-        oneof.setParent(message);
         message.addOneof(oneof);
         attachComments(ctx, oneof, false);
     }
 
     @Override
     public void enterOneofField(ProtoParser.OneofFieldContext ctx) {
-        Field field = new Field();
+        FieldContainer parent = context.peek(FieldContainer.class);
+        Field field = new Field(parent);
         context.push(field);
     }
 
@@ -138,7 +153,8 @@ public class MessageParseListener extends AbstractProtoParserListener {
 
     @Override
     public void enterOneofGroup(ProtoParser.OneofGroupContext ctx) {
-        Group group = new Group();
+        Oneof parent = context.peek(Oneof.class);
+        Group group = new Group(parent.getParent());
         context.push(group);
     }
 
@@ -152,7 +168,8 @@ public class MessageParseListener extends AbstractProtoParserListener {
 
     @Override
     public void enterMap(ProtoParser.MapContext ctx) {
-        Field field = new Field();
+        Message parent = context.peek(Message.class);
+        Field field = new Field(parent);
         context.push(field);
     }
 
@@ -163,7 +180,7 @@ public class MessageParseListener extends AbstractProtoParserListener {
         String name = ctx.name().getText();
         String keyType = ctx.mapKey().getText();
         String valueType = ctx.mapValue().getText();
-        Map map = new Map();
+        Map map = new Map(message);
         map.setName(name);
         map.setSourceCodeLocation(getSourceCodeLocation(ctx));
         map.setKeyTypeName(keyType);
