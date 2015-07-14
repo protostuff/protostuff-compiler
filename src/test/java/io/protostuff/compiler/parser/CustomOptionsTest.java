@@ -18,6 +18,14 @@ public class CustomOptionsTest extends AbstractParserTest {
     }
 
     @Test
+    public void invalidCustomOption() throws Exception {
+        thrown.expect(ParserException.class);
+        thrown.expectMessage("Unknown option: 'unknown_option' " +
+                "[protostuff_unittest/options_illegal_custom_option.proto:5]");
+        importer.importFile("protostuff_unittest/options_illegal_custom_option.proto");
+    }
+
+    @Test
     public void invalidStandardOption() throws Exception {
         thrown.expect(ParserException.class);
         thrown.expectMessage("Unknown option: 'non_existing_option' " +

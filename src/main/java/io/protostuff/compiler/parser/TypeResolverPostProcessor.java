@@ -31,19 +31,8 @@ public class TypeResolverPostProcessor implements ProtoContextPostProcessor {
     }
 
     private void resolveTypeReferences(ProtoContext context) {
-        Deque<String> scopeLookupList = new ArrayDeque<>();
-        String root = ".";
-        scopeLookupList.add(root);
         Proto proto = context.getProto();
-        io.protostuff.compiler.model.Package aPackage = proto.getPackage();
-        if (aPackage != null) {
-            String[] split = aPackage.getValue().split("\\.");
-            for (String s : split) {
-                String nextRoot = root + s + ".";
-                scopeLookupList.push(nextRoot);
-                root = nextRoot;
-            }
-        }
+        Deque<String> scopeLookupList = createScopeLookupList(proto);
 
         for (Service service : proto.getServices()) {
 
@@ -68,6 +57,24 @@ public class TypeResolverPostProcessor implements ProtoContextPostProcessor {
 
         resolveTypeReferences(context, scopeLookupList, proto);
 
+    }
+
+    // Type name resolution in the protocol buffer language works like C++: first
+    // the innermost scope is searched, then the next-innermost, and so on, with
+    // each package considered to be "inner" to its parent package.
+    public static Deque<String> createScopeLookupList(UserTypeContainer container) {
+        String namespace = container.getNamespace();
+        Deque<String> scopeLookupList = new ArrayDeque<>();
+        int end = 0;
+        while (end >= 0) {
+            end = namespace.indexOf('.', end);
+            if (end >= 0) {
+                end++;
+                String scope = namespace.substring(0, end);
+                scopeLookupList.addFirst(scope);
+            }
+        }
+        return scopeLookupList;
     }
 
     private void resolveTypeReferences(ProtoContext context, Deque<String> scopeLookupList, UserTypeContainer container) {
@@ -141,6 +148,7 @@ public class TypeResolverPostProcessor implements ProtoContextPostProcessor {
 
     private UserType resolveUserType(Element source, ProtoContext context, Deque<String> scopeLookupList, String typeName) {
         UserType fieldType = null;
+        // A leading '.' (for example, .foo.bar.Baz) means to start from the outermost scope
         if (typeName.startsWith(".")) {
             UserType type = (UserType) context.resolve(typeName);
             if (type != null) {

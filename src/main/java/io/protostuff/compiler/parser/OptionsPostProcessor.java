@@ -6,9 +6,7 @@ import io.protostuff.compiler.model.DynamicMessage;
 import io.protostuff.compiler.model.Element;
 import io.protostuff.compiler.model.Enum;
 import io.protostuff.compiler.model.Field;
-import io.protostuff.compiler.model.FieldContainer;
 import io.protostuff.compiler.model.FieldType;
-import io.protostuff.compiler.model.Group;
 import io.protostuff.compiler.model.Message;
 import io.protostuff.compiler.model.ScalarFieldType;
 import io.protostuff.compiler.model.UserTypeContainer;
@@ -18,10 +16,12 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Provider;
+import java.util.Deque;
 import java.util.Map;
 import java.util.Set;
 
 import static io.protostuff.compiler.parser.DefaultDescriptorProtoProvider.DESCRIPTOR_PROTO;
+import static io.protostuff.compiler.parser.TypeResolverPostProcessor.createScopeLookupList;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -58,24 +58,55 @@ public class OptionsPostProcessor implements ProtoContextPostProcessor {
         processOptions(context, sourceMessage, descriptor, options);
     }
 
-    private void processOptions(ProtoContext context, FieldContainer optionsType, Descriptor owningDescriptor, DynamicMessage options) {
+    private void processOptions(ProtoContext context, Message sourceMessage, Descriptor owningDescriptor, DynamicMessage options) {
+        ExtensionRegistry extensionRegistry = context.getExtensionRegistry();
+        Map<String, Field> extensionFields = extensionRegistry.getExtensionFields(sourceMessage);
         for (Map.Entry<DynamicMessage.Key, DynamicMessage.Value> entry : options.getFields()) {
             DynamicMessage.Key key = entry.getKey();
             DynamicMessage.Value value = entry.getValue();
             if (key.isExtension()) {
-                Element tmp = owningDescriptor;
-                while (!(tmp instanceof UserTypeContainer)) tmp = tmp.getParent();
-                // TODO check extension
+                String fullName = null;
+                Field extensionField = null;
+                if (key.getName().startsWith(".")) {
+                    String name = key.getName();
+                    if (extensionFields.containsKey(name)) {
+                        fullName = name;
+                        extensionField = extensionFields.get(fullName);
+                    }
+                } else {
+                    UserTypeContainer owningContainer = getOwningContainer(owningDescriptor);
+                    Deque<String> scopeLookupList = createScopeLookupList(owningContainer);
+                    for (String scope : scopeLookupList) {
+                        String name = scope + key.getName();
+                        if (extensionFields.containsKey(name)) {
+                            fullName = name;
+                            extensionField = extensionFields.get(fullName);
+                            break;
+                        }
+                    }
+                }
+                if (fullName == null) {
+                    throw new ParserException(value, "Unknown option: '%s'", key.getName());
+                }
+                checkFieldValue(context, owningDescriptor, extensionField, value);
             } else {
                 // check standard option
                 String fieldName = key.getName();
-                Field field = optionsType.getField(fieldName);
+                Field field = sourceMessage.getField(fieldName);
                 if (field == null) {
                     throw new ParserException(value, "Unknown option: '%s'", fieldName);
                 }
                 checkFieldValue(context, owningDescriptor, field, value);
             }
         }
+    }
+
+    private UserTypeContainer getOwningContainer(Descriptor descriptor) {
+        Element tmp = descriptor;
+        while (!(tmp instanceof UserTypeContainer)) {
+            tmp = tmp.getParent();
+        }
+        return (UserTypeContainer) tmp;
     }
 
     private void checkFieldValue(ProtoContext context, Descriptor descriptor, Field field, DynamicMessage.Value value) {
@@ -98,7 +129,7 @@ public class OptionsPostProcessor implements ProtoContextPostProcessor {
             if (valueType != DynamicMessage.Value.Type.MESSAGE) {
                 throw new ParserException(value, "Cannot set option '%s': expected message value", fieldName);
             }
-            FieldContainer message = (FieldContainer) fieldType;
+            Message message = (Message) fieldType;
             processOptions(context, message, descriptor, value.getMessage());
         } else {
             throw new IllegalStateException("Unknown field type: " + fieldType);
