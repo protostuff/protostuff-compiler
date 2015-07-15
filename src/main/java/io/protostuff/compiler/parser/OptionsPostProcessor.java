@@ -8,6 +8,7 @@ import io.protostuff.compiler.model.Enum;
 import io.protostuff.compiler.model.Field;
 import io.protostuff.compiler.model.FieldType;
 import io.protostuff.compiler.model.Message;
+import io.protostuff.compiler.model.ProtobufConstants;
 import io.protostuff.compiler.model.ScalarFieldType;
 import io.protostuff.compiler.model.UserTypeContainer;
 import org.slf4j.Logger;
@@ -17,6 +18,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Provider;
 import java.util.Deque;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -29,6 +31,7 @@ import static io.protostuff.compiler.parser.TypeResolverPostProcessor.createScop
 public class OptionsPostProcessor implements ProtoContextPostProcessor {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OptionsPostProcessor.class);
+
 
     private final Provider<ProtoContext> descriptorProtoProvider;
 
@@ -61,6 +64,7 @@ public class OptionsPostProcessor implements ProtoContextPostProcessor {
     private void processOptions(ProtoContext context, Message sourceMessage, Descriptor owningDescriptor, DynamicMessage options) {
         ExtensionRegistry extensionRegistry = context.getExtensionRegistry();
         Map<String, Field> extensionFields = extensionRegistry.getExtensionFields(sourceMessage);
+        Map<DynamicMessage.Key, String> fullNames = new HashMap<>();
         for (Map.Entry<DynamicMessage.Key, DynamicMessage.Value> entry : options.getFields()) {
             DynamicMessage.Key key = entry.getKey();
             DynamicMessage.Value value = entry.getValue();
@@ -88,6 +92,7 @@ public class OptionsPostProcessor implements ProtoContextPostProcessor {
                 if (fullName == null) {
                     throw new ParserException(value, "Unknown option: '%s'", key.getName());
                 }
+                fullNames.put(key, fullName);
                 checkFieldValue(context, owningDescriptor, extensionField, value);
             } else {
                 // check standard option
@@ -99,6 +104,10 @@ public class OptionsPostProcessor implements ProtoContextPostProcessor {
                 checkFieldValue(context, owningDescriptor, field, value);
             }
         }
+        for (Map.Entry<DynamicMessage.Key, String> entry : fullNames.entrySet()) {
+            options.normalizeName(entry.getKey(), entry.getValue());
+        }
+
     }
 
     private UserTypeContainer getOwningContainer(Descriptor descriptor) {
@@ -179,26 +188,26 @@ public class OptionsPostProcessor implements ProtoContextPostProcessor {
     private Message tryResolveFromContext(ProtoContext context, DescriptorType type) {
         switch (type) {
             case PROTO:
-                return context.resolve(Message.class, ".google.protobuf.FileOptions");
+                return context.resolve(Message.class, ProtobufConstants.MSG_FILE_OPTIONS);
             case ENUM:
-                return context.resolve(Message.class, ".google.protobuf.EnumOptions");
+                return context.resolve(Message.class, ProtobufConstants.MSG_ENUM_OPTIONS);
             case ENUM_CONSTANT:
-                return context.resolve(Message.class, ".google.protobuf.EnumValueOptions");
+                return context.resolve(Message.class, ProtobufConstants.MSG_ENUM_VALUE_OPTIONS);
             case MESSAGE:
-                return context.resolve(Message.class, ".google.protobuf.MessageOptions");
+                return context.resolve(Message.class, ProtobufConstants.MSG_MESSAGE_OPTIONS);
             case MESSAGE_FIELD:
-                return context.resolve(Message.class, ".google.protobuf.FieldOptions");
+                return context.resolve(Message.class, ProtobufConstants.MSG_FIELD_OPTIONS);
             case GROUP:
                 // Groups are not fully supported. For simplicity, in this place we assume
                 // that only that options that are applicable for messages are also
                 // applicable for groups.
                 // But, actually it is invalid assumption, because both field and message
                 // options are applicable to groups.
-                return context.resolve(Message.class, ".google.protobuf.MessageOptions");
+                return context.resolve(Message.class, ProtobufConstants.MSG_MESSAGE_OPTIONS);
             case SERVICE:
-                return context.resolve(Message.class, ".google.protobuf.ServiceOptions");
+                return context.resolve(Message.class, ProtobufConstants.MSG_SERVICE_OPTIONS);
             case SERVICE_METHOD:
-                return context.resolve(Message.class, ".google.protobuf.MethodOptions");
+                return context.resolve(Message.class, ProtobufConstants.MSG_METHOD_OPTIONS);
             default:
                 throw new IllegalStateException("Unknown descriptor type: " + type);
         }

@@ -1,5 +1,7 @@
 package io.protostuff.compiler.parser;
 
+import io.protostuff.compiler.model.Proto;
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -14,7 +16,12 @@ public class CustomOptionsTest extends AbstractParserTest {
 
     @Test
     public void sample() throws Exception {
-        importer.importFile("protostuff_unittest/options_sample.proto");
+        ProtoContext protoContext = importer.importFile("protostuff_unittest/options_sample.proto");
+        Proto proto = protoContext.getProto();
+        Assert.assertEquals("A", proto.getOptions().get("(.protostuff_unittest.a)").getString());
+        Assert.assertEquals("B", proto.getOptions().get("(.protostuff_unittest.b)").getString());
+        Assert.assertEquals("C", proto.getOptions().get("(.protostuff_unittest.c)").getString());
+        Assert.assertEquals(42, proto.getOptions().get("(.protostuff_unittest.d).f").getInt32());
     }
 
     @Test

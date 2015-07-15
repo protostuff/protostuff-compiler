@@ -222,6 +222,17 @@ public class DynamicMessage implements Map<String, DynamicMessage.Value> {
         return fields.entrySet();
     }
 
+    /**
+     * Change option name to its full name
+     */
+    public void normalizeName(Key key, String fullName) {
+        Value value = fields.remove(key);
+        if (value == null) {
+            throw new IllegalStateException("Could not find option for key=" + key);
+        }
+        fields.put(Key.extension(fullName), value);
+    }
+
     public static class Key {
         private final String name;
         private final boolean extension;
@@ -327,11 +338,6 @@ public class DynamicMessage implements Map<String, DynamicMessage.Value> {
             this.message = m;
         }
 
-        @Override
-        public Element getParent() {
-            return parent;
-        }
-
         public static Value createString(String value) {
             return new Value(SourceCodeLocation.UNKNOWN, Type.STRING, value, null);
         }
@@ -378,6 +384,11 @@ public class DynamicMessage implements Map<String, DynamicMessage.Value> {
 
         public static Value createEnum(SourceCodeLocation sourceCodeLocation, String value) {
             return new Value(sourceCodeLocation, Type.ENUM, value, null);
+        }
+
+        @Override
+        public Element getParent() {
+            return parent;
         }
 
         public Type getType() {
