@@ -107,9 +107,20 @@ public class MessageParseListener extends AbstractProtoParserListener {
     @Override
     public void exitGroupBlock(ProtoParser.GroupBlockContext ctx) {
         Group group = context.pop(Group.class);
+        group.setName(ctx.name().getText());
         group.setSourceCodeLocation(getSourceCodeLocation(ctx));
-        GroupContainer container = context.peek(GroupContainer.class);
-        container.addGroup(group);
+        GroupContainer groupContainer = context.peek(GroupContainer.class);
+        FieldContainer fieldContainer = context.peek(FieldContainer.class);
+        Field field = new Field(fieldContainer);
+        field.setName(group.getName().toLowerCase()); // same behavior as in protoc
+        int tag = Integer.decode(ctx.INTEGER_VALUE().getText());
+        field.setTag(tag);
+        field.setTypeName(group.getName());
+        field.setType(group);
+        field.setSourceCodeLocation(getSourceCodeLocation(ctx));
+        groupContainer.addGroup(group);
+        fieldContainer.addField(field);
+        attachComments(ctx, field, true);
     }
 
     @Override

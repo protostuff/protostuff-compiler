@@ -117,9 +117,16 @@ public class OptionParseListener extends AbstractProtoParserListener {
 
     @Override
     public void exitTextFormatEntry(ProtoParser.TextFormatEntryContext ctx) {
-        String name = ctx.textFormatOptionName().getText();
+        String optionName;
+        if (ctx.textFormatOptionName().name() != null) {
+            // standard option key
+            optionName = ctx.textFormatOptionName().getText();
+        } else {
+            // custom option key
+            optionName = "(" + ctx.textFormatOptionName().typeReference().getText() + ")";
+        }
         DynamicMessage.Value value = getTextFormatOptionValue(ctx);
-        currentTextFormat.set(getSourceCodeLocation(ctx), name, value);
+        currentTextFormat.set(getSourceCodeLocation(ctx), optionName, value);
     }
 
     private DynamicMessage.Value getTextFormatOptionValue(ProtoParser.TextFormatEntryContext ctx) {

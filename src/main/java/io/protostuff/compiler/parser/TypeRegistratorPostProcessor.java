@@ -1,6 +1,8 @@
 package io.protostuff.compiler.parser;
 
 import io.protostuff.compiler.model.Enum;
+import io.protostuff.compiler.model.Extension;
+import io.protostuff.compiler.model.GroupContainer;
 import io.protostuff.compiler.model.Map;
 import io.protostuff.compiler.model.Message;
 import io.protostuff.compiler.model.Proto;
@@ -8,6 +10,8 @@ import io.protostuff.compiler.model.Service;
 import io.protostuff.compiler.model.UserType;
 import io.protostuff.compiler.model.UserTypeContainer;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -23,7 +27,11 @@ public class TypeRegistratorPostProcessor implements ProtoContextPostProcessor {
 
     private void registerUserTypes(ProtoContext context) {
         final Proto proto = context.getProto();
-        List<Message> messages = proto.getMessages();
+        List<Message> messages = new ArrayList<>();
+        messages.addAll(proto.getMessages());
+        for (Extension extension : proto.getDeclaredExtensions()) {
+            messages.addAll(extension.getGroups());
+        }
         for (Message type : messages) {
             type.setProto(proto);
             String fullName = proto.getNamespace() + type.getName();
@@ -58,7 +66,15 @@ public class TypeRegistratorPostProcessor implements ProtoContextPostProcessor {
     }
 
     private void registerNestedUserTypes(ProtoContext context, UserTypeContainer parent) {
-        List<Message> nestedMessages = parent.getMessages();
+        List<Message> nestedMessages = new ArrayList<>();
+        nestedMessages.addAll(parent.getMessages());
+        if (parent instanceof GroupContainer) {
+            nestedMessages.addAll(((GroupContainer)parent).getGroups());
+        }
+        for (Extension extension : parent.getDeclaredExtensions()) {
+            nestedMessages.addAll(extension.getGroups());
+        }
+
         List<Enum> nestedEnums = parent.getEnums();
         Consumer<UserType> nestedTypeProcessor = type -> {
             type.setProto(context.getProto());

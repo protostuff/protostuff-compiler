@@ -5,6 +5,7 @@ import io.protostuff.compiler.model.Extension;
 import io.protostuff.compiler.model.Field;
 import io.protostuff.compiler.model.FieldContainer;
 import io.protostuff.compiler.model.FieldType;
+import io.protostuff.compiler.model.GroupContainer;
 import io.protostuff.compiler.model.Map;
 import io.protostuff.compiler.model.Message;
 import io.protostuff.compiler.model.Oneof;
@@ -16,7 +17,9 @@ import io.protostuff.compiler.model.UserType;
 import io.protostuff.compiler.model.UserTypeContainer;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Deque;
+import java.util.List;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -87,13 +90,24 @@ public class TypeResolverPostProcessor implements ProtoContextPostProcessor {
             Message extendee = (Message) type;
             extension.setExtendee(extendee);
             for (Field field : extension.getFields()) {
-                String typeName = field.getTypeName();
-                FieldType fieldType = resolveFieldType(field, context, scopeLookupList, typeName);
-                field.setType(fieldType);
+                // for groups field type is already set
+                if (field.getType() == null) {
+                    String typeName = field.getTypeName();
+                    FieldType fieldType = resolveFieldType(field, context, scopeLookupList, typeName);
+                    field.setType(fieldType);
+                }
             }
         }
 
-        for (Message message : container.getMessages()) {
+        List<Message> messages = new ArrayList<>();
+        messages.addAll(container.getMessages());
+        if (container instanceof GroupContainer) {
+            messages.addAll(((GroupContainer)container).getGroups());
+        }
+        for (Extension extension : container.getDeclaredExtensions()) {
+            messages.addAll(extension.getGroups());
+        }
+        for (Message message : messages) {
             String root = scopeLookupList.peek();
             scopeLookupList.push(root + message.getName() + ".");
             updateFieldTypes(context, scopeLookupList, message);
