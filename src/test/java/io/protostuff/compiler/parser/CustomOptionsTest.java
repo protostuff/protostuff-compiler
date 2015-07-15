@@ -33,6 +33,14 @@ public class CustomOptionsTest extends AbstractParserTest {
     }
 
     @Test
+    public void invalidCustomOptionType() throws Exception {
+        thrown.expect(ParserException.class);
+        thrown.expectMessage("Cannot set option 'a': expected string value " +
+                "[protostuff_unittest/options_illegal_custom_option_type.proto:7]");
+        importer.importFile("protostuff_unittest/options_illegal_custom_option_type.proto");
+    }
+
+    @Test
     public void invalidStandardOption() throws Exception {
         thrown.expect(ParserException.class);
         thrown.expectMessage("Unknown option: 'non_existing_option' " +
