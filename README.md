@@ -1,7 +1,7 @@
 Protocol Buffers parser and code generator
 ------------------------------------------
 
-[![Build Status](https://travis-ci.org/kshchepanovskyi/proto-compiler.svg?branch=master)](https://travis-ci.org/kshchepanovskyi/proto-compiler)
+[![Build Status](https://travis-ci.org/kshchepanovskyi/protostuff-compiler.svg?branch=master)](https://travis-ci.org/kshchepanovskyi/protostuff-compiler)
 [![Coverity](https://scan.coverity.com/projects/5635/badge.svg)](https://scan.coverity.com/projects/5635)
 
 Targets
