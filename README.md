@@ -23,3 +23,8 @@ Build
 ```
 $ mvn clean install
 ```
+
+Maven Plugin
+------------
+
+Requirements: Maven 3.1.0+
