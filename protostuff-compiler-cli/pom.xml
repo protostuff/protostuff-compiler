@@ -42,7 +42,7 @@
     <dependencies>
         <dependency>
             <groupId>io.protostuff</groupId>
-            <artifactId>protostuff-compiler</artifactId>
+            <artifactId>protostuff-compiler-core</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
