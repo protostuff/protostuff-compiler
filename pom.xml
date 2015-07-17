@@ -20,6 +20,7 @@
     <modules>
         <module>protostuff-compiler</module>
         <module>protostuff-compiler-maven-plugin</module>
+        <module>protostuff-compiler-cli</module>
     </modules>
 
     <build>
