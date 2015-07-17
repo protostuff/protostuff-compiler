@@ -7,14 +7,15 @@ Protocol Buffers parser and code generator
 Targets
 -------
 
-| # | Component    | Goal                                                                          |
-|---|--------------|-------------------------------------------------------------------------------|
-| 1 | parser       | Full compatibility with `proto3`                                              |
-| 2 | parser       | Partial compatibility with `proto2` (groups will not be fully supported).     |
-| 3 | generator    | `proto3` template: proto-to-proto transformation                              |
-| 4 | generator    | `java_nano` template: produce same output as `protoc --javanano_out=...`      |
-| 5 | maven plugin | simple maven plugin                                                           |
-| 6 | generator    | extensible template system that enables code generation for any language      |
+| Component    | Goal                                                                          |
+|--------------|-------------------------------------------------------------------------------|
+| parser       | Full compatibility with `proto3`                                              |
+| parser       | Partial compatibility with `proto2` (groups will not be fully supported).     |
+| generator    | `proto3` template: proto-to-proto transformation                              |
+| generator    | `java_nano` template: produce same output as `protoc --javanano_out=...`      |
+| generator    | extensible template system that enables code generation for any language      |
+| maven-plugin | simple maven plugin                                                           |
+| cli          | command-line interface with `protoc`-like syntax                              |
 
 
 Build
