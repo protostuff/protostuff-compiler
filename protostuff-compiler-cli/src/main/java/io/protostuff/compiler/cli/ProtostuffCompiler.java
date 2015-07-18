@@ -18,8 +18,16 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.core.LoggerContext;
+import org.apache.logging.log4j.core.config.Configuration;
+import org.apache.logging.log4j.core.config.LoggerConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,23 +37,22 @@ import java.util.Map;
  */
 public class ProtostuffCompiler {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProtostuffCompiler.class);
+
     private final Injector injector;
 
     public ProtostuffCompiler() {
         injector = Guice.createInjector(
-                new ParserModule(),
+                new ParserModule(Arrays.asList(Paths.get("."))),
                 new CompilerModule("io/protostuff/compiler/protodoc/tree.stg"));
     }
 
-    public void compile(ModuleConfiguration configuration) {
-        Importer importer = injector.getInstance(Importer.class);
-        Map<Path, Proto> importedFiles = new HashMap<>();
-        for (String path : configuration.getProtoFiles()) {
-            ProtoContext context = importer.importFile(path);
-            Proto proto = context.getProto();
-            ProtoCompiler compiler = injector.getInstance(ProtoCompiler.class);
-            compiler.compile(new Module(proto));
-        }
+    public static void changeLogLevel(Level newLevel) {
+        LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
+        Configuration config = ctx.getConfiguration();
+        LoggerConfig loggerConfig = config.getLoggerConfig(LogManager.ROOT_LOGGER_NAME);
+        loggerConfig.setLevel(newLevel);
+        ctx.updateLoggers();
     }
 
     public static void main(String[] args) {
@@ -64,8 +71,18 @@ public class ProtostuffCompiler {
                         " directories will be searched in order.  If not" +
                         " given, the current working directory is used.")
                 .build();
+        Option verbose = Option.builder("v")
+                .longOpt("verbose")
+                .desc("Be verbose.")
+                .build();
+        Option debug = Option.builder("d")
+                .longOpt("debug")
+                .desc("Show debug information.")
+                .build();
         options.addOption(help);
         options.addOption(includePath);
+        options.addOption(debug);
+        options.addOption(verbose);
 
         List<String> protoFiles;
         CommandLineParser parser = new DefaultParser();
@@ -74,24 +91,49 @@ public class ProtostuffCompiler {
             if (cmd.hasOption("help")) {
                 // automatically generate the help statement
                 HelpFormatter formatter = new HelpFormatter();
-                formatter.printHelp( "protostuff-compiler [OPTION] PROTO_FILES", options );
+                formatter.printHelp("protostuff-compiler [OPTION] PROTO_FILES", options);
                 return;
+            }
+            if (cmd.hasOption("debug")) {
+                changeLogLevel(Level.DEBUG);
+            } else if (cmd.hasOption("verbose")) {
+                changeLogLevel(Level.INFO);
             }
             protoFiles = cmd.getArgList();
         } catch (ParseException e) {
-            System.out.println("ERROR: " + e.getMessage());
+            LOGGER.error(e.getMessage());
             return;
         }
 
+        LOGGER.info("Version={}", ProtostuffCompiler.class.getPackage().getImplementationVersion());
         ModuleConfiguration configuration = ModuleConfiguration.newBuilder()
                 .protoFiles(protoFiles)
                 .build();
 
+        if (configuration.getProtoFiles().isEmpty()) {
+            LOGGER.error("Missing input file.");
+        }
         try {
             ProtostuffCompiler compiler = new ProtostuffCompiler();
             compiler.compile(configuration);
         } catch (ParserException e) {
-            System.out.println("ERROR: " + e.getMessage());
+            LOGGER.error(e.getMessage());
         }
     }
+
+    public void compile(ModuleConfiguration configuration) {
+        Importer importer = injector.getInstance(Importer.class);
+        ProtoCompiler compiler = injector.getInstance(ProtoCompiler.class);
+        Map<String, Proto> importedFiles = new HashMap<>();
+        for (String path : configuration.getProtoFiles()) {
+            ProtoContext context = importer.importFile(path);
+            Proto proto = context.getProto();
+            importedFiles.put(path, proto);
+        }
+        for (Map.Entry<String, Proto> entry : importedFiles.entrySet()) {
+            compiler.compile(new Module(entry.getValue()));
+        }
+
+    }
+
 }
