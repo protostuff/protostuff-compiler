@@ -18,6 +18,8 @@ public class StCompilerTest extends AbstractCompilerTest {
         Proto proto = context.getProto();
         StCompilerFactory compilerFactory = injector.getInstance(StCompilerFactory.class);
         ProtoCompiler compiler = compilerFactory.create("io/protostuff/compiler/proto/proto3.stg");
-        compiler.compile(new Module(proto));
+        Module module = new Module(proto);
+        module.setOutput("./");
+        compiler.compile(module);
     }
 }
