@@ -3,7 +3,7 @@ package io.protostuff.compiler.generator;
 /**
  * @author Kostiantyn Shchepanovskyi
  */
-public interface ProtoCompilerFactory {
+public interface StCompilerFactory {
 
     ProtoCompiler create(String template);
 }

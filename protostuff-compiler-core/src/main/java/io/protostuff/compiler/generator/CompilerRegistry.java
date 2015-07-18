@@ -14,10 +14,10 @@ public class CompilerRegistry {
 
     private final Map<String, ProtoCompiler> compilers;
 
-    private final ProtoCompilerFactory compilerFactory;
+    private final StCompilerFactory compilerFactory;
 
     @Inject
-    public CompilerRegistry(ProtoCompilerFactory compilerFactory) {
+    public CompilerRegistry(StCompilerFactory compilerFactory) {
         this.compilerFactory = compilerFactory;
         compilers = new HashMap<>();
         registerStandardCompilers();

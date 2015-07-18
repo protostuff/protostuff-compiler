@@ -7,8 +7,8 @@ import io.protostuff.compiler.generator.CompilerRegistry;
 import io.protostuff.compiler.generator.GeneratorException;
 import io.protostuff.compiler.generator.OutputStreamFactory;
 import io.protostuff.compiler.generator.ProtoCompiler;
-import io.protostuff.compiler.generator.ProtoCompilerFactory;
 import io.protostuff.compiler.generator.StCompiler;
+import io.protostuff.compiler.generator.StCompilerFactory;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -23,7 +23,7 @@ public class CompilerModule extends AbstractModule {
         bind(CompilerRegistry.class);
         install(new FactoryModuleBuilder()
                 .implement(ProtoCompiler.class, StCompiler.class)
-                .build(ProtoCompilerFactory.class));
+                .build(StCompilerFactory.class));
     }
 
     @Provides
