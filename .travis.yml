@@ -11,7 +11,7 @@ env:
 addons:
   coverity_scan:
     project:
-      name: "kshchepanovskyi/proto-compiler"
+      name: "kshchepanovskyi/protostuff-compiler"
       description: "Build submitted via Travis CI"
     notification_email: schepanovsky@gmail.com
     build_command_prepend: "mvn clean"
