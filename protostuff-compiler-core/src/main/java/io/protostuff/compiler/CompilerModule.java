@@ -10,7 +10,6 @@ import io.protostuff.compiler.generator.ProtoCompiler;
 import io.protostuff.compiler.generator.StCompiler;
 import io.protostuff.compiler.generator.StCompilerFactory;
 
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -38,10 +37,8 @@ public class CompilerModule extends AbstractModule {
                 Path dir = path.getParent();
                 Files.createDirectories(dir);
                 return new FileOutputStream(location);
-            } catch (FileNotFoundException e) {
-                throw new GeneratorException("Could not create file: %s", location);
             } catch (IOException e) {
-                throw new GeneratorException("I/O error when generating %s: %s", location, e.getMessage());
+                throw new GeneratorException("Could not create file: %s", e, location);
             }
         };
     }

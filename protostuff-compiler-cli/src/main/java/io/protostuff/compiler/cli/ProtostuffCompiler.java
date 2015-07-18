@@ -42,7 +42,6 @@ public class ProtostuffCompiler {
     public static final String __VERSION = ProtostuffCompiler.class.getPackage().getImplementationVersion();
     public static final String TEMPLATE = "template";
     public static final String OUTPUT = "output";
-    public static final String VERBOSE = "verbose";
     public static final String DEBUG = "debug";
     public static final String HELP = "help";
     public static final String PROTO_PATH = "proto_path";
@@ -93,10 +92,6 @@ public class ProtostuffCompiler {
                 .numberOfArgs(1)
                 .desc("Specify an template directory for saving generated files.")
                 .build();
-        Option verbose = Option.builder("v")
-                .longOpt(VERBOSE)
-                .desc("Be verbose.")
-                .build();
         Option debug = Option.builder("d")
                 .longOpt(DEBUG)
                 .desc("Show debug information.")
@@ -104,7 +99,6 @@ public class ProtostuffCompiler {
         options.addOption(help);
         options.addOption(includePath);
         options.addOption(debug);
-        options.addOption(verbose);
         options.addOption(outputOption);
         options.addOption(templateOption);
 
@@ -122,10 +116,7 @@ public class ProtostuffCompiler {
             }
             if (cmd.hasOption(DEBUG)) {
                 changeLogLevel(Level.DEBUG);
-            } else if (cmd.hasOption(VERBOSE)) {
-                changeLogLevel(Level.INFO);
             }
-
             if (cmd.hasOption(TEMPLATE)) {
                 template = cmd.getOptionValue(TEMPLATE);
             } else {
@@ -140,7 +131,11 @@ public class ProtostuffCompiler {
             }
             protoFiles = cmd.getArgList();
         } catch (ParseException e) {
-            LOGGER.error(e.getMessage());
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.error("Could not parse command", e);
+            } else {
+                LOGGER.error(e.getMessage());
+            }
             return;
         }
 
@@ -164,7 +159,11 @@ public class ProtostuffCompiler {
             ProtostuffCompiler compiler = new ProtostuffCompiler();
             compiler.compile(configuration);
         } catch (GeneratorException | ParserException e) {
-            LOGGER.error(e.getMessage());
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.error("Compilation error", e);
+            } else {
+                LOGGER.error(e.getMessage());
+            }
         }
     }
 
