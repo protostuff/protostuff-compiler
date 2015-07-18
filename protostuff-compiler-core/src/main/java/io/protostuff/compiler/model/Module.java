@@ -12,12 +12,21 @@ public class Module {
 
     private String name;
     private List<Proto> protos;
+    private String output;
 
     public Module() {
     }
 
     public Module(Proto... protos) {
         this.protos = Arrays.asList(protos);
+    }
+
+    public String getOutput() {
+        return output;
+    }
+
+    public void setOutput(String output) {
+        this.output = output;
     }
 
     public List<Proto> getProtos() {

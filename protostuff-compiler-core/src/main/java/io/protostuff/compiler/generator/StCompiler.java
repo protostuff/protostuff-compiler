@@ -12,6 +12,7 @@ import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
 import org.stringtemplate.v4.STGroupFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
 
@@ -113,23 +114,39 @@ public class StCompiler extends AbstractProtoCompiler {
     }
 
     @Override
-    protected String getOutputFileName(Module module) {
-        return getString(MODULE_COMPILER_OUTPUT, MODULE, module);
+    protected String getOutputFileName(String basedir, Module module) {
+        String filename = getString(MODULE_COMPILER_OUTPUT, MODULE, module);
+        return appendBasedir(basedir, filename);
     }
 
     @Override
-    protected String getOutputFileName(Proto proto) {
-        return getString(PROTO_COMPILER_OUTPUT, PROTO, proto);
+    protected String getOutputFileName(String basedir, Proto proto) {
+        String filename = getString(PROTO_COMPILER_OUTPUT, PROTO, proto);
+        return appendBasedir(basedir, filename);
     }
 
     @Override
-    protected String getOutputFileName(Message message) {
-        return getString(MESSAGE_COMPILER_OUTPUT, MESSAGE, message);
+    protected String getOutputFileName(String basedir, Message message) {
+        String filename = getString(MESSAGE_COMPILER_OUTPUT, MESSAGE, message);
+        return appendBasedir(basedir, filename);
     }
 
     @Override
-    protected String getOutputFileName(Enum anEnum) {
-        return getString(ENUM_COMPILER_OUTPUT, ENUM, anEnum);
+    protected String getOutputFileName(String basedir, Enum anEnum) {
+        String filename = getString(ENUM_COMPILER_OUTPUT, ENUM, anEnum);
+        return appendBasedir(basedir, filename);
+    }
+
+    protected String appendBasedir(String basedir, String relativeFilename) {
+        if (basedir.charAt(basedir.length() - 1) == getFolderSeparator()) {
+            return basedir + relativeFilename;
+        } else {
+            return basedir + getFolderSeparator() + relativeFilename;
+        }
+    }
+
+    protected char getFolderSeparator() {
+        return File.separatorChar;
     }
 
     private boolean getBoolean(String stName, String arg, Object value) {

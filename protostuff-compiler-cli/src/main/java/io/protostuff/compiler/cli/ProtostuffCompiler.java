@@ -5,6 +5,7 @@ import com.google.inject.Injector;
 import io.protostuff.compiler.CompilerModule;
 import io.protostuff.compiler.ParserModule;
 import io.protostuff.compiler.generator.CompilerRegistry;
+import io.protostuff.compiler.generator.GeneratorException;
 import io.protostuff.compiler.generator.ProtoCompiler;
 import io.protostuff.compiler.model.Module;
 import io.protostuff.compiler.model.ModuleConfiguration;
@@ -38,8 +39,14 @@ import java.util.Map;
  */
 public class ProtostuffCompiler {
 
+    public static final String __VERSION = ProtostuffCompiler.class.getPackage().getImplementationVersion();
+    public static final String TEMPLATE = "template";
+    public static final String OUTPUT = "output";
+    public static final String VERBOSE = "verbose";
+    public static final String DEBUG = "debug";
+    public static final String HELP = "help";
+    public static final String PROTO_PATH = "proto_path";
     private static final Logger LOGGER = LoggerFactory.getLogger(ProtostuffCompiler.class);
-
     private final Injector injector;
 
     public ProtostuffCompiler() {
@@ -60,11 +67,11 @@ public class ProtostuffCompiler {
 
         Options options = new Options();
         Option help = Option.builder("h")
-                .longOpt("help")
+                .longOpt(HELP)
                 .desc("Print this message.")
                 .build();
         Option includePath = Option.builder("I")
-                .longOpt("proto_path")
+                .longOpt(PROTO_PATH)
                 .argName("path")
                 .numberOfArgs(1)
                 .desc("Specify the directory in which to search for " +
@@ -72,20 +79,26 @@ public class ProtostuffCompiler {
                         " directories will be searched in order.  If not" +
                         " given, the current working directory is used.")
                 .build();
-        Option outputOption = Option.builder("o")
-                .longOpt("output")
+        Option templateOption = Option.builder("t")
+                .longOpt(TEMPLATE)
                 .argName("name")
                 .numberOfArgs(1)
-                .desc("Specify an output for compiler:\n" +
+                .desc("Specify an template template for compiler:\n" +
                         "* html - generate HTML documentation from given proto files;\n" +
                         "* proto - generate proto files, possibly apply additional transformations;")
                 .build();
+        Option outputOption = Option.builder("o")
+                .longOpt(OUTPUT)
+                .argName("name")
+                .numberOfArgs(1)
+                .desc("Specify an template directory for saving generated files.")
+                .build();
         Option verbose = Option.builder("v")
-                .longOpt("verbose")
+                .longOpt(VERBOSE)
                 .desc("Be verbose.")
                 .build();
         Option debug = Option.builder("d")
-                .longOpt("debug")
+                .longOpt(DEBUG)
                 .desc("Show debug information.")
                 .build();
         options.addOption(help);
@@ -93,34 +106,49 @@ public class ProtostuffCompiler {
         options.addOption(debug);
         options.addOption(verbose);
         options.addOption(outputOption);
+        options.addOption(templateOption);
 
         List<String> protoFiles;
+        String template;
         String output;
         CommandLineParser parser = new DefaultParser();
         try {
             CommandLine cmd = parser.parse(options, args);
-            if (cmd.hasOption("help")) {
+            if (cmd.hasOption(HELP)) {
                 // automatically generate the help statement
                 HelpFormatter formatter = new HelpFormatter();
                 formatter.printHelp("protostuff-compiler [options] proto_files", options);
                 return;
             }
-            if (cmd.hasOption("debug")) {
+            if (cmd.hasOption(DEBUG)) {
                 changeLogLevel(Level.DEBUG);
-            } else if (cmd.hasOption("verbose")) {
+            } else if (cmd.hasOption(VERBOSE)) {
                 changeLogLevel(Level.INFO);
             }
-            output = cmd.getOptionValue("output");
+
+            if (cmd.hasOption(TEMPLATE)) {
+                template = cmd.getOptionValue(TEMPLATE);
+            } else {
+                LOGGER.error("Template is not set.");
+                return;
+            }
+            if (cmd.hasOption(OUTPUT)) {
+                output = cmd.getOptionValue(OUTPUT);
+            } else {
+                LOGGER.error("Output directory is not set.");
+                return;
+            }
             protoFiles = cmd.getArgList();
         } catch (ParseException e) {
             LOGGER.error(e.getMessage());
             return;
         }
 
-        LOGGER.info("Version={}", ProtostuffCompiler.class.getPackage().getImplementationVersion());
+        LOGGER.info("Version={}", __VERSION);
         ModuleConfiguration configuration = ModuleConfiguration.newBuilder()
                 .name("main")
                 .protoFiles(protoFiles)
+                .template(template)
                 .output(output)
                 .build();
 
@@ -128,14 +156,14 @@ public class ProtostuffCompiler {
             LOGGER.error("Missing input file.");
             return;
         }
-        if (configuration.getOutput() == null) {
-            LOGGER.error("Missing output directives.");
+        if (configuration.getTemplate() == null) {
+            LOGGER.error("Missing template directives.");
             return;
         }
         try {
             ProtostuffCompiler compiler = new ProtostuffCompiler();
             compiler.compile(configuration);
-        } catch (ParserException e) {
+        } catch (GeneratorException | ParserException e) {
             LOGGER.error(e.getMessage());
         }
     }
@@ -143,9 +171,9 @@ public class ProtostuffCompiler {
     public void compile(ModuleConfiguration configuration) {
         Importer importer = injector.getInstance(Importer.class);
         CompilerRegistry registry = injector.getInstance(CompilerRegistry.class);
-        ProtoCompiler compiler = registry.findCompiler(configuration.getOutput());
+        ProtoCompiler compiler = registry.findCompiler(configuration.getTemplate());
         if (compiler == null) {
-            LOGGER.error("Unknown output: {}", configuration.getOutput());
+            LOGGER.error("Unknown template: {}", configuration.getTemplate());
             return;
         }
         Map<String, Proto> importedFiles = new HashMap<>();
@@ -157,6 +185,7 @@ public class ProtostuffCompiler {
         }
         Module module = new Module();
         module.setName(configuration.getName());
+        module.setOutput(configuration.getOutput());
         for (Map.Entry<String, Proto> entry : importedFiles.entrySet()) {
             module.addProto(entry.getValue());
         }

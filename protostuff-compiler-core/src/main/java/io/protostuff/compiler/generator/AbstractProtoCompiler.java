@@ -37,18 +37,17 @@ public abstract class AbstractProtoCompiler implements ProtoCompiler {
         try {
             if (canProcess(module)) {
                 LOGGER.info("Compile module: {}", module.getName());
-                String outputFileName = getOutputFileName(module);
+                String outputFileName = getOutputFileName(module.getOutput(), module);
                 LOGGER.info("Write {}", outputFileName);
                 Writer writer = getWriter(outputFileName);
                 compile(module, writer);
-                writer.close();
             }
             for (Proto proto : module.getProtos()) {
                 List<Message> messages = proto.getMessages();
                 List<io.protostuff.compiler.model.Enum> enums = proto.getEnums();
                 if (canProcess(proto)) {
                     LOGGER.info("Compile proto: {}", proto.getFilename());
-                    String outputFileName = getOutputFileName(proto);
+                    String outputFileName = getOutputFileName(module.getOutput(), proto);
                     LOGGER.info("Write {}", outputFileName);
                     Writer writer = getWriter(outputFileName);
                     compile(proto, writer);
@@ -56,7 +55,7 @@ public abstract class AbstractProtoCompiler implements ProtoCompiler {
                 for (Message message : messages) {
                     if (canProcess(message)) {
                         LOGGER.info("Compile message: {}", message.getName());
-                        String outputFileName = getOutputFileName(message);
+                        String outputFileName = getOutputFileName(module.getOutput(), message);
                         LOGGER.info("Write {}", outputFileName);
                         Writer writer = getWriter(outputFileName);
                         compile(message, writer);
@@ -65,15 +64,13 @@ public abstract class AbstractProtoCompiler implements ProtoCompiler {
                 for (Enum anEnum : enums) {
                     if (canProcess(anEnum)) {
                         LOGGER.info("Compile enum: {}", anEnum.getName());
-                        String outputFileName = getOutputFileName(anEnum);
+                        String outputFileName = getOutputFileName(module.getOutput(), anEnum);
                         LOGGER.info("Write {}", outputFileName);
                         Writer writer = getWriter(outputFileName);
                         compile(anEnum, writer);
                     }
                 }
             }
-        } catch (Exception e) {
-            LOGGER.error("Compilation error", e);
         } finally {
             for (Map.Entry<String, Writer> entry : fileWriterMap.entrySet()) {
                 String fileName = entry.getKey();
@@ -112,12 +109,12 @@ public abstract class AbstractProtoCompiler implements ProtoCompiler {
 
     protected abstract boolean canProcess(Enum anEnum);
 
-    protected abstract String getOutputFileName(Module module);
+    protected abstract String getOutputFileName(String basedir, Module module);
 
-    protected abstract String getOutputFileName(Proto proto);
+    protected abstract String getOutputFileName(String basedir, Proto proto);
 
-    protected abstract String getOutputFileName(Message message);
+    protected abstract String getOutputFileName(String basedir, Message message);
 
-    protected abstract String getOutputFileName(Enum anEnum);
+    protected abstract String getOutputFileName(String basedir, Enum anEnum);
 
 }

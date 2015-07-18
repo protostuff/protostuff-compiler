@@ -10,11 +10,13 @@ public class ModuleConfiguration {
 
     private final String name;
     private final List<String> protoFiles;
+    private final String template;
     private final String output;
 
     private ModuleConfiguration(Builder builder) {
         name = builder.name;
         protoFiles = builder.protoFiles;
+        template = builder.template;
         output = builder.output;
     }
 
@@ -26,6 +28,7 @@ public class ModuleConfiguration {
         Builder builder = new Builder();
         builder.protoFiles = copy.protoFiles;
         builder.name = copy.name;
+        builder.template = copy.template;
         builder.output = copy.output;
         return builder;
     }
@@ -38,6 +41,10 @@ public class ModuleConfiguration {
         return name;
     }
 
+    public String getTemplate() {
+        return template;
+    }
+
     public String getOutput() {
         return output;
     }
@@ -45,6 +52,7 @@ public class ModuleConfiguration {
     public static final class Builder {
         private String name;
         private List<String> protoFiles;
+        private String template;
         private String output;
 
         private Builder() {
@@ -57,6 +65,11 @@ public class ModuleConfiguration {
 
         public Builder protoFiles(List<String> protoFiles) {
             this.protoFiles = protoFiles;
+            return this;
+        }
+
+        public Builder template(String template) {
+            this.template = template;
             return this;
         }
 
