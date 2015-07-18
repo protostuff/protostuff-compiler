@@ -10,6 +10,7 @@ import java.util.List;
  */
 public class Module {
 
+    private String name;
     private List<Proto> protos;
 
     public Module() {
@@ -39,6 +40,10 @@ public class Module {
 
 
     public String getName() {
-        return "unnamed";
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

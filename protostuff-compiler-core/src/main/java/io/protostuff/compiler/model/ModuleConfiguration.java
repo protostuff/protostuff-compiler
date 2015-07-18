@@ -8,10 +8,11 @@ import java.util.List;
  */
 public class ModuleConfiguration {
 
-    // list of proto files that should be processed
+    private final String name;
     private final List<String> protoFiles;
 
     private ModuleConfiguration(Builder builder) {
+        name = builder.name;
         protoFiles = builder.protoFiles;
     }
 
@@ -22,6 +23,7 @@ public class ModuleConfiguration {
     public static Builder newBuilder(ModuleConfiguration copy) {
         Builder builder = new Builder();
         builder.protoFiles = copy.protoFiles;
+        builder.name = copy.name;
         return builder;
     }
 
@@ -29,11 +31,20 @@ public class ModuleConfiguration {
         return protoFiles;
     }
 
+    public String getName() {
+        return name;
+    }
 
     public static final class Builder {
+        private String name;
         private List<String> protoFiles;
 
         private Builder() {
+        }
+
+        public Builder name(String name) {
+            this.name = name;
+            return this;
         }
 
         public Builder protoFiles(List<String> protoFiles) {

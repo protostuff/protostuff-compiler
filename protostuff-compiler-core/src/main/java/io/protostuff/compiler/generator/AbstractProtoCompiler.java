@@ -38,7 +38,7 @@ public abstract class AbstractProtoCompiler implements ProtoCompiler {
             if (canProcess(module)) {
                 LOGGER.info("Compile module: {}", module.getName());
                 String outputFileName = getOutputFileName(module);
-                LOGGER.info("Output file: {}", outputFileName);
+                LOGGER.info("Write {}", outputFileName);
                 Writer writer = getWriter(outputFileName);
                 compile(module, writer);
                 writer.close();
@@ -49,6 +49,7 @@ public abstract class AbstractProtoCompiler implements ProtoCompiler {
                 if (canProcess(proto)) {
                     LOGGER.info("Compile proto: {}", proto.getName());
                     String outputFileName = getOutputFileName(proto);
+                    LOGGER.info("Write {}", outputFileName);
                     Writer writer = getWriter(outputFileName);
                     compile(proto, writer);
                 }
@@ -56,6 +57,7 @@ public abstract class AbstractProtoCompiler implements ProtoCompiler {
                     if (canProcess(message)) {
                         LOGGER.info("Compile message: {}", message.getName());
                         String outputFileName = getOutputFileName(message);
+                        LOGGER.info("Write {}", outputFileName);
                         Writer writer = getWriter(outputFileName);
                         compile(message, writer);
                     }
@@ -64,6 +66,7 @@ public abstract class AbstractProtoCompiler implements ProtoCompiler {
                     if (canProcess(anEnum)) {
                         LOGGER.info("Compile enum: {}", anEnum.getName());
                         String outputFileName = getOutputFileName(anEnum);
+                        LOGGER.info("Write {}", outputFileName);
                         Writer writer = getWriter(outputFileName);
                         compile(anEnum, writer);
                     }

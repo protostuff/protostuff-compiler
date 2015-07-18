@@ -107,6 +107,7 @@ public class ProtostuffCompiler {
 
         LOGGER.info("Version={}", ProtostuffCompiler.class.getPackage().getImplementationVersion());
         ModuleConfiguration configuration = ModuleConfiguration.newBuilder()
+                .name("main")
                 .protoFiles(protoFiles)
                 .build();
 
@@ -126,14 +127,17 @@ public class ProtostuffCompiler {
         ProtoCompiler compiler = injector.getInstance(ProtoCompiler.class);
         Map<String, Proto> importedFiles = new HashMap<>();
         for (String path : configuration.getProtoFiles()) {
+            LOGGER.info("Parse {}", path);
             ProtoContext context = importer.importFile(path);
             Proto proto = context.getProto();
             importedFiles.put(path, proto);
         }
+        Module module = new Module();
+        module.setName(configuration.getName());
         for (Map.Entry<String, Proto> entry : importedFiles.entrySet()) {
-            compiler.compile(new Module(entry.getValue()));
+            module.addProto(entry.getValue());
         }
-
+        compiler.compile(module);
     }
 
 }
