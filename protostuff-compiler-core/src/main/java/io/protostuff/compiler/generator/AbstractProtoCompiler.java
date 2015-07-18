@@ -47,7 +47,7 @@ public abstract class AbstractProtoCompiler implements ProtoCompiler {
                 List<Message> messages = proto.getMessages();
                 List<io.protostuff.compiler.model.Enum> enums = proto.getEnums();
                 if (canProcess(proto)) {
-                    LOGGER.info("Compile proto: {}", proto.getName());
+                    LOGGER.info("Compile proto: {}", proto.getFilename());
                     String outputFileName = getOutputFileName(proto);
                     LOGGER.info("Write {}", outputFileName);
                     Writer writer = getWriter(outputFileName);

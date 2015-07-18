@@ -4,6 +4,7 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import io.protostuff.compiler.CompilerModule;
 import io.protostuff.compiler.ParserModule;
+import io.protostuff.compiler.generator.CompilerRegistry;
 import io.protostuff.compiler.generator.ProtoCompiler;
 import io.protostuff.compiler.model.Module;
 import io.protostuff.compiler.model.ModuleConfiguration;
@@ -44,7 +45,7 @@ public class ProtostuffCompiler {
     public ProtostuffCompiler() {
         injector = Guice.createInjector(
                 new ParserModule(Arrays.asList(Paths.get("."))),
-                new CompilerModule("io/protostuff/compiler/protodoc/tree.stg"));
+                new CompilerModule());
     }
 
     public static void changeLogLevel(Level newLevel) {
@@ -71,6 +72,14 @@ public class ProtostuffCompiler {
                         " directories will be searched in order.  If not" +
                         " given, the current working directory is used.")
                 .build();
+        Option outputOption = Option.builder("o")
+                .longOpt("output")
+                .argName("name")
+                .numberOfArgs(1)
+                .desc("Specify an output for compiler:\n" +
+                        "* html - generate HTML documentation from given proto files;\n" +
+                        "* proto - generate proto files, possibly apply additional transformations;")
+                .build();
         Option verbose = Option.builder("v")
                 .longOpt("verbose")
                 .desc("Be verbose.")
@@ -83,15 +92,17 @@ public class ProtostuffCompiler {
         options.addOption(includePath);
         options.addOption(debug);
         options.addOption(verbose);
+        options.addOption(outputOption);
 
         List<String> protoFiles;
+        String output;
         CommandLineParser parser = new DefaultParser();
         try {
             CommandLine cmd = parser.parse(options, args);
             if (cmd.hasOption("help")) {
                 // automatically generate the help statement
                 HelpFormatter formatter = new HelpFormatter();
-                formatter.printHelp("protostuff-compiler [OPTION] PROTO_FILES", options);
+                formatter.printHelp("protostuff-compiler [options] proto_files", options);
                 return;
             }
             if (cmd.hasOption("debug")) {
@@ -99,6 +110,7 @@ public class ProtostuffCompiler {
             } else if (cmd.hasOption("verbose")) {
                 changeLogLevel(Level.INFO);
             }
+            output = cmd.getOptionValue("output");
             protoFiles = cmd.getArgList();
         } catch (ParseException e) {
             LOGGER.error(e.getMessage());
@@ -109,10 +121,16 @@ public class ProtostuffCompiler {
         ModuleConfiguration configuration = ModuleConfiguration.newBuilder()
                 .name("main")
                 .protoFiles(protoFiles)
+                .output(output)
                 .build();
 
         if (configuration.getProtoFiles().isEmpty()) {
             LOGGER.error("Missing input file.");
+            return;
+        }
+        if (configuration.getOutput() == null) {
+            LOGGER.error("Missing output directives.");
+            return;
         }
         try {
             ProtostuffCompiler compiler = new ProtostuffCompiler();
@@ -124,7 +142,12 @@ public class ProtostuffCompiler {
 
     public void compile(ModuleConfiguration configuration) {
         Importer importer = injector.getInstance(Importer.class);
-        ProtoCompiler compiler = injector.getInstance(ProtoCompiler.class);
+        CompilerRegistry registry = injector.getInstance(CompilerRegistry.class);
+        ProtoCompiler compiler = registry.findCompiler(configuration.getOutput());
+        if (compiler == null) {
+            LOGGER.error("Unknown output: {}", configuration.getOutput());
+            return;
+        }
         Map<String, Proto> importedFiles = new HashMap<>();
         for (String path : configuration.getProtoFiles()) {
             LOGGER.info("Parse {}", path);

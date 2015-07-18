@@ -4,7 +4,7 @@ import "io/protostuff/compiler/proto/TextFormat.stg"
 proto_compiler_enabled(proto) ::= "true"
 
 proto_compiler_output(proto) ::= <<
-<proto.name>
+<proto.name>.proto
 >>
 
 proto_compiler_template(proto) ::= <<

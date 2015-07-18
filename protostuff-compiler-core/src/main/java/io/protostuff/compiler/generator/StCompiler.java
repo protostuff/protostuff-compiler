@@ -1,5 +1,7 @@
 package io.protostuff.compiler.generator;
 
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
 import io.protostuff.compiler.model.Enum;
 import io.protostuff.compiler.model.Message;
 import io.protostuff.compiler.model.Module;
@@ -8,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
+import org.stringtemplate.v4.STGroupFile;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -38,8 +41,11 @@ public class StCompiler extends AbstractProtoCompiler {
     private static final Logger LOGGER = LoggerFactory.getLogger(StCompiler.class);
     private final STGroup stGroup;
 
-    public StCompiler(STGroup group, OutputStreamFactory outputStreamFactory) {
+    @Inject
+    public StCompiler(OutputStreamFactory outputStreamFactory, @Assisted String templateFileName) {
         super(outputStreamFactory);
+        STGroup group = new STGroupFile(templateFileName);
+        group.setListener(new StErrorListener());
         this.stGroup = group;
     }
 

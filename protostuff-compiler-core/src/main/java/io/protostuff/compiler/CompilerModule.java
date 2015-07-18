@@ -2,12 +2,13 @@ package io.protostuff.compiler;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
+import com.google.inject.assistedinject.FactoryModuleBuilder;
+import io.protostuff.compiler.generator.CompilerRegistry;
 import io.protostuff.compiler.generator.GeneratorException;
+import io.protostuff.compiler.generator.OutputStreamFactory;
 import io.protostuff.compiler.generator.ProtoCompiler;
+import io.protostuff.compiler.generator.ProtoCompilerFactory;
 import io.protostuff.compiler.generator.StCompiler;
-import io.protostuff.compiler.generator.StErrorListener;
-import org.stringtemplate.v4.STGroup;
-import org.stringtemplate.v4.STGroupFile;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -17,27 +18,22 @@ import java.io.FileOutputStream;
  */
 public class CompilerModule extends AbstractModule {
 
-    private final String templateFileName;
-
-    public CompilerModule(String templateFileName) {
-        this.templateFileName = templateFileName;
-    }
-
     @Override
     protected void configure() {
-
+        bind(CompilerRegistry.class);
+        install(new FactoryModuleBuilder()
+                .implement(ProtoCompiler.class, StCompiler.class)
+                .build(ProtoCompilerFactory.class));
     }
 
     @Provides
-    ProtoCompiler compiler() {
-        STGroup group = new STGroupFile(templateFileName);
-        group.setListener(new StErrorListener());
-        return new StCompiler(group, location -> {
+    OutputStreamFactory outputStreamFactory() {
+        return location -> {
             try {
                 return new FileOutputStream(location);
             } catch (FileNotFoundException e) {
                 throw new GeneratorException("Could not create file: {}", location);
             }
-        });
+        };
     }
 }

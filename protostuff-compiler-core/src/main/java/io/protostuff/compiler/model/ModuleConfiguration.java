@@ -10,10 +10,12 @@ public class ModuleConfiguration {
 
     private final String name;
     private final List<String> protoFiles;
+    private final String output;
 
     private ModuleConfiguration(Builder builder) {
         name = builder.name;
         protoFiles = builder.protoFiles;
+        output = builder.output;
     }
 
     public static Builder newBuilder() {
@@ -24,6 +26,7 @@ public class ModuleConfiguration {
         Builder builder = new Builder();
         builder.protoFiles = copy.protoFiles;
         builder.name = copy.name;
+        builder.output = copy.output;
         return builder;
     }
 
@@ -35,9 +38,14 @@ public class ModuleConfiguration {
         return name;
     }
 
+    public String getOutput() {
+        return output;
+    }
+
     public static final class Builder {
         private String name;
         private List<String> protoFiles;
+        private String output;
 
         private Builder() {
         }
@@ -49,6 +57,11 @@ public class ModuleConfiguration {
 
         public Builder protoFiles(List<String> protoFiles) {
             this.protoFiles = protoFiles;
+            return this;
+        }
+
+        public Builder output(String output) {
+            this.output = output;
             return this;
         }
 
