@@ -60,6 +60,10 @@ RETURNS
 MAP
     : 'map'
     ;
+BOOLEAN_VALUE
+    : 'true'
+    | 'false'
+    ;
 COMMENT
     : '/*' .*? '*/' -> channel(HIDDEN)
     ;
@@ -72,23 +76,18 @@ WS
 LCURLY
     :   '{'
     ;
-
 RCURLY
     :   '}'
     ;
-
 LPAREN
     :   '('
     ;
-
 RPAREN
     :   ')'
     ;
-
 LSQUARE
     :   '['
     ;
-
 RSQUARE
     :   ']'
     ;
@@ -112,10 +111,6 @@ SEMICOLON
     ;
 ASSIGN
     : '='
-    ;
-BOOLEAN_VALUE
-    : 'true'
-    | 'false'
     ;
 NAME
     :   (ALPHA | UNDERSCORE) (ALPHA | DIGIT | UNDERSCORE)*

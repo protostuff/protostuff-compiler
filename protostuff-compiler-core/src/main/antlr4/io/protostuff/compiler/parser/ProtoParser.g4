@@ -176,10 +176,24 @@ textFormatOptionValue
 name
     : NAME
     | PACKAGE
-    | SERVICE
+    | SYNTAX
+    | IMPORT
+    | PUBLIC
+    | OPTION
+    | MESSAGE
+    | GROUP
+    | OPTIONAL
+    | REQUIRED
+    | REPEATED
+    | ONEOF
     | EXTEND
     | EXTENSIONS
     | TO
-    | SYNTAX
+    | MAX
+    | ENUM
+    | SERVICE
+    | RPC
+    | RETURNS
     | MAP
+    | BOOLEAN_VALUE
     ;
