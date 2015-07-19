@@ -1,6 +1,10 @@
 delimiters "$", "$"
 import "io/protostuff/compiler/core.stg"
 
+import "io/protostuff/compiler/html/header.stg"
+import "io/protostuff/compiler/html/navbar.stg"
+import "io/protostuff/compiler/html/footer.stg"
+
 module_compiler_enabled(module) ::= "true"
 module_compiler_output(module) ::= "index.html"
 
@@ -9,18 +13,40 @@ $module:index()$
 >>
 
 index(module) ::= <<
-$module.protos:proto()$
+$header()$
+$navbar()$
+
+<div class="container container-left">
+    <div class="row">
+        <div class="col-md-3 hidden-xs">
+            <div class="sidebar well">
+                <ul>
+                    $module.protos:proto()$
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-9">
+          Main text
+        </div>
+    </div>
+</div>
+
+$footer()$
 >>
 
 proto(proto) ::= <<
-<h1>$proto.name$</h1>
+<li>$proto.name$</li>
+<ul>
 $proto.messages:message()$
+</ul>
 >>
 
 
 message(message) ::= <<
-<h2>$message.fullName$</h2>
+<li>$message.name$</li>
 $if(first(message.messages))$
+    <ul>
     $message.messages:message()$
+    </ul>
 $endif$
 >>

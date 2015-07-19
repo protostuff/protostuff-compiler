@@ -4,6 +4,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import io.protostuff.compiler.generator.CompilerRegistry;
+import io.protostuff.compiler.generator.CompilerUtils;
 import io.protostuff.compiler.generator.GeneratorException;
 import io.protostuff.compiler.generator.OutputStreamFactory;
 import io.protostuff.compiler.generator.ProtoCompiler;
@@ -24,6 +25,7 @@ public class CompilerModule extends AbstractModule {
     @Override
     protected void configure() {
         bind(CompilerRegistry.class);
+        bind(CompilerUtils.class);
         install(new FactoryModuleBuilder()
                 .implement(ProtoCompiler.class, StCompiler.class)
                 .build(StCompilerFactory.class));

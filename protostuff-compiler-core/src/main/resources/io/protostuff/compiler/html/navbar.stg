@@ -1,0 +1,11 @@
+delimiters "$", "$"
+
+navbar() ::= <<
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">Protocol Documentation</a>
+        </div>
+    </div>
+</nav>
+>>
