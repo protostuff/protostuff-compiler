@@ -11,6 +11,7 @@ import java.util.Map;
 public class CompilerRegistry {
 
     public static final String PROTO3 = "proto3";
+    public static final String HTML = "html";
 
     private final Map<String, ProtoCompiler> compilers;
 
@@ -25,10 +26,15 @@ public class CompilerRegistry {
 
     private void registerStandardCompilers() {
         registerCompiler(PROTO3, createProto3Compiler());
+        registerCompiler(HTML, createHtmlCompiler());
     }
 
     private ProtoCompiler createProto3Compiler() {
         return compilerFactory.create("io/protostuff/compiler/proto/proto3.stg");
+    }
+
+    private ProtoCompiler createHtmlCompiler() {
+        return compilerFactory.create("io/protostuff/compiler/html/index.stg");
     }
 
     @Nullable
