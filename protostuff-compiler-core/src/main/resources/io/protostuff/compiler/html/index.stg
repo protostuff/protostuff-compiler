@@ -1,9 +1,9 @@
 delimiters "$", "$"
-
 import "io/protostuff/compiler/core.stg"
 
 module_compiler_enabled(module) ::= "true"
 module_compiler_output(module) ::= "index.html"
+
 module_compiler_template(module) ::= <<
 $module:index()$
 >>
@@ -13,13 +13,14 @@ $module.protos:proto()$
 >>
 
 proto(proto) ::= <<
-<h1>$proto.name>$</h1>
+<h1>$proto.name$</h1>
 $proto.messages:message()$
 >>
 
+
 message(message) ::= <<
 <h2>$message.fullName$</h2>
-$if(first(message.messages))$,
+$if(first(message.messages))$
     $message.messages:message()$
 $endif$
 >>
