@@ -1,0 +1,36 @@
+delimiters "%", "%"
+import "io/protostuff/compiler/core.stg"
+
+message_compiler_enabled(message) ::= "true"
+
+message_compiler_output(message) ::= <%
+%message:full_type_name()%.html
+%>
+
+message_compiler_template(message) ::= <<
+<h1>Message</h1>
+%message:message()%
+>>
+
+message(message) ::= <<
+%message.name%
+%message:nested_messages()%
+>>
+
+nested_messages(message) ::= <<
+%if(first(message.messages))%
+Nested messages:
+<ul>
+%message.messages:nested_message()%
+</ul>
+%endif%
+>>
+
+nested_message(message) ::= <<
+<li>%message.name%</li>
+%if(first(message.messages))%
+<ul>
+    %message.messages:nested_message()%
+</ul>
+%endif%
+>>

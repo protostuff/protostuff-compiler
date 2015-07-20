@@ -33,10 +33,12 @@ public class StCompiler extends AbstractProtoCompiler {
 
     public static final String MESSAGE = "message";
     public static final String MESSAGE_COMPILER_ENABLED = "message_compiler_enabled";
+    public static final String MESSAGE_COMPILER_TEMPLATE = "message_compiler_template";
     public static final String MESSAGE_COMPILER_OUTPUT = "message_compiler_output";
 
     public static final String ENUM = "enum";
     public static final String ENUM_COMPILER_ENABLED = "enum_compiler_enabled";
+    public static final String ENUM_COMPILER_TEMPLATE = "enum_compiler_template";
     public static final String ENUM_COMPILER_OUTPUT = "enum_compiler_output";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(StCompiler.class);
@@ -85,7 +87,18 @@ public class StCompiler extends AbstractProtoCompiler {
 
     @Override
     protected void compile(Message message, Writer writer) {
-
+        String stName = MESSAGE_COMPILER_TEMPLATE;
+        ST st = stGroup.getInstanceOf(stName);
+        if (st == null) {
+            throw new GeneratorException("Template %s is not defined", stName);
+        }
+        st.add(MESSAGE, message);
+        String result = st.render();
+        try {
+            writer.append(result);
+        } catch (IOException e) {
+            throw new GeneratorException("Can not write file: %s", e.getMessage());
+        }
     }
 
     @Override

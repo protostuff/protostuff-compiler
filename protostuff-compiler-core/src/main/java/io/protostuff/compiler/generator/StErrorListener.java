@@ -10,25 +10,23 @@ import org.stringtemplate.v4.misc.STMessage;
  */
 public class StErrorListener implements STErrorListener {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(StErrorListener.class);
-
     @Override
     public void compileTimeError(STMessage stMessage) {
-        LOGGER.error("Compile time error: {}", stMessage);
+        throw new GeneratorException(stMessage.toString());
     }
 
     @Override
     public void runTimeError(STMessage stMessage) {
-        LOGGER.error("Runtime error: {}", stMessage);
+        throw new GeneratorException(stMessage.toString());
     }
 
     @Override
     public void IOError(STMessage stMessage) {
-        LOGGER.error("IO error: {}", stMessage);
+        throw new GeneratorException(stMessage.toString());
     }
 
     @Override
     public void internalError(STMessage stMessage) {
-        LOGGER.error("Internal error: {}", stMessage);
+        throw new GeneratorException(stMessage.toString());
     }
 }

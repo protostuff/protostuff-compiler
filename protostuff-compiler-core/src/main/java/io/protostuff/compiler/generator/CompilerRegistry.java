@@ -43,6 +43,8 @@ public class CompilerRegistry {
         return module -> {
             ProtoCompiler indexGenerator = compilerFactory.create("io/protostuff/compiler/html/index.stg");
             indexGenerator.compile(module);
+            ProtoCompiler messageGenerator = compilerFactory.create("io/protostuff/compiler/html/message.stg");
+            messageGenerator.compile(module);
             String staticResources[] = {
                     "fonts/glyphicons-halflings-regular.woff2",
                     "fonts/glyphicons-halflings-regular.svg",

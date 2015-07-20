@@ -1,9 +1,21 @@
-delimiters "$", "$"
+delimiters "%", "%"
 
 footer() ::= <<
 
 <script src="js/jquery.js"></script>
 <script src="js/bootstrap.js"></script>
+
+<script>
+
+$('.proto-ref').bind('click', function() { update_content($(this)) });
+
+function update_content(elem)
+{
+    alert ( elem.attr ("data-ref" ) );
+    $("#content").load(elem.attr ("data-ref" ));
+}
+</script>
+
 </body>
 </html>
 >>

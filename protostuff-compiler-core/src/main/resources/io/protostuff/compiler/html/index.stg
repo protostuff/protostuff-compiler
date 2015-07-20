@@ -1,4 +1,4 @@
-delimiters "$", "$"
+delimiters "%", "%"
 import "io/protostuff/compiler/core.stg"
 
 import "io/protostuff/compiler/html/header.stg"
@@ -9,44 +9,44 @@ module_compiler_enabled(module) ::= "true"
 module_compiler_output(module) ::= "index.html"
 
 module_compiler_template(module) ::= <<
-$module:index()$
+%module:index()%
 >>
 
 index(module) ::= <<
-$header()$
-$navbar()$
+%header()%
+%navbar()%
 
 <div class="container container-left">
     <div class="row">
         <div class="col-md-3 hidden-xs">
             <div class="sidebar well">
                 <ul>
-                    $module.protos:proto()$
+                    %module.protos:proto()%
                 </ul>
             </div>
         </div>
-        <div class="col-md-9">
+        <div id="content" class="col-md-9">
           Main text
         </div>
     </div>
 </div>
 
-$footer()$
+%footer()%
 >>
 
 proto(proto) ::= <<
-<li>$proto.name$</li>
+<li>%proto.name%</li>
 <ul>
-$proto.messages:message()$
+%proto.messages:message()%
 </ul>
 >>
 
 
 message(message) ::= <<
-<li>$message.name$</li>
-$if(first(message.messages))$
+<li class="proto-ref" data-ref="%message:full_type_name()%.html">%message.name%</li>
+%if(first(message.messages))%
     <ul>
-    $message.messages:message()$
+    %message.messages:message()%
     </ul>
-$endif$
+%endif%
 >>

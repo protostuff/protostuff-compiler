@@ -4,6 +4,7 @@ import io.protostuff.compiler.model.Enum;
 import io.protostuff.compiler.model.Message;
 import io.protostuff.compiler.model.Module;
 import io.protostuff.compiler.model.Proto;
+import io.protostuff.compiler.model.UserTypeContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,40 +37,13 @@ public abstract class AbstractProtoCompiler implements ProtoCompiler {
     public void compile(Module module) {
         try {
             if (canProcess(module)) {
-                LOGGER.info("Compile module: {}", module.getName());
                 String outputFileName = getOutputFileName(module.getOutput(), module);
                 LOGGER.info("Write {}", outputFileName);
                 Writer writer = getWriter(outputFileName);
                 compile(module, writer);
             }
             for (Proto proto : module.getProtos()) {
-                List<Message> messages = proto.getMessages();
-                List<io.protostuff.compiler.model.Enum> enums = proto.getEnums();
-                if (canProcess(proto)) {
-                    LOGGER.info("Compile proto: {}", proto.getFilename());
-                    String outputFileName = getOutputFileName(module.getOutput(), proto);
-                    LOGGER.info("Write {}", outputFileName);
-                    Writer writer = getWriter(outputFileName);
-                    compile(proto, writer);
-                }
-                for (Message message : messages) {
-                    if (canProcess(message)) {
-                        LOGGER.info("Compile message: {}", message.getName());
-                        String outputFileName = getOutputFileName(module.getOutput(), message);
-                        LOGGER.info("Write {}", outputFileName);
-                        Writer writer = getWriter(outputFileName);
-                        compile(message, writer);
-                    }
-                }
-                for (Enum anEnum : enums) {
-                    if (canProcess(anEnum)) {
-                        LOGGER.info("Compile enum: {}", anEnum.getName());
-                        String outputFileName = getOutputFileName(module.getOutput(), anEnum);
-                        LOGGER.info("Write {}", outputFileName);
-                        Writer writer = getWriter(outputFileName);
-                        compile(anEnum, writer);
-                    }
-                }
+                processUserTypes(module, proto);
             }
         } finally {
             for (Map.Entry<String, Writer> entry : fileWriterMap.entrySet()) {
@@ -82,7 +56,30 @@ public abstract class AbstractProtoCompiler implements ProtoCompiler {
                 }
             }
         }
+    }
 
+    void processUserTypes(Module module, UserTypeContainer container) {
+        List<Message> messages = container.getMessages();
+        List<io.protostuff.compiler.model.Enum> enums = container.getEnums();
+
+        for (Message message : messages) {
+            if (canProcess(message)) {
+                String outputFileName = getOutputFileName(module.getOutput(), message);
+                LOGGER.info("Write {}", outputFileName);
+                Writer writer = getWriter(outputFileName);
+                compile(message, writer);
+                // process nested messages and enums
+                processUserTypes(module, message);
+            }
+        }
+        for (Enum anEnum : enums) {
+            if (canProcess(anEnum)) {
+                String outputFileName = getOutputFileName(module.getOutput(), anEnum);
+                LOGGER.info("Write {}", outputFileName);
+                Writer writer = getWriter(outputFileName);
+                compile(anEnum, writer);
+            }
+        }
     }
 
     private Writer getWriter(String outputFileName) {
