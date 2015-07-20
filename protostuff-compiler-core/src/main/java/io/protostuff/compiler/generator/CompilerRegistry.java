@@ -65,7 +65,7 @@ public class CompilerRegistry {
                     "css/bootstrap.css.map",
                     "css/bootstrap.css",
                     "css/bootstrap-theme.css.map",
-
+                    "css/theme.css",
             };
             for (String staticResourceName : staticResources) {
                 String source = HTML_RESOURCE_BASE + "static/" + staticResourceName;

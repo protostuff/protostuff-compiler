@@ -16,17 +16,12 @@ index(module) ::= <<
 %header()%
 %navbar()%
 
-<div class="container container-left">
+<div class="container-fluid">
     <div class="row">
-        <div class="col-md-3 hidden-xs">
-            <div class="sidebar well">
-                <ul>
-                    %module.protos:proto()%
-                </ul>
-            </div>
+        <div class="col-sm-4 col-md-3 sidebar">
+            %module.protos:proto()%
         </div>
-        <div id="content" class="col-md-9">
-          Main text
+        <div id="content" class="col-sm-8 col-sm-offset-4 col-md-9 col-md-offset-3 main">
         </div>
     </div>
 </div>
@@ -35,7 +30,7 @@ index(module) ::= <<
 >>
 
 proto(proto) ::= <<
-<li>%proto.name%</li>
+<h1>%proto.name%.proto</h1>
 <ul>
 %proto.messages:message()%
 </ul>
