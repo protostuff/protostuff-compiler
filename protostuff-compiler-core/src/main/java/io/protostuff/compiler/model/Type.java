@@ -9,5 +9,5 @@ public interface Type {
 
     String getName();
 
-    String getReference();
+    String getFullyQualifiedName();
 }

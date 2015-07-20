@@ -1,6 +1,6 @@
 delimiters "%", "%"
 import "io/protostuff/compiler/core.stg"
-
+import "io/protostuff/compiler/html/common.stg"
 import "io/protostuff/compiler/html/header.stg"
 import "io/protostuff/compiler/html/navbar.stg"
 import "io/protostuff/compiler/html/footer.stg"
@@ -38,8 +38,8 @@ proto(proto) ::= <<
 
 
 message(message) ::= <<
-<li class="proto-ref" data-ref="%message.canonicalName%.html">
-    <a href="#%message.canonicalName%">%message.name%</a>
+<li>
+    %message:type_link()%
 </li>
 %if(first(message.messages))%
     <ul>

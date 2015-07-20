@@ -3,11 +3,13 @@ package io.protostuff.compiler.generator;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import io.protostuff.compiler.model.Enum;
+import io.protostuff.compiler.model.Map;
 import io.protostuff.compiler.model.Message;
 import io.protostuff.compiler.model.Module;
 import io.protostuff.compiler.model.Proto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.stringtemplate.v4.AttributeRenderer;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
 import org.stringtemplate.v4.STGroupFile;
@@ -15,6 +17,7 @@ import org.stringtemplate.v4.STGroupFile;
 import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.List;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -45,9 +48,12 @@ public class StCompiler extends AbstractProtoCompiler {
     private final STGroup stGroup;
 
     @Inject
-    public StCompiler(OutputStreamFactory outputStreamFactory, @Assisted String templateFileName) {
+    public StCompiler(OutputStreamFactory outputStreamFactory, @Assisted String templateFileName, @Assisted java.util.Map<Class<?>, AttributeRenderer> attributeRendererMap) {
         super(outputStreamFactory);
         STGroup group = new STGroupFile(templateFileName);
+        for (java.util.Map.Entry<Class<?>, AttributeRenderer> entry : attributeRendererMap.entrySet()) {
+            group.registerRenderer(entry.getKey(), entry.getValue());
+        }
         group.setListener(new StErrorListener());
         this.stGroup = group;
     }

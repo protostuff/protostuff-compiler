@@ -52,7 +52,7 @@ public class MapTest extends AbstractParserTest {
         Field field = m.getField(mapFieldName);
         Map type = (Map) field.getType();
         Assert.assertEquals(keyType, type.getKeyType());
-        Assert.assertEquals(valueType, type.getValueType().getReference());
+        Assert.assertEquals(valueType, type.getValueType().getFullyQualifiedName());
         Assert.assertEquals(tag, field.getTag());
     }
 }

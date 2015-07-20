@@ -1,5 +1,7 @@
 package io.protostuff.compiler.model;
 
+import com.google.common.base.Joiner;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -24,11 +26,16 @@ public abstract class AbstractElement implements Element {
     }
 
     @Override
-    public List<String> getComments() {
+    public List<String> getCommentLines() {
         if (comments == null) {
             return Collections.emptyList();
         }
         return comments;
+    }
+
+    @Override
+    public String getComments() {
+        return Joiner.on('\n').join(getCommentLines());
     }
 
     public void setComments(List<String> comments) {

@@ -167,11 +167,6 @@ public class Message extends AbstractUserTypeContainer
     }
 
     @Override
-    public String getReference() {
-        return fullyQualifiedName;
-    }
-
-    @Override
     public List<Group> getGroups() {
         if (groups == null) {
             return Collections.emptyList();

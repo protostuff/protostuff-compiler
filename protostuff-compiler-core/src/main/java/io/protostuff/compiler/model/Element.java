@@ -9,7 +9,9 @@ public interface Element {
 
     SourceCodeLocation getSourceCodeLocation();
 
-    List<String> getComments();
+    List<String> getCommentLines();
+
+    String getComments();
 
     Element getParent();
 }

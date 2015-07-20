@@ -1,11 +1,17 @@
 package io.protostuff.compiler.generator;
 
+import com.google.common.base.Joiner;
+import org.pegdown.PegDownProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.stringtemplate.v4.AttributeRenderer;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -36,16 +42,40 @@ public class CompilerRegistry {
     }
 
     private ProtoCompiler createProto3Compiler() {
-        return compilerFactory.create("io/protostuff/compiler/proto/proto3.stg");
+        return compilerFactory.create("io/protostuff/compiler/proto/proto3.stg", Collections.emptyMap());
     }
 
+    public static class MarkdownRenderer implements AttributeRenderer {
+
+        @Override
+        public String toString(Object o, String s, Locale locale) {
+            if ("markdown2html".equals(s)) {
+                if (o == null) {
+                    return "";
+                }
+                PegDownProcessor processor = new PegDownProcessor();
+                if (o instanceof List) {
+                    //noinspection unchecked
+                    List<String> lines = (List<String>) o;
+                    String source = Joiner.on('\n').join(lines);
+                    return processor.markdownToHtml(source);
+                }
+                return processor.markdownToHtml(o.toString());
+            }
+            return String.valueOf(o);
+        }
+    }
     private ProtoCompiler createHtmlCompiler() {
         return module -> {
-            ProtoCompiler indexGenerator = compilerFactory.create("io/protostuff/compiler/html/index.stg");
+            MarkdownRenderer renderer = new MarkdownRenderer();
+            Map<Class<?>, AttributeRenderer> rendererMap = new HashMap<>();
+            rendererMap.put(List.class, renderer);
+            rendererMap.put(String.class, renderer);
+            ProtoCompiler indexGenerator = compilerFactory.create("io/protostuff/compiler/html/index.stg", rendererMap);
             indexGenerator.compile(module);
-            ProtoCompiler messageGenerator = compilerFactory.create("io/protostuff/compiler/html/message.stg");
+            ProtoCompiler messageGenerator = compilerFactory.create("io/protostuff/compiler/html/message.stg", rendererMap);
             messageGenerator.compile(module);
-            ProtoCompiler mainGenerator = compilerFactory.create("io/protostuff/compiler/html/main.stg");
+            ProtoCompiler mainGenerator = compilerFactory.create("io/protostuff/compiler/html/main.stg", rendererMap);
             mainGenerator.compile(module);
             String staticResources[] = {
                     "fonts/glyphicons-halflings-regular.woff2",

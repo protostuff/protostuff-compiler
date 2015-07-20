@@ -31,7 +31,7 @@ public enum ScalarFieldType implements FieldType {
 
     static {
         for (ScalarFieldType type : values()) {
-            map.put(type.getReference(), type);
+            map.put(type.getFullyQualifiedName(), type);
         }
     }
 
@@ -66,7 +66,7 @@ public enum ScalarFieldType implements FieldType {
     }
 
     @Override
-    public String getReference() {
+    public String getFullyQualifiedName() {
         return name().toLowerCase();
     }
 

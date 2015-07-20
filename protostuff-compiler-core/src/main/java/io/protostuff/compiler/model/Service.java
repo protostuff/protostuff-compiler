@@ -47,11 +47,6 @@ public class Service extends AbstractDescriptor implements Type {
         this.fullyQualifiedName = fullyQualifiedName;
     }
 
-    @Override
-    public String getReference() {
-        return fullyQualifiedName;
-    }
-
     public List<ServiceMethod> getMethods() {
         if (methods == null) {
             return Collections.emptyList();

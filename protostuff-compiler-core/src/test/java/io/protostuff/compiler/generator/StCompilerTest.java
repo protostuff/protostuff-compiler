@@ -6,6 +6,8 @@ import io.protostuff.compiler.parser.Importer;
 import io.protostuff.compiler.parser.ProtoContext;
 import org.junit.Test;
 
+import java.util.Collections;
+
 /**
  * @author Kostiantyn Shchepanovskyi
  */
@@ -17,7 +19,7 @@ public class StCompilerTest extends AbstractCompilerTest {
         ProtoContext context = importer.importFile("protostuff_unittest/messages_sample.proto");
         Proto proto = context.getProto();
         StCompilerFactory compilerFactory = injector.getInstance(StCompilerFactory.class);
-        ProtoCompiler compiler = compilerFactory.create("io/protostuff/compiler/proto/proto3.stg");
+        ProtoCompiler compiler = compilerFactory.create("io/protostuff/compiler/proto/proto3.stg", Collections.emptyMap());
         Module module = new Module(proto);
         module.setOutput("./");
         compiler.compile(module);

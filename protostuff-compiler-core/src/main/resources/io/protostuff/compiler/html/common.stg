@@ -1,0 +1,10 @@
+delimiters "%", "%"
+import "io/protostuff/compiler/core.stg"
+
+type_link(type) ::= <%
+%if(is_scalar.(type.fullyQualifiedName))%
+<a href="https://developers.google.com/protocol-buffers/docs/proto#scalar">%type.name%</a>
+%else%
+<a href="#%type.canonicalName%">%type.name%</a>
+%endif%
+%>

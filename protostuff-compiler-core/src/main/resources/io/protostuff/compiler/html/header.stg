@@ -23,8 +23,7 @@ header() ::= <<
     <script src="js/jquery.js"></script>    
     <script src="js/bootstrap.js"></script>
 
-    <script>
-        // $('.proto-ref').bind('click', function() { update_content($(this)) });
+    <script>        
 
         $(function() {
  
@@ -51,12 +50,7 @@ header() ::= <<
              
              $(window).trigger( 'hashchange' );
         });
-        
-        function update_content(elem)
-        {
-            location.hash = '#'+elem.attr ("data-ref");            
-            // $("#content").load(elem.attr ("data-ref" ));
-        }
+
     </script>
 
 </head>

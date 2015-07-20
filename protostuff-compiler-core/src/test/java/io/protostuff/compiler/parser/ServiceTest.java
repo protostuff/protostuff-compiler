@@ -22,8 +22,8 @@ public class ServiceTest extends AbstractParserTest {
         ServiceMethod method = service.getMethods().get(0);
 
         assertEquals("search", method.getName());
-        assertEquals(".protostuff_unittest.SearchRequest", method.getArgType().getReference());
-        assertEquals(".protostuff_unittest.SearchResponse", method.getReturnType().getReference());
+        assertEquals(".protostuff_unittest.SearchRequest", method.getArgType().getFullyQualifiedName());
+        assertEquals(".protostuff_unittest.SearchResponse", method.getReturnType().getFullyQualifiedName());
     }
 
     @Test

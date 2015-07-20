@@ -1,25 +1,60 @@
 delimiters "%", "%"
 import "io/protostuff/compiler/core.stg"
+import "io/protostuff/compiler/html/common.stg"
 
 message_compiler_enabled(message) ::= "true"
-
-message_compiler_output(message) ::= <%
-%message.canonicalName%.html
-%>
-
-message_compiler_template(message) ::= <<
-<h1>Message</h1>
-%message:message()%
->>
+message_compiler_output(message) ::= "%message.canonicalName%.html"
+message_compiler_template(message) ::= "%message:message()%"
 
 message(message) ::= <<
-%message.name%
+<h1>%message.name%</h1>
+<p>Type: <code>message</code></p>
+<p>Full name: <code>%message.canonicalName%</code></p>
+%if(message.comments)%
+%message.comments; format="markdown2html"%
+%endif%
+%message:message_fields()%
 %message:nested_messages()%
+>>
+
+message_fields(message) ::= <<
+<h2>Fields</h2>
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th class="col-md-1">Field Name</th>
+            <th class="col-md-1">Type</th>
+            <th class="col-md-1">Modifier</th>
+            <th class="col-md-1">Tag</th>
+            <th class="col-md-8">Description</th>
+        </tr>
+    </thead>
+    <tbody>      
+        %message.fields:message_field_row()%
+    </tbody>
+</table>
+>>
+
+message_field_row(field) ::= <<
+<tr>
+    <td><code>%field.name%</code></td>
+    <td>%field.type:type_link()%</td>
+    <td><a href="https://developers.google.com/protocol-buffers/docs/proto#specifying-field-rules">%field.modifier%</a></td>
+    <td>%field.tag%</td>
+    <td>%field:message_field_comments()%</td>
+</tr>
+>>
+
+message_field_comments(field) ::= <<
+%field.comments; format="markdown2html"%
+%if(field.options.deprecated)%
+<span class="label label-warning">Deprecated</span>
+%endif%
 >>
 
 nested_messages(message) ::= <<
 %if(first(message.messages))%
-Nested messages:
+<h2>Nested messages</h2>
 <ul>
 %message.messages:nested_message()%
 </ul>
@@ -27,7 +62,7 @@ Nested messages:
 >>
 
 nested_message(message) ::= <<
-<li>%message.name%</li>
+<li>%message:type_link()%</li>
 %if(first(message.messages))%
 <ul>
     %message.messages:nested_message()%

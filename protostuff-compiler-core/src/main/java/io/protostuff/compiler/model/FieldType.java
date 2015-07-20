@@ -35,5 +35,5 @@ public interface FieldType extends Type {
      * For enums, it is full enum name.
      */
     @Override
-    String getReference();
+    String getFullyQualifiedName();
 }

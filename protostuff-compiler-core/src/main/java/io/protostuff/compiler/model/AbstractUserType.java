@@ -43,8 +43,4 @@ public abstract class AbstractUserType extends AbstractDescriptor implements Use
         return parent;
     }
 
-    @Override
-    public String getReference() {
-        return fullyQualifiedName;
-    }
 }
