@@ -25,18 +25,3 @@ Build
 ```
 $ mvn clean install
 ```
-
-Maven Plugin
-------------
-
-Requirements: Maven 3.1.0+
-
-HTML Template
--------------
-
-Note for google chrome: if you want to use generated files without running web server,
-then you should run it with a special parameter:
-
-```
-$ chrome --allow-file-access-from-files index.html
-```
