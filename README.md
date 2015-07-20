@@ -9,16 +9,14 @@ Targets
 
 Ordered by priority:
 
-| Component    | Goal                                                                      | Status      |
-|--------------|---------------------------------------------------------------------------|-------------|
-| parser       | Full compatibility with `proto3`.                                         | done        |
-| parser       | Partial compatibility with `proto2` (groups will not be fully supported). | done        |
-| cli          | Command-line interface with `protoc`-like syntax.                         | done        |
-| generator    | `html` template: generate HTML documentation from proto files.            | in progress |
-| maven-plugin | Simple maven plugin.                                                      | in progress |
-| generator    | `proto3` template: proto-to-proto transformation.                         | in progress |
-| generator    | `java_nano` template: produce same output as `protoc --javanano_out=...`. |             |
-| generator    | Extensible template system that enables code generation for any language  |             |
+1. [Full compatibility with proto3](https://github.com/kshchepanovskyi/protostuff-compiler/issues/1)
+2. [Compatibility with proto2](https://github.com/kshchepanovskyi/protostuff-compiler/issues/2)
+3. [Command-line interface](https://github.com/kshchepanovskyi/protostuff-compiler/issues/3)
+4. [HTML generator template](https://github.com/kshchepanovskyi/protostuff-compiler/issues/4)
+5. [Maven plugin](https://github.com/kshchepanovskyi/protostuff-compiler/issues/5)
+6. [Proto template](https://github.com/kshchepanovskyi/protostuff-compiler/issues/6)
+7. [java_nano template](https://github.com/kshchepanovskyi/protostuff-compiler/issues/7)
+8. [Generator extensions](https://github.com/kshchepanovskyi/protostuff-compiler/issues/8)
 
 
 Build
