@@ -25,20 +25,3 @@ is_repeated ::= [
     "repeated": true,
     default: false
 ]
-
-// Get full name for user type (message, enum, service).
-// If package is not empty, then full name is <package>.<name>,
-// else full name is just <name>.
-// This function returns a string that can be formed from 
-// <type.fullName> by removing leading dot.
-full_type_name(type) ::= <%
-<type.proto.package>
-<packageAndTypeNameDelimiter.(type.proto.package)>
-<type.name>
-%>
-
-// Insert dot between package name and filename if package is set
-packageAndTypeNameDelimiter ::= [
-        "":"",        
-        default:"."
-]

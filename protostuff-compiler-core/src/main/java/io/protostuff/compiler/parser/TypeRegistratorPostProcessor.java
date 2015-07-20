@@ -11,7 +11,6 @@ import io.protostuff.compiler.model.UserType;
 import io.protostuff.compiler.model.UserTypeContainer;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -34,29 +33,29 @@ public class TypeRegistratorPostProcessor implements ProtoContextPostProcessor {
         }
         for (Message type : messages) {
             type.setProto(proto);
-            String fullName = proto.getNamespace() + type.getName();
-            type.setFullName(fullName);
-            context.register(fullName, type);
+            String fullyQualifiedName = proto.getNamespace() + type.getName();
+            type.setFullyQualifiedName(fullyQualifiedName);
+            context.register(fullyQualifiedName, type);
             for (Map map : type.getMaps()) {
                 map.setProto(proto);
-                map.setFullName(type.getNamespace() + map.getName());
+                map.setFullyQualifiedName(type.getNamespace() + map.getName());
             }
         }
 
         List<io.protostuff.compiler.model.Enum> enums = proto.getEnums();
         for (Enum type : enums) {
             type.setProto(proto);
-            String fullName = proto.getNamespace() + type.getName();
-            type.setFullName(fullName);
-            context.register(fullName, type);
+            String fullyQualifiedName = proto.getNamespace() + type.getName();
+            type.setFullyQualifiedName(fullyQualifiedName);
+            context.register(fullyQualifiedName, type);
         }
 
         List<Service> services = proto.getServices();
         for (Service type : services) {
             type.setProto(proto);
-            String fullName = proto.getNamespace() + type.getName();
-            type.setFullName(fullName);
-            context.register(fullName, type);
+            String fullyQualifiedName = proto.getNamespace() + type.getName();
+            type.setFullyQualifiedName(fullyQualifiedName);
+            context.register(fullyQualifiedName, type);
         }
 
         for (Message message : messages) {
@@ -78,16 +77,16 @@ public class TypeRegistratorPostProcessor implements ProtoContextPostProcessor {
         List<Enum> nestedEnums = parent.getEnums();
         Consumer<UserType> nestedTypeProcessor = type -> {
             type.setProto(context.getProto());
-            String fullName = parent.getNamespace() + type.getName();
-            type.setFullName(fullName);
-            context.register(fullName, type);
+            String fullyQualifiedName = parent.getNamespace() + type.getName();
+            type.setFullyQualifiedName(fullyQualifiedName);
+            context.register(fullyQualifiedName, type);
         };
         nestedEnums.forEach(nestedTypeProcessor);
         nestedMessages.forEach(nestedTypeProcessor);
         nestedMessages.forEach(message -> {
             for (Map map : message.getMaps()) {
                 map.setProto(message.getProto());
-                map.setFullName(message.getNamespace() + map.getName());
+                map.setFullyQualifiedName(message.getNamespace() + map.getName());
             }
             registerNestedUserTypes(context, message);
         });

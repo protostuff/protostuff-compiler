@@ -64,18 +64,18 @@ public class OptionsPostProcessor implements ProtoContextPostProcessor {
     private void processOptions(ProtoContext context, Message sourceMessage, Descriptor owningDescriptor, DynamicMessage options) {
         ExtensionRegistry extensionRegistry = context.getExtensionRegistry();
         Map<String, Field> extensionFields = extensionRegistry.getExtensionFields(sourceMessage);
-        Map<DynamicMessage.Key, String> fullNames = new HashMap<>();
+        Map<DynamicMessage.Key, String> fullyQualifiedNames = new HashMap<>();
         for (Map.Entry<DynamicMessage.Key, DynamicMessage.Value> entry : options.getFields()) {
             DynamicMessage.Key key = entry.getKey();
             DynamicMessage.Value value = entry.getValue();
             if (key.isExtension()) {
-                String fullName = null;
+                String fullyQualifiedName = null;
                 Field extensionField = null;
                 if (key.getName().startsWith(".")) {
                     String name = key.getName();
                     if (extensionFields.containsKey(name)) {
-                        fullName = name;
-                        extensionField = extensionFields.get(fullName);
+                        fullyQualifiedName = name;
+                        extensionField = extensionFields.get(fullyQualifiedName);
                     }
                 } else {
                     UserTypeContainer owningContainer = getOwningContainer(owningDescriptor);
@@ -83,16 +83,16 @@ public class OptionsPostProcessor implements ProtoContextPostProcessor {
                     for (String scope : scopeLookupList) {
                         String name = scope + key.getName();
                         if (extensionFields.containsKey(name)) {
-                            fullName = name;
-                            extensionField = extensionFields.get(fullName);
+                            fullyQualifiedName = name;
+                            extensionField = extensionFields.get(fullyQualifiedName);
                             break;
                         }
                     }
                 }
-                if (fullName == null) {
+                if (fullyQualifiedName == null) {
                     throw new ParserException(value, "Unknown option: '%s'", key.getName());
                 }
-                fullNames.put(key, fullName);
+                fullyQualifiedNames.put(key, fullyQualifiedName);
                 checkFieldValue(context, owningDescriptor, extensionField, value);
             } else {
                 // check standard option
@@ -104,7 +104,7 @@ public class OptionsPostProcessor implements ProtoContextPostProcessor {
                 checkFieldValue(context, owningDescriptor, field, value);
             }
         }
-        for (Map.Entry<DynamicMessage.Key, String> entry : fullNames.entrySet()) {
+        for (Map.Entry<DynamicMessage.Key, String> entry : fullyQualifiedNames.entrySet()) {
             options.normalizeName(entry.getKey(), entry.getValue());
         }
 

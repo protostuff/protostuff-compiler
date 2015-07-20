@@ -17,9 +17,9 @@ public class LocalExtensionRegistry extends AbstractExtensionRegistry {
 
     @Override
     public void registerExtension(Extension extension) {
-        String extendeeFullName = extension.getExtendee().getFullName();
-        Preconditions.checkNotNull(extendeeFullName);
-        extensions.put(extendeeFullName, extension);
+        String extendeeFullyQualifiedName = extension.getExtendee().getFullyQualifiedName();
+        Preconditions.checkNotNull(extendeeFullyQualifiedName);
+        extensions.put(extendeeFullyQualifiedName, extension);
     }
 
     @Override

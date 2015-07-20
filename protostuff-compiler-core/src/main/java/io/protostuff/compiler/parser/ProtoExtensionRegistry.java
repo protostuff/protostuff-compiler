@@ -31,8 +31,8 @@ public final class ProtoExtensionRegistry extends AbstractExtensionRegistry {
     public void registerExtension(Extension extension) {
         super.registerExtension(extension);
         localExtensionRegistry.registerExtension(extension);
-        String fullName = extension.getExtendee().getFullName();
-        extensionCache.remove(fullName);
+        String fullyQualifiedName = extension.getExtendee().getFullyQualifiedName();
+        extensionCache.remove(fullyQualifiedName);
     }
 
     @Override

@@ -75,11 +75,11 @@ public class ProtoContext {
     /**
      * Register user type in symbol table. Full name should start with ".".
      */
-    public void register(String fullName, Type type) {
-        if (symbolTable.containsKey(fullName)) {
-            LOGGER.error("{} already registered", fullName);
+    public void register(String fullyQualifiedName, Type type) {
+        if (symbolTable.containsKey(fullyQualifiedName)) {
+            LOGGER.error("{} already registered", fullyQualifiedName);
         }
-        symbolTable.put(fullName, type);
+        symbolTable.put(fullyQualifiedName, type);
     }
 
     private <T> T fail(Object descriptor, Class<T> targetClass) {
@@ -107,8 +107,8 @@ public class ProtoContext {
     }
 
     @SuppressWarnings("unchecked")
-    public <T extends Type> T resolve(Class<T> typeClass, String fullName) {
-        Type result = resolve(fullName);
+    public <T extends Type> T resolve(Class<T> typeClass, String fullyQualifiedName) {
+        Type result = resolve(fullyQualifiedName);
         if (result == null) {
             return null;
         }
@@ -118,19 +118,19 @@ public class ProtoContext {
         throw new ClassCastException(result.getClass() + " cannot be cast to " + typeClass);
     }
 
-    public Type resolve(String fullName) {
-        Type local = symbolTable.get(fullName);
+    public Type resolve(String fullyQualifiedName) {
+        Type local = symbolTable.get(fullyQualifiedName);
         if (local != null) {
             return local;
         }
         for (ProtoContext importedContext : publicImports) {
-            Type imported = importedContext.resolve(fullName);
+            Type imported = importedContext.resolve(fullyQualifiedName);
             if (imported != null) {
                 return imported;
             }
         }
         for (ProtoContext importedContext : imports) {
-            Type imported = importedContext.resolveImport(fullName);
+            Type imported = importedContext.resolveImport(fullyQualifiedName);
             if (imported != null) {
                 return imported;
             }

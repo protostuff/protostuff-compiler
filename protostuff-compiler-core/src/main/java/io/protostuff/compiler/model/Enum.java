@@ -60,7 +60,7 @@ public class Enum extends AbstractUserType {
         return MoreObjects.toStringHelper(this)
                 .omitNullValues()
                 .add("name", name)
-                .add("fullName", fullName)
+                .add("fullyQualifiedName", fullyQualifiedName)
                 .add("values", values)
                 .add("options", options)
                 .toString();

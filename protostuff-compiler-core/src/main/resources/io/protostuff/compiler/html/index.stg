@@ -43,7 +43,9 @@ proto(proto) ::= <<
 
 
 message(message) ::= <<
-<li class="proto-ref" data-ref="%message:full_type_name()%.html">%message.name%</li>
+<li class="proto-ref" data-ref="%message.canonicalName%.html">
+    <a href="#%message.canonicalName%">%message.name%</a>
+</li>
 %if(first(message.messages))%
     <ul>
     %message.messages:message()%

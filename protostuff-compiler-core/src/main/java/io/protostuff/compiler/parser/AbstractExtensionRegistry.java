@@ -23,14 +23,14 @@ public abstract class AbstractExtensionRegistry implements ExtensionRegistry {
 
     @Override
     public void registerExtension(Extension extension) {
-        String fullName = extension.getExtendee().getFullName();
-        fieldCache.remove(fullName);
+        String fullyQualifiedName = extension.getExtendee().getFullyQualifiedName();
+        fieldCache.remove(fullyQualifiedName);
     }
 
     @Override
     public Collection<Extension> getExtensions(Message message) {
-        String fullName = message.getFullName();
-        return getExtensions(fullName);
+        String fullyQualifiedName = message.getFullyQualifiedName();
+        return getExtensions(fullyQualifiedName);
     }
 
     @Override
@@ -50,7 +50,7 @@ public abstract class AbstractExtensionRegistry implements ExtensionRegistry {
 
     @Override
     public Map<String, Field> getExtensionFields(Message message) {
-        String fullName = message.getFullName();
-        return getExtensionFields(fullName);
+        String fullyQualifiedName = message.getFullyQualifiedName();
+        return getExtensionFields(fullyQualifiedName);
     }
 }

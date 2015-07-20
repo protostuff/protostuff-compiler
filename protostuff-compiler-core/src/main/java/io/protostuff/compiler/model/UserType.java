@@ -16,9 +16,17 @@ public interface UserType extends Descriptor, FieldType {
 
     void setProto(Proto proto);
 
-    String getFullName();
+    /**
+     * Returns fully qualified name for this user type. It always starts with dot.
+     */
+    String getFullyQualifiedName();
 
-    void setFullName(String fullName);
+    void setFullyQualifiedName(String fullyQualifiedName);
+
+    /**
+     * Returns same as {@link #getFullyQualifiedName()} but without leading dot.
+     */
+    String getCanonicalName();
 
     UserTypeContainer getParent();
 

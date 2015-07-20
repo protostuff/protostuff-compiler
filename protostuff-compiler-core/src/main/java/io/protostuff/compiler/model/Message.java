@@ -18,7 +18,7 @@ public class Message extends AbstractUserTypeContainer
     protected List<Oneof> oneofs;
     protected List<Map> maps;
     protected Proto proto;
-    protected String fullName;
+    protected String fullyQualifiedName;
 
     protected List<ExtensionRange> extensionRanges;
 
@@ -127,7 +127,7 @@ public class Message extends AbstractUserTypeContainer
         return MoreObjects.toStringHelper(this)
                 .omitNullValues()
                 .add("name", name)
-                .add("fullName", getFullName())
+                .add("fullyQualifiedName", getFullyQualifiedName())
                 .add("fields", fields)
                 .add("messages", messages)
                 .add("enums", enums)
@@ -146,24 +146,29 @@ public class Message extends AbstractUserTypeContainer
     }
 
     @Override
-    public String getFullName() {
-        return fullName;
+    public String getFullyQualifiedName() {
+        return fullyQualifiedName;
     }
 
     @Override
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
+    public void setFullyQualifiedName(String fullyQualifiedName) {
+        this.fullyQualifiedName = fullyQualifiedName;
+    }
+
+    @Override
+    public String getCanonicalName() {
+        return getFullyQualifiedName().substring(1);
     }
 
     @Override
     public String getNamespace() {
-        Preconditions.checkNotNull(fullName, "message is not initialized");
-        return fullName + ".";
+        Preconditions.checkNotNull(fullyQualifiedName, "message is not initialized");
+        return fullyQualifiedName + ".";
     }
 
     @Override
     public String getReference() {
-        return fullName;
+        return fullyQualifiedName;
     }
 
     @Override

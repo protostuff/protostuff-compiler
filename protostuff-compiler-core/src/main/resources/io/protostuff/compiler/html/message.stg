@@ -4,7 +4,7 @@ import "io/protostuff/compiler/core.stg"
 message_compiler_enabled(message) ::= "true"
 
 message_compiler_output(message) ::= <%
-%message:full_type_name()%.html
+%message.canonicalName%.html
 %>
 
 message_compiler_template(message) ::= <<

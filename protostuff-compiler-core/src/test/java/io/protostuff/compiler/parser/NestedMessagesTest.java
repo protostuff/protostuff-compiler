@@ -42,42 +42,42 @@ public class NestedMessagesTest {
         Message a = proto.getMessage("A");
         assertNotNull(a);
         assertEquals("A", a.getName());
-        assertEquals(".protostuff_unittest.A", a.getFullName());
+        assertEquals(".protostuff_unittest.A", a.getFullyQualifiedName());
         assertTrue(proto == a.getProto());
         assertTrue(a.getParent() == proto);
 
         io.protostuff.compiler.model.Enum e1 = proto.getEnum("E");
         assertNotNull(e1);
         assertEquals("E", e1.getName());
-        assertEquals(".protostuff_unittest.E", e1.getFullName());
+        assertEquals(".protostuff_unittest.E", e1.getFullyQualifiedName());
         assertTrue(proto == e1.getProto());
         assertTrue(e1.getParent() == proto);
 
         Message b = a.getMessage("B");
         assertNotNull(b);
         assertEquals("B", b.getName());
-        assertEquals(".protostuff_unittest.A.B", b.getFullName());
+        assertEquals(".protostuff_unittest.A.B", b.getFullyQualifiedName());
         assertTrue(proto == b.getProto());
         assertTrue(b.getParent() == a);
 
         Message c = b.getMessage("C");
         assertNotNull(c);
         assertEquals("C", c.getName());
-        assertEquals(".protostuff_unittest.A.B.C", c.getFullName());
+        assertEquals(".protostuff_unittest.A.B.C", c.getFullyQualifiedName());
         assertTrue(proto == c.getProto());
         assertTrue(c.getParent() == b);
 
         Message d = c.getMessage("D");
         assertNotNull(d);
         assertEquals("D", d.getName());
-        assertEquals(".protostuff_unittest.A.B.C.D", d.getFullName());
+        assertEquals(".protostuff_unittest.A.B.C.D", d.getFullyQualifiedName());
         assertTrue(proto == d.getProto());
         assertTrue(d.getParent() == c);
 
         io.protostuff.compiler.model.Enum e = d.getEnum("E");
         assertNotNull(e);
         assertEquals("E", e.getName());
-        assertEquals(".protostuff_unittest.A.B.C.D.E", e.getFullName());
+        assertEquals(".protostuff_unittest.A.B.C.D.E", e.getFullyQualifiedName());
         assertTrue(proto == e.getProto());
         assertTrue(e.getParent() == d);
     }

@@ -12,7 +12,7 @@ import java.util.List;
 public class Service extends AbstractDescriptor implements Type {
 
     private Proto proto;
-    private String fullName;
+    private String fullyQualifiedName;
     private List<ServiceMethod> methods;
 
     private final Proto parent;
@@ -39,17 +39,17 @@ public class Service extends AbstractDescriptor implements Type {
         this.proto = proto;
     }
 
-    public String getFullName() {
-        return fullName;
+    public String getFullyQualifiedName() {
+        return fullyQualifiedName;
     }
 
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
+    public void setFullyQualifiedName(String fullyQualifiedName) {
+        this.fullyQualifiedName = fullyQualifiedName;
     }
 
     @Override
     public String getReference() {
-        return fullName;
+        return fullyQualifiedName;
     }
 
     public List<ServiceMethod> getMethods() {
@@ -83,7 +83,7 @@ public class Service extends AbstractDescriptor implements Type {
     public String toString() {
         return MoreObjects.toStringHelper(this)
                 .add("name", name)
-                .add("fullName", fullName)
+                .add("fullyQualifiedName", fullyQualifiedName)
                 .add("methods", methods)
                 .add("options", options)
                 .toString();

@@ -6,7 +6,7 @@ package io.protostuff.compiler.model;
 public abstract class AbstractUserType extends AbstractDescriptor implements UserType {
 
     protected Proto proto;
-    protected String fullName;
+    protected String fullyQualifiedName;
     protected final UserTypeContainer parent;
 
     public AbstractUserType(UserTypeContainer parent) {
@@ -24,13 +24,18 @@ public abstract class AbstractUserType extends AbstractDescriptor implements Use
     }
 
     @Override
-    public String getFullName() {
-        return fullName;
+    public String getFullyQualifiedName() {
+        return fullyQualifiedName;
     }
 
     @Override
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
+    public void setFullyQualifiedName(String fullyQualifiedName) {
+        this.fullyQualifiedName = fullyQualifiedName;
+    }
+
+    @Override
+    public String getCanonicalName() {
+        return getFullyQualifiedName().substring(1);
     }
 
     @Override
@@ -40,6 +45,6 @@ public abstract class AbstractUserType extends AbstractDescriptor implements Use
 
     @Override
     public String getReference() {
-        return fullName;
+        return fullyQualifiedName;
     }
 }

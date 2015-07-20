@@ -223,14 +223,14 @@ public class DynamicMessage implements Map<String, DynamicMessage.Value> {
     }
 
     /**
-     * Change option name to its full name
+     * Change option name to its fully qualified name
      */
-    public void normalizeName(Key key, String fullName) {
+    public void normalizeName(Key key, String fullyQualifiedName) {
         Value value = fields.remove(key);
         if (value == null) {
             throw new IllegalStateException("Could not find option for key=" + key);
         }
-        fields.put(Key.extension(fullName), value);
+        fields.put(Key.extension(fullyQualifiedName), value);
     }
 
     public static class Key {
