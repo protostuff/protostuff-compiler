@@ -7,15 +7,18 @@ Protocol Buffers parser and code generator
 Targets
 -------
 
-| Component    | Goal                                                                          |
-|--------------|-------------------------------------------------------------------------------|
-| parser       | Full compatibility with `proto3`                                              |
-| parser       | Partial compatibility with `proto2` (groups will not be fully supported).     |
-| generator    | `proto3` template: proto-to-proto transformation                              |
-| generator    | `java_nano` template: produce same output as `protoc --javanano_out=...`      |
-| generator    | extensible template system that enables code generation for any language      |
-| maven-plugin | simple maven plugin                                                           |
-| cli          | command-line interface with `protoc`-like syntax                              |
+Ordered by priority:
+
+| Component    | Goal                                                                      | Status      |
+|--------------|---------------------------------------------------------------------------|-------------|
+| parser       | Full compatibility with `proto3`.                                         | done        |
+| parser       | Partial compatibility with `proto2` (groups will not be fully supported). | done        |
+| cli          | Command-line interface with `protoc`-like syntax.                         | done        |
+| generator    | `html` template: generate HTML documentation from proto files.            | in progress |
+| maven-plugin | Simple maven plugin.                                                      | in progress |
+| generator    | `proto3` template: proto-to-proto transformation.                         | in progress |
+| generator    | `java_nano` template: produce same output as `protoc --javanano_out=...`. |             |
+| generator    | Extensible template system that enables code generation for any language  |             |
 
 
 Build
