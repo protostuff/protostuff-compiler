@@ -129,7 +129,7 @@ public class OptionsPostProcessor implements ProtoContextPostProcessor {
             }
         } else if (fieldType instanceof Enum) {
             Enum anEnum = (Enum) fieldType;
-            Set<String> allowedNames = anEnum.getValueNames();
+            Set<String> allowedNames = anEnum.getConstantNames();
             if (valueType != DynamicMessage.Value.Type.ENUM
                     || !allowedNames.contains(value.getEnumName())) {
                 throw new ParserException(value, "Cannot set option '%s': expected enum = %s", fieldName, allowedNames);

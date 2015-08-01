@@ -48,6 +48,7 @@ public class CompilerRegistry {
     public static class MarkdownRenderer implements AttributeRenderer {
 
         @Override
+        @SuppressWarnings("unchecked")
         public String toString(Object o, String s, Locale locale) {
             if ("markdown2html".equals(s)) {
                 if (o == null) {
@@ -55,7 +56,6 @@ public class CompilerRegistry {
                 }
                 PegDownProcessor processor = new PegDownProcessor();
                 if (o instanceof List) {
-                    //noinspection unchecked
                     List<String> lines = (List<String>) o;
                     String source = Joiner.on('\n').join(lines);
                     return processor.markdownToHtml(source);
@@ -75,6 +75,8 @@ public class CompilerRegistry {
             indexGenerator.compile(module);
             ProtoCompiler messageGenerator = compilerFactory.create("io/protostuff/compiler/html/message.stg", rendererMap);
             messageGenerator.compile(module);
+            ProtoCompiler enumGenerator = compilerFactory.create("io/protostuff/compiler/html/enum.stg", rendererMap);
+            enumGenerator.compile(module);
             ProtoCompiler mainGenerator = compilerFactory.create("io/protostuff/compiler/html/main.stg", rendererMap);
             mainGenerator.compile(module);
             String staticResources[] = {

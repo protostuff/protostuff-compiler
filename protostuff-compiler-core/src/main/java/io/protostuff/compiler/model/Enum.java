@@ -13,34 +13,34 @@ import java.util.stream.Collectors;
  */
 public class Enum extends AbstractUserType {
 
-    protected List<EnumConstant> values;
+    protected List<EnumConstant> constants;
 
     public Enum(UserTypeContainer parent) {
         super(parent);
     }
 
-    public List<EnumConstant> getValues() {
-        if (values == null) {
+    public List<EnumConstant> getConstants() {
+        if (constants == null) {
             return Collections.emptyList();
         }
-        return values;
+        return constants;
     }
 
-    public Set<String> getValueNames() {
-        if (values == null) {
+    public Set<String> getConstantNames() {
+        if (constants == null) {
             return Collections.emptySet();
         }
-        return values.stream()
+        return constants.stream()
                 .map(EnumConstant::getName)
                 .collect(Collectors.toSet());
     }
 
-    public void setValues(List<EnumConstant> values) {
-        this.values = values;
+    public void setConstants(List<EnumConstant> constants) {
+        this.constants = constants;
     }
 
-    public EnumConstant getValue(String name) {
-        for (EnumConstant enumConstant : getValues()) {
+    public EnumConstant getConstant(String name) {
+        for (EnumConstant enumConstant : getConstants()) {
             if (enumConstant.getName().equals(name)) {
                 return enumConstant;
             }
@@ -48,11 +48,11 @@ public class Enum extends AbstractUserType {
         return null;
     }
 
-    public void addValue(EnumConstant value) {
-        if (values == null) {
-            values = new ArrayList<>();
+    public void addConstant(EnumConstant value) {
+        if (constants == null) {
+            constants = new ArrayList<>();
         }
-        values.add(value);
+        constants.add(value);
     }
 
     @Override
@@ -61,7 +61,7 @@ public class Enum extends AbstractUserType {
                 .omitNullValues()
                 .add("name", name)
                 .add("fullyQualifiedName", fullyQualifiedName)
-                .add("values", values)
+                .add("constants", constants)
                 .add("options", options)
                 .toString();
     }

@@ -32,18 +32,25 @@ index(module) ::= <<
 proto(proto) ::= <<
 <h1>%proto.name%.proto</h1>
 <ul>
-%proto.messages:message()%
+%proto.messages:message_link()%
+%proto.enums:enum_link()%
 </ul>
 >>
 
-
-message(message) ::= <<
+message_link(message) ::= <<
 <li>
     %message:type_link()%
 </li>
-%if(first(message.messages))%
+%if(first(message.messages) || first(message.enums))%
     <ul>
-    %message.messages:message()%
+    %message.messages:message_link()%
+    %message.enums:enum_link()%
     </ul>
 %endif%
+>>
+
+enum_link(enum) ::= <<
+<li>
+    %enum:type_link()%
+</li>
 >>

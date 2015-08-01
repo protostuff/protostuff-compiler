@@ -49,7 +49,7 @@ public class EnumParseListener extends AbstractProtoParserListener {
         enumConstant.setName(name);
         enumConstant.setValue(number);
         enumConstant.setSourceCodeLocation(getSourceCodeLocation(ctx));
-        e.addValue(enumConstant);
+        e.addConstant(enumConstant);
         attachComments(ctx, enumConstant, true);
     }
 

@@ -1,0 +1,48 @@
+delimiters "%", "%"
+import "io/protostuff/compiler/core.stg"
+import "io/protostuff/compiler/html/common.stg"
+
+enum_compiler_enabled(enum) ::= "true"
+enum_compiler_output(enum) ::= "%enum.canonicalName%.html"
+enum_compiler_template(enum) ::= "%enum:enum()%"
+
+enum(enum) ::= <<
+<h1>%enum.name%</h1>
+<p>Type: <code>enum</code></p>
+<p>Full name: <code>%enum.canonicalName%</code></p>
+%if(enum.comments)%
+%enum.comments; format="markdown2html"%
+%endif%
+%enum:enum_constants()%
+>>
+
+enum_constants(enum) ::= <<
+<h2>Constants</h2>
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th class="col-md-1">Name</th>            
+            <th class="col-md-1">Value</th>
+            <th class="col-md-8">Description</th>
+        </tr>
+    </thead>
+    <tbody>      
+        %enum.constants:enum_constant_row()%
+    </tbody>
+</table>
+>>
+
+enum_constant_row(constant) ::= <<
+<tr>
+    <td><code>%constant.name%</code></td>
+    <td>%constant.value%</td>
+    <td>%constant:enum_constant_comments()%</td>
+</tr>
+>>
+
+enum_constant_comments(constant) ::= <<
+%constant.comments; format="markdown2html"%
+%if(constant.options.deprecated)%
+<span class="label label-warning">Deprecated</span>
+%endif%
+>>

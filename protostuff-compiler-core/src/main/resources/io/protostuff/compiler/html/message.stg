@@ -53,19 +53,25 @@ message_field_comments(field) ::= <<
 >>
 
 nested_messages(message) ::= <<
-%if(first(message.messages))%
-<h2>Nested messages</h2>
+%if(first(message.messages) || first(message.enums))%
+<h2>Nested types</h2>
 <ul>
 %message.messages:nested_message()%
+%message.enums:nested_enum()%
 </ul>
 %endif%
 >>
 
 nested_message(message) ::= <<
 <li>%message:type_link()%</li>
-%if(first(message.messages))%
+%if(first(message.messages) || first(message.enums))%
 <ul>
     %message.messages:nested_message()%
+    %message.enums:nested_enum()%
 </ul>
 %endif%
+>>
+
+nested_enum(enum) ::= <<
+<li>%enum:type_link()%</li>
 >>

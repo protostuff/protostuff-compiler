@@ -85,26 +85,26 @@ public class EnumParseListenerTest {
     public void parseEnum() throws Exception {
         Enum result = parseEnumBlock(ENUM_BLOCK);
         assertEquals("E", result.getName());
-        assertEquals(7, result.getValues().size());
-        EnumConstant a = result.getValues().get(0);
+        assertEquals(7, result.getConstants().size());
+        EnumConstant a = result.getConstants().get(0);
         assertEquals("A", a.getName());
         assertEquals(0, a.getValue());
-        EnumConstant b = result.getValues().get(1);
+        EnumConstant b = result.getConstants().get(1);
         assertEquals("B", b.getName());
         assertEquals(255, b.getValue());
-        EnumConstant c = result.getValues().get(2);
+        EnumConstant c = result.getConstants().get(2);
         assertEquals("C", c.getName());
         assertEquals(8, c.getValue());
-        EnumConstant d = result.getValues().get(3);
+        EnumConstant d = result.getConstants().get(3);
         assertEquals("D", d.getName());
         assertEquals(1234, d.getValue());
-        EnumConstant f = result.getValues().get(4);
+        EnumConstant f = result.getConstants().get(4);
         assertEquals("F", f.getName());
         assertEquals(-255, f.getValue());
-        EnumConstant g = result.getValues().get(5);
+        EnumConstant g = result.getConstants().get(5);
         assertEquals("G", g.getName());
         assertEquals(-8, g.getValue());
-        EnumConstant h = result.getValues().get(6);
+        EnumConstant h = result.getConstants().get(6);
         assertEquals("H", h.getName());
         assertEquals(-1234, h.getValue());
     }
@@ -113,7 +113,7 @@ public class EnumParseListenerTest {
     public void parseEmptyEnum() throws Exception {
         Enum result = parseEnumBlock(EMPTY_ENUM_BLOCK);
         assertEquals("E", result.getName());
-        assertEquals(0, result.getValues().size());
+        assertEquals(0, result.getConstants().size());
     }
 
 
@@ -168,7 +168,7 @@ public class EnumParseListenerTest {
     public void parseEnumWithStandardFieldOption() throws Exception {
         Enum result = parseEnumBlock(ENUM_BLOCK_WITH_STANDARD_FIELD_OPTION);
         assertEquals("E", result.getName());
-        DynamicMessage options = result.getValues().get(0).getOptions();
+        DynamicMessage options = result.getConstants().get(0).getOptions();
         assertEquals(true, options.get("deprecated").getBoolean());
     }
 

@@ -68,9 +68,9 @@ public abstract class AbstractProtoCompiler implements ProtoCompiler {
                 LOGGER.info("Write {}", outputFileName);
                 Writer writer = getWriter(outputFileName);
                 compile(message, writer);
-                // process nested messages and enums
-                processUserTypes(module, message);
             }
+            // process nested messages and enums
+            processUserTypes(module, message);
         }
         for (Enum anEnum : enums) {
             if (canProcess(anEnum)) {

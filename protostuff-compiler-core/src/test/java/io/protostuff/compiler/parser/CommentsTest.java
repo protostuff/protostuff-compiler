@@ -44,8 +44,8 @@ public class CommentsTest extends AbstractParserTest {
     public void testEnumComments() throws Exception {
         Enum anEnum = context.resolve(".protostuff_unittest.Enum", Enum.class);
         assertEquals("Enum comment", anEnum.getCommentLines().get(0));
-        assertEquals("leading enum constant comment", anEnum.getValue("A").getCommentLines().get(0));
-        assertEquals("trailing enum constant comment", anEnum.getValue("B").getCommentLines().get(0));
+        assertEquals("leading enum constant comment", anEnum.getConstant("A").getCommentLines().get(0));
+        assertEquals("trailing enum constant comment", anEnum.getConstant("B").getCommentLines().get(0));
     }
 
     @Test
