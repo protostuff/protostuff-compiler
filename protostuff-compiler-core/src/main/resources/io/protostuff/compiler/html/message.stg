@@ -1,6 +1,7 @@
 delimiters "%", "%"
 import "io/protostuff/compiler/core.stg"
 import "io/protostuff/compiler/html/common.stg"
+import "io/protostuff/compiler/html/links.stg"
 
 message_compiler_enabled(message) ::= "true"
 message_compiler_output(message) ::= "%message.canonicalName%.html"
@@ -55,23 +56,35 @@ message_field_comments(field) ::= <<
 nested_messages(message) ::= <<
 %if(first(message.messages) || first(message.enums))%
 <h2>Nested types</h2>
-<ul>
-%message.messages:nested_message()%
-%message.enums:nested_enum()%
-</ul>
+<div>
+%message:links()%
+</div>
 %endif%
 >>
 
-nested_message(message) ::= <<
-<li>%message:type_link()%</li>
+
+links(container) ::= <<
+<ul>
+    %container.messages:message_link()%
+    %container.enums:enum_link()%
+</ul>
+>>
+
+message_link(message) ::= <<
+<li>%message_icon()% %message:type_link()%</li>
 %if(first(message.messages) || first(message.enums))%
-<ul>
-    %message.messages:nested_message()%
-    %message.enums:nested_enum()%
-</ul>
+%message:links()%    
 %endif%
 >>
 
-nested_enum(enum) ::= <<
-<li>%enum:type_link()%</li>
+enum_link(enum) ::= <<
+<li>%enum_icon()% %enum:type_link()%</li>
+>>
+
+message_icon() ::= <<
+
+>>
+
+enum_icon() ::= <<
+
 >>

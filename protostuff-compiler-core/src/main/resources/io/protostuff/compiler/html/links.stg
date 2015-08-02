@@ -1,0 +1,28 @@
+delimiters "%", "%"
+import "io/protostuff/compiler/html/common.stg"
+
+links(container) ::= <<
+<ul>
+    %container.messages:message_link()%
+    %container.enums:enum_link()%
+</ul>
+>>
+
+message_link(message) ::= <<
+<li>%message_icon()% %message:type_link()%</li>
+%if(first(message.messages) || first(message.enums))%
+%message:links()%    
+%endif%
+>>
+
+enum_link(enum) ::= <<
+<li>%enum_icon()% %enum:type_link()%</li>
+>>
+
+message_icon() ::= <<
+
+>>
+
+enum_icon() ::= <<
+
+>>

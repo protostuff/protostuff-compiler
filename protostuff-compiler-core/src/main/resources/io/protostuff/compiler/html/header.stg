@@ -11,6 +11,7 @@ header() ::= <<
     <title>Protocol Documentation</title>
 
     <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/bootstrap-treeview.css" rel="stylesheet">
     <link href="css/theme.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -22,36 +23,9 @@ header() ::= <<
     
     <script src="js/jquery.js"></script>    
     <script src="js/bootstrap.js"></script>
+    <script src="js/bootstrap-treeview.js"></script>
 
-    <script>        
-
-        $(function() {
- 
-            //set up hash detection 
-            $(window).bind( 'hashchange', function(e) {
-             var hash = '';
-             var hashlenght = 0;
-             hashwith = '';
-             if (location.hash == ''){
-             location.hash = '#';
-             }
-
-             hash = location.hash;
-             hashlenght = hash.length;
-             hashwith = '#'+hash.substring(1, hashlenght);
-             hash = location.hash.substring(1, hashlenght);
-             if(hashwith != "#"){
-                 $("#content").load(hash + ".html");
-             } else{
-                 $("#content").load("main.html");
-             }
-
-             });
-             
-             $(window).trigger( 'hashchange' );
-        });
-
-    </script>
+  
 
 </head>
 <body>

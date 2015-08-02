@@ -2,9 +2,13 @@ delimiters "%", "%"
 import "io/protostuff/compiler/core.stg"
 
 type_link(type) ::= <%
+<a href="%type:type_href()%">%type.name%</a>
+%>
+
+type_href(type) ::= <%
 %if(is_scalar.(type.fullyQualifiedName))%
-<a href="https://developers.google.com/protocol-buffers/docs/proto#scalar">%type.name%</a>
+https://developers.google.com/protocol-buffers/docs/proto#scalar
 %else%
-<a href="#%type.canonicalName%">%type.name%</a>
+#page=%type.canonicalName%
 %endif%
 %>

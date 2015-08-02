@@ -2,10 +2,18 @@ delimiters "$", "$"
 
 navbar() ::= <<
 <nav class="navbar navbar-inverse navbar-fixed-top">
-    <div class="container container-left">
+    <div class="container-fluid">
         <div class="navbar-header">
             <a class="navbar-brand" href="#">Protocol Documentation</a>
         </div>
-    </div>
+        <form class="navbar-form navbar-right" role="search">
+            <div class="input-group">
+              <input id="input-search" type="text" class="form-control" placeholder="Search...">
+              <span class="input-group-btn">
+                  <button id="btn-search" class="btn btn-default" type="button">Go!</button>
+              </span>
+            </div>            
+        </form>
+    </div>    
 </nav>
 >>

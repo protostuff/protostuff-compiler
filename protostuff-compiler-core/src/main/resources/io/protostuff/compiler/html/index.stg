@@ -4,6 +4,7 @@ import "io/protostuff/compiler/html/common.stg"
 import "io/protostuff/compiler/html/header.stg"
 import "io/protostuff/compiler/html/navbar.stg"
 import "io/protostuff/compiler/html/footer.stg"
+import "io/protostuff/compiler/html/links.stg"
 
 module_compiler_enabled(module) ::= "true"
 module_compiler_output(module) ::= "index.html"
@@ -19,38 +20,64 @@ index(module) ::= <<
 <div class="container-fluid">
     <div class="row">
         <div class="col-sm-4 col-md-3 sidebar">
-            %module.protos:proto()%
+            <div id="tree"></div>
         </div>
         <div id="content" class="col-sm-8 col-sm-offset-4 col-md-9 col-md-offset-3 main">
         </div>
     </div>
 </div>
 
+<script>        
+    function getTree() {
+        var tree = [
+            %module.protos:proto(); separator=",\n"%
+        ];
+        return tree;
+    }
+</script>
+
+<script src="js/main.js"></script>
+
 %footer()%
 >>
 
 proto(proto) ::= <<
-<h1>%proto.name%.proto</h1>
-<ul>
-%proto.messages:message_link()%
-%proto.enums:enum_link()%
-</ul>
+{
+    text: "%proto.name%.proto",
+    nodes: [
+        %proto:links()%
+    ]
+}
+>>
+
+
+links(container) ::= <<
+%container.messages:message_link(); separator=",\n"%
+%if(first(container.messages) && first(container.enums))%,%endif%
+%container.enums:enum_link(); separator=",\n"%
 >>
 
 message_link(message) ::= <<
-<li>
-    %message:type_link()%
-</li>
-%if(first(message.messages) || first(message.enums))%
-    <ul>
-    %message.messages:message_link()%
-    %message.enums:enum_link()%
-    </ul>
-%endif%
+{
+    text: "%message.name%",
+    href: "%message:type_href()%"%if(first(message.messages) || first(message.enums))%,    
+    nodes: [
+        %message:links()%   
+    ]%endif%    
+}
 >>
 
 enum_link(enum) ::= <<
-<li>
-    %enum:type_link()%
-</li>
+{
+    text: "%enum.name%",
+    href: "%enum:type_href()%"
+}
+>>
+
+message_icon() ::= <<
+
+>>
+
+enum_icon() ::= <<
+
 >>
