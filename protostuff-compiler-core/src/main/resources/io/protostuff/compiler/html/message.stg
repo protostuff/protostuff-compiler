@@ -1,7 +1,6 @@
 delimiters "%", "%"
 import "io/protostuff/compiler/core.stg"
 import "io/protostuff/compiler/html/common.stg"
-import "io/protostuff/compiler/html/links.stg"
 
 message_compiler_enabled(message) ::= "true"
 message_compiler_output(message) ::= "%message.canonicalName%.html"

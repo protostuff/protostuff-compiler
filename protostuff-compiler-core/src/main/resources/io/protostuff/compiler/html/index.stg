@@ -4,7 +4,6 @@ import "io/protostuff/compiler/html/common.stg"
 import "io/protostuff/compiler/html/header.stg"
 import "io/protostuff/compiler/html/navbar.stg"
 import "io/protostuff/compiler/html/footer.stg"
-import "io/protostuff/compiler/html/links.stg"
 
 module_compiler_enabled(module) ::= "true"
 module_compiler_output(module) ::= "index.html"
