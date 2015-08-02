@@ -4,10 +4,8 @@ Protocol Buffers parser and code generator
 [![Build Status](https://travis-ci.org/kshchepanovskyi/protostuff-compiler.svg?branch=master)](https://travis-ci.org/kshchepanovskyi/protostuff-compiler)
 [![Coverity](https://scan.coverity.com/projects/5635/badge.svg)](https://scan.coverity.com/projects/5635)
 
-Targets
--------
-
-Ordered by priority:
+Current Tasks
+-------------
 
 1. [Full compatibility with proto3](https://github.com/kshchepanovskyi/protostuff-compiler/issues/1)
 2. [Compatibility with proto2](https://github.com/kshchepanovskyi/protostuff-compiler/issues/2)
