@@ -41,7 +41,7 @@ $(function() {
                 var options = {
                     ignoreCase: true,
                     exactMatch: false,
-                    revealResults: false
+                    revealResults: true
                 };
                 var $tree = $('#tree');
                 var results = $tree.treeview('search', [ pattern, options ]);
