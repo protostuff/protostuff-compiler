@@ -3,12 +3,10 @@ package io.protostuff.compiler.generator;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import io.protostuff.compiler.model.Enum;
-import io.protostuff.compiler.model.Map;
 import io.protostuff.compiler.model.Message;
 import io.protostuff.compiler.model.Module;
 import io.protostuff.compiler.model.Proto;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import io.protostuff.compiler.model.Service;
 import org.stringtemplate.v4.AttributeRenderer;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
@@ -17,7 +15,6 @@ import org.stringtemplate.v4.STGroupFile;
 import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
-import java.util.List;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -43,6 +40,11 @@ public class StCompiler extends AbstractProtoCompiler {
     public static final String ENUM_COMPILER_ENABLED = "enum_compiler_enabled";
     public static final String ENUM_COMPILER_TEMPLATE = "enum_compiler_template";
     public static final String ENUM_COMPILER_OUTPUT = "enum_compiler_output";
+
+    public static final String SERVICE = "service";
+    public static final String SERVICE_COMPILER_ENABLED = "service_compiler_enabled";
+    public static final String SERVICE_COMPILER_TEMPLATE = "service_compiler_template";
+    public static final String SERVICE_COMPILER_OUTPUT = "service_compiler_output";
 
     private final STGroup stGroup;
 
@@ -75,6 +77,11 @@ public class StCompiler extends AbstractProtoCompiler {
     @Override
     protected void compile(io.protostuff.compiler.model.Enum anEnum, Writer writer) {
         compile(ENUM_COMPILER_TEMPLATE, ENUM, anEnum, writer);
+    }
+
+    @Override
+    protected void compile(Service service, Writer writer) {
+        compile(SERVICE_COMPILER_TEMPLATE, SERVICE, service, writer);
     }
 
     protected void compile(String templateName, String templateArgName, Object templateArgValue, Writer writer) {
@@ -112,6 +119,11 @@ public class StCompiler extends AbstractProtoCompiler {
     }
 
     @Override
+    protected boolean canProcess(Service service) {
+        return getBoolean(SERVICE_COMPILER_ENABLED, SERVICE, service);
+    }
+
+    @Override
     protected String getOutputFileName(String basedir, Module module) {
         String filename = getString(MODULE_COMPILER_OUTPUT, MODULE, module);
         return appendBasedir(basedir, filename);
@@ -132,6 +144,12 @@ public class StCompiler extends AbstractProtoCompiler {
     @Override
     protected String getOutputFileName(String basedir, Enum anEnum) {
         String filename = getString(ENUM_COMPILER_OUTPUT, ENUM, anEnum);
+        return appendBasedir(basedir, filename);
+    }
+
+    @Override
+    protected String getOutputFileName(String basedir, Service service) {
+        String filename = getString(SERVICE_COMPILER_OUTPUT, SERVICE, service);
         return appendBasedir(basedir, filename);
     }
 

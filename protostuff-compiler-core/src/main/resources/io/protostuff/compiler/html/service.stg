@@ -1,0 +1,51 @@
+delimiters "%", "%"
+import "io/protostuff/compiler/core.stg"
+import "io/protostuff/compiler/html/common.stg"
+
+service_compiler_enabled(service) ::= "true"
+service_compiler_output(service) ::= "%service.canonicalName%.html"
+service_compiler_template(service) ::= "%service:service()%"
+
+service(service) ::= <<
+<h1>%service.name%</h1>
+<p>Type: <code>service</code></p>
+<p>Full name: <code>%service.canonicalName%</code></p>
+%if(service.comments)%
+%service.comments; format="markdown2html"%
+%endif%
+
+%service:service_methods()%
+>>
+
+service_methods(service) ::= <<
+<h2>Methods</h2>
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th class="col-md-1">Name</th>
+            <th class="col-md-1">Argument Type</th>
+            <th class="col-md-1">Return Type</th>            
+            <th class="col-md-9">Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        %service.methods:service_method_row()%
+    </tbody>
+</table>
+>>
+
+service_method_row(method) ::= <<
+<tr>
+    <td><code>%method.name%</code></td>
+    <td>%method.argType:type_link()%</td>
+    <td>%method.returnType:type_link()%</td>        
+    <td>%method:service_method_comments()%</td>
+</tr>
+>>
+
+service_method_comments(method) ::= <<
+%method.comments; format="markdown2html"%
+%if(method.options.deprecated)%
+<span class="label label-warning">Deprecated</span>
+%endif%
+>>

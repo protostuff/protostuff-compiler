@@ -44,16 +44,30 @@ proto(proto) ::= <<
 {
     text: "%proto.name%.proto",
     nodes: [
-        %proto:links()%
+        %proto:proto_links()%
     ]
 }
 >>
 
-
-links(container) ::= <<
+proto_links(container) ::= <<
+%container.services:service_link(); separator=",\n"%
+%if(first(container.services) && (first(container.messages) || first(container.enums)))%,%endif%
 %container.messages:message_link(); separator=",\n"%
 %if(first(container.messages) && first(container.enums))%,%endif%
 %container.enums:enum_link(); separator=",\n"%
+>>
+
+message_links(container) ::= <<
+%container.messages:message_link(); separator=",\n"%
+%if(first(container.messages) && first(container.enums))%,%endif%
+%container.enums:enum_link(); separator=",\n"%
+>>
+
+service_link(service) ::= <<
+{
+    text: "%service.name%",
+    href: "%service:type_href()%"
+}
 >>
 
 message_link(message) ::= <<
@@ -61,7 +75,7 @@ message_link(message) ::= <<
     text: "%message.name%",
     href: "%message:type_href()%"%if(first(message.messages) || first(message.enums))%,    
     nodes: [
-        %message:links()%   
+        %message:message_links()%   
     ]%endif%    
 }
 >>

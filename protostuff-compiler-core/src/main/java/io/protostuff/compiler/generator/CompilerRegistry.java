@@ -77,6 +77,8 @@ public class CompilerRegistry {
             messageGenerator.compile(module);
             ProtoCompiler enumGenerator = compilerFactory.create("io/protostuff/compiler/html/enum.stg", rendererMap);
             enumGenerator.compile(module);
+            ProtoCompiler serviceGenerator = compilerFactory.create("io/protostuff/compiler/html/service.stg", rendererMap);
+            serviceGenerator.compile(module);
             ProtoCompiler mainGenerator = compilerFactory.create("io/protostuff/compiler/html/main.stg", rendererMap);
             mainGenerator.compile(module);
             String staticResources[] = {

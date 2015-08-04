@@ -4,6 +4,7 @@ import io.protostuff.compiler.model.Enum;
 import io.protostuff.compiler.model.Message;
 import io.protostuff.compiler.model.Module;
 import io.protostuff.compiler.model.Proto;
+import io.protostuff.compiler.model.Service;
 import io.protostuff.compiler.model.UserTypeContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,6 +44,14 @@ public abstract class AbstractProtoCompiler implements ProtoCompiler {
                 compile(module, writer);
             }
             for (Proto proto : module.getProtos()) {
+                for (Service service : proto.getServices()) {
+                    if (canProcess(service)) {
+                        String outputFileName = getOutputFileName(module.getOutput(), service);
+                        LOGGER.info("Write {}", outputFileName);
+                        Writer writer = getWriter(outputFileName);
+                        compile(service, writer);
+                    }
+                }
                 processUserTypes(module, proto);
             }
         } finally {
@@ -98,6 +107,8 @@ public abstract class AbstractProtoCompiler implements ProtoCompiler {
 
     protected abstract void compile(Enum anEnum, Writer writer);
 
+    protected abstract void compile(Service service, Writer writer);
+
     protected abstract boolean canProcess(Module module);
 
     protected abstract boolean canProcess(Proto proto);
@@ -106,6 +117,8 @@ public abstract class AbstractProtoCompiler implements ProtoCompiler {
 
     protected abstract boolean canProcess(Enum anEnum);
 
+    protected abstract boolean canProcess(Service service);
+
     protected abstract String getOutputFileName(String basedir, Module module);
 
     protected abstract String getOutputFileName(String basedir, Proto proto);
@@ -113,5 +126,7 @@ public abstract class AbstractProtoCompiler implements ProtoCompiler {
     protected abstract String getOutputFileName(String basedir, Message message);
 
     protected abstract String getOutputFileName(String basedir, Enum anEnum);
+
+    protected abstract String getOutputFileName(String basedir, Service service);
 
 }
