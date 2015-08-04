@@ -24,7 +24,7 @@ public interface UserType extends Descriptor, FieldType {
     void setFullyQualifiedName(String fullyQualifiedName);
 
     /**
-     * Returns same as {@link #getFullyQualifiedName()} but without leading dot.
+     * Returns {@link #getFullyQualifiedName()} without leading dot.
      */
     String getCanonicalName();
 

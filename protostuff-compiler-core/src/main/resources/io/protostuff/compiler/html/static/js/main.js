@@ -17,6 +17,11 @@ $(function() {
         if (hash.startsWith("#page=")) {
             var type = hash.substring(6, hash.length);
             if (type !== "") {
+                var lastPage = localStorage.getItem("lastPage");
+                if (lastPage == "search") {
+                    clearSearch();
+                }
+                localStorage.setItem("lastPage", "page");
                 document.title = type;
                 content.load(type + ".html");
                 $.each($('#tree').treeview(true).getUnselected(), function (key, value) {
@@ -26,12 +31,12 @@ $(function() {
                         $tree.treeview('revealNode', [ value.nodeId, { silent: true } ]);
                     }
                 });
-                clearSearch();
                 return;
             }
         } else if (hash.startsWith("#search=")) {
             var pattern = hash.substring(8, hash.length);
             if (pattern !== "") {
+                localStorage.setItem("lastPage", "search");
                 document.title = "Search Results for " + pattern;
                 var options = {
                     ignoreCase: true,
