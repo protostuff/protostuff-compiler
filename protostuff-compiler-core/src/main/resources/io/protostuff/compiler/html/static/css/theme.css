@@ -88,3 +88,40 @@ body {
 .main .page-header {
     margin-top: 0;
 }
+
+.navbar {
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#56a3c2+0,193c65+100 */
+    background: rgb(86,163,194); /* Old browsers */
+    background: -moz-linear-gradient(top,  rgba(86,163,194,1) 0%, rgba(25,60,101,1) 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(86,163,194,1)), color-stop(100%,rgba(25,60,101,1))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  rgba(86,163,194,1) 0%,rgba(25,60,101,1) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  rgba(86,163,194,1) 0%,rgba(25,60,101,1) 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  rgba(86,163,194,1) 0%,rgba(25,60,101,1) 100%); /* IE10+ */
+    background: linear-gradient(to bottom,  rgba(86,163,194,1) 0%,rgba(25,60,101,1) 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#56a3c2', endColorstr='#193c65',GradientType=0 ); /* IE6-9 */
+}
+
+.navbar .navbar-brand {
+    color: white;
+}
+
+code {
+    padding: 0.2em 0;
+    margin: 0;
+    font-size: 85%;
+    font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+    color: rgb(51, 51, 51);
+    background-color: rgba(0,0,0,0.04);
+    border-radius: 3px;
+}
+
+code:before, code:after, tt:before, tt:after {
+    letter-spacing: -0.2em;
+    content: "\00a0";
+}
+
+body {
+    font: 16px/1.6 Helvetica, arial, nimbussansl, liberationsans, freesans, clean, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
+    color: rgb(51, 51, 51);
+    background-color: #fff;
+}
