@@ -2,11 +2,7 @@ package io.protostuff.compiler.generator;
 
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
-import io.protostuff.compiler.model.Enum;
-import io.protostuff.compiler.model.Message;
-import io.protostuff.compiler.model.Module;
-import io.protostuff.compiler.model.Proto;
-import io.protostuff.compiler.model.Service;
+
 import org.stringtemplate.v4.AttributeRenderer;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
@@ -16,31 +12,39 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
 
+import io.protostuff.compiler.model.Enum;
+import io.protostuff.compiler.model.Message;
+import io.protostuff.compiler.model.Module;
+import io.protostuff.compiler.model.Proto;
+import io.protostuff.compiler.model.Service;
+
 /**
  * @author Kostiantyn Shchepanovskyi
  */
 public class StCompiler extends AbstractProtoCompiler {
 
+    public static final String GENERATOR_NAME = "st4";
+
     public static final String MODULE = "module";
     public static final String MODULE_COMPILER_ENABLED = "module_compiler_enabled";
     public static final String MODULE_COMPILER_TEMPLATE = "module_compiler_template";
-    public static final String MODULE_COMPILER_OUTPUT = "module_compiler_output";
 
+    public static final String MODULE_COMPILER_OUTPUT = "module_compiler_output";
     public static final String PROTO = "proto";
     public static final String PROTO_COMPILER_ENABLED = "proto_compiler_enabled";
     public static final String PROTO_COMPILER_TEMPLATE = "proto_compiler_template";
-    public static final String PROTO_COMPILER_OUTPUT = "proto_compiler_output";
 
+    public static final String PROTO_COMPILER_OUTPUT = "proto_compiler_output";
     public static final String MESSAGE = "message";
     public static final String MESSAGE_COMPILER_ENABLED = "message_compiler_enabled";
     public static final String MESSAGE_COMPILER_TEMPLATE = "message_compiler_template";
-    public static final String MESSAGE_COMPILER_OUTPUT = "message_compiler_output";
 
+    public static final String MESSAGE_COMPILER_OUTPUT = "message_compiler_output";
     public static final String ENUM = "enum";
     public static final String ENUM_COMPILER_ENABLED = "enum_compiler_enabled";
     public static final String ENUM_COMPILER_TEMPLATE = "enum_compiler_template";
-    public static final String ENUM_COMPILER_OUTPUT = "enum_compiler_output";
 
+    public static final String ENUM_COMPILER_OUTPUT = "enum_compiler_output";
     public static final String SERVICE = "service";
     public static final String SERVICE_COMPILER_ENABLED = "service_compiler_enabled";
     public static final String SERVICE_COMPILER_TEMPLATE = "service_compiler_template";
@@ -179,4 +183,8 @@ public class StCompiler extends AbstractProtoCompiler {
         return st.render();
     }
 
+    @Override
+    public String getName() {
+        return GENERATOR_NAME;
+    }
 }

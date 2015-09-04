@@ -3,6 +3,14 @@ package io.protostuff.compiler;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
+import com.google.inject.multibindings.MapBinder;
+
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 import io.protostuff.compiler.generator.CompilerRegistry;
 import io.protostuff.compiler.generator.CompilerUtils;
 import io.protostuff.compiler.generator.GeneratorException;
@@ -10,12 +18,10 @@ import io.protostuff.compiler.generator.OutputStreamFactory;
 import io.protostuff.compiler.generator.ProtoCompiler;
 import io.protostuff.compiler.generator.StCompiler;
 import io.protostuff.compiler.generator.StCompilerFactory;
+import io.protostuff.compiler.generator.html.HtmlGenerator;
+import io.protostuff.compiler.generator.proto.ProtoGenerator;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import static com.google.inject.multibindings.MapBinder.newMapBinder;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -29,6 +35,9 @@ public class CompilerModule extends AbstractModule {
         install(new FactoryModuleBuilder()
                 .implement(ProtoCompiler.class, StCompiler.class)
                 .build(StCompilerFactory.class));
+        MapBinder<String, ProtoCompiler> compilers = newMapBinder(binder(), String.class, ProtoCompiler.class);
+        compilers.addBinding(HtmlGenerator.GENERATOR_NAME).to(HtmlGenerator.class);
+        compilers.addBinding(ProtoGenerator.GENERATOR_NAME).to(ProtoGenerator.class);
     }
 
     @Provides
