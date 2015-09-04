@@ -1,16 +1,16 @@
 package io.protostuff.compiler.generator;
 
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Inject;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
+import javax.inject.Inject;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -33,18 +33,19 @@ public class CompilerUtils {
             outputStream = outputStreamFactory.createStream(destinationFilename);
             ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
             if (classLoader == null) {
-                throw new IllegalStateException("Can not obtain classloader instance from current thread");
+                String error = "Can not obtain classloader instance from current thread";
+                throw new IllegalStateException(error);
             }
-            URL resource = classLoader.getResource(name);
-            if (resource != null) {
-                try {
-                    Path path = Paths.get(resource.toURI());
-                    byte[] bytes = Files.readAllBytes(path);
-                    outputStream.write(bytes);
-                    outputStream.close();
-                } catch (IOException | URISyntaxException e) {
-                    throw new GeneratorException("Could not copy %s", e, name);
+            try {
+                InputStream stream = classLoader.getResourceAsStream(name);
+                if (stream == null) {
+                    String error = "Could not copy file, source file not found: " + name;
+                    throw new IllegalStateException(error);
                 }
+                Path path = Paths.get(destinationFilename);
+                FileUtils.copyInputStreamToFile(stream, path.toFile());
+            } catch (IOException e) {
+                throw new GeneratorException("Could not copy %s", e, name);
             }
         } finally {
             if (outputStream != null) {
