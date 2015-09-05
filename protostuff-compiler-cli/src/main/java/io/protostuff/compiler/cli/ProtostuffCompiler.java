@@ -135,6 +135,12 @@ public class ProtostuffCompiler {
                 LOGGER.error("Output directory is not set.");
                 return;
             }
+            if (cmd.hasOption(PROTO_PATH)) {
+                String[] paths = cmd.getOptionValues(PROTO_PATH);
+                for (String path : paths) {
+                    includePaths.add(Paths.get(path));
+                }
+            }
             if (includePaths.isEmpty()) {
                 includePaths.add(Paths.get("."));
             }
