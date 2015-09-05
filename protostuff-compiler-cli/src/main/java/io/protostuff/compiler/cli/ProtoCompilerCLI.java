@@ -1,8 +1,5 @@
 package io.protostuff.compiler.cli;
 
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -21,51 +18,25 @@ import org.slf4j.LoggerFactory;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import io.protostuff.compiler.CompilerModule;
-import io.protostuff.compiler.ParserModule;
-import io.protostuff.compiler.generator.CompilerRegistry;
+import io.protostuff.compiler.ProtoCompiler;
 import io.protostuff.compiler.generator.GeneratorException;
-import io.protostuff.compiler.generator.ProtoCompiler;
-import io.protostuff.compiler.model.Module;
 import io.protostuff.compiler.model.ModuleConfiguration;
-import io.protostuff.compiler.model.Proto;
-import io.protostuff.compiler.parser.FileReader;
-import io.protostuff.compiler.parser.FileReaderFactory;
-import io.protostuff.compiler.parser.Importer;
 import io.protostuff.compiler.parser.ParserException;
-import io.protostuff.compiler.parser.ProtoContext;
 
 /**
  * @author Kostiantyn Shchepanovskyi
  */
-public class ProtostuffCompiler {
+public class ProtoCompilerCLI extends ProtoCompiler {
 
-    public static final String __VERSION = ProtostuffCompiler.class.getPackage().getImplementationVersion();
+    public static final String __VERSION = ProtoCompilerCLI.class.getPackage().getImplementationVersion();
     public static final String TEMPLATE = "template";
     public static final String OUTPUT = "output";
     public static final String DEBUG = "debug";
     public static final String HELP = "help";
     public static final String PROTO_PATH = "proto_path";
-    private static final Logger LOGGER = LoggerFactory.getLogger(ProtostuffCompiler.class);
-    private final Injector injector;
-
-    public ProtostuffCompiler() {
-        injector = Guice.createInjector(
-                new ParserModule(),
-                new CompilerModule());
-    }
-
-    public static void changeLogLevel(Level newLevel) {
-        LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
-        Configuration config = ctx.getConfiguration();
-        LoggerConfig loggerConfig = config.getLoggerConfig(LogManager.ROOT_LOGGER_NAME);
-        loggerConfig.setLevel(newLevel);
-        ctx.updateLoggers();
-    }
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProtoCompilerCLI.class);
 
     public static void main(String[] args) {
 
@@ -172,7 +143,7 @@ public class ProtostuffCompiler {
             return;
         }
         try {
-            ProtostuffCompiler compiler = new ProtostuffCompiler();
+            ProtoCompilerCLI compiler = new ProtoCompilerCLI();
             compiler.compile(configuration);
         } catch (GeneratorException | ParserException e) {
             if (LOGGER.isDebugEnabled()) {
@@ -183,30 +154,12 @@ public class ProtostuffCompiler {
         }
     }
 
-    public void compile(ModuleConfiguration configuration) {
-        FileReaderFactory fileReaderFactory = injector.getInstance(FileReaderFactory.class);
-        Importer importer = injector.getInstance(Importer.class);
-        CompilerRegistry registry = injector.getInstance(CompilerRegistry.class);
-        ProtoCompiler compiler = registry.findCompiler(configuration.getTemplate());
-        if (compiler == null) {
-            LOGGER.error("Unknown template: {}", configuration.getTemplate());
-            return;
-        }
-        FileReader fileReader = fileReaderFactory.create(configuration.getIncludePaths());
-        Map<String, Proto> importedFiles = new HashMap<>();
-        for (String path : configuration.getProtoFiles()) {
-            LOGGER.info("Parse {}", path);
-            ProtoContext context = importer.importFile(fileReader, path);
-            Proto proto = context.getProto();
-            importedFiles.put(path, proto);
-        }
-        Module module = new Module();
-        module.setName(configuration.getName());
-        module.setOutput(configuration.getOutput());
-        for (Map.Entry<String, Proto> entry : importedFiles.entrySet()) {
-            module.addProto(entry.getValue());
-        }
-        compiler.compile(module);
+    private static void changeLogLevel(Level newLevel) {
+        LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
+        Configuration config = ctx.getConfiguration();
+        LoggerConfig loggerConfig = config.getLoggerConfig(LogManager.ROOT_LOGGER_NAME);
+        loggerConfig.setLevel(newLevel);
+        ctx.updateLoggers();
     }
 
 }

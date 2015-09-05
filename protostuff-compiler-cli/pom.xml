@@ -21,7 +21,7 @@
                     <archive>
                         <manifest>
                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-                            <mainClass>io.protostuff.compiler.cli.ProtostuffCompiler</mainClass>
+                            <mainClass>io.protostuff.compiler.cli.ProtoCompilerCLI</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>

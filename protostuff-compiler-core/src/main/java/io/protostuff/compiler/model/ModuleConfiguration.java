@@ -1,5 +1,7 @@
 package io.protostuff.compiler.model;
 
+import com.google.common.base.MoreObjects;
+
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -55,6 +57,17 @@ public class ModuleConfiguration {
 
     public List<Path> getIncludePaths() {
         return includePaths;
+    }
+
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+                .add("name", name)
+                .add("includePaths", includePaths)
+                .add("protoFiles", protoFiles)
+                .add("template", template)
+                .add("output", output)
+                .toString();
     }
 
     public static final class Builder {

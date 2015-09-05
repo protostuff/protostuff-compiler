@@ -10,15 +10,13 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>protostuff-compiler-maven-plugin</artifactId>
-
     <packaging>maven-plugin</packaging>
-
     <name>Protostuff Compiler - Maven Plugin</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <mavenVersion>3.3.3</mavenVersion>
-        <mavenPluginPluginVersion>3.4</mavenPluginPluginVersion>
+        <maven.version>3.3.3</maven.version>
+        <maven-plugin.version>3.4</maven-plugin.version>
     </properties>
 
     <build>
@@ -26,7 +24,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-plugin-plugin</artifactId>
-                <version>${mavenPluginPluginVersion}</version>
+                <version>${maven-plugin.version}</version>
                 <configuration>
                     <skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
                 </configuration>
@@ -65,15 +63,18 @@
         <dependency>
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-plugin-api</artifactId>
-            <version>${mavenVersion}</version>
+            <version>${maven.version}</version>
         </dependency>
-
-        <!-- dependencies to annotations -->
         <dependency>
             <groupId>org.apache.maven.plugin-tools</groupId>
             <artifactId>maven-plugin-annotations</artifactId>
-            <version>${mavenPluginPluginVersion}</version>
+            <version>${maven-plugin.version}</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-core</artifactId>
+            <version>${maven.version}</version>
         </dependency>
 
         <dependency>
@@ -92,6 +93,12 @@
             <groupId>com.jcabi</groupId>
             <artifactId>jcabi-maven-slf4j</artifactId>
             <version>0.8</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.protostuff</groupId>
+            <artifactId>protostuff-compiler-core</artifactId>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 
