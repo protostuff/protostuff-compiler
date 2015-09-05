@@ -19,6 +19,6 @@ public class DefaultDescriptorProtoProvider implements Provider<ProtoContext> {
 
     @Override
     public ProtoContext get() {
-        return importer.importFile("google/protobuf/__descriptor.proto");
+        return importer.importFile(new ClasspathFileReader(), "google/protobuf/__descriptor.proto");
     }
 }

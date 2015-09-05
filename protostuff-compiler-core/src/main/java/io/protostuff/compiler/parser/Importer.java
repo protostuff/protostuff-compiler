@@ -5,5 +5,5 @@ package io.protostuff.compiler.parser;
  */
 public interface Importer {
 
-    ProtoContext importFile(String fileName);
+    ProtoContext importFile(FileReader fileReader, String fileName);
 }

@@ -2,11 +2,13 @@ package io.protostuff.compiler.parser;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+
+import org.junit.Before;
+import org.junit.Test;
+
 import io.protostuff.compiler.ParserModule;
 import io.protostuff.compiler.model.Message;
 import io.protostuff.compiler.model.Proto;
-import org.junit.Before;
-import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -30,7 +32,7 @@ public class NestedMessagesTest {
     @Test
     public void test() throws Exception {
         Importer importer = injector.getInstance(Importer.class);
-        ProtoContext context = importer.importFile("protostuff_unittest/messages_sample.proto");
+        ProtoContext context = importer.importFile(new ClasspathFileReader(), "protostuff_unittest/messages_sample.proto");
         Proto proto = context.getProto();
         assertNotNull(proto);
         assertEquals("protostuff_unittest/messages_sample.proto", proto.getFilename());

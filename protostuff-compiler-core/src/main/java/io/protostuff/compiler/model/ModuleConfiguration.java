@@ -1,5 +1,6 @@
 package io.protostuff.compiler.model;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,12 +10,14 @@ import java.util.List;
 public class ModuleConfiguration {
 
     private final String name;
+    private final List<Path> includePaths;
     private final List<String> protoFiles;
     private final String template;
     private final String output;
 
     private ModuleConfiguration(Builder builder) {
         name = builder.name;
+        includePaths = builder.includePaths;
         protoFiles = builder.protoFiles;
         template = builder.template;
         output = builder.output;
@@ -26,8 +29,9 @@ public class ModuleConfiguration {
 
     public static Builder newBuilder(ModuleConfiguration copy) {
         Builder builder = new Builder();
-        builder.protoFiles = copy.protoFiles;
         builder.name = copy.name;
+        builder.includePaths = copy.includePaths;
+        builder.protoFiles = copy.protoFiles;
         builder.template = copy.template;
         builder.output = copy.output;
         return builder;
@@ -49,8 +53,13 @@ public class ModuleConfiguration {
         return output;
     }
 
+    public List<Path> getIncludePaths() {
+        return includePaths;
+    }
+
     public static final class Builder {
         private String name;
+        private List<Path> includePaths;
         private List<String> protoFiles;
         private String template;
         private String output;
@@ -60,6 +69,11 @@ public class ModuleConfiguration {
 
         public Builder name(String name) {
             this.name = name;
+            return this;
+        }
+
+        public Builder includePaths(List<Path> includePaths) {
+            this.includePaths = includePaths;
             return this;
         }
 

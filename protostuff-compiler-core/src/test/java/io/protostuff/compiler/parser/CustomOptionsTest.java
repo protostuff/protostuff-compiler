@@ -1,8 +1,9 @@
 package io.protostuff.compiler.parser;
 
-import io.protostuff.compiler.model.Proto;
 import org.junit.Assert;
 import org.junit.Test;
+
+import io.protostuff.compiler.model.Proto;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -11,12 +12,12 @@ public class CustomOptionsTest extends AbstractParserTest {
 
     @Test
     public void googleUnitTest() throws Exception {
-        importer.importFile("protobuf_unittest/unittest_custom_options.proto");
+        importer.importFile(new ClasspathFileReader(), "protobuf_unittest/unittest_custom_options.proto");
     }
 
     @Test
     public void sample() throws Exception {
-        ProtoContext protoContext = importer.importFile("protostuff_unittest/options_sample.proto");
+        ProtoContext protoContext = importer.importFile(new ClasspathFileReader(), "protostuff_unittest/options_sample.proto");
         Proto proto = protoContext.getProto();
         Assert.assertEquals("A", proto.getOptions().get("(.protostuff_unittest.a)").getString());
         Assert.assertEquals("B", proto.getOptions().get("(.protostuff_unittest.b)").getString());
@@ -29,7 +30,7 @@ public class CustomOptionsTest extends AbstractParserTest {
         thrown.expect(ParserException.class);
         thrown.expectMessage("Unknown option: 'unknown_option' " +
                 "[protostuff_unittest/options_illegal_custom_option.proto:5]");
-        importer.importFile("protostuff_unittest/options_illegal_custom_option.proto");
+        importer.importFile(new ClasspathFileReader(), "protostuff_unittest/options_illegal_custom_option.proto");
     }
 
     @Test
@@ -37,7 +38,7 @@ public class CustomOptionsTest extends AbstractParserTest {
         thrown.expect(ParserException.class);
         thrown.expectMessage("Cannot set option 'a': expected string value " +
                 "[protostuff_unittest/options_illegal_custom_option_type.proto:7]");
-        importer.importFile("protostuff_unittest/options_illegal_custom_option_type.proto");
+        importer.importFile(new ClasspathFileReader(), "protostuff_unittest/options_illegal_custom_option_type.proto");
     }
 
     @Test
@@ -45,7 +46,7 @@ public class CustomOptionsTest extends AbstractParserTest {
         thrown.expect(ParserException.class);
         thrown.expectMessage("Unknown option: 'non_existing_option' " +
                 "[protostuff_unittest/options_illegal_standard_option.proto:7]");
-        importer.importFile("protostuff_unittest/options_illegal_standard_option.proto");
+        importer.importFile(new ClasspathFileReader(), "protostuff_unittest/options_illegal_standard_option.proto");
     }
 
     @Test
@@ -53,7 +54,7 @@ public class CustomOptionsTest extends AbstractParserTest {
         thrown.expect(ParserException.class);
         thrown.expectMessage("Cannot set option 'deprecated': expected bool value " +
                 "[protostuff_unittest/options_illegal_type.proto:7]");
-        importer.importFile("protostuff_unittest/options_illegal_type.proto");
+        importer.importFile(new ClasspathFileReader(), "protostuff_unittest/options_illegal_type.proto");
     }
 
     @Test
@@ -61,7 +62,7 @@ public class CustomOptionsTest extends AbstractParserTest {
         thrown.expect(ParserException.class);
         thrown.expectMessage("Cannot set option 'optimize_for': expected enum = [SPEED, LITE_RUNTIME, CODE_SIZE] " +
                 "[protostuff_unittest/options_illegal_enum_name.proto:7]");
-        importer.importFile("protostuff_unittest/options_illegal_enum_name.proto");
+        importer.importFile(new ClasspathFileReader(), "protostuff_unittest/options_illegal_enum_name.proto");
     }
 
 }

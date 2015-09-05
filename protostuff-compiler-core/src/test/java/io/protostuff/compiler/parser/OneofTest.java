@@ -1,11 +1,12 @@
 package io.protostuff.compiler.parser;
 
+import org.junit.Assert;
+import org.junit.Test;
+
 import io.protostuff.compiler.model.Field;
 import io.protostuff.compiler.model.Message;
 import io.protostuff.compiler.model.Oneof;
 import io.protostuff.compiler.model.ScalarFieldType;
-import org.junit.Assert;
-import org.junit.Test;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -14,7 +15,7 @@ public class OneofTest extends AbstractParserTest {
 
     @Test
     public void testSample() throws Exception {
-        ProtoContext context = importer.importFile("protostuff_unittest/oneof_sample.proto");
+        ProtoContext context = importer.importFile(new ClasspathFileReader(), "protostuff_unittest/oneof_sample.proto");
 
         Message m = context.resolve(".protostuff_unittest.SampleMessage", Message.class);
 

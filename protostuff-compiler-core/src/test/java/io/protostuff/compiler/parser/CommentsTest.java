@@ -1,11 +1,12 @@
 package io.protostuff.compiler.parser;
 
+import org.junit.Before;
+import org.junit.Test;
+
 import io.protostuff.compiler.model.Enum;
 import io.protostuff.compiler.model.Message;
 import io.protostuff.compiler.model.Oneof;
 import io.protostuff.compiler.model.Service;
-import org.junit.Before;
-import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
@@ -18,7 +19,7 @@ public class CommentsTest extends AbstractParserTest {
 
     @Before
     public void setUp() throws Exception {
-        context = importer.importFile("protostuff_unittest/comments_sample.proto");
+        context = importer.importFile(new ClasspathFileReader(), "protostuff_unittest/comments_sample.proto");
     }
 
     @Test

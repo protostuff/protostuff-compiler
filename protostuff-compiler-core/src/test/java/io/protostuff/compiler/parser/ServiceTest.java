@@ -1,8 +1,9 @@
 package io.protostuff.compiler.parser;
 
+import org.junit.Test;
+
 import io.protostuff.compiler.model.Service;
 import io.protostuff.compiler.model.ServiceMethod;
-import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
@@ -13,7 +14,7 @@ public class ServiceTest extends AbstractParserTest {
 
     @Test
     public void testSample() throws Exception {
-        ProtoContext context = importer.importFile("protostuff_unittest/services_sample.proto");
+        ProtoContext context = importer.importFile(new ClasspathFileReader(), "protostuff_unittest/services_sample.proto");
 
         Service service = context.resolve(".protostuff_unittest.SearchService", Service.class);
 
@@ -31,7 +32,7 @@ public class ServiceTest extends AbstractParserTest {
         thrown.expect(ParserException.class);
         thrown.expectMessage("Cannot use 'Enum' as a service method argument type: not a message " +
                 "[protostuff_unittest/services_bad_arg_type.proto:7]");
-        importer.importFile("protostuff_unittest/services_bad_arg_type.proto");
+        importer.importFile(new ClasspathFileReader(), "protostuff_unittest/services_bad_arg_type.proto");
     }
 
     @Test
@@ -39,6 +40,6 @@ public class ServiceTest extends AbstractParserTest {
         thrown.expect(ParserException.class);
         thrown.expectMessage("Cannot use 'Enum' as a service method return type: not a message " +
                 "[protostuff_unittest/services_bad_return_type.proto:7]");
-        importer.importFile("protostuff_unittest/services_bad_return_type.proto");
+        importer.importFile(new ClasspathFileReader(), "protostuff_unittest/services_bad_return_type.proto");
     }
 }

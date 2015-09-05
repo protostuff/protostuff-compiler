@@ -12,7 +12,7 @@ public class MessagesTest extends AbstractParserTest {
         thrown.expect(ParserException.class);
         thrown.expectMessage("Unresolved reference: 'NonExistingMessage' " +
                 "[protostuff_unittest/messages_unresolved_field_type.proto:6]");
-        importer.importFile("protostuff_unittest/messages_unresolved_field_type.proto");
+        importer.importFile(new ClasspathFileReader(), "protostuff_unittest/messages_unresolved_field_type.proto");
     }
 
 }

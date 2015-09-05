@@ -1,11 +1,10 @@
 package io.protostuff.compiler.parser;
 
-import org.antlr.v4.runtime.CharStream;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -13,19 +12,17 @@ import java.util.Map;
 @Singleton
 public class ImporterImpl implements Importer {
 
-    private final FileReader reader;
     private final FileDescriptorLoader loader;
 
     private Map<String, ProtoContext> cachedImports = new HashMap<>();
 
     @Inject
-    public ImporterImpl(FileReader reader, FileDescriptorLoader loader) {
-        this.reader = reader;
+    public ImporterImpl(FileDescriptorLoader loader) {
         this.loader = loader;
     }
 
     @Override
-    public ProtoContext importFile(String fileName) {
+    public ProtoContext importFile(FileReader reader, String fileName) {
         ProtoContext cachedInstance = cachedImports.get(fileName);
         if (cachedInstance != null) {
             if (cachedInstance.isInitialized()) {
@@ -33,11 +30,7 @@ public class ImporterImpl implements Importer {
             }
             throw new ParserException("Can not load proto: imports cycle found");
         }
-        CharStream stream = reader.read(fileName);
-        if (stream == null) {
-            throw new ParserException("Can not load proto: %s not found", fileName);
-        }
-        ProtoContext context = loader.load(fileName, stream);
+        ProtoContext context = loader.load(reader, fileName);
         cachedImports.put(fileName, context);
         return context;
     }

@@ -5,8 +5,9 @@ import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
-import javax.inject.Inject;
 import java.util.Set;
+
+import javax.inject.Inject;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -24,8 +25,13 @@ public class FileDescriptorLoaderImpl implements FileDescriptorLoader {
     }
 
     @Override
-    public ProtoContext load(String name, CharStream stream) {
-        ProtoContext context = parse(name, stream);
+    public ProtoContext load(FileReader reader, String filename) {
+        CharStream stream = reader.read(filename);
+        if (stream == null) {
+            throw new ParserException("Can not load proto: %s not found", filename);
+        }
+        ProtoContext context = parse(filename, stream);
+        context.setFileReader(reader);
         postProcessors.forEach(p -> p.process(context));
         context.setInitialized(true);
         return context;

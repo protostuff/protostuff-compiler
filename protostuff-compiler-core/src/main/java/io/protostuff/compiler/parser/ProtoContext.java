@@ -1,7 +1,5 @@
 package io.protostuff.compiler.parser;
 
-import io.protostuff.compiler.model.Proto;
-import io.protostuff.compiler.model.Type;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +10,9 @@ import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import io.protostuff.compiler.model.Proto;
+import io.protostuff.compiler.model.Type;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -28,6 +29,7 @@ public class ProtoContext {
     private final List<ProtoContext> publicImports;
 
     private boolean initialized;
+    private FileReader fileReader;
 
     public ProtoContext(String filename) {
         symbolTable = new HashMap<>();
@@ -180,4 +182,11 @@ public class ProtoContext {
         return extensionRegistry;
     }
 
+    public FileReader getFileReader() {
+        return fileReader;
+    }
+
+    public void setFileReader(FileReader fileReader) {
+        this.fileReader = fileReader;
+    }
 }

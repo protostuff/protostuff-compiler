@@ -2,12 +2,7 @@ package io.protostuff.compiler.parser;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import io.protostuff.compiler.ParserModule;
-import io.protostuff.compiler.model.ExtensionRange;
-import io.protostuff.compiler.model.Field;
-import io.protostuff.compiler.model.Message;
-import io.protostuff.compiler.model.Proto;
-import io.protostuff.compiler.model.ScalarFieldType;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -15,6 +10,13 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import java.util.Map;
+
+import io.protostuff.compiler.ParserModule;
+import io.protostuff.compiler.model.ExtensionRange;
+import io.protostuff.compiler.model.Field;
+import io.protostuff.compiler.model.Message;
+import io.protostuff.compiler.model.Proto;
+import io.protostuff.compiler.model.ScalarFieldType;
 
 import static org.junit.Assert.assertEquals;
 
@@ -36,7 +38,7 @@ public class ExtensionsTest {
 
     @Test
     public void testBasicExtensions() throws Exception {
-        ProtoContext context = importer.importFile("protostuff_unittest/extensions_sample.proto");
+        ProtoContext context = importer.importFile(new ClasspathFileReader(), "protostuff_unittest/extensions_sample.proto");
         Proto proto = context.getProto();
         ExtensionRegistry er = context.getExtensionRegistry();
 
@@ -74,7 +76,7 @@ public class ExtensionsTest {
         thrown.expect(ParserException.class);
         thrown.expectMessage("Extension field 'e' tag=9 is out of allowed range " +
                 "[protostuff_unittest/extensions_tag_out_of_range.proto:10]");
-        importer.importFile("protostuff_unittest/extensions_tag_out_of_range.proto");
+        importer.importFile(new ClasspathFileReader(), "protostuff_unittest/extensions_tag_out_of_range.proto");
     }
 
     @Test
@@ -82,6 +84,6 @@ public class ExtensionsTest {
         thrown.expect(ParserException.class);
         thrown.expectMessage("Cannot extend 'A': not a message " +
                 "[protostuff_unittest/extensions_bad_extendee.proto:9]");
-        importer.importFile("protostuff_unittest/extensions_bad_extendee.proto");
+        importer.importFile(new ClasspathFileReader(), "protostuff_unittest/extensions_bad_extendee.proto");
     }
 }

@@ -1,11 +1,12 @@
 package io.protostuff.compiler.parser;
 
+import org.junit.Assert;
+import org.junit.Test;
+
 import io.protostuff.compiler.model.Field;
 import io.protostuff.compiler.model.Map;
 import io.protostuff.compiler.model.Message;
 import io.protostuff.compiler.model.ScalarFieldType;
-import org.junit.Assert;
-import org.junit.Test;
 
 import static io.protostuff.compiler.model.ScalarFieldType.BOOL;
 import static io.protostuff.compiler.model.ScalarFieldType.FIXED32;
@@ -27,7 +28,7 @@ public class MapTest extends AbstractParserTest {
 
     @Test
     public void testSample() throws Exception {
-        ProtoContext context = importer.importFile("protobuf_unittest/map_unittest.proto");
+        ProtoContext context = importer.importFile(new ClasspathFileReader(), "protobuf_unittest/map_unittest.proto");
         Message m = context.resolve(Message.class, ".protobuf_unittest.TestMap");
         checkMap(m, "map_int32_int32", INT32, "int32", 1);
         checkMap(m, "map_int64_int64", INT64, "int64", 2);

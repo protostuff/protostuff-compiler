@@ -2,12 +2,14 @@ package io.protostuff.compiler.parser;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import io.protostuff.compiler.ParserModule;
-import io.protostuff.compiler.model.Field;
-import io.protostuff.compiler.model.Message;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import io.protostuff.compiler.ParserModule;
+import io.protostuff.compiler.model.Field;
+import io.protostuff.compiler.model.Message;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -24,7 +26,7 @@ public class NameResolutionTest {
     @Test
     public void test() throws Exception {
         Importer importer = injector.getInstance(Importer.class);
-        ProtoContext context = importer.importFile("protostuff_unittest/messages_name_resolution.proto");
+        ProtoContext context = importer.importFile(new ClasspathFileReader(), "protostuff_unittest/messages_name_resolution.proto");
         Message a = context.getProto().getMessage("A");
         Assert.assertNotNull(a);
         checkFieldType(a, "c0", ".protostuff_unittest.A.B.C");

@@ -1,33 +1,30 @@
 package io.protostuff.compiler;
 
 import com.google.inject.AbstractModule;
-import com.google.inject.Provides;
+import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.multibindings.Multibinder;
 import com.google.inject.name.Names;
-import io.protostuff.compiler.parser.ClasspathFileReader;
-import io.protostuff.compiler.parser.CompositeFileReader;
+
+import org.antlr.v4.runtime.ANTLRErrorListener;
+import org.antlr.v4.runtime.ANTLRErrorStrategy;
+import org.antlr.v4.runtime.BailErrorStrategy;
+
 import io.protostuff.compiler.parser.DefaultDescriptorProtoProvider;
 import io.protostuff.compiler.parser.ExtensionRegistratorPostProcessor;
 import io.protostuff.compiler.parser.FileDescriptorLoader;
 import io.protostuff.compiler.parser.FileDescriptorLoaderImpl;
 import io.protostuff.compiler.parser.FileReader;
+import io.protostuff.compiler.parser.FileReaderFactory;
 import io.protostuff.compiler.parser.Importer;
 import io.protostuff.compiler.parser.ImporterImpl;
 import io.protostuff.compiler.parser.ImportsPostProcessor;
-import io.protostuff.compiler.parser.LocalFileReader;
 import io.protostuff.compiler.parser.OptionsPostProcessor;
 import io.protostuff.compiler.parser.ParseErrorLogger;
 import io.protostuff.compiler.parser.ProtoContext;
 import io.protostuff.compiler.parser.ProtoContextPostProcessor;
+import io.protostuff.compiler.parser.ProtoFileReader;
 import io.protostuff.compiler.parser.TypeRegistratorPostProcessor;
 import io.protostuff.compiler.parser.TypeResolverPostProcessor;
-import org.antlr.v4.runtime.ANTLRErrorListener;
-import org.antlr.v4.runtime.ANTLRErrorStrategy;
-import org.antlr.v4.runtime.BailErrorStrategy;
-
-import java.nio.file.Path;
-import java.util.Collections;
-import java.util.List;
 
 import static io.protostuff.compiler.parser.DefaultDescriptorProtoProvider.DESCRIPTOR_PROTO;
 
@@ -35,16 +32,6 @@ import static io.protostuff.compiler.parser.DefaultDescriptorProtoProvider.DESCR
  * @author Kostiantyn Shchepanovskyi
  */
 public class ParserModule extends AbstractModule {
-
-    private final List<Path> protoIncludePathList;
-
-    public ParserModule() {
-        this.protoIncludePathList = Collections.emptyList();
-    }
-
-    public ParserModule(List<Path> protoIncludePathList) {
-        this.protoIncludePathList = protoIncludePathList;
-    }
 
     @Override
     protected void configure() {
@@ -63,13 +50,10 @@ public class ParserModule extends AbstractModule {
         postProcessors.addBinding().to(TypeResolverPostProcessor.class);
         postProcessors.addBinding().to(ExtensionRegistratorPostProcessor.class);
         postProcessors.addBinding().to(OptionsPostProcessor.class);
-    }
 
-    @Provides
-    FileReader fileReader() {
-        ClasspathFileReader classpathFileReader = new ClasspathFileReader();
-        LocalFileReader localFileReader = new LocalFileReader(protoIncludePathList);
-        return new CompositeFileReader(localFileReader, classpathFileReader);
+        install(new FactoryModuleBuilder()
+                .implement(FileReader.class, ProtoFileReader.class)
+                .build(FileReaderFactory.class));
     }
 
 }

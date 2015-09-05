@@ -1,8 +1,8 @@
 package io.protostuff.compiler.parser;
 
-import io.protostuff.compiler.model.Import;
-
 import javax.inject.Inject;
+
+import io.protostuff.compiler.model.Import;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -23,7 +23,9 @@ public class ImportsPostProcessor implements ProtoContextPostProcessor {
 
     private void resolveImports(ProtoContext context) {
         for (Import anImport : context.getProto().getImports()) {
-            ProtoContext importedContext = importer.importFile(anImport.getValue());
+            FileReader reader = context.getFileReader();
+            String file = anImport.getValue();
+            ProtoContext importedContext = importer.importFile(reader, file);
             if (anImport.isPublic()) {
                 context.addPublicImport(importedContext);
             } else {
