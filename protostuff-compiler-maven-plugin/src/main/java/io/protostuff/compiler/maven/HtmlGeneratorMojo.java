@@ -22,12 +22,12 @@ import io.protostuff.compiler.generator.html.HtmlGenerator;
 import io.protostuff.compiler.model.ModuleConfiguration;
 
 import static java.util.Collections.singletonList;
-import static org.apache.maven.plugins.annotations.LifecyclePhase.GENERATE_SOURCES;
+import static org.apache.maven.plugins.annotations.LifecyclePhase.PREPARE_PACKAGE;
 
 /**
  * @author Kostiantyn Shchepanovskyi
  */
-@Mojo(name = "html", defaultPhase = GENERATE_SOURCES)
+@Mojo(name = "html", defaultPhase = PREPARE_PACKAGE)
 public class HtmlGeneratorMojo extends AbstractGeneratorMojo {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(HtmlGeneratorMojo.class);

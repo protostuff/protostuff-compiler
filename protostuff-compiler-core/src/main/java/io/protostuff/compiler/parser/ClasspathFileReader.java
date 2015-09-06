@@ -5,14 +5,9 @@ import org.antlr.v4.runtime.CharStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.InputStream;
+
 import javax.annotation.Nullable;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -29,24 +24,14 @@ public class ClasspathFileReader implements FileReader {
             if (classLoader == null) {
                 throw new IllegalStateException("Can not obtain classloader instance from current thread");
             }
-            URL resource = classLoader.getResource(name);
+            InputStream resource = classLoader.getResourceAsStream(name);
             if (resource != null) {
-                return readFromURI(resource.toURI());
+                return new ANTLRInputStream(resource);
             }
         } catch (Exception e) {
-            LOGGER.error("Internal error - can not read {}", name, e);
+            LOGGER.error("Could not read {}", name, e);
         }
         return null;
     }
 
-    private CharStream readFromURI(URI uri) {
-        Path path = Paths.get(uri);
-        try {
-            byte[] bytes = Files.readAllBytes(path);
-            String result = new String(bytes, StandardCharsets.UTF_8);
-            return new ANTLRInputStream(result);
-        } catch (IOException e) {
-            throw new IllegalArgumentException("Could not read " + path, e);
-        }
-    }
 }
