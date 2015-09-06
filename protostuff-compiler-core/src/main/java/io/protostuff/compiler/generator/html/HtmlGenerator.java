@@ -1,5 +1,6 @@
 package io.protostuff.compiler.generator.html;
 
+import org.pegdown.Extensions;
 import org.pegdown.PegDownProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -98,7 +99,15 @@ public class HtmlGenerator implements ProtoCompiler {
                 if (o == null) {
                     return "";
                 }
-                PegDownProcessor processor = new PegDownProcessor();
+                int options = 0;
+                options |= Extensions.SMARTYPANTS;
+                options |= Extensions.AUTOLINKS;
+                options |= Extensions.TABLES;
+                options |= Extensions.FENCED_CODE_BLOCKS;
+                options |= Extensions.WIKILINKS;
+                options |= Extensions.STRIKETHROUGH;
+                options |= Extensions.SUPPRESS_ALL_HTML;
+                PegDownProcessor processor = new PegDownProcessor(options);
                 return processor.markdownToHtml(o.toString());
             }
             return String.valueOf(o);
