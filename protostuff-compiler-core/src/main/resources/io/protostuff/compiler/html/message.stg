@@ -19,7 +19,7 @@ message(message) ::= <<
 
 message_fields(message) ::= <<
 <h2>Fields</h2>
-<table class="table table-hover">
+<table class="table">
     <thead>
         <tr>
             <th class="col-md-1">Field Name</th>

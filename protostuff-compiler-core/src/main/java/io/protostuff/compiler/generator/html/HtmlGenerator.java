@@ -1,7 +1,5 @@
 package io.protostuff.compiler.generator.html;
 
-import com.google.common.base.Joiner;
-
 import org.pegdown.PegDownProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -101,11 +99,6 @@ public class HtmlGenerator implements ProtoCompiler {
                     return "";
                 }
                 PegDownProcessor processor = new PegDownProcessor();
-                if (o instanceof List) {
-                    List<String> lines = (List<String>) o;
-                    String source = Joiner.on('\n').join(lines);
-                    return processor.markdownToHtml(source);
-                }
                 return processor.markdownToHtml(o.toString());
             }
             return String.valueOf(o);

@@ -19,15 +19,7 @@ service(service) ::= <<
 
 service_methods(service) ::= <<
 <h2>Methods</h2>
-<table class="table table-hover">
-    <thead>
-        <tr>
-            <th class="col-md-1">Name</th>
-            <th class="col-md-1">Argument Type</th>
-            <th class="col-md-1">Return Type</th>            
-            <th class="col-md-9">Description</th>
-        </tr>
-    </thead>
+<table class="table">    
     <tbody>
         %service.methods:service_method_row()%
     </tbody>
@@ -36,10 +28,13 @@ service_methods(service) ::= <<
 
 service_method_row(method) ::= <<
 <tr>
-    <td><code>%method.name%</code></td>
-    <td>%method.argType:type_link()%</td>
-    <td>%method.returnType:type_link()%</td>        
-    <td>%method:service_method_comments()%</td>
+    <td>
+        <div class="well well-sm well-code">
+            rpc %method.name%(%method.argType:type_link()%)
+            returns(%method.returnType:type_link()%)
+        </div>
+        %method:service_method_comments()%
+    </td>
 </tr>
 >>
 

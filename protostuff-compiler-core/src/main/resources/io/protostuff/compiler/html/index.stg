@@ -66,7 +66,8 @@ message_links(container) ::= <<
 service_link(service) ::= <<
 {
     text: "%service.name%",
-    href: "%service:type_href()%"
+    href: "%service:type_href()%",
+    tags: ['service']
 }
 >>
 
@@ -85,12 +86,4 @@ enum_link(enum) ::= <<
     text: "%enum.name%",
     href: "%enum:type_href()%"
 }
->>
-
-message_icon() ::= <<
-
->>
-
-enum_icon() ::= <<
-
 >>

@@ -87,7 +87,10 @@ tree.treeview({
     data: getTree(),
     showBorder: false,
     showTags: true,
-    color: "#428bca"
+    color: "#3572b0",
+    backColor: "#F5F5F5",
+    selectedColor: "#3572b0",
+    selectedBackColor: "#e6e6e6"
 });
 
 tree.on('nodeSelected', function(event, data) {

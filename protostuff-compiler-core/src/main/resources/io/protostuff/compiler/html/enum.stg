@@ -18,7 +18,7 @@ enum(enum) ::= <<
 
 enum_constants(enum) ::= <<
 <h2>Constants</h2>
-<table class="table table-hover">
+<table class="table">
     <thead>
         <tr>
             <th class="col-md-1">Name</th>            
