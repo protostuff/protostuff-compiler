@@ -7,10 +7,12 @@ service_compiler_output(service) ::= "%service.canonicalName%.html"
 service_compiler_template(service) ::= "%service:service()%"
 
 service(service) ::= <<
-<h1>%service.name%</h1>
-<p>Type: <code>service</code></p>
-<p>Full name: <code>%service.canonicalName%</code></p>
-%if(service.comments)%
+
+<div class="page-header">
+    <h1>Service <span class="code">%service.name%</span></h1> 
+</div>
+
+%if(first(service.commentLines))%
 %service.comments; format="markdown2html"%
 %endif%
 
@@ -19,23 +21,21 @@ service(service) ::= <<
 
 service_methods(service) ::= <<
 <h2>Methods</h2>
-<table class="table">    
-    <tbody>
-        %service.methods:service_method_row()%
-    </tbody>
-</table>
+%service.methods:service_method_row()%
 >>
 
 service_method_row(method) ::= <<
-<tr>
-    <td>
-        <div class="well well-sm well-code">
-            rpc %method.name%(%method.argType:type_link()%)
-            returns(%method.returnType:type_link()%)
-        </div>
-        %method:service_method_comments()%
-    </td>
-</tr>
+<div class="panel panel-default">
+  <div class="panel-heading code">
+    rpc %method.name%(%method.argType:type_link()%)
+    returns(%method.returnType:type_link()%)
+  </div>
+  %if(first(method.commentLines))%
+  <div class="panel-body">
+    %method:service_method_comments()%
+  </div>
+  %endif%
+</div>
 >>
 
 service_method_comments(method) ::= <<

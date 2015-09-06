@@ -93,7 +93,7 @@ body {
     color: white;
 }
 
-.well-code {
+.code {
     font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
 }
 
@@ -116,4 +116,39 @@ body {
     font: 14px/1.4 Helvetica, arial, nimbussansl, liberationsans, freesans, clean, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
     color: rgb(51, 51, 51);
     background-color: #fff;
+}
+
+/* https://css-tricks.com/snippets/css/remove-margins-first-element/ */
+p:first-child {
+    margin-top: 0 !important;
+    margin-left: 0 !important;
+}
+
+p:last-child {
+    margin-bottom: 0 !important;
+    margin-right: 0 !important;
+}
+
+h1 {
+    font-size: 24px;
+}
+
+h2 {
+    font-size: 22px;
+}
+
+h3 {
+    font-size: 20px;
+}
+
+h4 {
+    font-size: 18px;
+}
+
+h5 {
+    font-size: 14px;
+}
+
+h6 {
+    font-size: 12px;
 }
