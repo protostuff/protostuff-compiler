@@ -9,6 +9,6 @@ type_href(type) ::= <%
 %if(is_scalar.(type.fullyQualifiedName))%
 https://developers.google.com/protocol-buffers/docs/proto#scalar
 %else%
-#page=%type.canonicalName%
+#%type.canonicalName%
 %endif%
 %>

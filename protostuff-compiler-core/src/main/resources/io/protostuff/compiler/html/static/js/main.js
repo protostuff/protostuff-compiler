@@ -14,26 +14,7 @@ $(function() {
     //set up hash detection
     $(window).bind( 'hashchange', function(e) {
         var hash = location.hash;
-        if (hash.startsWith("#page=")) {
-            var type = hash.substring(6, hash.length);
-            if (type !== "") {
-                var lastPage = localStorage.getItem("lastPage");
-                if (lastPage == "search") {
-                    clearSearch();
-                }
-                localStorage.setItem("lastPage", "page");
-                document.title = type;
-                content.load(type + ".html");
-                $.each($('#tree').treeview(true).getUnselected(), function (key, value) {
-                    if (hash === value.href) {
-                        var $tree = $('#tree');
-                        $tree.treeview('selectNode', [value.nodeId, {silent: true}]);
-                        $tree.treeview('revealNode', [ value.nodeId, { silent: true } ]);
-                    }
-                });
-                return;
-            }
-        } else if (hash.startsWith("#search=")) {
+        if (hash.startsWith("#search=")) {
             var pattern = hash.substring(8, hash.length);
             if (pattern !== "") {
                 localStorage.setItem("lastPage", "search");
@@ -56,7 +37,32 @@ $(function() {
                 return;
             }
         }
-        location.hash = '#page=main';
+
+        var type = hash.substring(1, hash.length);
+        if (type !== "") {
+            var lastPage = localStorage.getItem("lastPage");
+            if (lastPage == "search") {
+                clearSearch();
+            }
+            localStorage.setItem("lastPage", "page");
+            content.load(type + ".html", function (response, status, xhr) {
+                if (status == "error") {
+                    document.title = "Page error";
+                    $("#content").html(xhr.status + " " + xhr.statusText);
+                } else {
+                    document.title = type.substring(type.lastIndexOf(".") + 1);
+                    $.each($('#tree').treeview(true).getUnselected(), function (key, value) {
+                        if (hash === value.href) {
+                            var $tree = $('#tree');
+                            $tree.treeview('selectNode', [value.nodeId, {silent: true}]);
+                            $tree.treeview('revealNode', [value.nodeId, {silent: true}]);
+                        }
+                    });
+                }
+            });
+            return;
+        }
+        location.hash = '#main';
         document.title = 'Protocol Documentation';
         content.load("main.html");
         clearSearch();
