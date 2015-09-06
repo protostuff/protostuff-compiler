@@ -6,14 +6,14 @@ navbar() ::= <<
         <div class="navbar-header">
             <a class="navbar-brand" href="#">Protocol Documentation</a>
         </div>
-        <form class="navbar-form navbar-right" role="search">
+        <div class="navbar-form navbar-right" role="search">
             <div class="input-group">
               <input id="input-search" type="text" class="form-control" placeholder="Search...">
               <span class="input-group-btn">
-                  <button id="btn-search" class="btn btn-default" type="button">Go!</button>
+                  <a id="btn-search" class="btn btn-default">Go!</a>
               </span>
             </div>            
-        </form>
+        </div>
     </div>    
 </nav>
 >>
