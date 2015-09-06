@@ -104,8 +104,9 @@ public class HtmlGenerator implements ProtoCompiler {
                 options |= Extensions.AUTOLINKS;
                 options |= Extensions.TABLES;
                 options |= Extensions.FENCED_CODE_BLOCKS;
-                options |= Extensions.WIKILINKS;
-                options |= Extensions.STRIKETHROUGH;
+                // TODO enable when fix for https://github.com/sirthias/pegdown/issues/161 released
+                // options |= Extensions.WIKILINKS;
+                // options |= Extensions.STRIKETHROUGH;
                 options |= Extensions.SUPPRESS_ALL_HTML;
                 PegDownProcessor processor = new PegDownProcessor(options);
                 return processor.markdownToHtml(o.toString());

@@ -107,9 +107,14 @@ code {
     border-radius: 3px;
 }
 
-code:before, code:after, tt:before, tt:after {
+code:before, code:after {
     letter-spacing: -0.2em;
     content: "\00a0";
+}
+
+pre > code:before, pre > code:after {
+    letter-spacing: normal;
+    content: normal;
 }
 
 body {
