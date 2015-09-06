@@ -7,12 +7,15 @@ message_compiler_output(message) ::= "%message.canonicalName%.html"
 message_compiler_template(message) ::= "%message:message()%"
 
 message(message) ::= <<
-<h1>%message.name%</h1>
-<p>Type: <code>message</code></p>
-<p>Full name: <code>%message.canonicalName%</code></p>
-%if(message.comments)%
+
+<div class="page-header" title="%message.canonicalName%">
+    <h1>Message <span class="code">%message.name%</span></h1> 
+</div>
+
+%if(first(message.commentLines))%
 %message.comments; format="markdown2html"%
 %endif%
+
 %message:message_fields()%
 %message:nested_messages()%
 >>

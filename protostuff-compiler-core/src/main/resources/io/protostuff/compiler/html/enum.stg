@@ -7,12 +7,15 @@ enum_compiler_output(enum) ::= "%enum.canonicalName%.html"
 enum_compiler_template(enum) ::= "%enum:enum()%"
 
 enum(enum) ::= <<
-<h1>%enum.name%</h1>
-<p>Type: <code>enum</code></p>
-<p>Full name: <code>%enum.canonicalName%</code></p>
-%if(enum.comments)%
+
+<div class="page-header" title="%enum.canonicalName%">
+    <h1>Enum <span class="code">%enum.name%</span></h1> 
+</div>
+
+%if(first(enum.commentLines))%
 %enum.comments; format="markdown2html"%
 %endif%
+
 %enum:enum_constants()%
 >>
 

@@ -8,7 +8,7 @@ service_compiler_template(service) ::= "%service:service()%"
 
 service(service) ::= <<
 
-<div class="page-header">
+<div class="page-header" title="%service.canonicalName%">
     <h1>Service <span class="code">%service.name%</span></h1> 
 </div>
 
