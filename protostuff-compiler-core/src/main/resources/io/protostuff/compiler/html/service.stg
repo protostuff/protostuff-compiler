@@ -9,7 +9,7 @@ service_compiler_template(service) ::= "%service:service()%"
 service(service) ::= <<
 
 <div class="page-header" title="%service.canonicalName%">
-    <h1>Service <span class="code">%service.name%</span></h1> 
+    <h1><span class="code">%service.name%</span> <small>(service)</small></h1> 
 </div>
 
 %if(first(service.commentLines))%
@@ -20,14 +20,14 @@ service(service) ::= <<
 >>
 
 service_methods(service) ::= <<
-<h2>Methods</h2>
+<h1>RPC Methods</h1>
 %service.methods:service_method_row()%
 >>
 
 service_method_row(method) ::= <<
 <div class="panel panel-default">
   <div class="panel-heading code">
-    rpc %method.name%(%method.argType:type_link()%)
+    %method.name%(%method.argType:type_link()%)
     returns(%method.returnType:type_link()%)
   </div>
   %if(first(method.commentLines))%

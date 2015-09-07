@@ -9,7 +9,7 @@ enum_compiler_template(enum) ::= "%enum:enum()%"
 enum(enum) ::= <<
 
 <div class="page-header" title="%enum.canonicalName%">
-    <h1>Enum <span class="code">%enum.name%</span></h1> 
+    <h1><span class="code">%enum.name%</span> <small>(enum)</small></h1> 
 </div>
 
 %if(first(enum.commentLines))%
@@ -20,7 +20,7 @@ enum(enum) ::= <<
 >>
 
 enum_constants(enum) ::= <<
-<h2>Constants</h2>
+<h1>Constants</h1>
 <table class="table">
     <thead>
         <tr>

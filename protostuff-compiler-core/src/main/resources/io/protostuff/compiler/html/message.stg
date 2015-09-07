@@ -9,7 +9,7 @@ message_compiler_template(message) ::= "%message:message()%"
 message(message) ::= <<
 
 <div class="page-header" title="%message.canonicalName%">
-    <h1>Message <span class="code">%message.name%</span></h1> 
+    <h1><span class="code">%message.name%</span> <small>(message)</small></h1> 
 </div>
 
 %if(first(message.commentLines))%
@@ -21,7 +21,7 @@ message(message) ::= <<
 >>
 
 message_fields(message) ::= <<
-<h2>Fields</h2>
+<h1>Fields</h1>
 <table class="table">
     <thead>
         <tr>
@@ -57,7 +57,7 @@ message_field_comments(field) ::= <<
 
 nested_messages(message) ::= <<
 %if(first(message.messages) || first(message.enums))%
-<h2>Nested types</h2>
+<h1>Nested types</h1>
 <div>
 %message:links()%
 </div>
