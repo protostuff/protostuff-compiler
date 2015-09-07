@@ -21,14 +21,15 @@ message(message) ::= <<
 >>
 
 message_fields(message) ::= <<
+%if(first(message.fields))%
 <h1>Fields</h1>
 <table class="table">
     <thead>
         <tr>
-            <th class="col-md-1">Field Name</th>
+            <th class="col-md-1">Name</th>
             <th class="col-md-1">Type</th>
             <th class="col-md-1">Modifier</th>
-            <th class="col-md-1">Tag</th>
+            <th>Tag</th>
             <th class="col-md-8">Description</th>
         </tr>
     </thead>
@@ -36,6 +37,7 @@ message_fields(message) ::= <<
         %message.fields:message_field_row()%
     </tbody>
 </table>
+%endif%
 >>
 
 message_field_row(field) ::= <<
