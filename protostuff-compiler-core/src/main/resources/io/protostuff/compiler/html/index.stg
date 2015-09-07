@@ -67,7 +67,7 @@ service_link(service) ::= <<
 {
     text: "%service.name%",
     href: "%service:type_href()%",
-    tags: ['service']
+    icon: "glyphicon glyphicon-th-large"
 }
 >>
 
