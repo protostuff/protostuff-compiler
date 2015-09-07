@@ -1,0 +1,157 @@
+<div class="page-header">
+    <h1 id="scalar">Scalar Value Types</h1>
+</div>
+<p>A scalar message field can have one of the
+    following types – the table shows the type specified in
+    the <code>.proto</code> file, and the corresponding type in the
+    automatically generated class:
+</p>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>.proto Type</th>
+        <th>Notes</th>
+        <th>C++ Type</th>
+        <th>Java Type</th>
+        <th>Python Type<sup>[2]</sup></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>double</td>
+        <td></td>
+        <td>double</td>
+        <td>double</td>
+        <td>float</td>
+    </tr>
+    <tr>
+        <td>float</td>
+        <td></td>
+        <td>float</td>
+        <td>float</td>
+        <td>float</td>
+    </tr>
+    <tr>
+        <td>int32</td>
+        <td>Uses variable-length encoding. Inefficient for encoding negative numbers – if your
+            field is likely to have negative values, use sint32 instead.
+        </td>
+        <td>int32</td>
+        <td>int</td>
+        <td>int</td>
+    </tr>
+    <tr>
+        <td>int64</td>
+        <td>Uses variable-length encoding. Inefficient for encoding negative numbers – if your
+            field is likely to have negative values, use sint64 instead.
+        </td>
+        <td>int64</td>
+        <td>long</td>
+        <td>int/long<sup>[3]</sup></td>
+    </tr>
+
+    <tr>
+        <td>uint32</td>
+        <td>Uses variable-length encoding.</td>
+        <td>uint32</td>
+        <td>int<sup>[1]</sup></td>
+        <td>int/long<sup>[3]</sup></td>
+    </tr>
+    <tr>
+        <td>uint64</td>
+        <td>Uses variable-length encoding.</td>
+        <td>uint64</td>
+        <td>long<sup>[1]</sup></td>
+        <td>int/long<sup>[3]</sup></td>
+    </tr>
+    <tr>
+        <td>sint32</td>
+        <td>Uses variable-length encoding. Signed int value. These more efficiently encode
+            negative numbers than regular int32s.
+        </td>
+        <td>int32</td>
+        <td>int</td>
+        <td>int</td>
+    </tr>
+    <tr>
+        <td>sint64</td>
+        <td>Uses variable-length encoding. Signed int value. These more efficiently encode
+            negative numbers than regular int64s.
+        </td>
+        <td>int64</td>
+        <td>long</td>
+        <td>int/long<sup>[3]</sup></td>
+    </tr>
+
+    <tr>
+        <td>fixed32</td>
+        <td>Always four bytes. More efficient than uint32 if values are often greater than
+            2<sup>28</sup>.
+        </td>
+        <td>uint32</td>
+        <td>int<sup>[1]</sup></td>
+        <td>int</td>
+    </tr>
+    <tr>
+        <td>fixed64</td>
+        <td>Always eight bytes. More efficient than uint64 if values are often greater than
+            2<sup>56</sup>.
+        </td>
+        <td>uint64</td>
+        <td>long<sup>[1]</sup></td>
+        <td>int/long<sup>[3]</sup></td>
+    </tr>
+    <tr>
+        <td>sfixed32</td>
+        <td>Always four bytes.</td>
+        <td>int32</td>
+        <td>int</td>
+        <td>int</td>
+    </tr>
+    <tr>
+        <td>sfixed64</td>
+        <td>Always eight bytes.</td>
+        <td>int64</td>
+        <td>long</td>
+        <td>int/long<sup>[3]</sup></td>
+    </tr>
+    <tr>
+        <td>bool</td>
+        <td></td>
+        <td>bool</td>
+        <td>boolean</td>
+        <td>bool</td>
+    </tr>
+    <tr>
+        <td>string</td>
+        <td>A string must always contain UTF-8 encoded or 7-bit ASCII text.</td>
+        <td>string</td>
+        <td>String</td>
+        <td>str/unicode<sup>[4]</sup></td>
+    </tr>
+    <tr>
+        <td>bytes</td>
+        <td>May contain any arbitrary sequence of bytes.</td>
+        <td>string</td>
+        <td>ByteString</td>
+        <td>str</td>
+    </tr>
+    </tbody>
+</table>
+
+<p>You can find out more about how these types are encoded when you serialize your message in <a
+        href="/protocol-buffers/docs/encoding">Protocol Buffer Encoding</a>.
+</p><p><sup>[1]</sup> In Java, unsigned 32-bit and 64-bit integers are represented using their
+    signed counterparts, with the top bit simply being stored in the sign bit.</p>
+<p><sup>[2]</sup> In all cases, setting values to a field will perform type checking to make sure it
+    is valid.</p>
+<p><sup>[3]</sup> 64-bit or unsigned 32-bit integers are always represented as long when decoded,
+    but can be an int if an int is given when setting the field. In all cases, the value must fit in
+    the type represented when set. See [2].</p>
+<p><sup>[4]</sup> Python strings are represented as unicode on decode but can be str if an ASCII
+    string is given (this is subject to change).</p>
+
+<p>Source: <a href="https://developers.google.com/protocol-buffers/docs/proto#scalar">
+    https://developers.google.com/protocol-buffers/docs/proto#scalar</a>
+</p>

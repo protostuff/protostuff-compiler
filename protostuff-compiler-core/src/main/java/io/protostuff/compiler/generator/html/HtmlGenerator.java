@@ -48,6 +48,7 @@ public class HtmlGenerator implements ProtoCompiler {
             "css/bootstrap-treeview.css",
             "css/bootstrap-treeview.min.css",
             "css/theme.css",
+            "scalar-value-types.html",
     };
     private static final Logger LOGGER = LoggerFactory.getLogger(HtmlGenerator.class);
     private final StCompilerFactory compilerFactory;
