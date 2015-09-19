@@ -1,9 +1,0 @@
-syntax = "proto3";
-
-package protostuff_unittest;
-
-import public "protostuff_unittest/imports_c.proto";
-
-message B {
-    C c = 1;
-}

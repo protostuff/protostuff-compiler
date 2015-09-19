@@ -1,7 +1,0 @@
-syntax = "proto3";
-
-package protostuff_unittest;
-
-import "google/protobuf/descriptor.proto";
-
-option deprecated = "this option type is boolean";
