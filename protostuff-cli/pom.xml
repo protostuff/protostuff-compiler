@@ -21,7 +21,7 @@
                     <archive>
                         <manifest>
                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-                            <mainClass>io.protostuff.compiler.cli.ProtoCompilerCLI</mainClass>
+                            <mainClass>io.protostuff.compiler.cli.ProtostuffCompilerCLI</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
@@ -44,6 +44,11 @@
         <dependency>
             <groupId>io.protostuff</groupId>
             <artifactId>protostuff-compiler-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.protostuff</groupId>
+            <artifactId>protostuff-generator</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

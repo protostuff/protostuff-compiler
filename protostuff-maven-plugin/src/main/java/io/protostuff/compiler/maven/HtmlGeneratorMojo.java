@@ -17,9 +17,9 @@ import java.nio.file.PathMatcher;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 
-import io.protostuff.compiler.ProtoCompiler;
-import io.protostuff.compiler.generator.html.HtmlGenerator;
 import io.protostuff.compiler.model.ModuleConfiguration;
+import io.protostuff.generator.ProtostuffCompiler;
+import io.protostuff.generator.html.HtmlGenerator;
 
 import static java.util.Collections.singletonList;
 import static org.apache.maven.plugins.annotations.LifecyclePhase.PREPARE_PACKAGE;
@@ -39,7 +39,7 @@ public class HtmlGeneratorMojo extends AbstractGeneratorMojo {
     public void execute() throws MojoExecutionException, MojoFailureException {
         super.execute();
 
-        ProtoCompiler compiler = new ProtoCompiler();
+        ProtostuffCompiler compiler = new ProtostuffCompiler();
         final Path sourcePath = source.toPath();
         ModuleConfiguration.Builder builder = ModuleConfiguration.newBuilder()
                 .name("html")

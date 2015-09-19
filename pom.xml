@@ -21,6 +21,7 @@
         <module>protostuff-compiler-core</module>
         <module>protostuff-maven-plugin</module>
         <module>protostuff-cli</module>
+        <module>protostuff-generator</module>
     </modules>
 
     <build>

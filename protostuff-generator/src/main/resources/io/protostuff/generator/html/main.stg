@@ -1,0 +1,9 @@
+delimiters "%", "%"
+import "io/protostuff/generator/core.stg"
+
+module_compiler_enabled(module) ::= "true"
+module_compiler_output(module) ::= "main.html"
+
+module_compiler_template(module) ::= <<
+Main page
+>>

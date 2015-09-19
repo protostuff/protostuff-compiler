@@ -1,0 +1,14 @@
+delimiters "%", "%"
+import "io/protostuff/generator/core.stg"
+
+type_link(type) ::= <%
+<a href="%type:type_href()%">%type.name%</a>
+%>
+
+type_href(type) ::= <%
+%if(is_scalar.(type.fullyQualifiedName))%
+#scalar-value-types
+%else%
+#%type.canonicalName%
+%endif%
+%>
