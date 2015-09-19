@@ -4,7 +4,7 @@
 
     <groupId>io.protostuff</groupId>
     <artifactId>protostuff-compiler</artifactId>
-    <version>2.0.0-prealpha1</version>
+    <version>2.0.0-prealpha2-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Protostuff Compiler - Parent</name>
@@ -160,7 +160,7 @@
         <developerConnection>scm:git:git@github.com:protostuff/protostuff-compiler.git
         </developerConnection>
         <url>https://github.com/protostuff/protostuff-compiler</url>
-        <tag>protostuff-compiler-2.0.0-prealpha1</tag>
+        <tag>HEAD</tag>
     </scm>
 
 </project>
