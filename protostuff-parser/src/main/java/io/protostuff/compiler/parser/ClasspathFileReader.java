@@ -20,6 +20,8 @@ public class ClasspathFileReader implements FileReader {
     @Override
     public CharStream read(String name) {
         try {
+            String classpath = System.getProperty("java.class.path");
+            LOGGER.debug("Reading {} from classpath={}", name, classpath);
             ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
             if (classLoader == null) {
                 throw new IllegalStateException("Can not obtain classloader instance from current thread");
