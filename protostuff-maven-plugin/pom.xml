@@ -97,7 +97,7 @@
 
         <dependency>
             <groupId>io.protostuff</groupId>
-            <artifactId>protostuff-compiler-core</artifactId>
+            <artifactId>protostuff-parser</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
