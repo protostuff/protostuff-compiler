@@ -3,22 +3,17 @@ Protocol Buffers parser and code generator
 
 [![Build Status](https://travis-ci.org/protostuff/protostuff-compiler.svg?branch=master)](https://travis-ci.org/protostuff/protostuff-compiler)
 
-Current Tasks
--------------
+Usage
+-----
 
-1. [Full compatibility with proto3](https://github.com/kshchepanovskyi/protostuff-compiler/issues/1)
-2. [Compatibility with proto2](https://github.com/kshchepanovskyi/protostuff-compiler/issues/2)
-3. [Command-line interface](https://github.com/kshchepanovskyi/protostuff-compiler/issues/3)
-4. [HTML generator template](https://github.com/kshchepanovskyi/protostuff-compiler/issues/4)
-5. [Maven plugin](https://github.com/kshchepanovskyi/protostuff-compiler/issues/5)
-6. [Proto template](https://github.com/kshchepanovskyi/protostuff-compiler/issues/6)
-7. [java_nano template](https://github.com/kshchepanovskyi/protostuff-compiler/issues/7)
-8. [Generator extensions](https://github.com/kshchepanovskyi/protostuff-compiler/issues/8)
-
+* [maven plugin](https://github.com/protostuff/protostuff-compiler/wiki/Maven-Plugin)
+* [command-line interface](https://github.com/protostuff/protostuff-compiler/wiki/Command-line-interface)
 
 Build
 -----
 
+You need [Apache Maven](https://maven.apache.org/) version 3.0 or higher.
+
 ```
-$ mvn clean install
+mvn clean install
 ```
