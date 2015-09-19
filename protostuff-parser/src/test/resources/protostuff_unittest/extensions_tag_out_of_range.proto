@@ -1,0 +1,11 @@
+syntax = "proto2";
+
+package protostuff_unittest;
+
+message A {
+    extensions 10 to max;
+}
+
+extend A {
+    optional int32 e = 9;
+}

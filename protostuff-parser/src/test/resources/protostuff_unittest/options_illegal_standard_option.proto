@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+package protostuff_unittest;
+
+import "google/protobuf/descriptor.proto";
+
+option non_existing_option = 42;

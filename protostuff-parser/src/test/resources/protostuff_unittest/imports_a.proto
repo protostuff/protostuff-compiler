@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package protostuff_unittest;
+
+import "protostuff_unittest/imports_b.proto";
+
+message A {
+    B
+    b
+    =
+    1
+    ;
+    C
+    c
+    =
+    1
+    ;
+}

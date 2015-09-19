@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package protostuff_unittest;
+
+service SearchService {
+    rpc search (SearchRequest) returns (SearchResponse);
+}
+
+message SearchRequest {
+
+}
+
+message SearchResponse {
+
+}
