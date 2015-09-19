@@ -18,10 +18,10 @@
     </properties>
 
     <modules>
-        <module>protostuff-compiler-core</module>
-        <module>protostuff-maven-plugin</module>
-        <module>protostuff-cli</module>
+        <module>protostuff-parser</module>
         <module>protostuff-generator</module>
+        <module>protostuff-cli</module>
+        <module>protostuff-maven-plugin</module>
     </modules>
 
     <build>
