@@ -62,7 +62,7 @@ message_fields(message) ::= <<
 >>
 
 message_field(field) ::= <%
-<if(is_repeated.(field.modifier))>
+<if(field.repeated)>
 <field.modifier> <field.type> <field.name> = <field.tag>;
 <else>
 <field.type> <field.name> = <field.tag>;

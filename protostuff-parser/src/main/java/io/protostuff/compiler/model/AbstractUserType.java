@@ -34,6 +34,11 @@ public abstract class AbstractUserType extends AbstractDescriptor implements Use
     }
 
     @Override
+    public boolean isScalar() {
+        return false;
+    }
+
+    @Override
     public String getCanonicalName() {
         return getFullyQualifiedName().substring(1);
     }

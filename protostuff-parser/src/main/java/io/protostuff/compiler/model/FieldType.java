@@ -36,4 +36,9 @@ public interface FieldType extends Type {
      */
     @Override
     String getFullyQualifiedName();
+
+    /**
+     * Test if this type is scalar.
+     */
+    boolean isScalar();
 }

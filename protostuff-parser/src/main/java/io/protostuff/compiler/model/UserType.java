@@ -30,4 +30,11 @@ public interface UserType extends Descriptor, FieldType {
 
     UserTypeContainer getParent();
 
+    /**
+     * Test if this type is nested (declared inside of other message).
+     */
+    default boolean isNested() {
+        return getParent().getDescriptorType() == DescriptorType.PROTO;
+    }
+
 }

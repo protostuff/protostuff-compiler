@@ -6,7 +6,7 @@ type_link(type) ::= <%
 %>
 
 type_href(type) ::= <%
-%if(is_scalar.(type.fullyQualifiedName))%
+%if(type.scalar)%
 #scalar-value-types
 %else%
 #%type.canonicalName%

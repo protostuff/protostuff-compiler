@@ -156,6 +156,11 @@ public class Message extends AbstractUserTypeContainer
     }
 
     @Override
+    public boolean isScalar() {
+        return false;
+    }
+
+    @Override
     public String getCanonicalName() {
         return getFullyQualifiedName().substring(1);
     }

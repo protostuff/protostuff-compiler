@@ -21,29 +21,3 @@ proto_compiler_template(proto) ::= ""
 message_compiler_template(message) ::= ""
 enum_compiler_template(enum) ::= ""
 service_compiler_template(service) ::= ""
-
-// Common functions
-
-is_repeated ::= [
-    "repeated": true,
-    default: false
-]
-
-is_scalar ::= [
-    "int32": true,
-    "int64": true,
-    "uint32": true,
-    "uint64": true,
-    "sint32": true,
-    "sint64": true,
-    "fixed32": true,
-    "fixed64": true,
-    "sfixed32": true,
-    "sfixed64": true,
-    "float": true,
-    "double": true,
-    "bool": true,
-    "string": true,
-    "bytes": true,
-    default: false
-]

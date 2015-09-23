@@ -71,6 +71,11 @@ public enum ScalarFieldType implements FieldType {
     }
 
     @Override
+    public boolean isScalar() {
+        return true;
+    }
+
+    @Override
     public String toString() {
         return getName();
     }

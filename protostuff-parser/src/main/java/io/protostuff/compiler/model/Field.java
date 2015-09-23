@@ -65,6 +65,13 @@ public class Field extends AbstractDescriptor {
         this.type = type;
     }
 
+    /**
+     * Test if this field is `repeated`.
+     */
+    public boolean isRepeated() {
+        return getModifier() == FieldModifier.REPEATED;
+    }
+
     @Override
     public String toString() {
         return MoreObjects.toStringHelper(this)
