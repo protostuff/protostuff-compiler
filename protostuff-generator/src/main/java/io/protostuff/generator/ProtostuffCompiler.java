@@ -39,8 +39,7 @@ public class ProtostuffCompiler {
         CompilerRegistry registry = injector.getInstance(CompilerRegistry.class);
         ProtoCompiler compiler = registry.findCompiler(configuration.getTemplate());
         if (compiler == null) {
-            LOGGER.error("Unknown template: {}", configuration.getTemplate());
-            return;
+            throw new GeneratorException("Unknown template: %s", configuration.getTemplate());
         }
         FileReader fileReader = fileReaderFactory.create(configuration.getIncludePaths());
         Map<String, Proto> importedFiles = new HashMap<>();

@@ -12,6 +12,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import io.protostuff.generator.html.HtmlGenerator;
+import io.protostuff.generator.java.JavaGenerator;
 import io.protostuff.generator.proto.ProtoGenerator;
 
 import static com.google.inject.multibindings.MapBinder.newMapBinder;
@@ -31,6 +32,7 @@ public class CompilerModule extends AbstractModule {
         MapBinder<String, ProtoCompiler> compilers = newMapBinder(binder(), String.class, ProtoCompiler.class);
         compilers.addBinding(HtmlGenerator.GENERATOR_NAME).to(HtmlGenerator.class);
         compilers.addBinding(ProtoGenerator.GENERATOR_NAME).to(ProtoGenerator.class);
+        compilers.addBinding(JavaGenerator.GENERATOR_NAME).to(JavaGenerator.class);
     }
 
     @Provides

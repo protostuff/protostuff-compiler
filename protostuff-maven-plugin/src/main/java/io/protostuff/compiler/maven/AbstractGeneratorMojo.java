@@ -1,6 +1,7 @@
 package io.protostuff.compiler.maven;
 
 import org.apache.maven.plugin.AbstractMojo;
+import org.apache.maven.plugin.MojoExecution;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Parameter;
@@ -15,10 +16,13 @@ import java.util.List;
  */
 public abstract class AbstractGeneratorMojo extends AbstractMojo {
 
-    @Parameter(property = "project", required = true, readonly = true)
+    @Parameter(defaultValue = "${project}", readonly = true)
     protected MavenProject project;
 
-    @Parameter(defaultValue = "src/main/proto")
+    @Parameter(defaultValue = "${mojoExecution}", readonly = true)
+    protected MojoExecution execution;
+
+    @Parameter(defaultValue = "${project.basedir}/src/main/proto")
     protected File source;
 
     /**

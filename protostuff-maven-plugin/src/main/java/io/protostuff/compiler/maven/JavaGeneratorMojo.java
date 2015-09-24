@@ -19,19 +19,22 @@ import java.nio.file.attribute.BasicFileAttributes;
 
 import io.protostuff.compiler.model.ModuleConfiguration;
 import io.protostuff.generator.ProtostuffCompiler;
-import io.protostuff.generator.html.HtmlGenerator;
+import io.protostuff.generator.java.JavaGenerator;
 
 import static java.util.Collections.singletonList;
+import static org.apache.maven.plugins.annotations.LifecyclePhase.GENERATE_TEST_SOURCES;
 
 /**
  * @author Kostiantyn Shchepanovskyi
  */
-@Mojo(name = "html")
-public class HtmlGeneratorMojo extends AbstractGeneratorMojo {
+@Mojo(name = "java")
+public class JavaGeneratorMojo extends AbstractGeneratorMojo {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(HtmlGeneratorMojo.class);
+    public static final String GENERATED_SOURCES = "/generated-sources/proto";
+    public static final String GENERATED_TEST_SOURCES = "/generated-test-sources/proto";
+    private static final Logger LOGGER = LoggerFactory.getLogger(JavaGeneratorMojo.class);
 
-    @Parameter(defaultValue = "${project.build.directory}/generated-html")
+    @Parameter
     private File target;
 
     @Override
@@ -40,11 +43,12 @@ public class HtmlGeneratorMojo extends AbstractGeneratorMojo {
 
         ProtostuffCompiler compiler = new ProtostuffCompiler();
         final Path sourcePath = source.toPath();
+        String output = calculateOutput();
         ModuleConfiguration.Builder builder = ModuleConfiguration.newBuilder()
-                .name("html")
+                .name("java")
                 .includePaths(singletonList(sourcePath))
-                .template(HtmlGenerator.GENERATOR_NAME)
-                .output(target.getAbsolutePath());
+                .template(JavaGenerator.GENERATOR_NAME)
+                .output(output);
         PathMatcher protoMatcher = FileSystems.getDefault().getPathMatcher("glob:**/*.proto");
         try {
             Files.walkFileTree(sourcePath, new SimpleFileVisitor<Path>() {
@@ -65,6 +69,23 @@ public class HtmlGeneratorMojo extends AbstractGeneratorMojo {
         LOGGER.debug("Module configuration = {}", moduleConfiguration);
         compiler.compile(moduleConfiguration);
 
+    }
+
+    private String calculateOutput() {
+        String output;
+        if (target != null) {
+            output = target.getAbsolutePath();
+        } else {
+            String phase = execution.getLifecyclePhase();
+            String buildDirectory = project.getBuild().getDirectory();
+            if (GENERATE_TEST_SOURCES.id().equals(phase)) {
+                output = buildDirectory + GENERATED_TEST_SOURCES;
+            } else {
+                output = buildDirectory + GENERATED_SOURCES;
+            }
+        }
+        LOGGER.debug("output = {}", output);
+        return output;
     }
 
 }

@@ -1,0 +1,20 @@
+delimiters "<", ">"
+import "io/protostuff/generator/core.stg"
+import "io/protostuff/generator/html/common.stg"
+
+message_compiler_enabled(message) ::= <%
+<if(message.nested)>
+false
+<else>
+true
+<endif>
+%>
+
+message_compiler_output(message) ::= "<message.name>.java"
+message_compiler_template(message) ::= "<message:message()>"
+
+message(message) ::= <<
+public class <message.name> {
+
+}
+>>
