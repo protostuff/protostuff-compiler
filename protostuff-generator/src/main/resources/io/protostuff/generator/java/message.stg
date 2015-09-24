@@ -1,6 +1,5 @@
 delimiters "<", ">"
 import "io/protostuff/generator/core.stg"
-import "io/protostuff/generator/html/common.stg"
 
 message_compiler_enabled(message) ::= <%
 <if(message.nested)>
