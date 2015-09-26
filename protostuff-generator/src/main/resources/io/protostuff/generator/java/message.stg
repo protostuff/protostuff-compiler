@@ -9,10 +9,12 @@ true
 <endif>
 %>
 
-message_compiler_output(message) ::= "<message.name>.java"
+message_compiler_output(message) ::= "<message.proto.javaPackagePath>/<message.name>.java"
 message_compiler_template(message) ::= "<message:message()>"
 
 message(message) ::= <<
+package <message.proto.javaPackage>;
+
 public class <message.name> {
 
 }

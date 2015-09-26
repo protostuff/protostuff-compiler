@@ -15,6 +15,7 @@ import javax.inject.Inject;
 
 import io.protostuff.compiler.model.Module;
 import io.protostuff.generator.CompilerUtils;
+import io.protostuff.generator.ObjectExtender;
 import io.protostuff.generator.ProtoCompiler;
 import io.protostuff.generator.StCompilerFactory;
 
@@ -72,15 +73,16 @@ public class HtmlGenerator implements ProtoCompiler {
         Map<Class<?>, AttributeRenderer> rendererMap = new HashMap<>();
         rendererMap.put(List.class, renderer);
         rendererMap.put(String.class, renderer);
-        ProtoCompiler indexGenerator = compilerFactory.create("io/protostuff/generator/html/index.stg", rendererMap);
+        Map<Class<?>, ObjectExtender<?>> extenderMap = new HashMap<>();
+        ProtoCompiler indexGenerator = compilerFactory.create("io/protostuff/generator/html/index.stg", rendererMap, extenderMap);
         indexGenerator.compile(module);
-        ProtoCompiler messageGenerator = compilerFactory.create("io/protostuff/generator/html/message.stg", rendererMap);
+        ProtoCompiler messageGenerator = compilerFactory.create("io/protostuff/generator/html/message.stg", rendererMap, extenderMap);
         messageGenerator.compile(module);
-        ProtoCompiler enumGenerator = compilerFactory.create("io/protostuff/generator/html/enum.stg", rendererMap);
+        ProtoCompiler enumGenerator = compilerFactory.create("io/protostuff/generator/html/enum.stg", rendererMap, extenderMap);
         enumGenerator.compile(module);
-        ProtoCompiler serviceGenerator = compilerFactory.create("io/protostuff/generator/html/service.stg", rendererMap);
+        ProtoCompiler serviceGenerator = compilerFactory.create("io/protostuff/generator/html/service.stg", rendererMap, extenderMap);
         serviceGenerator.compile(module);
-        ProtoCompiler mainGenerator = compilerFactory.create("io/protostuff/generator/html/main.stg", rendererMap);
+        ProtoCompiler mainGenerator = compilerFactory.create("io/protostuff/generator/html/main.stg", rendererMap, extenderMap);
         mainGenerator.compile(module);
         for (String staticResourceName : STATIC_RESOURCES) {
             String source = HTML_RESOURCE_BASE + "static/" + staticResourceName;

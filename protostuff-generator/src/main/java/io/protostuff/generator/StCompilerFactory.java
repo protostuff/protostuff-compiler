@@ -9,5 +9,7 @@ import java.util.Map;
  */
 public interface StCompilerFactory {
 
-    ProtoCompiler create(String template, Map<Class<?>, AttributeRenderer> rendererMap);
+    ProtoCompiler create(String template,
+                         Map<Class<?>, AttributeRenderer> rendererMap,
+                         Map<Class<?>, ObjectExtender<?>> extenderMap);
 }

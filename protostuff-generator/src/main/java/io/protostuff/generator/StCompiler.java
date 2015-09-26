@@ -4,13 +4,17 @@ import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
 import org.stringtemplate.v4.AttributeRenderer;
+import org.stringtemplate.v4.Interpreter;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
 import org.stringtemplate.v4.STGroupFile;
+import org.stringtemplate.v4.misc.ObjectModelAdaptor;
+import org.stringtemplate.v4.misc.STNoSuchPropertyException;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Map;
 
 import io.protostuff.compiler.model.Enum;
 import io.protostuff.compiler.model.Message;
@@ -52,14 +56,34 @@ public class StCompiler extends AbstractProtoCompiler {
 
     private final STGroup stGroup;
 
+    private final Map<Class<?>, ObjectExtender<?>> extenderMap;
+
     @Inject
-    public StCompiler(OutputStreamFactory outputStreamFactory, @Assisted String templateFileName, @Assisted java.util.Map<Class<?>, AttributeRenderer> attributeRendererMap) {
+    public StCompiler(OutputStreamFactory outputStreamFactory,
+                      @Assisted String templateFileName,
+                      @Assisted Map<Class<?>, AttributeRenderer> attributeRendererMap,
+                      @Assisted Map<Class<?>, ObjectExtender<?>> extenderMap) {
         super(outputStreamFactory);
+        this.extenderMap = extenderMap;
         STGroup group = new STGroupFile(templateFileName);
         for (java.util.Map.Entry<Class<?>, AttributeRenderer> entry : attributeRendererMap.entrySet()) {
             group.registerRenderer(entry.getKey(), entry.getValue());
         }
         group.setListener(new StErrorListener());
+        for (Map.Entry<Class<?>, ObjectExtender<?>> entry : extenderMap.entrySet()) {
+            Class<?> objectClass = entry.getKey();
+            ObjectExtender<Object> extender = (ObjectExtender<Object>) entry.getValue();
+            group.registerModelAdaptor(objectClass, new ObjectModelAdaptor() {
+                @Override
+                public synchronized Object getProperty(Interpreter interp, ST self, Object o, Object property, String propertyName) throws STNoSuchPropertyException {
+                    if (extender.hasProperty(propertyName)) {
+                        return extender.getProperty(o, propertyName);
+                    }
+                    return super.getProperty(interp, self, o, property, propertyName);
+                }
+            });
+        }
+
         this.stGroup = group;
     }
 
@@ -187,4 +211,5 @@ public class StCompiler extends AbstractProtoCompiler {
     public String getName() {
         return GENERATOR_NAME;
     }
+
 }

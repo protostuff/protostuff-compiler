@@ -21,7 +21,7 @@ public class StCompilerTest extends AbstractCompilerTest {
         ProtoContext context = importer.importFile(new ClasspathFileReader(), "protostuff_unittest/messages_sample.proto");
         Proto proto = context.getProto();
         StCompilerFactory compilerFactory = injector.getInstance(StCompilerFactory.class);
-        ProtoCompiler compiler = compilerFactory.create("io/protostuff/generator/proto/proto3.stg", Collections.emptyMap());
+        ProtoCompiler compiler = compilerFactory.create("io/protostuff/generator/proto/proto3.stg", Collections.emptyMap(), Collections.emptyMap());
         Module module = new Module(proto);
         module.setOutput("./");
         compiler.compile(module);

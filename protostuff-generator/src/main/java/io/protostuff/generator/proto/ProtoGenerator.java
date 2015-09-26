@@ -22,7 +22,7 @@ public class ProtoGenerator implements ProtoCompiler {
     public ProtoGenerator(StCompilerFactory compilerFactory) {
         this.compilerFactory = compilerFactory;
         // TODO initialization should be lazy - usually only one generator is used
-        delegate = compilerFactory.create("io/protostuff/generator/proto/proto3.stg", Collections.emptyMap());
+        delegate = compilerFactory.create("io/protostuff/generator/proto/proto3.stg", Collections.emptyMap(), Collections.emptyMap());
     }
 
     @Override
