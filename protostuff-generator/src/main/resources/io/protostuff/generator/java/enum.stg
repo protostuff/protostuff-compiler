@@ -15,8 +15,11 @@ enum_compiler_template(enum) ::= "<enum:enum()>"
 enum(enum) ::= <<
 package <enum.proto.javaPackage>;
 
+<enum:enum_body()>
+>>
+
+enum_body(enum) ::= <<
 public enum <enum.javaName> {
-    
     <enum.constants:enum_constant(); separator=",\n">
 }
 >>

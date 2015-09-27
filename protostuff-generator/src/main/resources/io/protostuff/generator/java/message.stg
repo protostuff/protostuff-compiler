@@ -1,5 +1,6 @@
 delimiters "<", ">"
 import "io/protostuff/generator/core.stg"
+import "io/protostuff/generator/java/enum.stg"
 
 message_compiler_enabled(message) ::= <%
 <if(message.nested)>
@@ -18,6 +19,8 @@ package <message.proto.javaPackage>;
 public final class <message.javaName> {
     
     <message.fields:message_field(); separator="\n">
+    
+    <message.enums:enum_body(); separator="\n">
 }
 >>
 
