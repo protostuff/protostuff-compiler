@@ -1,5 +1,6 @@
 delimiters "<", ">"
 import "io/protostuff/generator/core.stg"
+import "io/protostuff/generator/java/generator.stg"
 import "io/protostuff/generator/java/enum.stg"
 
 message_compiler_enabled(message) ::= <%
@@ -16,10 +17,13 @@ message_compiler_template(message) ::= "<message:message()>"
 message(message) ::= <<
 package <message.proto.javaPackage>;
 
+<imports_generator_annotation()>
+
 <message:message_body()>
 >>
 
 message_body(message) ::= <<
+<message:generator_annotation()>
 public <if(message.nested)>static <endif>final class <message.javaName> {
     
     <message.fields:message_field(); separator="\n">

@@ -1,0 +1,12 @@
+delimiters "<", ">"
+
+imports_generator_annotation() ::= <<
+import javax.annotation.Generated;
+>>
+
+generator_annotation(type) ::= <<
+<if(!type.nested)>@Generated(
+        value = {"<type.proto.generator.name>", "<type.proto.generator.version>"},
+        comments = "<type.proto.filename>",
+        date = "<type.proto.generator.date>")<endif>
+>>

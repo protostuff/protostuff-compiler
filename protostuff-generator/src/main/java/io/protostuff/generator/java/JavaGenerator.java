@@ -54,6 +54,7 @@ public class JavaGenerator implements ProtoCompiler {
         Map<Class<?>, AttributeRenderer> rendererMap = new HashMap<>();
         Map<Class<?>, ObjectExtender<?>> extenderMap = ImmutableMap.<Class<?>, ObjectExtender<?>>builder()
                 .put(Proto.class, SimpleObjectExtender.<Proto>newBuilder()
+                        .property("generator", ProtoUtil::getGeneratorInfo)
                         .property("javaPackage", ProtoUtil::getPackage)
                         .property("javaPackagePath", ProtoUtil::getPackagePath)
                         .build())

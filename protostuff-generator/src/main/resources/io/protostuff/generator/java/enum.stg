@@ -15,10 +15,13 @@ enum_compiler_template(enum) ::= "<enum:enum()>"
 enum(enum) ::= <<
 package <enum.proto.javaPackage>;
 
+<imports_generator_annotation()>
+
 <enum:enum_body()>
 >>
 
 enum_body(enum) ::= <<
+<message:generator_annotation()>
 public enum <enum.javaName> {
     <enum.constants:enum_constant(); separator=",\n">
 }
