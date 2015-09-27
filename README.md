@@ -37,15 +37,15 @@ This generator is an alternative to https://github.com/estan/protoc-gen-doc
 Requirements
 ------------
 
-| Component    | Version   |
-|--------------|-----------|
-| JDK          | 1.8.0_45+ |  
-| Apache Maven | 3.0.5+    |
+| Component                                 | Version   |
+|-------------------------------------------|-----------|
+| JDK                                       | 1.8.0_45+ |  
+| [Apache Maven](https://maven.apache.org/) | 3.0.5+    |
 
 Build
 -----
 
-You need [Apache Maven](https://maven.apache.org/) version 3.0 or higher.
+You need  version 3.0 or higher.
 
 ```
 mvn clean install
