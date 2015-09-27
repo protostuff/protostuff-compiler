@@ -15,7 +15,7 @@ public class SimpleObjectExtender<ObjectT> implements ObjectExtender<ObjectT> {
         this.propertyProviders = propertyProviders;
     }
 
-    private SimpleObjectExtender(Builder builder) {
+    private SimpleObjectExtender(Builder<ObjectT> builder) {
         propertyProviders = builder.propertyProviders;
     }
 

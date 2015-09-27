@@ -1,5 +1,7 @@
 package io.protostuff.generator.java;
 
+import com.google.common.collect.ImmutableMap;
+
 import org.stringtemplate.v4.AttributeRenderer;
 
 import java.util.HashMap;
@@ -9,8 +11,13 @@ import java.util.function.Function;
 import javax.inject.Inject;
 
 import io.protostuff.compiler.model.DynamicMessage;
+import io.protostuff.compiler.model.Enum;
+import io.protostuff.compiler.model.Field;
+import io.protostuff.compiler.model.Message;
 import io.protostuff.compiler.model.Module;
 import io.protostuff.compiler.model.Proto;
+import io.protostuff.compiler.model.ScalarFieldType;
+import io.protostuff.compiler.model.Service;
 import io.protostuff.generator.ObjectExtender;
 import io.protostuff.generator.ProtoCompiler;
 import io.protostuff.generator.SimpleObjectExtender;
@@ -43,25 +50,30 @@ public class JavaGenerator implements ProtoCompiler {
         this.compilerFactory = compilerFactory;
         // TODO initialization should be lazy - usually only one generator is used
         Map<Class<?>, AttributeRenderer> rendererMap = new HashMap<>();
-        Map<Class<?>, ObjectExtender<?>> extenderMap = new HashMap<>();
-        extenderMap.put(Proto.class, SimpleObjectExtender.<Proto>newBuilder()
-                .property("javaPackage", JavaGenerator::javaPackage)
-                .property("javaPackagePath", JavaGenerator::javaPackagePath)
-                .build());
+        Map<Class<?>, ObjectExtender<?>> extenderMap = ImmutableMap.<Class<?>, ObjectExtender<?>>builder()
+                .put(Proto.class, SimpleObjectExtender.<Proto>newBuilder()
+                        .property("javaPackage", ProtoUtil::getPackage)
+                        .property("javaPackagePath", ProtoUtil::getPackagePath)
+                        .build())
+                .put(ScalarFieldType.class, SimpleObjectExtender.<ScalarFieldType>newBuilder()
+                        .property("javaWrapperType", ScalarFieldTypeUtil::getWrapperType)
+                        .property("javaPrimitiveType", ScalarFieldTypeUtil::getPrimitiveType)
+                        .build())
+                .put(Message.class, SimpleObjectExtender.<Message>newBuilder()
+                        .property("javaClassName", UserTypeUtil::getClassName)
+                        .build())
+                .put(Field.class, SimpleObjectExtender.<Field>newBuilder()
+                        .property("javaFieldType", MessageFieldUtil::getFieldType)
+                        .property("javaFieldName", MessageFieldUtil::getFieldName)
+                        .build())
+                .put(Enum.class, SimpleObjectExtender.<Enum>newBuilder()
+                        .property("javaClassName", UserTypeUtil::getClassName)
+                        .build())
+                .put(Service.class, SimpleObjectExtender.<Service>newBuilder()
+                        .property("javaClassName", ServiceUtil::getClassName)
+                        .build())
+                .build();
         delegate = compilerFactory.create("io/protostuff/generator/java/message.stg", rendererMap, extenderMap);
-    }
-
-    public static String javaPackage(Proto proto) {
-        DynamicMessage.Value javaPackage = proto.getOptions().get("java_package");
-        if (javaPackage != null) {
-            return javaPackage.getString();
-        }
-        return proto.getPackage().getValue();
-    }
-
-    public static String javaPackagePath(Proto proto) {
-        String javaPackage = javaPackage(proto);
-        return javaPackage.replace('.', '/');
     }
 
     @Override
@@ -69,12 +81,8 @@ public class JavaGenerator implements ProtoCompiler {
         return GENERATOR_NAME;
     }
 
-    ;
-
     @Override
     public void compile(Module module) {
         delegate.compile(module);
     }
-
-    ;
 }

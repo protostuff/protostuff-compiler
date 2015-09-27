@@ -15,7 +15,12 @@ message_compiler_template(message) ::= "<message:message()>"
 message(message) ::= <<
 package <message.proto.javaPackage>;
 
-public class <message.name> {
-
+public final class <message.javaClassName> {
+    
+    <message.fields:message_field(); separator="\n">
 }
+>>
+
+message_field(field) ::= <<
+private <field.javaFieldType> <field.javaFieldName>;
 >>
