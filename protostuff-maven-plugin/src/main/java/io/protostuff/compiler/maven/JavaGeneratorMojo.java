@@ -68,7 +68,16 @@ public class JavaGeneratorMojo extends AbstractGeneratorMojo {
 
         LOGGER.debug("Module configuration = {}", moduleConfiguration);
         compiler.compile(moduleConfiguration);
+        addGeneratedSourcesToProject(output);
+    }
 
+    private void addGeneratedSourcesToProject(String output) {
+        // Include generated directory to the list of compilation sources
+        if (GENERATE_TEST_SOURCES.id().equals(execution.getLifecyclePhase())) {
+            project.addTestCompileSourceRoot(output);
+        } else {
+            project.addCompileSourceRoot(output);
+        }
     }
 
     private String calculateOutput() {
