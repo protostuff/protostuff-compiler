@@ -45,8 +45,6 @@ Requirements
 Build
 -----
 
-You need  version 3.0 or higher.
-
 ```
 mvn clean install
 ```
