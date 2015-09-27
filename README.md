@@ -34,6 +34,14 @@ Sample output: http://www.protostuff.io/samples/protostuff-compiler/html/#com.ex
 
 This generator is an alternative to https://github.com/estan/protoc-gen-doc
 
+Requirements
+------------
+
+| Component    | Version   |
+|--------------|-----------|
+| JDK          | 1.8.0_45+ |  
+| Apache Maven | 3.0.5+    |
+
 Build
 -----
 

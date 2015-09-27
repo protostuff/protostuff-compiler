@@ -13,6 +13,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <antlr4.version>4.5</antlr4.version>
         <guice.version>4.0</guice.version>
+        <guava.version>18.0</guava.version>
     </properties>
 
     <modules>
@@ -73,7 +74,7 @@
             <dependency>
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
-                <version>18.0</version>
+                <version>${guava.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.google.inject</groupId>
