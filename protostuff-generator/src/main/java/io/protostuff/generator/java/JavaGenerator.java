@@ -12,6 +12,7 @@ import javax.inject.Inject;
 
 import io.protostuff.compiler.model.DynamicMessage;
 import io.protostuff.compiler.model.Enum;
+import io.protostuff.compiler.model.EnumConstant;
 import io.protostuff.compiler.model.Field;
 import io.protostuff.compiler.model.Message;
 import io.protostuff.compiler.model.Module;
@@ -43,7 +44,8 @@ public class JavaGenerator implements ProtoCompiler {
     };
 
     private final StCompilerFactory compilerFactory;
-    private final ProtoCompiler delegate;
+    private final ProtoCompiler messageGenerator;
+    private final ProtoCompiler enumGenerator;
 
     @Inject
     public JavaGenerator(StCompilerFactory compilerFactory) {
@@ -60,20 +62,24 @@ public class JavaGenerator implements ProtoCompiler {
                         .property("javaPrimitiveType", ScalarFieldTypeUtil::getPrimitiveType)
                         .build())
                 .put(Message.class, SimpleObjectExtender.<Message>newBuilder()
-                        .property("javaClassName", UserTypeUtil::getClassName)
+                        .property("javaName", UserTypeUtil::getClassName)
                         .build())
                 .put(Field.class, SimpleObjectExtender.<Field>newBuilder()
-                        .property("javaFieldType", MessageFieldUtil::getFieldType)
-                        .property("javaFieldName", MessageFieldUtil::getFieldName)
+                        .property("javaType", MessageFieldUtil::getFieldType)
+                        .property("javaName", MessageFieldUtil::getFieldName)
                         .build())
                 .put(Enum.class, SimpleObjectExtender.<Enum>newBuilder()
-                        .property("javaClassName", UserTypeUtil::getClassName)
+                        .property("javaName", UserTypeUtil::getClassName)
+                        .build())
+                .put(EnumConstant.class, SimpleObjectExtender.<EnumConstant>newBuilder()
+                        .property("javaName", EnumUtil::getName)
                         .build())
                 .put(Service.class, SimpleObjectExtender.<Service>newBuilder()
-                        .property("javaClassName", ServiceUtil::getClassName)
+                        .property("javaName", ServiceUtil::getClassName)
                         .build())
                 .build();
-        delegate = compilerFactory.create("io/protostuff/generator/java/message.stg", rendererMap, extenderMap);
+        messageGenerator = compilerFactory.create("io/protostuff/generator/java/message.stg", rendererMap, extenderMap);
+        enumGenerator = compilerFactory.create("io/protostuff/generator/java/enum.stg", rendererMap, extenderMap);
     }
 
     @Override
@@ -83,6 +89,7 @@ public class JavaGenerator implements ProtoCompiler {
 
     @Override
     public void compile(Module module) {
-        delegate.compile(module);
+        messageGenerator.compile(module);
+        enumGenerator.compile(module);
     }
 }

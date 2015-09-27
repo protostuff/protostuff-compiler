@@ -1,0 +1,26 @@
+delimiters "<", ">"
+import "io/protostuff/generator/core.stg"
+
+enum_compiler_enabled(enum) ::= <%
+<if(enum.nested)>
+false
+<else>
+true
+<endif>
+%>
+
+enum_compiler_output(enum) ::= "<enum.proto.javaPackagePath>/<enum.javaName>.java"
+enum_compiler_template(enum) ::= "<enum:enum()>"
+
+enum(enum) ::= <<
+package <enum.proto.javaPackage>;
+
+public enum <enum.javaName> {
+    
+    <enum.constants:enum_constant(); separator=",\n">
+}
+>>
+
+enum_constant(constant) ::= <<
+<constant.javaName>
+>>
