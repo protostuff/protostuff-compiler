@@ -17,12 +17,18 @@ public static final class Builder {
 >>
 
 builder_constructor(message) ::= <<
-
 private <message.javaName>(Builder builder) {
 	<message.fields:builder_field_constructor_init(); separator="\n">
 	// this.__lock = true;
 }
 >>
+
+builder_factory_method(message) ::= <<
+public static Builder newBuilder() {
+	return new Builder();
+}
+>>
+
 
 builder_field_constructor_init(field) ::= <%
 <if(field.repeated)>
@@ -43,7 +49,7 @@ builder_field_setter(field) ::= <<
 <if(field.repeated)>
 
 <else>
-public Builder <field.javaBuilderSetterName>(<field.javaType> <field.javaName>) {
+private Builder <field.javaBuilderSetterName>(<field.javaType> <field.javaName>) {
 	this.<field.javaName> = <field.javaName>;
 	return this;
 }

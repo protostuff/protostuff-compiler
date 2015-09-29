@@ -29,6 +29,8 @@ public <if(message.nested)>static <endif>final class <message.javaName> {
         
     <message.fields:field_declaration(); separator="\n">
     
+    <message:builder_factory_method()>
+    
     <message:builder_constructor()>
     
     <message.fields:field_accessors(); separator="\n">

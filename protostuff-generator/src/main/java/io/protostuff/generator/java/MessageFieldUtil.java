@@ -12,8 +12,9 @@ import io.protostuff.generator.Formatter;
  */
 public class MessageFieldUtil {
 
+    public static final String HAS_PREFIX = "has";
     public static final String GETTER_PREFIX = "get";
-    public static final String CHECK_SET_PREFIX = "has";
+    public static final String SETTER_PREFIX = "set";
 
     public static String getFieldType(Field field) {
         FieldType type = field.getType();
@@ -30,7 +31,15 @@ public class MessageFieldUtil {
 
     public static String getFieldName(Field field) {
         String name = field.getName();
-        return Formatter.toCamelCase(name);
+        String formattedName = Formatter.toCamelCase(name);
+        if (isReservedKeyword(formattedName)) {
+            return formattedName + '_';
+        }
+        return formattedName;
+    }
+
+    private static boolean isReservedKeyword(String formattedName) {
+        return JavaConstants.RESERVED_KEYWORDS.contains(formattedName);
     }
 
     public static String getFieldGetterName(Field field) {
@@ -42,10 +51,10 @@ public class MessageFieldUtil {
     }
 
     public static String getHasMethodName(Field field) {
-        return CHECK_SET_PREFIX + Formatter.toPascalCase(field.getName());
+        return HAS_PREFIX + Formatter.toPascalCase(field.getName());
     }
 
     public static String getBuilderSetterName(Field field) {
-        return Formatter.toPascalCase(field.getName());
+        return SETTER_PREFIX + Formatter.toPascalCase(field.getName());
     }
 }

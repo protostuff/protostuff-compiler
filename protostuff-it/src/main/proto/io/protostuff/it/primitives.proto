@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package io.protostuff.it;
+
+message PrimitiveFieldTestMsg {
+    double
+    double
+    =
+    1
+    ;
+    float
+    float
+    =
+    2
+    ;
+    int32
+    int32
+    =
+    3
+    ;
+}
