@@ -1,0 +1,51 @@
+delimiters "<", ">"
+
+builder(message) ::= <<
+public static final class Builder {
+
+	<message.fields:builder_field_declaration(); separator="\n">
+
+	private Builder() {}
+
+	<message.fields:builder_field_setter(); separator="\n">
+
+	public <message.javaName> build() {
+		return new <message.javaName>(this);
+	}
+
+}
+>>
+
+builder_constructor(message) ::= <<
+
+private <message.javaName>(Builder builder) {
+	<message.fields:builder_field_constructor_init(); separator="\n">
+	// this.__lock = true;
+}
+>>
+
+builder_field_constructor_init(field) ::= <%
+<if(field.repeated)>
+
+<else>
+this.<field.javaName> = builder.<field.javaName>;
+<endif>
+%>
+
+
+
+builder_field_declaration(field) ::= <<
+private <field.javaType> <field.javaName>;
+>>
+
+builder_field_setter(field) ::= <<
+
+<if(field.repeated)>
+
+<else>
+public Builder <field.javaBuilderSetterName>(<field.javaType> <field.javaName>) {
+	this.<field.javaName> = <field.javaName>;
+	return this;
+}
+<endif>
+>>

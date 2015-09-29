@@ -2,6 +2,7 @@ delimiters "<", ">"
 import "io/protostuff/generator/core.stg"
 import "io/protostuff/generator/java/generator.stg"
 import "io/protostuff/generator/java/enum.stg"
+import "io/protostuff/generator/java/builder.stg"
 
 message_compiler_enabled(message) ::= <%
 <if(message.nested)>
@@ -25,8 +26,14 @@ package <message.proto.javaPackage>;
 message_body(message) ::= <<
 <message:generator_annotation()>
 public <if(message.nested)>static <endif>final class <message.javaName> {
+        
+    <message.fields:field_declaration(); separator="\n">
     
-    <message.fields:message_field(); separator="\n">
+    <message:builder_constructor()>
+    
+    <message.fields:field_accessors(); separator="\n">
+    
+    <message:builder()>
     
     <message.messages:message_body(); separator="\n">
     
@@ -34,6 +41,25 @@ public <if(message.nested)>static <endif>final class <message.javaName> {
 }
 >>
 
-message_field(field) ::= <<
+field_declaration(field) ::= <<
 private <field.javaType> <field.javaName>;
+>>
+
+field_accessors(field) ::= <<
+<field:field_getter()>
+<field:field_presence_check()>
+>>
+
+field_getter(field) ::= <<
+public <field.javaType> <field.javaGetterName>() {
+    return <field.javaName>;
+}
+>>
+
+field_presence_check(field) ::= <<
+<if(field.javaGenerateHasMethod)>
+public boolean <field.javaHasMethodName>() {
+    return <field.javaName> != null;
+}
+<endif>
 >>
