@@ -72,6 +72,8 @@ public class JavaGenerator implements ProtoCompiler {
                         .property("javaGenerateHasMethod", MessageFieldUtil::isGenerateHasMethod)
                         .property("javaHasMethodName", MessageFieldUtil::getHasMethodName)
                         .property("javaBuilderSetterName", MessageFieldUtil::getBuilderSetterName)
+                        .property("javaDefaultValue", MessageFieldUtil::getDefaultValue)
+                        .property("javaIsNullableType", MessageFieldUtil::isNullableType)
                         .build())
                 .put(Enum.class, SimpleObjectExtender.<Enum>newBuilder()
                         .property("javaName", UserTypeUtil::getClassName)

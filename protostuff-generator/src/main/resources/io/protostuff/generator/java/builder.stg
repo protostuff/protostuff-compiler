@@ -34,7 +34,11 @@ builder_field_constructor_init(field) ::= <%
 <if(field.repeated)>
 
 <else>
+<if(field.javaIsNullableType)>
+this.<field.javaName> = builder.<field.javaName> == null ? <field.javaDefaultValue> : builder.<field.javaName>;
+<else>
 this.<field.javaName> = builder.<field.javaName>;
+<endif>
 <endif>
 %>
 

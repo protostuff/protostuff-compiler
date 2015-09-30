@@ -84,4 +84,34 @@ public class ScalarFieldTypeUtil {
         }
         return primitiveType.getSimpleName();
     }
+
+    public static String getDefaultValue(ScalarFieldType type) {
+        switch (type) {
+            case INT32:
+            case UINT32:
+            case SINT32:
+            case FIXED32:
+            case SFIXED32:
+                return "0";
+            case INT64:
+            case UINT64:
+            case SINT64:
+            case FIXED64:
+            case SFIXED64:
+                return "0L";
+            case FLOAT:
+                return "0f";
+            case DOUBLE:
+                return "0d";
+            case BOOL:
+                return "false";
+            case STRING:
+                return "\"\"";
+            case BYTES:
+                // TODO optimize
+                return "new byte[0]";
+            default:
+                throw new IllegalArgumentException(String.valueOf(type));
+        }
+    }
 }
