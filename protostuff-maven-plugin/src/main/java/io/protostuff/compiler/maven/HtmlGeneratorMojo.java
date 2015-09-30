@@ -52,7 +52,7 @@ public class HtmlGeneratorMojo extends AbstractGeneratorMojo {
                 public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
                     if (protoMatcher.matches(file)) {
                         String protoFile = sourcePath.relativize(file).toString();
-                        builder.addProtoFile(protoFile);
+                        builder.addProtoFile(normalizeProtoPath(protoFile));
                     }
                     return super.visitFile(file, attrs);
                 }

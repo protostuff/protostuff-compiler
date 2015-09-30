@@ -39,4 +39,14 @@ public abstract class AbstractGeneratorMojo extends AbstractMojo {
         StaticLoggerBinder.getSingleton().setMavenLog(this.getLog());
     }
 
+    protected String normalizeProtoPath(String protoFilePath) {
+        String normalizedPath;
+        if (File.separatorChar == '\\') {
+            normalizedPath = protoFilePath.replace('\\', '/');
+        } else {
+            normalizedPath = protoFilePath;
+        }
+        return normalizedPath;
+    }
+
 }
