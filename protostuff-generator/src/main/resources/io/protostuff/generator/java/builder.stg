@@ -53,7 +53,7 @@ builder_field_setter(field) ::= <<
 <if(field.repeated)>
 
 <else>
-private Builder <field.javaBuilderSetterName>(<field.javaType> <field.javaName>) {
+public Builder <field.javaBuilderSetterName>(<field.javaType> <field.javaName>) {
 	this.<field.javaName> = <field.javaName>;
 	return this;
 }
