@@ -12,7 +12,7 @@ public class GeneratedCodeTest {
 
     @Test
     public void primitiveDefaultValues() throws Exception {
-        PrimitiveFieldTestMsg msg = PrimitiveFieldTestMsg.newBuilder().build();
+        ScalarFieldTestMsg msg = ScalarFieldTestMsg.newBuilder().build();
         assertEquals(0d, msg.getDouble(), 0d);
         assertEquals(0f, msg.getFloat(), 0f);
         assertEquals(0, msg.getInt32());
@@ -32,7 +32,7 @@ public class GeneratedCodeTest {
 
     @Test
     public void primitiveConstructedObject() throws Exception {
-        PrimitiveFieldTestMsg msg = PrimitiveFieldTestMsg.newBuilder()
+        ScalarFieldTestMsg msg = ScalarFieldTestMsg.newBuilder()
                 .setDouble(0.1d)
                 .setFloat(0.2f)
                 .setInt32(3)
