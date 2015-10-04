@@ -6,11 +6,9 @@ import org.stringtemplate.v4.AttributeRenderer;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Function;
 
 import javax.inject.Inject;
 
-import io.protostuff.compiler.model.DynamicMessage;
 import io.protostuff.compiler.model.Enum;
 import io.protostuff.compiler.model.EnumConstant;
 import io.protostuff.compiler.model.Field;
@@ -60,13 +58,13 @@ public class JavaGenerator implements ProtoCompiler {
                         .property("javaRepeatedGetterName", MessageFieldUtil::getRepeatedFieldGetterName)
                         .property("javaBuilderRepeatedAdderName", MessageFieldUtil::getRepeatedFieldAdderName)
                         .property("javaBuilderRepeatedGetterName", MessageFieldUtil::getRepeatedFieldGetterName)
-                        .property("javaGenerateHasMethod", MessageFieldUtil::isGenerateHasMethod)
+                        .property("javaIsMessage", MessageFieldUtil::isMessage)
                         .property("javaHasMethodName", MessageFieldUtil::getHasMethodName)
                         .property("javaBuilderGetterName", MessageFieldUtil::getBuilderGetterName)
                         .property("javaBuilderSetterName", MessageFieldUtil::getBuilderSetterName)
                         .property("javaBuilderRepeatedSetterName", MessageFieldUtil::getRepeatedBuilderSetterName)
                         .property("javaDefaultValue", MessageFieldUtil::getDefaultValue)
-                        .property("javaIsNullableType", MessageFieldUtil::isNullableType)
+                        .property("javaIsScalarNullableType", MessageFieldUtil::isScalarNullableType)
                         .property("javaRepeatedGetCountMethodName", MessageFieldUtil::repeatedGetCountMethodName)
                         .property("javaRepeatedGetByIndexMethodName", MessageFieldUtil::repeatedGetByIndexMethodName)
                         .build())

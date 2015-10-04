@@ -1,10 +1,6 @@
 package io.protostuff.generator.java;
 
-import io.protostuff.compiler.model.Field;
-import io.protostuff.compiler.model.FieldType;
-import io.protostuff.compiler.model.Message;
-import io.protostuff.compiler.model.ScalarFieldType;
-import io.protostuff.compiler.model.UserType;
+import io.protostuff.compiler.model.*;
 import io.protostuff.generator.Formatter;
 
 import static io.protostuff.compiler.model.ScalarFieldType.BYTES;
@@ -52,8 +48,8 @@ public class MessageFieldUtil {
         return GETTER_PREFIX + Formatter.toPascalCase(field.getName());
     }
 
-    public static boolean isGenerateHasMethod(Field field) {
-        return !field.isRepeated() && field.getType() instanceof Message;
+    public static boolean isMessage(Field field) {
+        return field.getType() instanceof Message;
     }
 
     public static String getHasMethodName(Field field) {
@@ -79,9 +75,9 @@ public class MessageFieldUtil {
     /**
      * Check if field type used to store value in java is nullable type.
      */
-    public static boolean isNullableType(Field field) {
+    public static boolean isScalarNullableType(Field field) {
         FieldType type = field.getType();
-        return STRING.equals(type) || BYTES.equals(type) || !(type instanceof ScalarFieldType);
+        return STRING.equals(type) || BYTES.equals(type) || type instanceof io.protostuff.compiler.model.Enum;
     }
 
     public static String getRepeatedFieldType(Field field) {

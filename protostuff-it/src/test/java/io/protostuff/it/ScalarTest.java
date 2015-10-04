@@ -8,13 +8,16 @@ import java.util.Arrays;
 import java.util.Collections;
 
 import io.protostuff.ByteString;
+import io.protostuff.it.scalar_test.RepeatedScalarFieldTestMsg;
+import io.protostuff.it.scalar_test.ScalarFieldTestMsg;
 
 import static org.junit.Assert.assertEquals;
+
 
 /**
  * @author Kostiantyn Shchepanovskyi
  */
-public class GeneratedCodeTest {
+public class ScalarTest {
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();

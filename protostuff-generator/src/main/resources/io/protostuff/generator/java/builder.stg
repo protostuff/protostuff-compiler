@@ -19,7 +19,6 @@ public static final class Builder {
 builder_constructor(message) ::= <<
 private <message.javaName>(Builder builder) {
     <message.fields:builder_field_constructor_init(); separator="\n">
-    // this.__lock = true;
 }
 >>
 
@@ -34,7 +33,7 @@ builder_field_constructor_init(field) ::= <%
 <if(field.repeated)>
 this.<field.javaName> = builder.<field.javaBuilderRepeatedGetterName>();
 <else>
-<if(field.javaIsNullableType)>
+<if(field.javaIsScalarNullableType)>
 this.<field.javaName> = builder.<field.javaName> == null ? <field.javaDefaultValue> : builder.<field.javaName>;
 <else>
 this.<field.javaName> = builder.<field.javaName>;
@@ -74,6 +73,13 @@ public Builder <field.javaBuilderRepeatedAdderName>(<field.javaType> <field.java
     return this;
 }
 
+public Builder <field.javaBuilderRepeatedAdderName>(<field.javaRepeatedType> <field.javaName>) {
+    if (this.<field.javaName> == null) {
+        this.<field.javaName> = new java.util.ArrayList\<>();
+    } 
+    this.<field.javaName>.addAll(<field.javaName>);
+    return this;
+}
 <else>
 public Builder <field.javaBuilderSetterName>(<field.javaType> <field.javaName>) {
     this.<field.javaName> = <field.javaName>;
