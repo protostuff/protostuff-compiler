@@ -6,13 +6,9 @@ option java_package = "io.protostuff.it.message_test";
 
 message ParentMsg {
     NestedMsg nested_msg = 1;
-    repeated NestedRepeatedMsg nested_repeated_msg = 2;
+    repeated NestedMsg nested_repeated_msg = 2;
 }
 
 message NestedMsg {
-    string name = 1;
-}
-
-message NestedRepeatedMsg {
     string name = 1;
 }

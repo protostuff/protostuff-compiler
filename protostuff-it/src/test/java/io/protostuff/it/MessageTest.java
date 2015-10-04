@@ -4,7 +4,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import io.protostuff.it.message_test.NestedMsg;
-import io.protostuff.it.message_test.NestedRepeatedMsg;
 import io.protostuff.it.message_test.ParentMsg;
 
 import static org.junit.Assert.assertEquals;
@@ -30,7 +29,7 @@ public class MessageTest {
                 .setNestedMsg(NestedMsg.newBuilder()
                         .setName("1")
                         .build())
-                .addNestedRepeatedMsg(NestedRepeatedMsg.newBuilder()
+                .addNestedRepeatedMsg(NestedMsg.newBuilder()
                         .setName("2")
                         .build())
                 .build();

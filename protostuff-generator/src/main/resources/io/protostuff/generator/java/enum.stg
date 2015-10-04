@@ -1,5 +1,6 @@
 delimiters "<", ">"
 import "io/protostuff/generator/core.stg"
+import "io/protostuff/generator/java/generator.stg"
 
 enum_compiler_enabled(enum) ::= <%
 <if(enum.nested)>
@@ -21,12 +22,20 @@ package <enum.proto.javaPackage>;
 >>
 
 enum_body(enum) ::= <<
-<message:generator_annotation()>
+<enum:generator_annotation()>
 public enum <enum.javaName> {
-    <enum.constants:enum_constant(); separator=",\n">
+    <enum.constants:enum_constant(); separator=",\n">;
+    
+    public static <enum.javaName> getDefaultInstance() {
+        return <enum:enum_default_value()>;
+    }
 }
 >>
 
 enum_constant(constant) ::= <<
 <constant.javaName>
 >>
+
+enum_default_value(enum) ::= <%
+<first(enum.constants):enum_constant()>
+%>

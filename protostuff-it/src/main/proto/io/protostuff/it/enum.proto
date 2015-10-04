@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package io.protostuff.it;
+
+option java_package = "io.protostuff.it.enum_test";
+
+message ParentEnumMsg {
+    NestedEnum nested_enum = 1;
+    repeated NestedEnum nested_repeated_enum = 2;
+}
+
+enum NestedEnum {
+    UNKNOWN = 0;
+    FIRST = 1;
+    SECOND = 2;
+    HUNDRED = 100;
+}
+
