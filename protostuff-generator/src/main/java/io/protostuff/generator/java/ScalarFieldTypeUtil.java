@@ -10,79 +10,79 @@ import io.protostuff.compiler.model.ScalarFieldType;
 public class ScalarFieldTypeUtil {
 
     public static String getWrapperType(ScalarFieldType type) {
-        Class<?> wrapperType;
+        String wrapperType;
         switch (type) {
             case INT32:
             case UINT32:
             case SINT32:
             case FIXED32:
             case SFIXED32:
-                wrapperType = Integer.class;
+                wrapperType = "Integer";
                 break;
             case INT64:
             case UINT64:
             case SINT64:
             case FIXED64:
             case SFIXED64:
-                wrapperType = Long.class;
+                wrapperType = "Long";
                 break;
             case FLOAT:
-                wrapperType = Float.class;
+                wrapperType = "Float";
                 break;
             case DOUBLE:
-                wrapperType = Double.class;
+                wrapperType = "Double";
                 break;
             case BOOL:
-                wrapperType = Boolean.class;
+                wrapperType = "Boolean";
                 break;
             case STRING:
-                wrapperType = String.class;
+                wrapperType = "String";
                 break;
             case BYTES:
-                wrapperType = ByteBuffer.class;
+                wrapperType = "io.protostuff.ByteString";
                 break;
             default:
                 throw new IllegalArgumentException(String.valueOf(type));
         }
-        return wrapperType.getSimpleName();
+        return wrapperType;
     }
 
     public static String getPrimitiveType(ScalarFieldType type) {
-        Class<?> primitiveType;
+        String primitiveType;
         switch (type) {
             case INT32:
             case UINT32:
             case SINT32:
             case FIXED32:
             case SFIXED32:
-                primitiveType = int.class;
+                primitiveType = "int";
                 break;
             case INT64:
             case UINT64:
             case SINT64:
             case FIXED64:
             case SFIXED64:
-                primitiveType = long.class;
+                primitiveType = "long";
                 break;
             case FLOAT:
-                primitiveType = float.class;
+                primitiveType = "float";
                 break;
             case DOUBLE:
-                primitiveType = double.class;
+                primitiveType = "double";
                 break;
             case BOOL:
-                primitiveType = boolean.class;
+                primitiveType  ="boolean";
                 break;
             case STRING:
-                primitiveType = String.class;
+                primitiveType = "String";
                 break;
             case BYTES:
-                primitiveType = byte[].class;
+                primitiveType = "io.protostuff.ByteString";
                 break;
             default:
                 throw new IllegalArgumentException(String.valueOf(type));
         }
-        return primitiveType.getSimpleName();
+        return primitiveType;
     }
 
     public static String getDefaultValue(ScalarFieldType type) {
@@ -108,8 +108,7 @@ public class ScalarFieldTypeUtil {
             case STRING:
                 return "\"\"";
             case BYTES:
-                // TODO optimize
-                return "new byte[0]";
+                return "io.protostuff.ByteString.EMPTY";
             default:
                 throw new IllegalArgumentException(String.valueOf(type));
         }

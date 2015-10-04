@@ -3,36 +3,36 @@ delimiters "<", ">"
 builder(message) ::= <<
 public static final class Builder {
 
-	<message.fields:builder_field_declaration(); separator="\n">
+    <message.fields:builder_field_declaration(); separator="\n">
 
-	private Builder() {}
+    private Builder() {}
 
-	<message.fields:builder_field_setter(); separator="\n">
+    <message.fields:builder_field_accessors(); separator="\n">
 
-	public <message.javaName> build() {
-		return new <message.javaName>(this);
-	}
+    public <message.javaName> build() {
+        return new <message.javaName>(this);
+    }
 
 }
 >>
 
 builder_constructor(message) ::= <<
 private <message.javaName>(Builder builder) {
-	<message.fields:builder_field_constructor_init(); separator="\n">
-	// this.__lock = true;
+    <message.fields:builder_field_constructor_init(); separator="\n">
+    // this.__lock = true;
 }
 >>
 
 builder_factory_method(message) ::= <<
 public static Builder newBuilder() {
-	return new Builder();
+    return new Builder();
 }
 >>
 
 
 builder_field_constructor_init(field) ::= <%
 <if(field.repeated)>
-
+this.<field.javaName> = builder.<field.javaBuilderRepeatedGetterName>();
 <else>
 <if(field.javaIsNullableType)>
 this.<field.javaName> = builder.<field.javaName> == null ? <field.javaDefaultValue> : builder.<field.javaName>;
@@ -45,17 +45,43 @@ this.<field.javaName> = builder.<field.javaName>;
 
 
 builder_field_declaration(field) ::= <<
+<if(field.repeated)>
+private <field.javaRepeatedType> <field.javaName>;
+<else>
 private <field.javaType> <field.javaName>;
+<endif>
 >>
 
-builder_field_setter(field) ::= <<
-
+builder_field_accessors(field) ::= <<
 <if(field.repeated)>
+public <field.javaRepeatedType> <field.javaBuilderRepeatedGetterName>() {
+    if (this.<field.javaName> == null) {
+        return java.util.Collections.emptyList();
+    }
+    return java.util.Collections.unmodifiableList(this.<field.javaName>);    
+}
+
+public Builder <field.javaBuilderRepeatedSetterName>(<field.javaRepeatedType> <field.javaName>) {
+    this.<field.javaName> = <field.javaName>;
+    return this;
+}
+
+public Builder <field.javaBuilderRepeatedAdderName>(<field.javaType> <field.javaName>) {
+    if (this.<field.javaName> == null) {
+        this.<field.javaName> = new java.util.ArrayList\<>();
+    } 
+    this.<field.javaName>.add(<field.javaName>);
+    return this;
+}
 
 <else>
 public Builder <field.javaBuilderSetterName>(<field.javaType> <field.javaName>) {
-	this.<field.javaName> = <field.javaName>;
-	return this;
+    this.<field.javaName> = <field.javaName>;
+    return this;
+}
+
+public <field.javaType> <field.javaBuilderGetterName>() {
+    return <field.javaName>;
 }
 <endif>
 >>

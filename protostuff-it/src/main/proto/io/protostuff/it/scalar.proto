@@ -6,16 +6,34 @@ message ScalarFieldTestMsg {
     double double = 1;
     float float = 2;
     int32 int32 = 3;
-    int64 int64 = 3;
-    uint32 unsigned_int32 = 3;
-    uint64 unsigned_int64 = 3;
-    sint32 signed_int32 = 3;
-    sint64 signed_int64 = 3;
-    fixed32 fixed32 = 3;
-    fixed64 fixed64 = 3;
-    fixed32 signed_fixed32 = 3;
-    fixed64 signed_fixed64 = 3;
-    bool bool = 3;
-    string string = 3;
-    bytes bytes = 3;
+    int64 int64 = 4;
+    uint32 unsigned_int32 = 5;
+    uint64 unsigned_int64 = 6;
+    sint32 signed_int32 = 7;
+    sint64 signed_int64 = 8;
+    fixed32 fixed32 = 9;
+    fixed64 fixed64 = 10;
+    fixed32 signed_fixed32 = 11;
+    fixed64 signed_fixed64 = 12;
+    bool bool = 13;
+    string string = 14;
+    bytes bytes = 15;
+}
+
+message RepeatedScalarFieldTestMsg {
+    repeated double double = 1;
+    repeated float float = 2;
+    repeated int32 int32 = 3;
+    repeated int64 int64 = 4;
+    repeated uint32 unsigned_int32 = 5;
+    repeated uint64 unsigned_int64 = 6;
+    repeated sint32 signed_int32 = 7;
+    repeated sint64 signed_int64 = 8;
+    repeated fixed32 fixed32 = 9;
+    repeated fixed64 fixed64 = 10;
+    repeated fixed32 signed_fixed32 = 11;
+    repeated fixed64 signed_fixed64 = 12;
+    repeated bool bool = 13;
+    repeated string string = 14;
+    repeated bytes bytes = 15;
 }

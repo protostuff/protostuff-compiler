@@ -19,6 +19,8 @@ public class MessageFieldUtil {
     public static final String GETTER_PREFIX = "get";
     public static final String SETTER_PREFIX = "set";
     public static final String GET_DEFAULT_INSTANCE = "getDefaultInstance()";
+    public static final String LIST = "java.util.List";
+    public static final String GETTER_REPEATED_SUFFIX = "List";
 
     public static String getFieldType(Field field) {
         FieldType type = field.getType();
@@ -30,7 +32,7 @@ public class MessageFieldUtil {
             UserType userType = (UserType) type;
             return UserTypeUtil.getCanonicalName(userType);
         }
-        throw new IllegalArgumentException(String.valueOf(field.getType()));
+        throw new IllegalArgumentException(field.toString());
     }
 
     public static String getFieldName(Field field) {
@@ -51,7 +53,7 @@ public class MessageFieldUtil {
     }
 
     public static boolean isGenerateHasMethod(Field field) {
-        return field.getType() instanceof Message;
+        return !field.isRepeated() && field.getType() instanceof Message;
     }
 
     public static String getHasMethodName(Field field) {
@@ -80,5 +82,51 @@ public class MessageFieldUtil {
     public static boolean isNullableType(Field field) {
         FieldType type = field.getType();
         return STRING.equals(type) || BYTES.equals(type) || !(type instanceof ScalarFieldType);
+    }
+
+    public static String getRepeatedFieldType(Field field) {
+        FieldType type = field.getType();
+        if (type instanceof ScalarFieldType) {
+            ScalarFieldType scalarFieldType = (ScalarFieldType) type;
+            return LIST + "<" + ScalarFieldTypeUtil.getWrapperType(scalarFieldType) + ">";
+        }
+        if (type instanceof UserType) {
+            UserType userType = (UserType) type;
+            return LIST + "<" + UserTypeUtil.getCanonicalName(userType) + ">";
+        }
+        throw new IllegalArgumentException(field.toString());
+    }
+
+    public static String getRepeatedFieldGetterName(Field field) {
+        if (field.isRepeated()) {
+            return GETTER_PREFIX + Formatter.toPascalCase(field.getName()) + GETTER_REPEATED_SUFFIX;
+        }
+        throw new IllegalArgumentException(field.toString());
+    }
+
+    public static String repeatedGetCountMethodName(Field field) {
+        if (field.isRepeated()) {
+            return GETTER_PREFIX + Formatter.toPascalCase(field.getName()) + "Count";
+        }
+        throw new IllegalArgumentException(field.toString());
+    }
+
+    public static String repeatedGetByIndexMethodName(Field field) {
+        if (field.isRepeated()) {
+            return GETTER_PREFIX + Formatter.toPascalCase(field.getName());
+        }
+        throw new IllegalArgumentException(field.toString());
+    }
+
+    public static String getRepeatedBuilderSetterName(Field field) {
+        return SETTER_PREFIX + Formatter.toPascalCase(field.getName()) + "List";
+    }
+
+    public static String getBuilderGetterName(Field field) {
+        return GETTER_PREFIX + Formatter.toPascalCase(field.getName());
+    }
+
+    public static String getRepeatedFieldAdderName(Field field) {
+        return "add" + Formatter.toPascalCase(field.getName());
     }
 }

@@ -44,12 +44,22 @@ public <if(message.nested)>static <endif>final class <message.javaName> {
 >>
 
 field_declaration(field) ::= <<
-private <field.javaType> <field.javaName>;
+<if(field.repeated)>
+private final <field.javaRepeatedType> <field.javaName>;
+<else>
+private final <field.javaType> <field.javaName>;
+<endif>
 >>
 
 field_accessors(field) ::= <<
+<if(field.repeated)>
+<field:repeated_field_getter()>
+<field:repeated_field_get_count()>
+<field:repeated_field_get_by_index()>
+<else>
 <field:field_getter()>
 <field:field_presence_check()>
+<endif>
 >>
 
 field_getter(field) ::= <<
@@ -65,3 +75,22 @@ public boolean <field.javaHasMethodName>() {
 }
 <endif>
 >>
+
+repeated_field_getter(field) ::= <<
+public <field.javaRepeatedType> <field.javaRepeatedGetterName>() {
+    return <field.javaName>;
+}
+>>
+
+repeated_field_get_count(field) ::= <<
+public int <field.javaRepeatedGetCountMethodName>() {
+    return <field.javaName>.size();
+}
+>>
+
+repeated_field_get_by_index(field) ::= <<
+public <field.javaType> <field.javaRepeatedGetByIndexMethodName>(int index) {
+    return <field.javaName>.get(index);
+}
+>>
+

@@ -30,19 +30,6 @@ import io.protostuff.generator.StCompilerFactory;
 public class JavaGenerator implements ProtoCompiler {
     public static final String GENERATOR_NAME = "java";
 
-    public static final Function<Proto, String> JAVA_PACKAGE = proto -> {
-        DynamicMessage.Value javaPackage = proto.getOptions().get("java_package");
-        if (javaPackage != null) {
-            return javaPackage.getString();
-        }
-        return proto.getPackage().getValue();
-    };
-
-    public static final Function<Proto, String> JAVA_PACKAGE_PATH = proto -> {
-        String javaPackage = JAVA_PACKAGE.apply(proto);
-        return javaPackage.replace('.', '/');
-    };
-
     private final StCompilerFactory compilerFactory;
     private final ProtoCompiler messageGenerator;
     private final ProtoCompiler enumGenerator;
@@ -67,13 +54,21 @@ public class JavaGenerator implements ProtoCompiler {
                         .build())
                 .put(Field.class, SimpleObjectExtender.<Field>newBuilder()
                         .property("javaType", MessageFieldUtil::getFieldType)
+                        .property("javaRepeatedType", MessageFieldUtil::getRepeatedFieldType)
                         .property("javaName", MessageFieldUtil::getFieldName)
                         .property("javaGetterName", MessageFieldUtil::getFieldGetterName)
+                        .property("javaRepeatedGetterName", MessageFieldUtil::getRepeatedFieldGetterName)
+                        .property("javaBuilderRepeatedAdderName", MessageFieldUtil::getRepeatedFieldAdderName)
+                        .property("javaBuilderRepeatedGetterName", MessageFieldUtil::getRepeatedFieldGetterName)
                         .property("javaGenerateHasMethod", MessageFieldUtil::isGenerateHasMethod)
                         .property("javaHasMethodName", MessageFieldUtil::getHasMethodName)
+                        .property("javaBuilderGetterName", MessageFieldUtil::getBuilderGetterName)
                         .property("javaBuilderSetterName", MessageFieldUtil::getBuilderSetterName)
+                        .property("javaBuilderRepeatedSetterName", MessageFieldUtil::getRepeatedBuilderSetterName)
                         .property("javaDefaultValue", MessageFieldUtil::getDefaultValue)
                         .property("javaIsNullableType", MessageFieldUtil::isNullableType)
+                        .property("javaRepeatedGetCountMethodName", MessageFieldUtil::repeatedGetCountMethodName)
+                        .property("javaRepeatedGetByIndexMethodName", MessageFieldUtil::repeatedGetByIndexMethodName)
                         .build())
                 .put(Enum.class, SimpleObjectExtender.<Enum>newBuilder()
                         .property("javaName", UserTypeUtil::getClassName)
