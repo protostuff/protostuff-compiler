@@ -5,6 +5,7 @@ import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
 
 import java.util.ArrayList;
+import java.util.BitSet;
 import java.util.List;
 
 import io.protostuff.compiler.model.AbstractElement;
@@ -18,9 +19,12 @@ public abstract class AbstractProtoParserListener extends ProtoParserBaseListene
     protected final ProtoContext context;
     private final BufferedTokenStream tokens;
 
+    private BitSet usedComments;
+
     protected AbstractProtoParserListener(BufferedTokenStream tokens, ProtoContext context) {
         this.context = context;
         this.tokens = tokens;
+        usedComments = new BitSet();
     }
 
     protected SourceCodeLocation getSourceCodeLocation(ParserRuleContext ctx) {
@@ -36,7 +40,7 @@ public abstract class AbstractProtoParserListener extends ProtoParserBaseListene
         List<Token> tokensBefore = tokens.getHiddenTokensToLeft(start.getTokenIndex(), ProtoLexer.HIDDEN);
         if (tokensBefore != null) {
             int i = tokensBefore.size();
-            while (i > 0 &&
+            while (i > 0 && !usedComments.get(tokensBefore.get(i - 1).getLine()) &&
                     (tokensBefore.get(i - 1).getType() == ProtoLexer.LINE_COMMENT
                             || !tokensBefore.get(i - 1).getText().contains("\n"))) {
                 i--;
@@ -46,6 +50,7 @@ public abstract class AbstractProtoParserListener extends ProtoParserBaseListene
                 if (token.getType() == ProtoLexer.LINE_COMMENT) {
                     String text = getTextFromLineCommentToken(token);
                     comments.add(text);
+                    usedComments.set(token.getLine());
                 }
             }
         }
@@ -56,6 +61,7 @@ public abstract class AbstractProtoParserListener extends ProtoParserBaseListene
                     if (token.getType() == ProtoLexer.LINE_COMMENT) {
                         String text = getTextFromLineCommentToken(token);
                         comments.add(text);
+                        usedComments.set(token.getLine());
                         break;
                     } else {
                         if (token.getText().contains("\n")) {
