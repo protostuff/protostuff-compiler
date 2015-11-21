@@ -3,9 +3,5 @@ syntax = "proto3";
 package protostuff_unittest;
 
 message D {
-    int32
-    x
-    =
-    1
-    ;
+    int32 x = 1;
 }

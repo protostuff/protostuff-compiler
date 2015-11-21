@@ -8,84 +8,28 @@ package protostuff_unittest;
 // (for example, .foo.bar.Baz) means to start from the outermost scope instead.
 
 message B {
-    int32
-    x
-    =
-    1
-    ;
-
+    int32 x = 1 ;
     message C {
-        int32
-        y
-        =
-        1
-        ;
+        int32 y = 1;
     }
 }
 
 message A {
-    int32
-    x
-    =
-    1
-    ;
+    int32 x = 1 ;
 
     // fully-qualified name
-    .
-    protostuff_unittest
-    .
-    A
-    .
-    B
-    .
-    C
-    c0
-    =
-    10
-    ;
+    .protostuff_unittest.A.B.C c0 = 10;
 
     // all following names are also valid
-    protostuff_unittest
-    .
-    A
-    .
-    B
-    .
-    C
-    c1
-    =
-    11
-    ;
-    A
-    .
-    B
-    .
-    C
-    c2
-    =
-    12
-    ;
-    B
-    .
-    C
-    c4
-    =
-    14
-    ;
+    protostuff_unittest.A.B.C c1 = 11;
+    A.B.C c2 = 12;
+    B.C c4 = 14;
 
     message B {
-        int32
-        y
-        =
-        1
-        ;
+        int32 y = 1;
 
         message C {
-            int32
-            z
-            =
-            1
-            ;
+            int32 z = 1;
         }
     }
 }

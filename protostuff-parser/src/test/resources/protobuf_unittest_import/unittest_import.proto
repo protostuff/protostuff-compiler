@@ -53,13 +53,7 @@ option java_package = "com.google.protobuf.test";
 // one.
 
 // Test public import
-import
-
-public
-
-"protobuf_unittest_import/unittest_import_public.proto"
-
-;
+import public "protobuf_unittest_import/unittest_import_public.proto";
 
 message ImportMessage {
     optional int32 d = 1;

@@ -3,9 +3,5 @@ syntax = "proto3";
 package protostuff_unittest;
 
 message A {
-    NonExistingMessage
-    a
-    =
-    1
-    ;
+    NonExistingMessage a = 1;
 }
