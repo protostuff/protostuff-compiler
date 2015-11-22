@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+
+<html lang="en" ng-app="app">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="libs/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+    <link href="libs/angular-bootstrap-nav-tree-gildo/0.1.0/dist/abn_tree.css" rel="stylesheet">
+    <link href="css/theme.css" rel="stylesheet">
+
+    <script src="libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="libs/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="libs/angularjs/1.4.7/angular.min.js"></script>
+    <script src="libs/angularjs/1.4.7/angular-animate.min.js"></script>
+    <script src="libs/angularjs/1.4.7/angular-route.min.js"></script>
+    <script src="libs/angular-bootstrap-nav-tree-gildo/0.1.0/dist/abn_tree_directive.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/controllers.js"></script>
+    <title>Protocol Documentation</title>
+</head>
+
+<body>
+<nav class="navbar navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">Protocol Documentation</a>
+        </div>
+        <div class="navbar-form navbar-right" role="search">
+            <div class="input-group">
+                <input id="input-search" type="text" class="form-control" placeholder="Search...">
+              <span class="input-group-btn">
+                  <a id="btn-search" class="btn btn-default"><span
+                          class="glyphicon glyphicon-search" aria-hidden="true"></span></a>
+              </span>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <div ng-controller="TreeCtrl" ng-init="init()" class="col-sm-4 col-md-3 sidebar">
+            <div id="tree">
+                <abn-tree
+                        tree-data="tree_data"
+                        tree-control="tree"
+                        expand-level="2"
+                        icon-leaf="glyphicon glyphicon-file"
+                        icon-expand="glyphicon glyphicon-plus"
+                        icon-collapse="glyphicon glyphicon-minus"
+                        on-select="show(branch)">
+                </abn-tree>
+            </div>
+        </div>
+        <div ng-view id="content" class="col-sm-8 col-sm-offset-4 col-md-9 col-md-offset-3 main">
+
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,7 +1,0 @@
-delimiters "%", "%"
-
-footer() ::= <<
-
-</body>
-</html>
->>

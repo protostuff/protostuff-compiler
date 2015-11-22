@@ -1,0 +1,16 @@
+<div class="page-header" title="{{type.canonicalName}}">
+    <h1>
+        <span class="code">{{type.name}}</span>
+    </h1>
+</div>
+
+<div ng-if="type.description">
+    <h2>Description</h2>
+    <p>{{type.description}}</p>
+</div>
+
+<div ng-switch on="type.type">
+    <div ng-switch-when="enum"><div ng-include="'partials/enum.html'"></div></div>
+    <div ng-switch-when="message"><div ng-include="'partials/message.html'"></div></div>
+    <div ng-switch-when="service"><div ng-include="'partials/service.html'"></div></div>
+</div>

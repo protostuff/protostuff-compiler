@@ -161,11 +161,6 @@ public class Message extends AbstractUserTypeContainer
     }
 
     @Override
-    public String getCanonicalName() {
-        return getFullyQualifiedName().substring(1);
-    }
-
-    @Override
     public String getNamespace() {
         Preconditions.checkNotNull(fullyQualifiedName, "message is not initialized");
         return fullyQualifiedName + ".";

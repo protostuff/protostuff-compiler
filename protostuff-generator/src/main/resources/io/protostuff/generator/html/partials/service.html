@@ -1,0 +1,12 @@
+<div>
+    <h2>Service Methods</h2>
+    <div ng-repeat="method in type.methods" class="panel panel-default">
+        <div class="panel-heading code">
+            {{method.name}}({{method.argTypeId}})
+            returns({{method.returnTypeId}})
+        </div>
+        <div ng-if="method.description" class="panel-body">
+            {{method.description}}
+        </div>
+    </div>
+</div>

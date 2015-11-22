@@ -1,0 +1,19 @@
+<div>
+    <h2>Enum Constants</h2>
+    <table class="table">
+        <thead>
+        <tr>
+            <th class="col-md-1">Name</th>
+            <th class="col-md-1">Value</th>
+            <th class="col-md-10">Description</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="constant in type.constants">
+            <td><code>{{constant.name}}</code></td>
+            <td>{{constant.value}}</td>
+            <td>{{constant.description}}</td>
+        </tr>
+        </tbody>
+    </table>
+</div>

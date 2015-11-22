@@ -39,11 +39,6 @@ public abstract class AbstractUserType extends AbstractDescriptor implements Use
     }
 
     @Override
-    public String getCanonicalName() {
-        return getFullyQualifiedName().substring(1);
-    }
-
-    @Override
     public UserTypeContainer getParent() {
         return parent;
     }
