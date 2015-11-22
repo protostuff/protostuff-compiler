@@ -151,4 +151,11 @@ public class Proto extends AbstractUserTypeContainer implements UserTypeContaine
         }
         return "." + aPackage.getValue() + ".";
     }
+
+    public String getCanonicalName() {
+        if (aPackage == null) {
+            return name;
+        }
+        return aPackage + "." + name;
+    }
 }

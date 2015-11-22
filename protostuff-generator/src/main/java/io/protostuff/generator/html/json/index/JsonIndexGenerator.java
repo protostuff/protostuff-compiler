@@ -31,9 +31,9 @@ public final class JsonIndexGenerator extends AbstractJsonGenerator {
         List<JsonTreeNode> root = new ArrayList<>();
         module.getProtos().stream()
                 .forEach(proto -> root.add(JsonTreeNode.newBuilder()
-                        .label(proto.getName())
+                        .label(proto.getFilename())
                         .data(NodeData.newBuilder()
-                                .file(proto.getFilename())
+                                .ref(proto.getCanonicalName())
                                 .type(NodeType.PROTO)
                                 .build())
                         .children(processProto(proto))

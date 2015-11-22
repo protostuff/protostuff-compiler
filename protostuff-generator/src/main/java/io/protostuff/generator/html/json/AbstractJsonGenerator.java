@@ -6,6 +6,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.OutputStream;
 
 import javax.inject.Inject;
@@ -18,6 +21,8 @@ import io.protostuff.generator.ProtoCompiler;
  * @author Kostiantyn Shchepanovskyi
  */
 public abstract class AbstractJsonGenerator implements ProtoCompiler {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractJsonGenerator.class);
 
     protected final OutputStreamFactory outputStreamFactory;
     protected final ObjectMapper objectMapper;
@@ -32,6 +37,7 @@ public abstract class AbstractJsonGenerator implements ProtoCompiler {
     protected void write(String file, Object data) {
         Preconditions.checkNotNull(file);
         Preconditions.checkNotNull(data);
+        LOGGER.info("Write {}", file);
         try (OutputStream os = outputStreamFactory.createStream(file)) {
             objectMapper.writeValue(os, data);
         } catch (Exception e) {

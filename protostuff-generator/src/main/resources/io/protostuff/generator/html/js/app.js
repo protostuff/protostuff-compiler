@@ -46,5 +46,9 @@ app.config(['$routeProvider', function ($routeProvider) {
         templateUrl: 'partials/type-detail.html',
         controller: 'TypeDetailCtrl'
     });
+    $routeProvider.when('/protos/:protoId', {
+        templateUrl: 'partials/proto-detail.html',
+        controller: 'ProtoDetailCtrl'
+    });
     $routeProvider.otherwise({redirectTo: '/'});
 }]);

@@ -55,7 +55,7 @@ public class JsonServiceGenerator extends AbstractJsonGenerator {
                                 .build())
                         .collect(Collectors.toList()))
                 .build();
-        String output = module.getOutput() + "/data/" + service.getCanonicalName() + ".json";
+        String output = module.getOutput() + "/data/type/" + service.getCanonicalName() + ".json";
         write(output, descriptor);
     }
 

@@ -11,6 +11,7 @@ import io.protostuff.generator.ProtoCompiler;
 import io.protostuff.generator.html.json.enumeration.JsonEnumGenerator;
 import io.protostuff.generator.html.json.index.JsonIndexGenerator;
 import io.protostuff.generator.html.json.message.JsonMessageGenerator;
+import io.protostuff.generator.html.json.proto.JsonProtoGenerator;
 import io.protostuff.generator.html.json.service.JsonServiceGenerator;
 
 /**
@@ -24,6 +25,7 @@ public class HtmlGenerator implements ProtoCompiler {
             "index.html",
             "partials/type-list.html",
             "partials/type-detail.html",
+            "partials/proto-detail.html",
             "partials/enum.html",
             "partials/message.html",
             "partials/service.html",
@@ -61,18 +63,21 @@ public class HtmlGenerator implements ProtoCompiler {
     private final JsonEnumGenerator enumGenerator;
     private final JsonMessageGenerator messageGenerator;
     private final JsonServiceGenerator serviceGenerator;
+    private final JsonProtoGenerator protoGenerator;
 
     @Inject
     public HtmlGenerator(CompilerUtils compilerUtils,
                          JsonIndexGenerator indexGenerator,
                          JsonEnumGenerator enumGenerator,
                          JsonMessageGenerator messageGenerator,
-                         JsonServiceGenerator serviceGenerator) {
+                         JsonServiceGenerator serviceGenerator,
+                         JsonProtoGenerator protoGenerator) {
         this.compilerUtils = compilerUtils;
         this.indexGenerator = indexGenerator;
         this.enumGenerator = enumGenerator;
         this.messageGenerator = messageGenerator;
         this.serviceGenerator = serviceGenerator;
+        this.protoGenerator = protoGenerator;
     }
 
     @Override
@@ -86,6 +91,7 @@ public class HtmlGenerator implements ProtoCompiler {
         enumGenerator.compile(module);
         messageGenerator.compile(module);
         serviceGenerator.compile(module);
+        protoGenerator.compile(module);
         copy(HTML_RESOURCE_BASE, module.getOutput() + "/", STATIC_RESOURCES);
         copy(WEBJARS_RESOURCE_PREFIX, module.getOutput() + "/libs/", STATIC_LIBS);
     }
