@@ -5,6 +5,11 @@ var app = angular.module('app', [
     'angularBootstrapNavTree'
 ]);
 
+app.config(['$httpProvider', function ($httpProvider) {
+        // enable http caching
+        $httpProvider.defaults.cache = true;
+    }]);
+
 app.config(['$routeProvider', function ($routeProvider) {
     $routeProvider.
     when('/types', {
