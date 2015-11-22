@@ -1,3 +1,5 @@
+// Proto file comment.
+// Multiline.
 syntax = "proto3";
 
 package protostuff_unittest;

@@ -1,0 +1,6 @@
+// Proto file comment.
+message Message {
+
+}
+
+package protostuff_unittest;

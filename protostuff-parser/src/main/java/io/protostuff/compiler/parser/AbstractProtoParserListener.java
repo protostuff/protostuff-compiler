@@ -81,7 +81,7 @@ public abstract class AbstractProtoParserListener extends ProtoParserBaseListene
      * Remove common leading whitespaces from all strings in the list.
      * Returns new list instance.
      */
-    private List<String> trim(List<String> comments) {
+    protected List<String> trim(List<String> comments) {
         List<String> trimComments = new ArrayList<>();
         int n = 0;
         boolean tryRemoveWhitespace = true;
@@ -113,7 +113,7 @@ public abstract class AbstractProtoParserListener extends ProtoParserBaseListene
         return trimComments;
     }
 
-    private String getTextFromLineCommentToken(Token token) {
+    protected String getTextFromLineCommentToken(Token token) {
         String comment = token.getText().trim();
         return comment.substring(2);
     }

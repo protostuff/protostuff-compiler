@@ -6,6 +6,7 @@ import org.junit.Test;
 import io.protostuff.compiler.model.Enum;
 import io.protostuff.compiler.model.Message;
 import io.protostuff.compiler.model.Oneof;
+import io.protostuff.compiler.model.Proto;
 import io.protostuff.compiler.model.Service;
 
 import static org.junit.Assert.assertEquals;
@@ -20,6 +21,12 @@ public class CommentsTest extends AbstractParserTest {
     @Before
     public void setUp() throws Exception {
         context = importer.importFile(new ClasspathFileReader(), "protostuff_unittest/comments_sample.proto");
+    }
+
+    @Test
+    public void testMProtoComments() throws Exception {
+        Proto proto = context.getProto();
+        assertEquals("Proto file comment.\nMultiline.", proto.getComments());
     }
 
     @Test
