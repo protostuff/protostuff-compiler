@@ -27,10 +27,13 @@ public class HtmlGenerator implements ProtoCompiler {
             "partials/enum.html",
             "partials/message.html",
             "partials/service.html",
+            "partials/type-ref.html",
+            "partials/scalar-value-types.html",
             "js/app.js",
             "js/controllers.js",
+            "js/filters.js",
+            "js/directives.js",
             "css/theme.css",
-            "scalar-value-types.html",
     };
 
     public static final String WEBJARS_RESOURCE_PREFIX = "META-INF/resources/webjars/";

@@ -13,7 +13,7 @@
         <tbody>
         <tr ng-repeat="field in type.fields">
             <td><code>{{field.name}}</code></td>
-            <td>{{field.typeId}}</td>
+            <td><type-ref value="field.typeId"></type-ref></td>
             <td>{{field.modifier}}</td>
             <td>{{field.tag}}</td>
             <td>{{field.description}}</td>
