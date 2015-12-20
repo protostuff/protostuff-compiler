@@ -62,6 +62,12 @@
             <groupId>org.webjars.bower</groupId>
             <artifactId>angular-bootstrap-nav-tree-gildo</artifactId>
             <version>0.1.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!--Optional-->
