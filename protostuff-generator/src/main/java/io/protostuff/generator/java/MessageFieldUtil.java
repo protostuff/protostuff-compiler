@@ -125,4 +125,11 @@ public class MessageFieldUtil {
     public static String getRepeatedFieldAdderName(Field field) {
         return "add" + Formatter.toPascalCase(field.getName());
     }
+
+    public static String toStringPart(Field field) {
+        if (field.getType() == STRING) {
+            return "\"" + field.getName() + "='\" + " + getFieldName(field) + " + \"'\"";
+        }
+        return "\"" + field.getName() + "=\" + " + getFieldName(field);
+    }
 }

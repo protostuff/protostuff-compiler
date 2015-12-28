@@ -10,5 +10,14 @@ message ParentMsg {
 }
 
 message NestedMsg {
-    string name = 1;
+    string name = 2;
+}
+
+message SimpleMessage {
+    int32 a = 1;
+    string b = 2;
+}
+
+message MessageWithoutFields {
+
 }

@@ -18,6 +18,9 @@ message_compiler_template(message) ::= "<message:message()>"
 message(message) ::= <<
 package <message.proto.javaPackage>;
 
+import java.util.Objects;
+import java.util.List;
+import java.util.ArrayList;
 <imports_generator_annotation()>
 
 <message:message_body()>
@@ -36,7 +39,13 @@ public <if(message.nested)>static <endif>final class <message.javaName> {
     <message:builder_constructor()>
     
     <message.fields:field_accessors(); separator="\n">
-    
+
+    <message:message_equals()>
+
+    <message:message_hashCode()>
+
+    <message:message_toString()>
+
     <message:builder()>
     
     <message.messages:message_body(); separator="\n">
@@ -109,5 +118,54 @@ static {
 
 public static <message.javaName> getDefaultInstance() {
     return DEFAULT_INSTANCE;
+}
+>>
+
+message_equals(message) ::= <<
+@Override
+public boolean equals(Object obj) {
+	if (this == obj) {
+		return true;
+	}
+	if (obj == null || this.getClass() != obj.getClass()) {
+		return false;
+	}
+	<message.name> that = (<message.name>) obj;
+	<if(message.hasFields)>
+	return
+	    <message.fields:field_equals(); separator="\n&& ">;
+	<else>
+	return true;
+	<endif>
+}
+>>
+
+message_hashCode(message) ::= <<
+@Override
+public int hashCode() {
+	<if(message.hasFields)>
+	return Objects.hash(<message.fields:{field|<field.javaName>}; separator=", ">);
+	<else>
+	return 0;
+	<endif>
+}
+>>
+
+field_equals(field) ::= <<
+Objects.equals(this.<field.javaName>, that.<field.javaName>)
+>>
+
+message_toString(message) ::= <<
+@Override
+public String toString() {
+    List\<String> parts = new ArrayList\<>();
+    <message.fields:field_toString_part(); separator="\n">
+    return "<message.javaName>{" + String.join(", ", parts) + "}";
+}
+>>
+
+field_toString_part(field) ::= <<
+if (!Objects.equals(<field.javaName>, <field.javaDefaultValue>)) {
+    parts.add(<field.toStringPart>);
 }
 >>
