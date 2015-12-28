@@ -165,7 +165,11 @@ public String toString() {
 >>
 
 field_toString_part(field) ::= <<
+<if(field.repeated)>
+if (!<field.javaName>.isEmpty()) {
+<else>
 if (!Objects.equals(<field.javaName>, <field.javaDefaultValue>)) {
+<endif>
     parts.add(<field.toStringPart>);
 }
 >>

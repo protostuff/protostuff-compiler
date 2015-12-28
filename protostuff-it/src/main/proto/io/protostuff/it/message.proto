@@ -14,8 +14,10 @@ message NestedMsg {
 }
 
 message SimpleMessage {
-    int32 a = 1;
-    string b = 2;
+    int32 int32 = 10;
+    string string = 11;
+    repeated int32 repeated_int32 = 12;
+    repeated string repeated_string = 13;
 }
 
 message MessageWithoutFields {

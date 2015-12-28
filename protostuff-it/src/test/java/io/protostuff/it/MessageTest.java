@@ -1,18 +1,12 @@
 package io.protostuff.it;
 
-import org.junit.Assert;
-import org.junit.Test;
-
 import io.protostuff.it.message_test.MessageWithoutFields;
 import io.protostuff.it.message_test.NestedMsg;
 import io.protostuff.it.message_test.ParentMsg;
 import io.protostuff.it.message_test.SimpleMessage;
+import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -20,16 +14,16 @@ import static org.junit.Assert.assertTrue;
 public class MessageTest {
 
     public static final SimpleMessage A = SimpleMessage.newBuilder()
-            .setA(42)
-            .setB("abra")
+            .setInt32(42)
+            .setString("abra")
             .build();
     public static final SimpleMessage A_COPY = SimpleMessage.newBuilder()
-            .setA(42)
-            .setB("abra")
+            .setInt32(42)
+            .setString("abra")
             .build();
     public static final SimpleMessage B = SimpleMessage.newBuilder()
-            .setA(43)
-            .setB("cadabra")
+            .setInt32(43)
+            .setString("cadabra")
             .build();
 
     @Test
@@ -70,23 +64,41 @@ public class MessageTest {
 
     @Test
     public void testToString() throws Exception {
-        assertEquals("SimpleMessage{a=42, b='abra'}", A.toString());
+        assertEquals("SimpleMessage{int32=42, string=abra}", A.toString());
     }
 
     @Test
     public void testToString_integer_field() throws Exception {
         SimpleMessage message = SimpleMessage.newBuilder()
-                .setA(15)
+                .setInt32(15)
                 .build();
-        assertEquals("SimpleMessage{a=15}", message.toString());
+        assertEquals("SimpleMessage{int32=15}", message.toString());
     }
 
     @Test
     public void testToString_string_field() throws Exception {
         SimpleMessage message = SimpleMessage.newBuilder()
-                .setB("test")
+                .setString("test")
                 .build();
-        assertEquals("SimpleMessage{b='test'}", message.toString());
+        assertEquals("SimpleMessage{string=test}", message.toString());
+    }
+
+    @Test
+    public void testToString_repeated_string_field() throws Exception {
+        SimpleMessage message = SimpleMessage.newBuilder()
+                .addRepeatedString("test1")
+                .addRepeatedString("test2")
+                .build();
+        assertEquals("SimpleMessage{repeated_string=[test1, test2]}", message.toString());
+    }
+
+    @Test
+    public void testToString_repeated_int32_field() throws Exception {
+        SimpleMessage message = SimpleMessage.newBuilder()
+                .addRepeatedInt32(41)
+                .addRepeatedInt32(42)
+                .build();
+        assertEquals("SimpleMessage{repeated_int32=[41, 42]}", message.toString());
     }
 
     @Test
