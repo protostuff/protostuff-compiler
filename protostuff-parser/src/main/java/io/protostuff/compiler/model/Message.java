@@ -161,6 +161,16 @@ public class Message extends AbstractUserTypeContainer
     }
 
     @Override
+    public boolean isEnum() {
+        return false;
+    }
+
+    @Override
+    public boolean isMessage() {
+        return true;
+    }
+
+    @Override
     public String getNamespace() {
         Preconditions.checkNotNull(fullyQualifiedName, "message is not initialized");
         return fullyQualifiedName + ".";

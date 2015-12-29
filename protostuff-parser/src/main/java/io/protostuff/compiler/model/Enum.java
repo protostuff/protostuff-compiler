@@ -72,4 +72,18 @@ public class Enum extends AbstractUserType {
     }
 
 
+    @Override
+    public boolean isScalar() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnum() {
+        return true;
+    }
+
+    @Override
+    public boolean isMessage() {
+        return false;
+    }
 }

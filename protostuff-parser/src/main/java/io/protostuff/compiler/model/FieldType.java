@@ -52,4 +52,14 @@ public interface FieldType extends Type {
      * Test if this type is scalar.
      */
     boolean isScalar();
+
+    /**
+     * Test if this type is enum.
+     */
+    boolean isEnum();
+
+    /**
+     * Test if this type is message.
+     */
+    boolean isMessage();
 }

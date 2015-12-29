@@ -23,17 +23,31 @@ package <enum.proto.javaPackage>;
 
 enum_body(enum) ::= <<
 <enum:generator_annotation()>
-public enum <enum.javaName> {
+public enum <enum.javaName> implements io.protostuff.EnumLite\<<enum.javaName>\>{
     <enum.constants:enum_constant(); separator=",\n">;
-    
-    public static <enum.javaName> getDefaultInstance() {
-        return <enum:enum_default_value()>;
+
+    private int value;
+
+    private <enum.javaName>(int n) {
+        this.value = n;
+    }
+
+    @Override
+    public int getNumber() {
+        return value;
+    }
+
+    public static final <enum.javaName> valueOf(int tag) {
+        switch(tag) {
+            <enum.constants:{constant|case <constant.value>: return <constant.javaName>;}; separator="\n">
+            default: return <first(enum.constants).javaName>;
+        }
     }
 }
 >>
 
 enum_constant(constant) ::= <<
-<constant.javaName>
+<constant.javaName>(<constant.value>)
 >>
 
 enum_default_value(enum) ::= <%

@@ -1,0 +1,178 @@
+delimiters "<", ">"
+
+imports_schema() ::= <<
+import java.io.IOException;
+>>
+
+schema(message) ::= <<
+public static final class Schema implements io.protostuff.Schema\<<message.javaName>\>{
+
+    private static final Schema INSTANCE = new Schema();
+
+    @Override
+    public <message.javaName> newMessage() {
+        return new <message.javaName>();
+    }
+
+    @Override
+    public Class\<<message.javaName>\> typeClass() {
+        return <message.javaName>.class;
+    }
+
+    @Override
+    public String messageName() {
+        return <message.javaName>.class.getSimpleName();
+    }
+
+    @Override
+    public String messageFullName() {
+        return <message.javaName>.class.getName();
+    }
+
+    @Override
+    @Deprecated
+    public boolean isInitialized(<message.javaName> message) {
+        return true;
+    }
+
+    @Override
+    public void mergeFrom(Input input, <message.name> instance) throws IOException {
+    	if (instance.__lock) {
+    		throw new IllegalStateException("Cannot reuse message instance");
+    	} else {
+    		instance.__lock = true;
+    	}
+    	try {
+    		for(int number = input.readFieldNumber(this);; number = input.readFieldNumber(this)) {
+    			switch(number) {
+    				case 0:
+    					return;
+    				<message.fields:field_merge_switch(); separator="\n">
+    				default:
+    					input.handleUnknownField(number, this);
+    			}
+    		}
+    	} finally {
+    		// set all non-initialized fields to default values
+    		instance.initialize();
+    	}
+    }
+
+    @Override
+    public void writeTo(Output output, <message.javaName> instance) throws IOException {
+        <message.fields:field_write_switch(); separator="\n\n">
+    }
+
+    @Override
+    public String getFieldName(int number) {
+    	switch(number) {
+    		<message.fields:field_switch_case(); separator="\n">
+    		default: return null;
+    	}
+    }
+
+    @Override
+    public int getFieldNumber(String name) {
+    	final Integer number = __fieldMap.get(name);
+    	return number == null ? 0 : number.intValue();
+    }
+
+    private static final java.util.Map\<String,Integer> __fieldMap = new java.util.HashMap\<>();
+
+    static {
+    	<message.fields:field_map(); separator="\n">
+    }
+}
+>>
+
+
+field_merge_switch(field) ::= <<
+case <field.tag>:
+	<if(field.repeated)>
+	<field:repeated_field_merge_switch()>
+	<else>
+	<field:singular_field_merge_switch()>
+	<endif>
+	break;
+>>
+
+singular_field_merge_switch(field) ::= <<
+<if(field.type.message)>
+instance.<field.javaName> = input.mergeObject(instance.<field.javaName>, <field.javaType>.getSchema());
+<elseif(field.type.enum)>
+instance.<field.javaName> = <field.javaType>.valueOf(input.readEnum());
+<else>
+instance.<field.javaName> = input.<field.protostuffReadMethod>();
+<endif>
+>>
+
+repeated_field_merge_switch(field) ::= <<
+<if(field.type.message)>
+if(instance.<field.javaName> == null) {
+	instance.<field.javaName> = new ArrayList\<>();
+}
+instance.<field.javaName>.add(input.mergeObject(null, <field.javaType>.getSchema()));
+<elseif(field.type.enum)>
+if(instance.<field.javaName> == null) {
+	instance.<field.javaName> = new ArrayList\<>();
+}
+instance.<field.javaName>.add(<field.javaType>.valueOf(input.readEnum()));
+<else>
+if(instance.<field.javaName> == null) {
+	instance.<field.javaName> = new ArrayList\<>();
+}
+instance.<field.javaName>.add(input.<field.protostuffReadMethod>());
+<endif>
+>>
+
+field_write_switch(field) ::= <<
+<if(field.repeated)>
+<field:repeated_field_write_switch()>
+<else>
+<field:singular_field_write_switch()>
+<endif>
+>>
+
+singular_field_write_switch(field) ::= <<
+<if(field.type.message)>
+if(instance.<field.javaName> != null) {
+	output.writeObject(<field.tag>, instance.<field.javaName>, <field.javaType>.getSchema(), false);
+}
+<elseif(field.type.enum)>
+if(instance.<field.javaName> != null) {
+	output.writeEnum(<field.tag>, instance.<field.javaName>.getNumber(), false);
+}
+<elseif(field.type.string || field.type.bytes)>
+if(instance.<field.javaName> != null) {
+	output.<field.protostuffWriteMethod>(<field.tag>, instance.<field.javaName>, false);
+}
+<else>
+output.<field.protostuffWriteMethod>(<field.tag>, instance.<field.javaName>, false);
+<endif>
+>>
+
+repeated_field_write_switch(field) ::= <<
+<if(field.type.message)>
+for(<field.javaType> <field.javaName> : instance.<field.javaName>) {
+    output.writeObject(<field.tag>, <field.javaName>, <field.javaType>.getSchema(), true);
+}
+<elseif(field.type.enum)>
+for(<field.javaType> <field.javaName> : instance.<field.javaName>) {
+    output.writeEnum(<field.tag>, <field.javaName>.getNumber(), true);
+}
+<else>
+// TODO remove unboxing
+for(<field.javaType> <field.javaName> : instance.<field.javaName>) {
+    output.<field.protostuffWriteMethod>(<field.tag>, <field.javaName>, true);
+}
+<endif>
+>>
+
+
+field_switch_case(field) ::= <<
+case <field.tag>: return "<field.name>";
+>>
+
+field_map(field) ::= <<
+__fieldMap.put("<field.name>", <field.tag>);
+>>

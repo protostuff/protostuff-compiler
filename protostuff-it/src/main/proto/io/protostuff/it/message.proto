@@ -13,11 +13,16 @@ message NestedMsg {
     string name = 2;
 }
 
+message TestMessage {
+    int32 a = 1;
+}
+
 message SimpleMessage {
     int32 int32 = 10;
     string string = 11;
     repeated int32 repeated_int32 = 12;
     repeated string repeated_string = 13;
+    TestMessage message = 14;
 }
 
 message MessageWithoutFields {

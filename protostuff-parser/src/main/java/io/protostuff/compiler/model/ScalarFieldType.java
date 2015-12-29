@@ -76,6 +76,24 @@ public enum ScalarFieldType implements FieldType {
     }
 
     @Override
+    public boolean isEnum() {
+        return false;
+    }
+
+    @Override
+    public boolean isMessage() {
+        return false;
+    }
+
+    public boolean isString() {
+        return this == STRING;
+    }
+
+    public boolean isBytes() {
+        return this == BYTES;
+    }
+
+    @Override
     public String toString() {
         return getName();
     }

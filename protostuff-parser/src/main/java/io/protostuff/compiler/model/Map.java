@@ -55,4 +55,19 @@ public class Map extends AbstractUserType {
     public void setValueType(Type valueType) {
         this.valueType = valueType;
     }
+
+    @Override
+    public boolean isScalar() {
+        return false;
+    }
+
+    @Override
+    public boolean isEnum() {
+        return false;
+    }
+
+    @Override
+    public boolean isMessage() {
+        return false;
+    }
 }

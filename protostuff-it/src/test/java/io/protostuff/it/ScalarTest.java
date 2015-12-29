@@ -79,12 +79,12 @@ public class ScalarTest {
     }
 
     @Test
-    public void scalarBuilderGetters() throws Exception {
-        ScalarFieldTestMsg.Builder builder = ScalarFieldTestMsg.newBuilder()
+    public void scalarGetters() throws Exception {
+        ScalarFieldTestMsg msg = ScalarFieldTestMsg.newBuilder()
                 .setDouble(0.1d)
                 .setFloat(0.2f);
-        assertEquals(0.1d, builder.getDouble(), 0d);
-        assertEquals(0.2f, builder.getFloat(), 0f);
+        assertEquals(0.1d, msg.getDouble(), 0d);
+        assertEquals(0.2f, msg.getFloat(), 0f);
     }
 
     @Test

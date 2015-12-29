@@ -1,10 +1,11 @@
 package io.protostuff.it;
 
-import io.protostuff.it.message_test.MessageWithoutFields;
-import io.protostuff.it.message_test.NestedMsg;
-import io.protostuff.it.message_test.ParentMsg;
-import io.protostuff.it.message_test.SimpleMessage;
+import io.protostuff.it.message_test.*;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
+
+import java.util.Collections;
 
 import static org.junit.Assert.*;
 
@@ -12,6 +13,9 @@ import static org.junit.Assert.*;
  * @author Kostiantyn Shchepanovskyi
  */
 public class MessageTest {
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     public static final SimpleMessage A = SimpleMessage.newBuilder()
             .setInt32(42)
@@ -25,14 +29,6 @@ public class MessageTest {
             .setInt32(43)
             .setString("cadabra")
             .build();
-
-    @Test
-    public void defaultInstance() throws Exception {
-        ParentMsg instance = ParentMsg.getDefaultInstance();
-        assertSame(NestedMsg.getDefaultInstance(), instance.getNestedMsg());
-        assertFalse(instance.hasNestedMsg());
-        assertEquals(0, instance.getNestedRepeatedMsgCount());
-    }
 
     @Test
     public void createdInstance() throws Exception {
@@ -84,6 +80,16 @@ public class MessageTest {
     }
 
     @Test
+    public void testToString_message_field() throws Exception {
+        SimpleMessage message = SimpleMessage.newBuilder()
+                .setMessage(TestMessage.newBuilder()
+                        .setA(123)
+                        .build())
+                .build();
+        assertEquals("SimpleMessage{message=TestMessage{a=123}}", message.toString());
+    }
+
+    @Test
     public void testToString_repeated_string_field() throws Exception {
         SimpleMessage message = SimpleMessage.newBuilder()
                 .addRepeatedString("test1")
@@ -103,7 +109,35 @@ public class MessageTest {
 
     @Test
     public void testToString_MessageWithoutFields() throws Exception {
-        MessageWithoutFields message = MessageWithoutFields.getDefaultInstance();
+        MessageWithoutFields message = MessageWithoutFields.newBuilder().build();
         assertEquals("MessageWithoutFields{}", message.toString());
+    }
+
+    @Test
+    public void testModifyConstructedMessage_normal_setter() throws Exception {
+        SimpleMessage message = SimpleMessage.newBuilder().build();
+        thrown.expect(IllegalStateException.class);
+        message.setInt32(1);
+    }
+
+    @Test
+    public void testModifyConstructedMessage_repeated_setter() throws Exception {
+        SimpleMessage message = SimpleMessage.newBuilder().build();
+        thrown.expect(IllegalStateException.class);
+        message.setRepeatedInt32List(Collections.emptyList());
+    }
+
+    @Test
+    public void testModifyConstructedMessage_adder_single() throws Exception {
+        SimpleMessage message = SimpleMessage.newBuilder().build();
+        thrown.expect(IllegalStateException.class);
+        message.addRepeatedInt32(1);
+    }
+
+    @Test
+    public void testModifyConstructedMessage_adder_list() throws Exception {
+        SimpleMessage message = SimpleMessage.newBuilder().build();
+        thrown.expect(IllegalStateException.class);
+        message.addRepeatedInt32(1);
     }
 }

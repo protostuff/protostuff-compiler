@@ -2,7 +2,7 @@ delimiters "<", ">"
 import "io/protostuff/generator/core.stg"
 import "io/protostuff/generator/java/generator.stg"
 import "io/protostuff/generator/java/enum.stg"
-import "io/protostuff/generator/java/builder.stg"
+import "io/protostuff/generator/java/schema.stg"
 
 message_compiler_enabled(message) ::= <%
 <if(message.nested)>
@@ -21,146 +21,182 @@ package <message.proto.javaPackage>;
 import java.util.Objects;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Collections;
+import io.protostuff.ByteString;
+import io.protostuff.Input;
+import io.protostuff.Output;
+import io.protostuff.Schema;
 <imports_generator_annotation()>
+<imports_schema()>
 
 <message:message_body()>
 >>
 
 message_body(message) ::= <<
 <message:generator_annotation()>
-public <if(message.nested)>static <endif>final class <message.javaName> {
-    
+public <if(message.nested)>static <endif>final class <message.javaName>
+        implements io.protostuff.Message\<<message.javaName>\>{
+
     <message.fields:field_declaration(); separator="\n">
-    
-    <message:default_instance()>
-    
-    <message:builder_factory_method()>
-    
-    <message:builder_constructor()>
-    
+    private transient boolean __lock = false;
+
+    private void initialize() {
+        <message.fields:field_initializer(); separator="\n">
+    }
+
+    public static <message.javaName> newBuilder() {
+        return new <message.javaName>();
+    }
+
+    public static io.protostuff.Schema\<<message.name>\> getSchema()
+    {
+    	return Schema.INSTANCE;
+    }
+
     <message.fields:field_accessors(); separator="\n">
 
-    <message:message_equals()>
+    public <message.javaName> build() {
+        initialize();
+        this.__lock = true;
+        return this;
+    }
 
-    <message:message_hashCode()>
+    @Override
+    public io.protostuff.Schema\<<message.name>\> cachedSchema() {
+        return Schema.INSTANCE;
+    }
 
-    <message:message_toString()>
+    @Override
+    public boolean equals(Object obj) {
+    	if (this == obj) {
+    		return true;
+    	}
+    	if (obj == null || this.getClass() != obj.getClass()) {
+    		return false;
+    	}
+    	<message.name> that = (<message.name>) obj;
+    	<if(message.hasFields)>
+    	return
+    	    <message.fields:{field|Objects.equals(this.<field.javaName>, that.<field.javaName>)}; separator="\n&& ">;
+    	<else>
+    	return true;
+    	<endif>
+    }
 
-    <message:builder()>
-    
+    @Override
+    public int hashCode() {
+    	<if(message.hasFields)>
+    	return Objects.hash(<message.fields:{field|<field.javaName>}; separator=", ">);
+    	<else>
+    	return 0;
+    	<endif>
+    }
+
+    @Override
+    public String toString() {
+        List\<String> parts = new ArrayList\<>();
+        <message.fields:field_toString_part(); separator="\n">
+        return "<message.javaName>{" + String.join(", ", parts) + "}";
+    }
+
+    <message:schema()>
+
     <message.messages:message_body(); separator="\n">
     
     <message.enums:enum_body(); separator="\n">
 }
 >>
 
+field_initializer(field) ::= <<
+<if(field.repeated)>
+if (<field.javaName> == null) {
+    <field.javaName> = Collections.emptyList();
+} else {
+    <field.javaName> = Collections.unmodifiableList(<field.javaName>);
+}
+<elseif(field.type.enum)>
+if (<field.javaName> == null) {
+    <field.javaName> = <field.javaDefaultValue>;
+}
+<elseif(field.type.scalar)>
+<if(field.type.string)>
+if (<field.javaName> == null) {
+    <field.javaName> = "";
+}
+<elseif(field.type.bytes)>
+if (<field.javaName> == null) {
+    <field.javaName> = ByteString.EMPTY;
+}
+<endif>
+<endif>
+>>
+
 field_declaration(field) ::= <<
 <if(field.repeated)>
-private final <field.javaRepeatedType> <field.javaName>;
+private <field.javaRepeatedType> <field.javaName>;
 <else>
-private final <field.javaType> <field.javaName>;
+private <field.javaType> <field.javaName>;
 <endif>
 >>
 
 field_accessors(field) ::= <<
 <if(field.repeated)>
-<field:repeated_field_getter()>
-<field:repeated_field_get_count()>
-<field:repeated_field_get_by_index()>
-<else>
-<field:field_getter()>
-<if(field.javaIsMessage)>
-<field:field_presence_check()>
-<endif>
-<endif>
->>
-
-field_getter(field) ::= <<
-public <field.javaType> <field.javaGetterName>() {
-<if(field.javaIsMessage)>
-    return <field.javaName> == null ? <field.javaDefaultValue> : <field.javaName>;
-<else>
-    return <field.javaName>;
-<endif>
-}
->>
-
-field_presence_check(field) ::= <<
-public boolean <field.javaHasMethodName>() {
-    return <field.javaName> != null;
-}
->>
-
-repeated_field_getter(field) ::= <<
 public <field.javaRepeatedType> <field.javaRepeatedGetterName>() {
     return <field.javaName>;
 }
->>
 
-repeated_field_get_count(field) ::= <<
+public <field.parent.javaName> <field.javaRepeatedSetterName>(<field.javaRepeatedType> <field.javaName>) {
+    <field:check_field_modification_lock()>
+    this.<field.javaName> = <field.javaName>;
+    return this;
+}
+
+public <field.parent.javaName> <field.javaRepeatedAdderName>(<field.javaType> <field.javaName>) {
+    <field:check_field_modification_lock()>
+    if (this.<field.javaName> == null) {
+        this.<field.javaName> = new ArrayList\<>();
+    }
+    this.<field.javaName>.add(<field.javaName>);
+    return this;
+}
+
+public <field.parent.javaName> <field.javaRepeatedAdderName>(<field.javaRepeatedType> <field.javaName>) {
+    <field:check_field_modification_lock()>
+    if (this.<field.javaName> == null) {
+        this.<field.javaName> = new ArrayList\<>();
+    }
+    this.<field.javaName>.addAll(<field.javaName>);
+    return this;
+}
+
 public int <field.javaRepeatedGetCountMethodName>() {
     return <field.javaName>.size();
 }
->>
 
-repeated_field_get_by_index(field) ::= <<
 public <field.javaType> <field.javaRepeatedGetByIndexMethodName>(int index) {
     return <field.javaName>.get(index);
 }
->>
-
-default_instance(message) ::= <<
-private static final <message.javaName> DEFAULT_INSTANCE;
-
-static {
-    DEFAULT_INSTANCE = newBuilder().build();
+<else>
+public <field.javaType> <field.javaGetterName>() {
+    return <field.javaName>;
 }
 
-public static <message.javaName> getDefaultInstance() {
-    return DEFAULT_INSTANCE;
+public <field.parent.javaName> <field.javaSetterName>(<field.javaType> value) {
+    <field:check_field_modification_lock()>
+    this.<field.javaName> = value;
+    return this;
 }
->>
-
-message_equals(message) ::= <<
-@Override
-public boolean equals(Object obj) {
-	if (this == obj) {
-		return true;
-	}
-	if (obj == null || this.getClass() != obj.getClass()) {
-		return false;
-	}
-	<message.name> that = (<message.name>) obj;
-	<if(message.hasFields)>
-	return
-	    <message.fields:field_equals(); separator="\n&& ">;
-	<else>
-	return true;
-	<endif>
+<if(field.type.message)>
+public boolean <field.javaHasMethodName>() {
+    return <field.javaName> != null;
 }
+<endif>
+<endif>
 >>
 
-message_hashCode(message) ::= <<
-@Override
-public int hashCode() {
-	<if(message.hasFields)>
-	return Objects.hash(<message.fields:{field|<field.javaName>}; separator=", ">);
-	<else>
-	return 0;
-	<endif>
-}
->>
-
-field_equals(field) ::= <<
-Objects.equals(this.<field.javaName>, that.<field.javaName>)
->>
-
-message_toString(message) ::= <<
-@Override
-public String toString() {
-    List\<String> parts = new ArrayList\<>();
-    <message.fields:field_toString_part(); separator="\n">
-    return "<message.javaName>{" + String.join(", ", parts) + "}";
+check_field_modification_lock(field) ::= <<
+if(__lock) {
+    throw new IllegalStateException("Could not update <field.parent.javaName>.<field.name>");
 }
 >>
 
