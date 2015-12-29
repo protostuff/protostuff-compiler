@@ -33,7 +33,7 @@ import io.protostuff.Schema;
 >>
 
 message_body(message) ::= <<
-<message:generator_annotation()>
+<if(!message.nested)><message:generator_annotation()><endif>
 public <if(message.nested)>static <endif>final class <message.javaName>
         implements io.protostuff.Message\<<message.javaName>\>{
 

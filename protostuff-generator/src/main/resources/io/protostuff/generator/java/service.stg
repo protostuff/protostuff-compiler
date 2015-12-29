@@ -1,0 +1,55 @@
+delimiters "<", ">"
+import "io/protostuff/generator/core.stg"
+import "io/protostuff/generator/java/generator.stg"
+
+service_compiler_enabled(service) ::= "true"
+service_compiler_output(service) ::= "<service.proto.javaPackagePath>/<service.javaName>.java"
+service_compiler_template(service) ::= "<service:service()>"
+
+service(service) ::= <<
+package <service.proto.javaPackage>;
+
+import java.util.concurrent.CompletableFuture;
+<imports_generator_annotation()>
+
+import io.protostuff.Service;
+import io.protostuff.Rpc;
+import io.protostuff.Request;
+import io.protostuff.Response;
+
+<service:generator_annotation()>
+@Service("<namespace(service)>")
+public interface <service.javaName> {
+
+	<service.methods:service_method_declaration(); separator="\n\n">
+
+}
+>>
+
+
+namespace(service) ::= <%
+<service.proto.package>.<service.name>
+%>
+
+request_action(method) ::= <%
+<method.name>Request
+%>
+
+response_action(method) ::= <%
+<method.name>Response
+%>
+
+request_qualifier(method) ::= <%
+<namespace(method.service)>/<request_action(method)>
+%>
+
+response_qualifier(method) ::= <%
+<namespace(method.service)>/<response_action(method)>
+%>
+
+service_method_declaration(method) ::= <<
+@Rpc
+@Request("<method:request_action()>")
+@Response("<method:response_action()>")
+CompletableFuture\<<method.returnType.name>\> <method.name>(<method.argType.name> request);
+>>

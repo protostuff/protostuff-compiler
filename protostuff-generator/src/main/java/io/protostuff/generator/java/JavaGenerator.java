@@ -31,6 +31,7 @@ public class JavaGenerator implements ProtoCompiler {
     private final StCompilerFactory compilerFactory;
     private final ProtoCompiler messageGenerator;
     private final ProtoCompiler enumGenerator;
+    private final ProtoCompiler serviceGenerator;
 
     @Inject
     public JavaGenerator(StCompilerFactory compilerFactory) {
@@ -86,6 +87,7 @@ public class JavaGenerator implements ProtoCompiler {
                 .build();
         messageGenerator = compilerFactory.create("io/protostuff/generator/java/message.stg", rendererMap, extenderMap);
         enumGenerator = compilerFactory.create("io/protostuff/generator/java/enum.stg", rendererMap, extenderMap);
+        serviceGenerator = compilerFactory.create("io/protostuff/generator/java/service.stg", rendererMap, extenderMap);
     }
 
     @Override
@@ -97,5 +99,6 @@ public class JavaGenerator implements ProtoCompiler {
     public void compile(Module module) {
         messageGenerator.compile(module);
         enumGenerator.compile(module);
+        serviceGenerator.compile(module);
     }
 }

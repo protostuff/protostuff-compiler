@@ -22,7 +22,7 @@ package <enum.proto.javaPackage>;
 >>
 
 enum_body(enum) ::= <<
-<enum:generator_annotation()>
+<if(!enum.nested)><enum:generator_annotation()><endif>
 public enum <enum.javaName> implements io.protostuff.EnumLite\<<enum.javaName>\>{
     <enum.constants:enum_constant(); separator=",\n">;
 
