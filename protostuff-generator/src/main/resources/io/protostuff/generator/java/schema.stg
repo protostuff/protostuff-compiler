@@ -135,19 +135,21 @@ field_write_switch(field) ::= <<
 
 singular_field_write_switch(field) ::= <<
 <if(field.type.message)>
-if(instance.<field.javaName> != null) {
+if(!Objects.equals(instance.<field.javaName>, <field.javaDefaultValue>)) {
 	output.writeObject(<field.tag>, instance.<field.javaName>, <field.javaType>.getSchema(), false);
 }
 <elseif(field.type.enum)>
-if(instance.<field.javaName> != null) {
+if(!Objects.equals(instance.<field.javaName>, <field.javaDefaultValue>)) {
 	output.writeEnum(<field.tag>, instance.<field.javaName>.getNumber(), false);
 }
 <elseif(field.type.string || field.type.bytes)>
-if(instance.<field.javaName> != null) {
+if(!Objects.equals(instance.<field.javaName>, <field.javaDefaultValue>)) {
 	output.<field.protostuffWriteMethod>(<field.tag>, instance.<field.javaName>, false);
 }
 <else>
-output.<field.protostuffWriteMethod>(<field.tag>, instance.<field.javaName>, false);
+if(!Objects.equals(instance.<field.javaName>, <field.javaDefaultValue>)) {
+    output.<field.protostuffWriteMethod>(<field.tag>, instance.<field.javaName>, false);
+}
 <endif>
 >>
 
