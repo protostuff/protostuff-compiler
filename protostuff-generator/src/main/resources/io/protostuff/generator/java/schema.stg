@@ -132,19 +132,15 @@ field_write_switch(field) ::= <<
 
 singular_field_write_switch(field) ::= <<
 <if(field.type.message)>
-if(!java.util.Objects.equals(instance.<field.javaName>, <field.javaDefaultValue>)) {
+if(instance.<field.javaName> != null) {
 	output.writeObject(<field.tag>, instance.<field.javaName>, <field.javaType>.getSchema(), false);
 }
 <elseif(field.type.enum)>
-if(!java.util.Objects.equals(instance.<field.javaName>, <field.javaDefaultValue>)) {
+if(instance.<field.javaName> != null) {
 	output.writeEnum(<field.tag>, instance.<field.javaName>.getNumber(), false);
 }
-<elseif(field.type.string || field.type.bytes)>
-if(!java.util.Objects.equals(instance.<field.javaName>, <field.javaDefaultValue>)) {
-	output.<field.protostuffWriteMethod>(<field.tag>, instance.<field.javaName>, false);
-}
 <else>
-if(!java.util.Objects.equals(instance.<field.javaName>, <field.javaDefaultValue>)) {
+if(instance.<field.javaName> != null) {
     output.<field.protostuffWriteMethod>(<field.tag>, instance.<field.javaName>, false);
 }
 <endif>
@@ -160,7 +156,6 @@ for(<field.javaType> <field.javaName> : instance.<field.javaName>) {
     output.writeEnum(<field.tag>, <field.javaName>.getNumber(), true);
 }
 <else>
-// TODO remove unboxing
 for(<field.javaType> <field.javaName> : instance.<field.javaName>) {
     output.<field.protostuffWriteMethod>(<field.tag>, <field.javaName>, true);
 }

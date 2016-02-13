@@ -5,11 +5,7 @@ import "io/protostuff/generator/java/enum.stg"
 import "io/protostuff/generator/java/schema.stg"
 
 message_compiler_enabled(message) ::= <%
-<if(message.nested)>
-false
-<else>
-true
-<endif>
+<if(message.nested)>false<else>true<endif>
 %>
 
 message_compiler_output(message) ::= "<message.proto.javaPackagePath>/<message.javaName>.java"
@@ -103,20 +99,6 @@ if (<field.javaName> == null) {
 } else {
     <field.javaName> = java.util.Collections.unmodifiableList(<field.javaName>);
 }
-<elseif(field.type.enum)>
-if (<field.javaName> == null) {
-    <field.javaName> = <field.javaDefaultValue>;
-}
-<elseif(field.type.scalar)>
-<if(field.type.string)>
-if (<field.javaName> == null) {
-    <field.javaName> = "";
-}
-<elseif(field.type.bytes)>
-if (<field.javaName> == null) {
-    <field.javaName> = io.protostuff.ByteString.EMPTY;
-}
-<endif>
 <endif>
 >>
 
@@ -167,6 +149,11 @@ public <field.javaType> <field.javaRepeatedGetByIndexMethodName>(int index) {
 }
 <else>
 public <field.javaType> <field.javaGetterName>() {
+    <if(!field.type.message)>
+    if (<field.javaName> == null) {
+        return <field.javaDefaultValue>;
+    }
+    <endif>
     return <field.javaName>;
 }
 
@@ -175,11 +162,10 @@ public <field.parent.javaName> <field.javaSetterName>(<field.javaType> value) {
     this.<field.javaName> = value;
     return this;
 }
-<if(field.type.message)>
+
 public boolean <field.javaHasMethodName>() {
     return <field.javaName> != null;
 }
-<endif>
 <endif>
 >>
 
@@ -193,7 +179,7 @@ field_toString_part(field) ::= <<
 <if(field.repeated)>
 if (!<field.javaName>.isEmpty()) {
 <else>
-if (!java.util.Objects.equals(<field.javaName>, <field.javaDefaultValue>)) {
+if (<field.javaName> != null) {
 <endif>
     parts.add(<field.toStringPart>);
 }

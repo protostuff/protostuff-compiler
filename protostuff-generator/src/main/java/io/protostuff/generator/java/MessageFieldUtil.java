@@ -22,7 +22,7 @@ public class MessageFieldUtil {
         FieldType type = field.getType();
         if (type instanceof ScalarFieldType) {
             ScalarFieldType scalarFieldType = (ScalarFieldType) type;
-            return ScalarFieldTypeUtil.getPrimitiveType(scalarFieldType);
+            return ScalarFieldTypeUtil.getWrapperType(scalarFieldType);
         }
         if (type instanceof UserType) {
             UserType userType = (UserType) type;
