@@ -18,17 +18,6 @@ message_compiler_template(message) ::= "<message:message()>"
 message(message) ::= <<
 package <message.proto.javaPackage>;
 
-import java.util.Objects;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Collections;
-import io.protostuff.ByteString;
-import io.protostuff.Input;
-import io.protostuff.Output;
-import io.protostuff.Schema;
-<imports_generator_annotation()>
-<imports_schema()>
-
 <message:message_body()>
 >>
 
@@ -77,7 +66,7 @@ public <if(message.nested)>static <endif>final class <message.javaName>
     	<message.name> that = (<message.name>) obj;
     	<if(message.hasFields)>
     	return
-    	    <message.fields:{field|Objects.equals(this.<field.javaName>, that.<field.javaName>)}; separator="\n&& ">;
+    	    <message.fields:{field|java.util.Objects.equals(this.<field.javaName>, that.<field.javaName>)}; separator="\n&& ">;
     	<else>
     	return true;
     	<endif>
@@ -86,7 +75,7 @@ public <if(message.nested)>static <endif>final class <message.javaName>
     @Override
     public int hashCode() {
     	<if(message.hasFields)>
-    	return Objects.hash(<message.fields:{field|<field.javaName>}; separator=", ">);
+    	return java.util.Objects.hash(<message.fields:{field|<field.javaName>}; separator=", ">);
     	<else>
     	return 0;
     	<endif>
@@ -94,7 +83,7 @@ public <if(message.nested)>static <endif>final class <message.javaName>
 
     @Override
     public String toString() {
-        List\<String> parts = new ArrayList\<>();
+        java.util.List\<String> parts = new java.util.ArrayList\<>();
         <message.fields:field_toString_part(); separator="\n">
         return "<message.javaName>{" + String.join(", ", parts) + "}";
     }
@@ -110,9 +99,9 @@ public <if(message.nested)>static <endif>final class <message.javaName>
 field_initializer(field) ::= <<
 <if(field.repeated)>
 if (<field.javaName> == null) {
-    <field.javaName> = Collections.emptyList();
+    <field.javaName> = java.util.Collections.emptyList();
 } else {
-    <field.javaName> = Collections.unmodifiableList(<field.javaName>);
+    <field.javaName> = java.util.Collections.unmodifiableList(<field.javaName>);
 }
 <elseif(field.type.enum)>
 if (<field.javaName> == null) {
@@ -125,7 +114,7 @@ if (<field.javaName> == null) {
 }
 <elseif(field.type.bytes)>
 if (<field.javaName> == null) {
-    <field.javaName> = ByteString.EMPTY;
+    <field.javaName> = io.protostuff.ByteString.EMPTY;
 }
 <endif>
 <endif>
@@ -154,7 +143,7 @@ public <field.parent.javaName> <field.javaRepeatedSetterName>(<field.javaRepeate
 public <field.parent.javaName> <field.javaRepeatedAdderName>(<field.javaType> <field.javaName>) {
     <field:check_field_modification_lock()>
     if (this.<field.javaName> == null) {
-        this.<field.javaName> = new ArrayList\<>();
+        this.<field.javaName> = new java.util.ArrayList\<>();
     }
     this.<field.javaName>.add(<field.javaName>);
     return this;
@@ -163,7 +152,7 @@ public <field.parent.javaName> <field.javaRepeatedAdderName>(<field.javaType> <f
 public <field.parent.javaName> <field.javaRepeatedAdderName>(<field.javaRepeatedType> <field.javaName>) {
     <field:check_field_modification_lock()>
     if (this.<field.javaName> == null) {
-        this.<field.javaName> = new ArrayList\<>();
+        this.<field.javaName> = new java.util.ArrayList\<>();
     }
     this.<field.javaName>.addAll(<field.javaName>);
     return this;
@@ -204,7 +193,7 @@ field_toString_part(field) ::= <<
 <if(field.repeated)>
 if (!<field.javaName>.isEmpty()) {
 <else>
-if (!Objects.equals(<field.javaName>, <field.javaDefaultValue>)) {
+if (!java.util.Objects.equals(<field.javaName>, <field.javaDefaultValue>)) {
 <endif>
     parts.add(<field.toStringPart>);
 }

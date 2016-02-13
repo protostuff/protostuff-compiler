@@ -1,9 +1,5 @@
 delimiters "<", ">"
 
-imports_generator_annotation() ::= <<
-import javax.annotation.Generated;
->>
-
 generator_annotation(type) ::= <<
-@Generated("<type.proto.filename>")
+@javax.annotation.Generated("<type.proto.filename>")
 >>

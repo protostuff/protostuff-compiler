@@ -16,8 +16,6 @@ enum_compiler_template(enum) ::= "<enum:enum()>"
 enum(enum) ::= <<
 package <enum.proto.javaPackage>;
 
-<imports_generator_annotation()>
-
 <enum:enum_body()>
 >>
 

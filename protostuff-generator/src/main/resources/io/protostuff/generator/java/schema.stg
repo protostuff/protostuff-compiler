@@ -1,13 +1,15 @@
 delimiters "<", ">"
 
-imports_schema() ::= <<
-import java.io.IOException;
->>
-
 schema(message) ::= <<
 public static final class Schema implements io.protostuff.Schema\<<message.javaName>\>{
 
     private static final Schema INSTANCE = new Schema();
+
+    private static final java.util.Map\<String,Integer> __fieldMap = new java.util.HashMap\<>();
+
+    static {
+    	<message.fields:field_map(); separator="\n">
+    }
 
     @Override
     public <message.javaName> newMessage() {
@@ -36,7 +38,7 @@ public static final class Schema implements io.protostuff.Schema\<<message.javaN
     }
 
     @Override
-    public void mergeFrom(Input input, <message.name> instance) throws IOException {
+    public void mergeFrom(io.protostuff.Input input, <message.name> instance) throws java.io.IOException {
     	if (instance.__lock) {
     		throw new IllegalStateException("Cannot reuse message instance");
     	} else {
@@ -59,7 +61,7 @@ public static final class Schema implements io.protostuff.Schema\<<message.javaN
     }
 
     @Override
-    public void writeTo(Output output, <message.javaName> instance) throws IOException {
+    public void writeTo(io.protostuff.Output output, <message.javaName> instance) throws java.io.IOException {
         <message.fields:field_write_switch(); separator="\n\n">
     }
 
@@ -77,11 +79,6 @@ public static final class Schema implements io.protostuff.Schema\<<message.javaN
     	return number == null ? 0 : number.intValue();
     }
 
-    private static final java.util.Map\<String,Integer> __fieldMap = new java.util.HashMap\<>();
-
-    static {
-    	<message.fields:field_map(); separator="\n">
-    }
 }
 >>
 
@@ -109,17 +106,17 @@ instance.<field.javaName> = input.<field.protostuffReadMethod>();
 repeated_field_merge_switch(field) ::= <<
 <if(field.type.message)>
 if(instance.<field.javaName> == null) {
-	instance.<field.javaName> = new ArrayList\<>();
+	instance.<field.javaName> = new java.util.ArrayList\<>();
 }
 instance.<field.javaName>.add(input.mergeObject(null, <field.javaType>.getSchema()));
 <elseif(field.type.enum)>
 if(instance.<field.javaName> == null) {
-	instance.<field.javaName> = new ArrayList\<>();
+	instance.<field.javaName> = new java.util.ArrayList\<>();
 }
 instance.<field.javaName>.add(<field.javaType>.valueOf(input.readEnum()));
 <else>
 if(instance.<field.javaName> == null) {
-	instance.<field.javaName> = new ArrayList\<>();
+	instance.<field.javaName> = new java.util.ArrayList\<>();
 }
 instance.<field.javaName>.add(input.<field.protostuffReadMethod>());
 <endif>
@@ -135,19 +132,19 @@ field_write_switch(field) ::= <<
 
 singular_field_write_switch(field) ::= <<
 <if(field.type.message)>
-if(!Objects.equals(instance.<field.javaName>, <field.javaDefaultValue>)) {
+if(!java.util.Objects.equals(instance.<field.javaName>, <field.javaDefaultValue>)) {
 	output.writeObject(<field.tag>, instance.<field.javaName>, <field.javaType>.getSchema(), false);
 }
 <elseif(field.type.enum)>
-if(!Objects.equals(instance.<field.javaName>, <field.javaDefaultValue>)) {
+if(!java.util.Objects.equals(instance.<field.javaName>, <field.javaDefaultValue>)) {
 	output.writeEnum(<field.tag>, instance.<field.javaName>.getNumber(), false);
 }
 <elseif(field.type.string || field.type.bytes)>
-if(!Objects.equals(instance.<field.javaName>, <field.javaDefaultValue>)) {
+if(!java.util.Objects.equals(instance.<field.javaName>, <field.javaDefaultValue>)) {
 	output.<field.protostuffWriteMethod>(<field.tag>, instance.<field.javaName>, false);
 }
 <else>
-if(!Objects.equals(instance.<field.javaName>, <field.javaDefaultValue>)) {
+if(!java.util.Objects.equals(instance.<field.javaName>, <field.javaDefaultValue>)) {
     output.<field.protostuffWriteMethod>(<field.tag>, instance.<field.javaName>, false);
 }
 <endif>

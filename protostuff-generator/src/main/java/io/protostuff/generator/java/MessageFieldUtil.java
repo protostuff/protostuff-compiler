@@ -15,7 +15,7 @@ public class MessageFieldUtil {
     public static final String HAS_PREFIX = "has";
     public static final String GETTER_PREFIX = "get";
     public static final String SETTER_PREFIX = "set";
-    public static final String LIST = "List";
+    public static final String LIST = "java.util.List";
     public static final String GETTER_REPEATED_SUFFIX = "List";
 
     public static String getFieldType(Field field) {

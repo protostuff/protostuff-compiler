@@ -10,7 +10,6 @@ service(service) ::= <<
 package <service.proto.javaPackage>;
 
 import java.util.concurrent.CompletableFuture;
-<imports_generator_annotation()>
 
 import io.protostuff.Service;
 import io.protostuff.Rpc;
