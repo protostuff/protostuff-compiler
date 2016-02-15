@@ -22,7 +22,7 @@ public class MessageFieldUtil {
         FieldType type = field.getType();
         if (type instanceof ScalarFieldType) {
             ScalarFieldType scalarFieldType = (ScalarFieldType) type;
-            return ScalarFieldTypeUtil.getWrapperType(scalarFieldType);
+            return ScalarFieldTypeUtil.getPrimitiveType(scalarFieldType);
         }
         if (type instanceof UserType) {
             UserType userType = (UserType) type;
@@ -260,5 +260,17 @@ public class MessageFieldUtil {
                 throw new IllegalArgumentException(String.valueOf(type));
         }
         return name;
+    }
+
+    public static String bitFieldName(Field field) {
+        return "__bitField" + (field.getIndex() - 1) / 32;
+    }
+
+    public static int bitFieldIndex(Field field) {
+        return (field.getIndex() - 1) % 32;
+    }
+
+    public static int bitFieldMask(Field field) {
+        return 1 << bitFieldIndex(field);
     }
 }

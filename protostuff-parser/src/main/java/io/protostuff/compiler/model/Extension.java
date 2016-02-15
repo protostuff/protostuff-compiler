@@ -59,6 +59,14 @@ public class Extension extends AbstractElement implements FieldContainer, GroupC
         return fields;
     }
 
+    @Override
+    public int getFieldCount() {
+        if (fields == null) {
+            return 0;
+        }
+        return fields.size();
+    }
+
     public void setFields(List<Field> fields) {
         this.fields = fields;
     }

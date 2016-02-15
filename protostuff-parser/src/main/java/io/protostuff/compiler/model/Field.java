@@ -13,7 +13,7 @@ public class Field extends AbstractDescriptor {
     protected String typeName;
     protected FieldType type;
     protected int tag;
-
+    protected int index;
     private FieldContainer parent;
 
     public Field(FieldContainer parent) {
@@ -63,6 +63,17 @@ public class Field extends AbstractDescriptor {
 
     public void setType(FieldType type) {
         this.type = type;
+    }
+
+    /**
+     * Field index in the container (order, starting from 1)
+     */
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
     }
 
     /**

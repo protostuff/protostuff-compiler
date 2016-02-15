@@ -67,6 +67,7 @@ public class MessageParseListener extends AbstractProtoParserListener {
         updateModifier(ctx.fieldModifier(), field);
         field.setName(name);
         field.setTag(tag);
+        field.setIndex(fieldContainer.getFieldCount()+1);
         field.setTypeName(type);
         field.setSourceCodeLocation(getSourceCodeLocation(ctx));
         fieldContainer.addField(field);
@@ -116,6 +117,7 @@ public class MessageParseListener extends AbstractProtoParserListener {
         field.setName(group.getName().toLowerCase()); // same behavior as in protoc
         int tag = Integer.decode(ctx.INTEGER_VALUE().getText());
         field.setTag(tag);
+        field.setIndex(fieldContainer.getFieldCount()+1);
         field.setTypeName(group.getName());
         field.setType(group);
         field.setSourceCodeLocation(getSourceCodeLocation(ctx));
@@ -157,6 +159,7 @@ public class MessageParseListener extends AbstractProtoParserListener {
         Integer tag = Integer.decode(ctx.INTEGER_VALUE().getText());
         field.setName(name);
         field.setTag(tag);
+        field.setIndex(fieldContainer.getFieldCount()+1);
         field.setTypeName(type);
         field.setSourceCodeLocation(getSourceCodeLocation(ctx));
         fieldContainer.addField(field);
@@ -200,6 +203,7 @@ public class MessageParseListener extends AbstractProtoParserListener {
         Integer tag = Integer.decode(ctx.tag().getText());
         field.setName(name);
         field.setTag(tag);
+        field.setIndex(message.getFieldCount()+1);
         field.setTypeName(name);
         field.setType(map);
         field.setSourceCodeLocation(getSourceCodeLocation(ctx));

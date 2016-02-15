@@ -101,6 +101,7 @@ instance.<field.javaName> = <field.javaType>.valueOf(input.readEnum());
 <else>
 instance.<field.javaName> = input.<field.protostuffReadMethod>();
 <endif>
+instance.<field.javaBitFieldName> |= <field.javaBitFieldMask>;
 >>
 
 repeated_field_merge_switch(field) ::= <<
@@ -132,15 +133,15 @@ field_write_switch(field) ::= <<
 
 singular_field_write_switch(field) ::= <<
 <if(field.type.message)>
-if(instance.<field.javaName> != null) {
+if((instance.<field.javaBitFieldName> & <field.javaBitFieldMask>) == <field.javaBitFieldMask>) {
 	output.writeObject(<field.tag>, instance.<field.javaName>, <field.javaType>.getSchema(), false);
 }
 <elseif(field.type.enum)>
-if(instance.<field.javaName> != null) {
+if((instance.<field.javaBitFieldName> & <field.javaBitFieldMask>) == <field.javaBitFieldMask>) {
 	output.writeEnum(<field.tag>, instance.<field.javaName>.getNumber(), false);
 }
 <else>
-if(instance.<field.javaName> != null) {
+if((instance.<field.javaBitFieldName> & <field.javaBitFieldMask>) == <field.javaBitFieldMask>) {
     output.<field.protostuffWriteMethod>(<field.tag>, instance.<field.javaName>, false);
 }
 <endif>

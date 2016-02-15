@@ -214,4 +214,12 @@ public class Message extends AbstractUserTypeContainer
         }
         extensionRanges.add(range);
     }
+
+    @Override
+    public int getFieldCount() {
+        if (fields == null) {
+            return 0;
+        }
+        return fields.size();
+    }
 }

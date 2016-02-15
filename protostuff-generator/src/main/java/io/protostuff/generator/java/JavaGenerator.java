@@ -28,14 +28,12 @@ import io.protostuff.generator.StCompilerFactory;
 public class JavaGenerator implements ProtoCompiler {
     public static final String GENERATOR_NAME = "java";
 
-    private final StCompilerFactory compilerFactory;
     private final ProtoCompiler messageGenerator;
     private final ProtoCompiler enumGenerator;
     private final ProtoCompiler serviceGenerator;
 
     @Inject
     public JavaGenerator(StCompilerFactory compilerFactory) {
-        this.compilerFactory = compilerFactory;
         // TODO initialization should be lazy - usually only one generator is used
         Map<Class<?>, AttributeRenderer> rendererMap = new HashMap<>();
         Map<Class<?>, ObjectExtender<?>> extenderMap = ImmutableMap.<Class<?>, ObjectExtender<?>>builder()
@@ -51,6 +49,7 @@ public class JavaGenerator implements ProtoCompiler {
                 .put(Message.class, SimpleObjectExtender.<Message>newBuilder()
                         .property("javaName", UserTypeUtil::getClassName)
                         .property("hasFields", MessageUtil::hasFields)
+                        .property("javaBitFieldNames", MessageUtil::bitFieldNames)
                         .build())
                 .put(Field.class, SimpleObjectExtender.<Field>newBuilder()
                         .property("javaType", MessageFieldUtil::getFieldType)
@@ -74,6 +73,9 @@ public class JavaGenerator implements ProtoCompiler {
                         .property("protostuffReadMethod", MessageFieldUtil::protostuffReadMethod)
                         .property("protostuffWriteMethod", MessageFieldUtil::protostuffWriteMethod)
                         .property("toStringPart", MessageFieldUtil::toStringPart)
+                        .property("javaBitFieldName", MessageFieldUtil::bitFieldName)
+                        .property("javaBitFieldIndex", MessageFieldUtil::bitFieldIndex)
+                        .property("javaBitFieldMask", MessageFieldUtil::bitFieldMask)
                         .build())
                 .put(Enum.class, SimpleObjectExtender.<Enum>newBuilder()
                         .property("javaName", UserTypeUtil::getClassName)
