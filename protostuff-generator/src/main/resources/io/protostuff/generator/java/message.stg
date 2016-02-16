@@ -81,7 +81,7 @@ public <if(message.nested)>static <endif>final class <message.javaName>
     @Override
     public String toString() {
         java.util.List\<String> parts = new java.util.ArrayList\<>();
-        <message.fields:field_toString_part(); separator="\n">
+        <message.fields:field_toString_part()>
         return "<message.javaName>{" + String.join(", ", parts) + "}";
     }
 

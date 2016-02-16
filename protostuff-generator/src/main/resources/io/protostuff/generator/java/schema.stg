@@ -62,7 +62,7 @@ public static final class Schema implements io.protostuff.Schema\<<message.javaN
 
     @Override
     public void writeTo(io.protostuff.Output output, <message.javaName> instance) throws java.io.IOException {
-        <message.fields:field_write_switch(); separator="\n\n">
+        <message.fields:field_write_switch()>
     }
 
     @Override
@@ -123,13 +123,13 @@ instance.<field.javaName>.add(input.<field.protostuffReadMethod>());
 <endif>
 >>
 
-field_write_switch(field) ::= <<
+field_write_switch(field) ::= <%
 <if(field.repeated)>
 <field:repeated_field_write_switch()>
 <else>
 <field:singular_field_write_switch()>
 <endif>
->>
+%>
 
 singular_field_write_switch(field) ::= <<
 <if(field.type.message)>
