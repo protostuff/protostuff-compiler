@@ -44,20 +44,18 @@ public static final class Schema implements io.protostuff.Schema\<<message.javaN
     	} else {
     		instance.__lock = true;
     	}
-    	try {
-    		for(int number = input.readFieldNumber(this);; number = input.readFieldNumber(this)) {
-    			switch(number) {
-    				case 0:
-    					return;
-    				<message.fields:field_merge_switch(); separator="\n">
-    				default:
-    					input.handleUnknownField(number, this);
-    			}
-    		}
-    	} finally {
-    		// set all non-initialized fields to default values
-    		instance.initialize();
+    	while(true) {
+    		int number = input.readFieldNumber(this);
+            if (number == 0) {
+                break;
+            }
+            switch(number) {
+                <message.fields:field_merge_switch(); separator="\n">
+                default:
+                    input.handleUnknownField(number, this);
+            }
     	}
+        instance.initialize();
     }
 
     @Override
