@@ -1,8 +1,11 @@
 package io.protostuff.it;
 
 import io.protostuff.JsonIOUtil;
+import io.protostuff.LinkedBuffer;
+import io.protostuff.ProtobufIOUtil;
 import io.protostuff.Schema;
 import io.protostuff.it.message_test.SimpleMessage;
+import io.protostuff.it.message_test.TestMap;
 import io.protostuff.it.message_test.TestMessage;
 import org.junit.Assert;
 import org.junit.Test;
@@ -21,7 +24,7 @@ public class MessageSerializationTest {
             .setInt32(42)
             .setString("xxx")
             .build();
-    private static final String REPEATED_JSON = "{\"repeated_int32\":[42,43],\"repeated_string\":[\"line1\",\"line2\"]}";
+    private static final String REPEATED_JSON = "{\"repeatedInt32\":[42,43],\"repeatedString\":[\"line1\",\"line2\"]}";
     private static final SimpleMessage REPEATED_MESSAGE =SimpleMessage.newBuilder()
             .addRepeatedInt32(42)
             .addRepeatedInt32(43)
@@ -79,4 +82,30 @@ public class MessageSerializationTest {
         JsonIOUtil.mergeFrom(NESTED_JSON.getBytes(), result, SCHEMA, false);
         Assert.assertEquals(NESTED_MESSAGE, result);
     }
+
+    @Test
+    public void map_serialization_deserialization() throws Exception {
+        SimpleMessage simpleMessage = SimpleMessage.newBuilder()
+                .setInt32(5)
+                .build();
+        TestMap container = TestMap.newBuilder()
+                .putMapBoolBool(true, true)
+                .putMapBoolBool(false, false)
+                .putMapInt32Int32(43, 42)
+                .putMapInt32Int32(1, 0)
+                .putMapStringSimpleMessage("key", simpleMessage)
+                .build();
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        ProtobufIOUtil.writeTo(stream, container, TestMap.getSchema(), LinkedBuffer.allocate());
+        byte[] bytes = stream.toByteArray();
+        TestMap newInstance = TestMap.getSchema().newMessage();
+        ProtobufIOUtil.mergeFrom(bytes, newInstance, TestMap.getSchema());
+        Assert.assertEquals(true, newInstance.getMapBoolBool(true));
+        Assert.assertEquals(false, newInstance.getMapBoolBool(false));
+        Assert.assertEquals(42, newInstance.getMapInt32Int32(43).intValue());
+        Assert.assertEquals(0, newInstance.getMapInt32Int32(1).intValue());
+        Assert.assertEquals(simpleMessage, newInstance.getMapStringSimpleMessage("key"));
+        Assert.assertEquals(container, newInstance);
+    }
+
 }

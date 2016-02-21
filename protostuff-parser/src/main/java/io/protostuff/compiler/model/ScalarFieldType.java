@@ -85,6 +85,11 @@ public enum ScalarFieldType implements FieldType {
         return false;
     }
 
+    @Override
+    public boolean isMap() {
+        return false;
+    }
+
     public boolean isString() {
         return this == STRING;
     }

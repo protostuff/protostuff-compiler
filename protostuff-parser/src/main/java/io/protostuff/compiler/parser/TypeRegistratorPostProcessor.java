@@ -7,7 +7,6 @@ import java.util.function.Consumer;
 import io.protostuff.compiler.model.Enum;
 import io.protostuff.compiler.model.Extension;
 import io.protostuff.compiler.model.GroupContainer;
-import io.protostuff.compiler.model.Map;
 import io.protostuff.compiler.model.Message;
 import io.protostuff.compiler.model.Proto;
 import io.protostuff.compiler.model.Service;
@@ -36,10 +35,6 @@ public class TypeRegistratorPostProcessor implements ProtoContextPostProcessor {
             String fullyQualifiedName = proto.getNamespace() + type.getName();
             type.setFullyQualifiedName(fullyQualifiedName);
             context.register(fullyQualifiedName, type);
-            for (Map map : type.getMaps()) {
-                map.setProto(proto);
-                map.setFullyQualifiedName(type.getNamespace() + map.getName());
-            }
         }
 
         List<io.protostuff.compiler.model.Enum> enums = proto.getEnums();
@@ -83,12 +78,6 @@ public class TypeRegistratorPostProcessor implements ProtoContextPostProcessor {
         };
         nestedEnums.forEach(nestedTypeProcessor);
         nestedMessages.forEach(nestedTypeProcessor);
-        nestedMessages.forEach(message -> {
-            for (Map map : message.getMaps()) {
-                map.setProto(message.getProto());
-                map.setFullyQualifiedName(message.getNamespace() + map.getName());
-            }
-            registerNestedUserTypes(context, message);
-        });
+        nestedMessages.forEach(message -> registerNestedUserTypes(context, message));
     }
 }

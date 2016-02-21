@@ -16,7 +16,6 @@ public class Message extends AbstractUserTypeContainer
     protected List<Field> fields;
     protected List<Group> groups;
     protected List<Oneof> oneofs;
-    protected List<Map> maps;
     protected Proto proto;
     protected String fullyQualifiedName;
 
@@ -66,33 +65,6 @@ public class Message extends AbstractUserTypeContainer
             }
         }
         return null;
-    }
-
-    public List<Map> getMaps() {
-        if (maps == null) {
-            return Collections.emptyList();
-        }
-        return maps;
-    }
-
-    public void setMaps(List<Map> maps) {
-        this.maps = maps;
-    }
-
-    public Map getMap(String name) {
-        for (Map map : getMaps()) {
-            if (map.getName().equals(name)) {
-                return map;
-            }
-        }
-        return null;
-    }
-
-    public void addMap(Map map) {
-        if (maps == null) {
-            maps = new ArrayList<>();
-        }
-        maps.add(map);
     }
 
     public List<Oneof> getOneofs() {
@@ -168,6 +140,11 @@ public class Message extends AbstractUserTypeContainer
     @Override
     public boolean isMessage() {
         return true;
+    }
+
+    @Override
+    public boolean isMap() {
+        return false;
     }
 
     @Override

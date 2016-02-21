@@ -29,6 +29,11 @@ public abstract class AbstractUserType extends AbstractDescriptor implements Use
     }
 
     @Override
+    public boolean isMap() {
+        return false;
+    }
+
+    @Override
     public void setFullyQualifiedName(String fullyQualifiedName) {
         this.fullyQualifiedName = fullyQualifiedName;
     }

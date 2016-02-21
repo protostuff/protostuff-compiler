@@ -1,11 +1,14 @@
 package io.protostuff.it;
 
 import io.protostuff.it.message_test.*;
+import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.Assert.*;
 
@@ -28,6 +31,10 @@ public class MessageTest {
     public static final SimpleMessage B = SimpleMessage.newBuilder()
             .setInt32(43)
             .setString("cadabra")
+            .build();
+    public static final TestMap TEST_MAP = TestMap.newBuilder()
+            .putMapStringString("key", "value")
+            .putMapStringString("test", "test")
             .build();
 
     @Test
@@ -139,5 +146,49 @@ public class MessageTest {
         SimpleMessage message = SimpleMessage.newBuilder().build();
         thrown.expect(IllegalStateException.class);
         message.addRepeatedInt32(1);
+    }
+
+    @Test
+    public void testMap_getter_map() throws Exception {
+        Map<String, String> expected = new HashMap<>();
+        expected.put("key", "value");
+        expected.put("test", "test");
+        Assert.assertEquals(expected, TEST_MAP.getMapStringStringMap());
+    }
+
+    @Test
+    public void testMap_getter_single() throws Exception {
+        Assert.assertEquals("value", TEST_MAP.getMapStringString("key"));
+    }
+
+    @Test
+    public void testMap_getter_count() throws Exception {
+        Assert.assertEquals(2, TEST_MAP.getMapStringStringCount());
+    }
+
+    @Test
+    public void testMap_setter_map() throws Exception {
+        Map<String, String> map = new HashMap<>();
+        map.put("key", "value");
+        map.put("test", "test");
+        TestMap instance = TestMap.newBuilder()
+                .setMapStringStringMap(map)
+                .build();
+        Assert.assertEquals(map, instance.getMapStringStringMap());
+    }
+
+    @Test
+    public void testModifyConstructedMap_setter_map() throws Exception {
+        Map<String, String> map = new HashMap<>();
+        map.put("key", "value");
+        map.put("test", "test");
+        thrown.expect(IllegalStateException.class);
+        TEST_MAP.setMapStringStringMap(map);
+    }
+
+    @Test
+    public void testMap_setter_single() throws Exception {
+        thrown.expect(IllegalStateException.class);
+        TEST_MAP.putMapStringString("a", "b");
     }
 }

@@ -62,4 +62,11 @@ public interface FieldType extends Type {
      * Test if this type is message.
      */
     boolean isMessage();
+
+    /**
+     * Test if this type is map.
+     */
+    boolean isMap();
+
+
 }

@@ -34,7 +34,7 @@ public <if(message.nested)>static <endif>final class <message.javaName>
         return new <message.javaName>();
     }
 
-    public static io.protostuff.Schema\<<message.name>\> getSchema()
+    public static io.protostuff.Schema\<<message.javaName>\> getSchema()
     {
     	return Schema.INSTANCE;
     }
@@ -48,7 +48,7 @@ public <if(message.nested)>static <endif>final class <message.javaName>
     }
 
     @Override
-    public io.protostuff.Schema\<<message.name>\> cachedSchema() {
+    public io.protostuff.Schema\<<message.javaName>\> cachedSchema() {
         return Schema.INSTANCE;
     }
 
@@ -60,7 +60,7 @@ public <if(message.nested)>static <endif>final class <message.javaName>
     	if (obj == null || this.getClass() != obj.getClass()) {
     		return false;
     	}
-    	<message.name> that = (<message.name>) obj;
+    	<message.javaName> that = (<message.javaName>) obj;
     	<if(message.hasFields)>
     	return
     	    <message.fields:{field|java.util.Objects.equals(this.<field.javaName>, that.<field.javaName>)}; separator="\n&& ">;
@@ -98,7 +98,13 @@ private int <name>;
 >>
 
 field_initializer(field) ::= <<
-<if(field.repeated)>
+<if(field.map)>
+if (<field.javaName> == null) {
+    <field.javaName> = java.util.Collections.emptyMap();
+} else {
+    <field.javaName> = java.util.Collections.unmodifiableMap(<field.javaName>);
+}
+<elseif(field.repeated)>
 if (<field.javaName> == null) {
     <field.javaName> = java.util.Collections.emptyList();
 } else {
@@ -108,7 +114,9 @@ if (<field.javaName> == null) {
 >>
 
 field_declaration(field) ::= <<
-<if(field.repeated)>
+<if(field.map)>
+private <field.javaMapType> <field.javaName>;
+<elseif(field.repeated)>
 private <field.javaRepeatedType> <field.javaName>;
 <else>
 private <field.javaType> <field.javaName>;
@@ -116,7 +124,34 @@ private <field.javaType> <field.javaName>;
 >>
 
 field_accessors(field) ::= <<
-<if(field.repeated)>
+<if(field.map)>
+public <field.javaMapType> <field.javaMapGetterName>() {
+    return <field.javaName>;
+}
+
+public <field.parent.javaName> <field.javaMapSetterName>(<field.javaMapType> <field.javaName>) {
+    <field:check_field_modification_lock()>
+    this.<field.javaName> = <field.javaName>;
+    return this;
+}
+
+public <field.parent.javaName> <field.javaMapAdderName>(<field.javaMapKeyType> key, <field.javaMapValueType> value) {
+    <field:check_field_modification_lock()>
+    if (this.<field.javaName> == null) {
+        this.<field.javaName> = new java.util.HashMap\<>();
+    }
+    this.<field.javaName>.put(key, value);
+    return this;
+}
+
+public int <field.javaRepeatedGetCountMethodName>() {
+    return <field.javaName>.size();
+}
+
+public <field.javaMapValueType> <field.javaMapGetByKeyMethodName>(<field.javaMapKeyType> key) {
+    return <field.javaName>.get(key);
+}
+<elseif(field.repeated)>
 public <field.javaRepeatedType> <field.javaRepeatedGetterName>() {
     return <field.javaName>;
 }
@@ -175,7 +210,7 @@ public boolean <field.javaHasMethodName>() {
 
 check_field_modification_lock(field) ::= <<
 if(__lock) {
-    throw new IllegalStateException("Could not update <field.parent.javaName>.<field.name>");
+    throw new IllegalStateException("Could not update <field.parent.javaName>.<field.javaName>");
 }
 >>
 

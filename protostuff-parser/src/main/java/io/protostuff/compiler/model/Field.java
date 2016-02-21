@@ -1,6 +1,7 @@
 package io.protostuff.compiler.model;
 
 import com.google.common.base.MoreObjects;
+import io.protostuff.compiler.model.DynamicMessage.Value;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -8,6 +9,7 @@ import com.google.common.base.MoreObjects;
 public class Field extends AbstractDescriptor {
 
     public static final int MAX_TAG_VALUE = (1 << 29) - 1;
+    public static final Value DV_TRUE = Value.createBoolean(true);
 
     protected FieldModifier modifier;
     protected String typeName;
@@ -81,6 +83,15 @@ public class Field extends AbstractDescriptor {
      */
     public boolean isRepeated() {
         return getModifier() == FieldModifier.REPEATED;
+    }
+
+    public boolean isMap() {
+        if (type instanceof Message) {
+            Message message = (Message) type;
+            Value value = message.getOptions().get(".google.protobuf.map_entry");
+            return value != null && value.isBooleanType() && value.getBoolean();
+        }
+        return false;
     }
 
     @Override

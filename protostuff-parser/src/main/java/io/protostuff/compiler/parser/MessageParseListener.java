@@ -1,21 +1,8 @@
 package io.protostuff.compiler.parser;
 
+import io.protostuff.compiler.model.*;
+import io.protostuff.compiler.model.DynamicMessage.Value;
 import org.antlr.v4.runtime.BufferedTokenStream;
-
-import io.protostuff.compiler.model.AbstractUserTypeContainer;
-import io.protostuff.compiler.model.Element;
-import io.protostuff.compiler.model.Extension;
-import io.protostuff.compiler.model.ExtensionContainer;
-import io.protostuff.compiler.model.ExtensionRange;
-import io.protostuff.compiler.model.Field;
-import io.protostuff.compiler.model.FieldContainer;
-import io.protostuff.compiler.model.Group;
-import io.protostuff.compiler.model.GroupContainer;
-import io.protostuff.compiler.model.Map;
-import io.protostuff.compiler.model.Message;
-import io.protostuff.compiler.model.MessageContainer;
-import io.protostuff.compiler.model.Oneof;
-import io.protostuff.compiler.model.UserTypeContainer;
 
 import static io.protostuff.compiler.model.FieldModifier.OPTIONAL;
 import static io.protostuff.compiler.model.FieldModifier.REPEATED;
@@ -27,6 +14,9 @@ import static io.protostuff.compiler.model.FieldModifier.REQUIRED;
 public class MessageParseListener extends AbstractProtoParserListener {
 
     public static final String MAX = "max";
+    public static final String MAP_ENTRY = ".google.protobuf.map_entry";
+    public static final String MAP_ENTRY_KEY = "key";
+    public static final String MAP_ENTRY_VALUE = "value";
 
     public MessageParseListener(BufferedTokenStream tokens, ProtoContext context) {
         super(tokens, context);
@@ -193,23 +183,51 @@ public class MessageParseListener extends AbstractProtoParserListener {
         Field field = context.pop(Field.class);
         Message message = context.peek(Message.class);
         String name = ctx.name().getText();
-        String keyType = ctx.mapKey().getText();
-        String valueType = ctx.mapValue().getText();
-        Map map = new Map(message);
-        map.setName(name);
-        map.setSourceCodeLocation(getSourceCodeLocation(ctx));
-        map.setKeyTypeName(keyType);
-        map.setValueTypeName(valueType);
+        String keyTypeName = ctx.mapKey().getText();
+        String valueTypeName = ctx.mapValue().getText();
+        SourceCodeLocation codeLocation = getSourceCodeLocation(ctx);
+        Message map = new Message(message);
+        String mapEntryTypeName = name + "_entry";
+        map.setName(mapEntryTypeName);
+        map.setSourceCodeLocation(codeLocation);
+        map.getOptions().set(codeLocation, MAP_ENTRY, Value.createBoolean(true));
+        Field keyField = createMapKeyField(map, keyTypeName, codeLocation);
+        map.addField(keyField);
+        Field valueField = createMapValueField(map, valueTypeName, codeLocation);
+        map.addField(valueField);
         Integer tag = Integer.decode(ctx.tag().getText());
         field.setName(name);
         field.setTag(tag);
         field.setIndex(message.getFieldCount()+1);
-        field.setTypeName(name);
+        field.setModifier(REPEATED);
+        field.setTypeName(mapEntryTypeName);
         field.setType(map);
-        field.setSourceCodeLocation(getSourceCodeLocation(ctx));
+        field.setSourceCodeLocation(codeLocation);
         message.addField(field);
-        message.addMap(map);
+        message.addMessage(map);
         attachComments(ctx, field, true);
+    }
+
+    private Field createMapValueField(Message map, String valueTypeName, SourceCodeLocation codeLocation) {
+        Field valueField = new Field(map);
+        valueField.setName(MAP_ENTRY_VALUE);
+        valueField.setTag(2);
+        valueField.setIndex(2);
+        valueField.setModifier(OPTIONAL);
+        valueField.setTypeName(valueTypeName);
+        valueField.setSourceCodeLocation(codeLocation);
+        return valueField;
+    }
+
+    private Field createMapKeyField(Message map, String keyTypeName, SourceCodeLocation codeLocation) {
+        Field keyField = new Field(map);
+        keyField.setName(MAP_ENTRY_KEY);
+        keyField.setTag(1);
+        keyField.setIndex(1);
+        keyField.setTypeName(keyTypeName);
+        keyField.setModifier(OPTIONAL);
+        keyField.setSourceCodeLocation(codeLocation);
+        return keyField;
     }
 
     @Override

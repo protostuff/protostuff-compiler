@@ -4,7 +4,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import io.protostuff.compiler.model.Field;
-import io.protostuff.compiler.model.Map;
 import io.protostuff.compiler.model.Message;
 import io.protostuff.compiler.model.ScalarFieldType;
 
@@ -20,6 +19,8 @@ import static io.protostuff.compiler.model.ScalarFieldType.SINT64;
 import static io.protostuff.compiler.model.ScalarFieldType.STRING;
 import static io.protostuff.compiler.model.ScalarFieldType.UINT32;
 import static io.protostuff.compiler.model.ScalarFieldType.UINT64;
+import static io.protostuff.compiler.parser.MessageParseListener.MAP_ENTRY_KEY;
+import static io.protostuff.compiler.parser.MessageParseListener.MAP_ENTRY_VALUE;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -51,9 +52,9 @@ public class MapTest extends AbstractParserTest {
 
     private void checkMap(Message m, String mapFieldName, ScalarFieldType keyType, String valueType, int tag) {
         Field field = m.getField(mapFieldName);
-        Map type = (Map) field.getType();
-        Assert.assertEquals(keyType, type.getKeyType());
-        Assert.assertEquals(valueType, type.getValueType().getFullyQualifiedName());
+        Message type = (Message) field.getType();
+        Assert.assertEquals(keyType, type.getField(MAP_ENTRY_KEY).getType());
+        Assert.assertEquals(valueType, type.getField(MAP_ENTRY_VALUE).getType().getFullyQualifiedName());
         Assert.assertEquals(tag, field.getTag());
     }
 }
