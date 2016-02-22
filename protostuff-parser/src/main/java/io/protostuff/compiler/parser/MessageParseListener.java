@@ -14,7 +14,7 @@ import static io.protostuff.compiler.model.FieldModifier.REQUIRED;
 public class MessageParseListener extends AbstractProtoParserListener {
 
     public static final String MAX = "max";
-    public static final String MAP_ENTRY = ".google.protobuf.map_entry";
+    public static final String OPTION_MAP_ENTRY = ".google.protobuf.map_entry";
     public static final String MAP_ENTRY_KEY = "key";
     public static final String MAP_ENTRY_VALUE = "value";
 
@@ -190,7 +190,7 @@ public class MessageParseListener extends AbstractProtoParserListener {
         String mapEntryTypeName = name + "_entry";
         map.setName(mapEntryTypeName);
         map.setSourceCodeLocation(codeLocation);
-        map.getOptions().set(codeLocation, MAP_ENTRY, Value.createBoolean(true));
+        map.getOptions().set(codeLocation, OPTION_MAP_ENTRY, Value.createBoolean(true));
         Field keyField = createMapKeyField(map, keyTypeName, codeLocation);
         map.addField(keyField);
         Field valueField = createMapValueField(map, valueTypeName, codeLocation);

@@ -2,6 +2,7 @@ package io.protostuff.compiler.model;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Preconditions;
+import io.protostuff.compiler.parser.MessageParseListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -198,5 +199,10 @@ public class Message extends AbstractUserTypeContainer
             return 0;
         }
         return fields.size();
+    }
+
+    public boolean isMapEntry() {
+        DynamicMessage.Value value = this.getOptions().get(MessageParseListener.OPTION_MAP_ENTRY);
+        return value != null && value.isBooleanType() && value.getBoolean();
     }
 }

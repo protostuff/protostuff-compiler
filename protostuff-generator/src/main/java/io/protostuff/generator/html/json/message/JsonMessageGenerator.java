@@ -51,17 +51,37 @@ public class JsonMessageGenerator extends AbstractJsonGenerator {
                 .canonicalName(message.getCanonicalName())
                 .description(message.getComments())
                 .addAllFields(message.getFields().stream()
-                        .map(field -> ImmutableMessageField.builder()
-                                .name(field.getName())
-                                .typeId(field.getType().getCanonicalName())
-                                .modifier(getModifier(field))
-                                .tag(field.getTag())
-                                .description(field.getComments())
-                                .build())
+                        .map(field -> {
+                            ImmutableMessageField.Builder builder = ImmutableMessageField.builder()
+                                    .name(field.getName())
+                                    .typeId(field.getType().getCanonicalName())
+                                    .modifier(getModifier(field))
+                                    .tag(field.getTag())
+                                    .description(field.getComments());
+                            boolean isMap = field.isMap();
+                            if (isMap) {
+                                builder.isMap(true);
+                                builder.mapKeyTypeId(getMapKeyType(field));
+                                builder.mapValueTypeId(getMapValueType(field));
+                            }
+                            return builder.build();
+                        })
                         .collect(Collectors.toList()))
                 .build();
         String output = module.getOutput() + "/data/type/" + message.getCanonicalName() + ".json";
         write(output, descriptor);
+    }
+
+    private String getMapKeyType(Field field) {
+        Message message = (Message) field.getType();
+        Field key = message.getField("key");
+        return key.getType().getCanonicalName();
+    }
+
+    private String getMapValueType(Field field) {
+        Message message = (Message) field.getType();
+        Field value = message.getField("value");
+        return value.getType().getCanonicalName();
     }
 
     private MessageFieldModifier getModifier(Field field) {

@@ -67,6 +67,7 @@ public final class JsonIndexGenerator extends AbstractJsonGenerator {
                                 .build())
                         .build()));
         proto.getMessages().stream()
+                .filter(message -> !message.isMapEntry())
                 .forEach(message -> {
                     JsonTreeNode.Builder builder = JsonTreeNode.newBuilder();
                     builder.label(message.getName());

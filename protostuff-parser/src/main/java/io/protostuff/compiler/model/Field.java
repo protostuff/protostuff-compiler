@@ -88,8 +88,7 @@ public class Field extends AbstractDescriptor {
     public boolean isMap() {
         if (type instanceof Message) {
             Message message = (Message) type;
-            Value value = message.getOptions().get(".google.protobuf.map_entry");
-            return value != null && value.isBooleanType() && value.getBoolean();
+            return message.isMapEntry();
         }
         return false;
     }
