@@ -14,16 +14,7 @@ Java Source Code Generator
 
 Current status: development in progress.
 
-Proto-2-Proto Generator
------------------------
-
-Main idea is to give users simple proto file processor. This generator should
-be able to do following:
-
-* convert proto file syntax: `proto3` -> `proto2`
-* remove deprecated fields (messages, service methods)
-
-Current status: development in progress.
+Generated code API: [draft](http://www.protostuff.io/documentation/compiler/java/generated-code).
 
 Documentation Generator
 -----------------------
