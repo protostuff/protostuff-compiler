@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package io.protostuff.it;
+
+option java_package = "io.protostuff.it.test";
+
+message TestGenerateTestSourcesPhase {
+    
+}

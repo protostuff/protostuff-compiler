@@ -42,7 +42,7 @@ public class JavaGeneratorMojo extends AbstractGeneratorMojo {
         super.execute();
 
         ProtostuffCompiler compiler = new ProtostuffCompiler();
-        final Path sourcePath = source.toPath();
+        final Path sourcePath = getSourcePath();
         String output = calculateOutput();
         ModuleConfiguration.Builder builder = ModuleConfiguration.newBuilder()
                 .name("java")

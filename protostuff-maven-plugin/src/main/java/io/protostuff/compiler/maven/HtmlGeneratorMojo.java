@@ -39,7 +39,7 @@ public class HtmlGeneratorMojo extends AbstractGeneratorMojo {
         super.execute();
 
         ProtostuffCompiler compiler = new ProtostuffCompiler();
-        final Path sourcePath = source.toPath();
+        final Path sourcePath = getSourcePath();
         ModuleConfiguration.Builder builder = ModuleConfiguration.newBuilder()
                 .name("html")
                 .includePaths(singletonList(sourcePath))

@@ -18,6 +18,11 @@
                 <directory>${project.basedir}/src/main/proto</directory>
             </resource>
         </resources>
+        <testResources>
+            <testResource>
+                <directory>${project.basedir}/src/test/proto</directory>
+            </testResource>
+        </testResources>
         <plugins>
             <plugin>
                 <artifactId>maven-deploy-plugin</artifactId>
@@ -31,6 +36,13 @@
                 <artifactId>protostuff-maven-plugin</artifactId>
                 <version>${project.version}</version>
                 <executions>
+                    <execution>
+                        <id>generate-java-sources</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                    </execution>
                     <execution>
                         <id>generate-test-java-sources</id>
                         <phase>generate-test-sources</phase>

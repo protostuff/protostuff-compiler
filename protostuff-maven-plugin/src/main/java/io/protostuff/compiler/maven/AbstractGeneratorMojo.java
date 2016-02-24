@@ -1,5 +1,6 @@
 package io.protostuff.compiler.maven;
 
+import com.google.common.base.Throwables;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecution;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -9,7 +10,12 @@ import org.apache.maven.project.MavenProject;
 import org.slf4j.impl.StaticLoggerBinder;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
+
+import static org.apache.maven.plugins.annotations.LifecyclePhase.GENERATE_TEST_SOURCES;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -22,7 +28,7 @@ public abstract class AbstractGeneratorMojo extends AbstractMojo {
     @Parameter(defaultValue = "${mojoExecution}", readonly = true)
     protected MojoExecution execution;
 
-    @Parameter(defaultValue = "${project.basedir}/src/main/proto")
+    @Parameter
     protected File source;
 
     /**
@@ -33,6 +39,26 @@ public abstract class AbstractGeneratorMojo extends AbstractMojo {
 
     @Parameter
     protected List<String> excludes;
+
+    protected Path getSourcePath() {
+        if (source != null) {
+            return source.toPath();
+        }
+        String phase = execution.getLifecyclePhase();
+        String basedir;
+        try {
+            basedir = project.getBasedir().getCanonicalPath();
+        } catch (IOException e) {
+            throw Throwables.propagate(e);
+        }
+        String sourcePath;
+        if (GENERATE_TEST_SOURCES.id().equals(phase)) {
+            sourcePath = basedir + "/src/test/proto/";
+        } else {
+            sourcePath = basedir + "/src/main/proto/";
+        }
+        return Paths.get(sourcePath);
+    }
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
