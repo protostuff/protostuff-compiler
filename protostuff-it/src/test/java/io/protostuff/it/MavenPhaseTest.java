@@ -1,7 +1,6 @@
 package io.protostuff.it;
 
 import io.protostuff.it.test.TestGenerateTestSourcesPhase;
-import org.junit.Assert;
 import org.junit.Test;
 
 /**

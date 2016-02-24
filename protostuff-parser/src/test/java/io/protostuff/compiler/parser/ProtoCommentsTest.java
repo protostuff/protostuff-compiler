@@ -1,6 +1,5 @@
 package io.protostuff.compiler.parser;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import io.protostuff.compiler.model.Proto;

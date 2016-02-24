@@ -11,8 +11,6 @@ import io.protostuff.compiler.model.Module;
 import io.protostuff.compiler.model.UserTypeContainer;
 import io.protostuff.generator.OutputStreamFactory;
 import io.protostuff.generator.html.json.AbstractJsonGenerator;
-import io.protostuff.generator.html.json.enumeration.ImmutableEnumConstant;
-import io.protostuff.generator.html.json.enumeration.ImmutableEnumDescriptor;
 import io.protostuff.generator.html.json.index.NodeType;
 
 /**

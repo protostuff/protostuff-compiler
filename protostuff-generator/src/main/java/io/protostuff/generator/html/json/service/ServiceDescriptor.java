@@ -10,7 +10,6 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import io.protostuff.generator.html.json.index.NodeType;
-import io.protostuff.generator.html.json.message.MessageField;
 
 /**
  * @author Kostiantyn Shchepanovskyi

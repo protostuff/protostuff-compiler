@@ -1,6 +1,5 @@
 package io.protostuff.generator.java;
 
-import io.protostuff.compiler.model.Field;
 import io.protostuff.compiler.model.Message;
 
 import java.util.ArrayList;

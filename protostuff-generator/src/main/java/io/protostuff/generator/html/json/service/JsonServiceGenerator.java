@@ -4,18 +4,11 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
-import io.protostuff.compiler.model.Field;
-import io.protostuff.compiler.model.FieldModifier;
-import io.protostuff.compiler.model.Message;
 import io.protostuff.compiler.model.Module;
 import io.protostuff.compiler.model.Service;
-import io.protostuff.compiler.model.UserTypeContainer;
 import io.protostuff.generator.OutputStreamFactory;
 import io.protostuff.generator.html.json.AbstractJsonGenerator;
 import io.protostuff.generator.html.json.index.NodeType;
-import io.protostuff.generator.html.json.message.ImmutableMessageDescriptor;
-import io.protostuff.generator.html.json.message.ImmutableMessageField;
-import io.protostuff.generator.html.json.message.MessageFieldModifier;
 
 /**
  * @author Kostiantyn Shchepanovskyi

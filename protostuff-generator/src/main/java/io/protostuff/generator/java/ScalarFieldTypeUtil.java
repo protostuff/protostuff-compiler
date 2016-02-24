@@ -1,7 +1,5 @@
 package io.protostuff.generator.java;
 
-import java.nio.ByteBuffer;
-
 import io.protostuff.compiler.model.ScalarFieldType;
 
 /**

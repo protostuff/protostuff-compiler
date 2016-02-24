@@ -8,7 +8,6 @@ import org.immutables.value.Value;
 import javax.annotation.Nullable;
 
 import io.protostuff.generator.html.json.index.NodeType;
-import io.protostuff.generator.html.json.message.ImmutableMessageDescriptor;
 
 /**
  * @author Kostiantyn Shchepanovskyi

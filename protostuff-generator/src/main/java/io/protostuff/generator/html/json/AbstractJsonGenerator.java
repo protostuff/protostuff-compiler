@@ -11,8 +11,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.OutputStream;
 
-import javax.inject.Inject;
-
 import io.protostuff.generator.GeneratorException;
 import io.protostuff.generator.OutputStreamFactory;
 import io.protostuff.generator.ProtoCompiler;
