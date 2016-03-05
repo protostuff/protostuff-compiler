@@ -1,0 +1,28 @@
+delimiters "<", ">"
+
+one_of(oneOf) ::= <<
+public enum <oneOf.javaName> implements io.protostuff.EnumLite\<<oneOf.javaName>\>{
+    <oneOf.fields:{field | <field.javaOneofConstantName>(<field.tag>),}; separator="\n">
+    <oneOf.javaNotSetConstantName>(0);
+
+    private int value;
+
+    private <oneOf.javaName>(int n) {
+        this.value = n;
+    }
+
+    @Override
+    public int getNumber() {
+        return value;
+    }
+
+    public static final <oneOf.javaName> valueOf(int tag) {
+        switch(tag) {
+            case 0: return <oneOf.javaNotSetConstantName>;
+            <oneOf.fields:{field|case <field.tag>: return <field.javaOneofConstantName>;}; separator="\n">
+            default: throw new IllegalArgumentException(String.valueOf(tag));
+        }
+    }
+}
+>>
+

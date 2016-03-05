@@ -83,7 +83,9 @@ public static final class Schema implements io.protostuff.Schema\<<message.javaN
 
 field_merge_switch(field) ::= <<
 case <field.tag>:
-    <if(field.map)>
+    <if(field.oneofPart)>
+    <field:oneof_field_merge_switch()>
+    <elseif(field.map)>
     <field:map_field_merge_switch()>
 	<elseif(field.repeated)>
 	<field:repeated_field_merge_switch()>
@@ -102,6 +104,19 @@ instance.<field.javaName> = <field.javaType>.valueOf(input.readEnum());
 instance.<field.javaName> = input.<field.protostuffReadMethod>();
 <endif>
 instance.<field.javaBitFieldName> |= <field.javaBitFieldMask>;
+>>
+
+oneof_field_merge_switch(field) ::= <<
+{
+    <if(field.type.message)>
+    instance.<field.oneof.javaFieldName> = input.mergeObject(instance.<field.javaName>, <field.javaType>.getSchema());
+    <elseif(field.type.enum)>
+    instance.<field.oneof.javaFieldName> = <field.javaType>.valueOf(input.readEnum());
+    <else>
+    instance.<field.oneof.javaFieldName> = input.<field.protostuffReadMethod>();
+    <endif>
+    instance.<field.oneof.javaCaseFieldName> = <field.oneof.javaName>.<field.javaOneofConstantName>;
+}
 >>
 
 map_field_merge_switch(field) ::= <<
@@ -134,7 +149,9 @@ instance.<field.javaName>.add(input.<field.protostuffReadMethod>());
 >>
 
 field_write_switch(field) ::= <%
-<if(field.map)>
+<if(field.oneofPart)>
+<field:oneof_field_write_switch()>
+<elseif(field.map)>
 <field:map_field_write_switch()>
 <elseif(field.repeated)>
 <field:repeated_field_write_switch()>
@@ -160,6 +177,22 @@ if((instance.<field.javaBitFieldName> & <field.javaBitFieldMask>) == <field.java
 <else>
 if((instance.<field.javaBitFieldName> & <field.javaBitFieldMask>) == <field.javaBitFieldMask>) {
     output.<field.protostuffWriteMethod>(<field.tag>, instance.<field.javaName>, false);
+}
+<endif>
+>>
+
+oneof_field_write_switch(field) ::= <<
+<if(field.type.message)>
+if(instance.<field.oneof.javaCaseFieldName> == <field.oneof.javaName>.<field.javaOneofConstantName>) {
+	output.writeObject(<field.tag>, (<field.javaType>) instance.<field.oneof.javaFieldName>, <field.javaType>.getSchema(), false);
+}
+<elseif(field.type.enum)>
+if(instance.<field.oneof.javaCaseFieldName> == <field.oneof.javaName>.<field.javaOneofConstantName>) {
+	output.writeEnum(<field.tag>, ((<field.javaType>) instance.<field.oneof.javaFieldName>).getNumber(), false);
+}
+<else>
+if(instance.<field.oneof.javaCaseFieldName> == <field.oneof.javaName>.<field.javaOneofConstantName>) {
+    output.<field.protostuffWriteMethod>(<field.tag>, (<field.javaType>) instance.<field.oneof.javaFieldName>, false);
 }
 <endif>
 >>

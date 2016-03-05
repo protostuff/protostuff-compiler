@@ -7,6 +7,7 @@ import io.protostuff.Schema;
 import io.protostuff.it.message_test.SimpleMessage;
 import io.protostuff.it.message_test.TestMap;
 import io.protostuff.it.message_test.TestMessage;
+import io.protostuff.it.message_test.TestOneof;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -108,4 +109,16 @@ public class MessageSerializationTest {
         Assert.assertEquals(container, newInstance);
     }
 
+    @Test
+    public void testOneof_serialization_deserialization() throws Exception {
+        TestOneof a = TestOneof.newBuilder()
+                .setFooString("abra")
+                .build();
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        ProtobufIOUtil.writeTo(stream, a, TestOneof.getSchema(), LinkedBuffer.allocate());
+        byte[] bytes = stream.toByteArray();
+        TestOneof newInstance = TestOneof.getSchema().newMessage();
+        ProtobufIOUtil.mergeFrom(bytes, newInstance, TestOneof.getSchema());
+        Assert.assertEquals(a, newInstance);
+    }
 }

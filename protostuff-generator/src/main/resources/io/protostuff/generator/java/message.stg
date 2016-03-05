@@ -3,6 +3,7 @@ import "io/protostuff/generator/core.stg"
 import "io/protostuff/generator/java/generator.stg"
 import "io/protostuff/generator/java/enum.stg"
 import "io/protostuff/generator/java/schema.stg"
+import "io/protostuff/generator/java/oneof.stg"
 
 message_compiler_enabled(message) ::= <%
 <if(message.nested)>false<else>true<endif>
@@ -25,6 +26,7 @@ public <if(message.nested)>static <endif>final class <message.javaName>
     <message.fields:field_declaration(); separator="\n">
     private boolean __lock = false;
     <message.javaBitFieldNames:message_bit_field(); separator="\n">
+    <message.oneofs:oneof_fields(); separator="\n">
 
     private void initialize() {
         <message.fields:field_initializer(); separator="\n">
@@ -40,6 +42,8 @@ public <if(message.nested)>static <endif>final class <message.javaName>
     }
 
     <message.fields:field_accessors(); separator="\n">
+
+    <message.oneofs:oneof_case(); separator="\n">
 
     public <message.javaName> build() {
         initialize();
@@ -62,8 +66,9 @@ public <if(message.nested)>static <endif>final class <message.javaName>
     	}
     	<message.javaName> that = (<message.javaName>) obj;
     	<if(message.hasFields)>
-    	return
-    	    <message.fields:{field|java.util.Objects.equals(this.<field.javaName>, that.<field.javaName>)}; separator="\n&& ">;
+    	<message.fields:field_equals_part()>
+    	<message.oneofs:oneof_field_equals_part()>
+    	return true;
     	<else>
     	return true;
     	<endif>
@@ -72,7 +77,10 @@ public <if(message.nested)>static <endif>final class <message.javaName>
     @Override
     public int hashCode() {
     	<if(message.hasFields)>
-    	return java.util.Objects.hash(<message.fields:{field|<field.javaName>}; separator=", ">);
+    	int result = 1;
+    	<message.fields:field_hashCode_part()>
+        <message.oneofs:oneof_field_hashCode_part()>
+    	return result;
     	<else>
     	return 0;
     	<endif>
@@ -90,7 +98,51 @@ public <if(message.nested)>static <endif>final class <message.javaName>
     <message.messages:message_body(); separator="\n">
     
     <message.enums:enum_body(); separator="\n">
+
+    <message.oneofs:one_of(); separator="\n">
 }
+>>
+
+field_equals_part(field) ::= <<
+<if(!field.oneofPart)>
+if (!java.util.Objects.equals(this.<field.javaName>, that.<field.javaName>)) {
+    return false;
+}
+<endif>
+>>
+
+oneof_field_equals_part(oneof) ::= <<
+if (!(java.util.Objects.equals(this.<oneof.javaCaseFieldName>, that.<oneof.javaCaseFieldName>)
+        && java.util.Objects.equals(this.<oneof.javaFieldName>, that.<oneof.javaFieldName>))) {
+    return false;
+}
+>>
+
+field_hashCode_part(field) ::= <<
+<if(!field.oneofPart)>
+<if(!field.repeated && (field.javaIsNumericType || field.javaIsBooleanType))>
+result = 31 * result + <field.type.javaWrapperType>.hashCode(<field.javaName>);
+<else>
+result = 31 * result + (<field.javaName> == null ? 0 : <field.javaName>.hashCode());
+<endif>
+<endif>
+>>
+
+oneof_field_hashCode_part(oneof) ::= <<
+result = 31 * result + <oneof.javaCaseFieldName>.hashCode();
+result = 31 * result + (<oneof.javaFieldName> == null ? 0 : <oneof.javaFieldName>.hashCode());
+>>
+
+oneof_case(oneOf) ::= <<
+public <oneOf.javaName> <oneOf.javaCaseGetterName>() {
+    return <oneOf.javaCaseFieldName>;
+}
+>>
+
+
+oneof_fields(oneOf) ::= <<
+private <oneOf.javaName> <oneOf.javaCaseFieldName> = <oneOf.javaName>.<oneOf.javaNotSetConstantName>;
+private Object <oneOf.javaFieldName> = null;
 >>
 
 message_bit_field(name) ::= <<
@@ -124,7 +176,25 @@ private <field.javaType> <field.javaName>;
 >>
 
 field_accessors(field) ::= <<
-<if(field.map)>
+<if(field.oneofPart)>
+public <field.javaType> <field.javaGetterName>() {
+    if (<field.oneof.javaCaseFieldName> == <field.oneof.javaName>.<field.javaOneofConstantName>) {
+        return (<field.javaType>) <field.oneof.javaFieldName>;
+    }
+    return <field.javaDefaultValue>;
+}
+
+public <field.parent.javaName> <field.javaSetterName>(<field.javaType> value) {
+    <field:check_field_modification_lock()>
+    this.<field.oneof.javaFieldName> = value;
+    this.<field.oneof.javaCaseFieldName> = <field.oneof.javaName>.<field.javaOneofConstantName>;
+    return this;
+}
+
+public boolean <field.javaHasMethodName>() {
+    return <field.oneof.javaCaseFieldName> == <field.oneof.javaName>.<field.javaOneofConstantName>;
+}
+<elseif(field.map)>
 public <field.javaMapType> <field.javaMapGetterName>() {
     return <field.javaName>;
 }

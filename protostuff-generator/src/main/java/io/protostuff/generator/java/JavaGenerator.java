@@ -1,26 +1,17 @@
 package io.protostuff.generator.java;
 
 import com.google.common.collect.ImmutableMap;
-
-import org.stringtemplate.v4.AttributeRenderer;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.inject.Inject;
-
 import io.protostuff.compiler.model.Enum;
-import io.protostuff.compiler.model.EnumConstant;
-import io.protostuff.compiler.model.Field;
-import io.protostuff.compiler.model.Message;
-import io.protostuff.compiler.model.Module;
-import io.protostuff.compiler.model.Proto;
-import io.protostuff.compiler.model.ScalarFieldType;
-import io.protostuff.compiler.model.Service;
+import io.protostuff.compiler.model.*;
 import io.protostuff.generator.ObjectExtender;
 import io.protostuff.generator.ProtoCompiler;
 import io.protostuff.generator.SimpleObjectExtender;
 import io.protostuff.generator.StCompilerFactory;
+import org.stringtemplate.v4.AttributeRenderer;
+
+import javax.inject.Inject;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -73,6 +64,8 @@ public class JavaGenerator implements ProtoCompiler {
                         .property("javaBuilderSetterName", MessageFieldUtil::getBuilderSetterName)
                         .property("javaBuilderRepeatedSetterName", MessageFieldUtil::getRepeatedBuilderSetterName)
                         .property("javaDefaultValue", MessageFieldUtil::getDefaultValue)
+                        .property("javaIsNumericType", MessageFieldUtil::isNumericType)
+                        .property("javaIsBooleanType", MessageFieldUtil::isBooleanType)
                         .property("javaIsScalarNullableType", MessageFieldUtil::isScalarNullableType)
                         .property("javaRepeatedGetCountMethodName", MessageFieldUtil::repeatedGetCountMethodName)
                         .property("javaRepeatedGetByIndexMethodName", MessageFieldUtil::repeatedGetByIndexMethodName)
@@ -83,6 +76,14 @@ public class JavaGenerator implements ProtoCompiler {
                         .property("javaBitFieldName", MessageFieldUtil::bitFieldName)
                         .property("javaBitFieldIndex", MessageFieldUtil::bitFieldIndex)
                         .property("javaBitFieldMask", MessageFieldUtil::bitFieldMask)
+                        .property("javaOneofConstantName", MessageFieldUtil::javaOneofConstantName)
+                        .build())
+                .put(Oneof.class, SimpleObjectExtender.<Oneof>newBuilder()
+                        .property("javaName", MessageUtil::getOneofEnumClassName)
+                        .property("javaNotSetConstantName", MessageUtil::getOneofNotSetConstantName)
+                        .property("javaCaseGetterName", MessageUtil::getOneofCaseGetterName)
+                        .property("javaFieldName", MessageUtil::getOneofFieldName)
+                        .property("javaCaseFieldName", MessageUtil::getOneofCaseFieldName)
                         .build())
                 .put(Enum.class, SimpleObjectExtender.<Enum>newBuilder()
                         .property("javaName", UserTypeUtil::getClassName)

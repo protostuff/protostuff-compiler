@@ -17,6 +17,7 @@ public class Field extends AbstractDescriptor {
     protected int tag;
     protected int index;
     private FieldContainer parent;
+    private Oneof oneof;
 
     public Field(FieldContainer parent) {
         this.parent = parent;
@@ -76,6 +77,18 @@ public class Field extends AbstractDescriptor {
 
     public void setIndex(int index) {
         this.index = index;
+    }
+
+    public Oneof getOneof() {
+        return oneof;
+    }
+
+    public void setOneof(Oneof oneof) {
+        this.oneof = oneof;
+    }
+
+    public boolean isOneofPart() {
+        return oneof != null;
     }
 
     /**

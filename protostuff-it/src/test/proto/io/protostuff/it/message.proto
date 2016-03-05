@@ -56,3 +56,13 @@ message SimpleMessage {
 message MessageWithoutFields {
 
 }
+
+message TestOneof {
+    oneof oneof_name {
+        int32 foo_int = 4;
+        string foo_string = 9;
+        SimpleMessage simple_message = 10;
+        MapEnum map_enum = 11;
+        bytes foo_bytes = 12;
+    }
+}

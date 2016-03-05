@@ -4,6 +4,7 @@ import io.protostuff.compiler.model.*;
 import io.protostuff.compiler.model.Enum;
 import io.protostuff.generator.Formatter;
 
+import static io.protostuff.compiler.model.ScalarFieldType.BOOL;
 import static io.protostuff.compiler.model.ScalarFieldType.BYTES;
 import static io.protostuff.compiler.model.ScalarFieldType.STRING;
 import static io.protostuff.compiler.parser.MessageParseListener.MAP_ENTRY_KEY;
@@ -146,7 +147,15 @@ public class MessageFieldUtil {
     }
 
     public static String toStringPart(Field field) {
-        return "\"" + field.getName() + "=\" + " + getFieldName(field);
+        String getterName;
+        if (field.isMap()) {
+            getterName = getMapGetterName(field);
+        } else if (field.isRepeated()) {
+            getterName = getRepeatedFieldGetterName(field);
+        } else {
+            getterName = getFieldGetterName(field);
+        }
+        return "\"" + getFieldName(field) + "=\" + " + getterName + "()";
     }
 
     public static String protostuffReadMethod(Field field) {
@@ -339,5 +348,21 @@ public class MessageFieldUtil {
             return PUT_PREFIX + Formatter.toPascalCase(field.getName());
         }
         throw new IllegalArgumentException(field.toString());
+    }
+
+    public static String javaOneofConstantName(Field field) {
+        String name = field.getName();
+        String underscored = Formatter.toUnderscoreCase(name);
+        return Formatter.toUpperCase(underscored);
+    }
+
+    public static boolean isNumericType(Field field) {
+        FieldType type = field.getType();
+        boolean scalar = type instanceof ScalarFieldType;
+        return scalar && !(BOOL.equals(type) || STRING.equals(type) || BYTES.equals(type));
+    }
+
+    public static boolean isBooleanType(Field field) {
+        return BOOL.equals(field.getType());
     }
 }

@@ -10,6 +10,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import static io.protostuff.it.message_test.TestOneof.OneofNameCase.FOO_INT;
+import static io.protostuff.it.message_test.TestOneof.OneofNameCase.ONEOF_NAME_NOT_SET;
 import static org.junit.Assert.*;
 
 /**
@@ -102,7 +104,7 @@ public class MessageTest {
                 .addRepeatedString("test1")
                 .addRepeatedString("test2")
                 .build();
-        assertEquals("SimpleMessage{repeated_string=[test1, test2]}", message.toString());
+        assertEquals("SimpleMessage{repeatedString=[test1, test2]}", message.toString());
     }
 
     @Test
@@ -111,7 +113,7 @@ public class MessageTest {
                 .addRepeatedInt32(41)
                 .addRepeatedInt32(42)
                 .build();
-        assertEquals("SimpleMessage{repeated_int32=[41, 42]}", message.toString());
+        assertEquals("SimpleMessage{repeatedInt32=[41, 42]}", message.toString());
     }
 
     @Test
@@ -191,4 +193,65 @@ public class MessageTest {
         thrown.expect(IllegalStateException.class);
         TEST_MAP.putMapStringString("a", "b");
     }
+
+    @Test
+    public void testOneof_default_value() throws Exception {
+        TestOneof testOneof = TestOneof.newBuilder().build();
+        assertEquals(ONEOF_NAME_NOT_SET, testOneof.getOneofNameCase());
+        assertFalse(testOneof.hasFooInt());
+        assertFalse(testOneof.hasFooString());
+        assertEquals(0, testOneof.getFooInt());
+        assertEquals("", testOneof.getFooString());
+    }
+
+    @Test
+    public void testOneof_set_value() throws Exception {
+        TestOneof testOneof = TestOneof.newBuilder()
+                .setFooInt(42)
+                .build();
+        assertEquals(FOO_INT, testOneof.getOneofNameCase());
+        assertTrue(testOneof.hasFooInt());
+        assertFalse(testOneof.hasFooString());
+        assertEquals(42, testOneof.getFooInt());
+        assertEquals("", testOneof.getFooString());
+    }
+
+    @Test
+    public void testOneof_equals() throws Exception {
+        TestOneof a1 = TestOneof.newBuilder()
+                .setFooInt(42)
+                .build();
+        TestOneof a2 = TestOneof.newBuilder()
+                .setFooInt(42)
+                .build();
+        TestOneof b = TestOneof.newBuilder()
+                .setFooString("test")
+                .build();
+        assertEquals(a1, a2);
+        assertNotEquals(a1, b);
+    }
+
+    @Test
+    public void testOneof_hashCode() throws Exception {
+        TestOneof a1 = TestOneof.newBuilder()
+                .setFooInt(42)
+                .build();
+        TestOneof a2 = TestOneof.newBuilder()
+                .setFooInt(42)
+                .build();
+        TestOneof b = TestOneof.newBuilder()
+                .setFooString("test")
+                .build();
+        assertEquals(a1.hashCode(), a2.hashCode());
+        assertNotEquals(a1.hashCode(), b.hashCode());
+    }
+
+    @Test
+    public void testOneof_toString() throws Exception {
+        TestOneof a1 = TestOneof.newBuilder()
+                .setFooInt(42)
+                .build();
+        assertEquals("TestOneof{fooInt=42}", a1.toString());
+    }
+
 }

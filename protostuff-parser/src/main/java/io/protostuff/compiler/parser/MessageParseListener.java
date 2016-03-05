@@ -135,24 +135,28 @@ public class MessageParseListener extends AbstractProtoParserListener {
 
     @Override
     public void enterOneofField(ProtoParser.OneofFieldContext ctx) {
-        FieldContainer parent = context.peek(FieldContainer.class);
-        Field field = new Field(parent);
+        Oneof oneof = context.peek(Oneof.class);
+        Message message = oneof.getParent();
+        Field field = new Field(message);
+        field.setOneof(oneof);
         context.push(field);
     }
 
     @Override
     public void exitOneofField(ProtoParser.OneofFieldContext ctx) {
         Field field = context.pop(Field.class);
-        FieldContainer fieldContainer = context.peek(FieldContainer.class);
+        Oneof oneOf = context.peek(Oneof.class);
+        Message message = oneOf.getParent();
         String name = ctx.name().getText();
         String type = ctx.typeReference().getText();
         Integer tag = Integer.decode(ctx.INTEGER_VALUE().getText());
         field.setName(name);
         field.setTag(tag);
-        field.setIndex(fieldContainer.getFieldCount()+1);
+        field.setIndex(message.getFieldCount()+1);
         field.setTypeName(type);
         field.setSourceCodeLocation(getSourceCodeLocation(ctx));
-        fieldContainer.addField(field);
+        oneOf.addField(field);
+        message.addField(field);
         attachComments(ctx, field, true);
     }
 
