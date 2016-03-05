@@ -35,4 +35,7 @@ public interface MessageField {
 
     @Nullable
     String mapValueTypeId();
+
+    @Nullable
+    String oneof();
 }

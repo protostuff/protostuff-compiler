@@ -17,15 +17,16 @@
                 <div ng-hide="field.map">
                     <type-ref value="field.typeId"></type-ref>
                 </div>
-                <div ng-show="field.map">
-                    <code class="text-nowrap">
-                        map&lt;<type-ref value="field.mapKeyTypeId"></type-ref>, <type-ref value="field.mapValueTypeId"></type-ref>&gt;
-                    </code>
+                <div ng-show="field.map" class="text-nowrap">
+                    map&lt;<type-ref value="field.mapKeyTypeId"></type-ref>, <type-ref value="field.mapValueTypeId"></type-ref>&gt;
                 </div>
             </td>
             <td>
-                <div ng-hide="field.map">
+                <div ng-hide="field.map || field.oneof">
                     {{field.modifier}}
+                </div>
+                <div ng-show="field.oneof" class="text-nowrap">
+                    oneof {{field.oneof}}
                 </div>
             <td>{{field.tag}}</td>
             <td>{{field.description}}</td>

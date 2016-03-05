@@ -55,7 +55,8 @@ public class JsonMessageGenerator extends AbstractJsonGenerator {
                                     .typeId(field.getType().getCanonicalName())
                                     .modifier(getModifier(field))
                                     .tag(field.getTag())
-                                    .description(field.getComments());
+                                    .description(field.getComments())
+                                    .oneof(field.isOneofPart() ? field.getOneof().getName() : null);
                             boolean isMap = field.isMap();
                             if (isMap) {
                                 builder.isMap(true);
