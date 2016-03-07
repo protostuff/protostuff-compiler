@@ -45,6 +45,12 @@ public abstract class AbstractProtoCompiler implements ProtoCompiler {
                 compile(module, writer);
             }
             for (Proto proto : module.getProtos()) {
+				if (canProcess(proto)) {
+					String outputFileName = getOutputFileName(module.getOutput(), proto);
+					LOGGER.info("Write {}", outputFileName);
+					Writer writer = getWriter(outputFileName);
+					compile(proto, writer);
+				}
                 for (Service service : proto.getServices()) {
                     if (canProcess(service)) {
                         String outputFileName = getOutputFileName(module.getOutput(), service);

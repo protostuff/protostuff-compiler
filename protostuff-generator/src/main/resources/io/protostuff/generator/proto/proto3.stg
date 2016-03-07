@@ -80,7 +80,7 @@ enum <enum.name> {
 >>
 
 enum_values(enum) ::= <<
-<enum.values:enum_value(); separator="\n">
+<enum.constants:enum_value(); separator="\n">
 >>
 
 enum_value(value) ::= <<

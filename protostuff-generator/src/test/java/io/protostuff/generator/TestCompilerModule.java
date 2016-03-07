@@ -18,6 +18,6 @@ public class TestCompilerModule extends AbstractModule {
     @Provides
     OutputStreamFactory outputStreamFactory() {
         // dummy
-        return location -> new ByteArrayOutputStream();
+        return location -> System.out;
     }
 }
