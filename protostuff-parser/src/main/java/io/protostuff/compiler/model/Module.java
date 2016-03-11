@@ -1,9 +1,6 @@
 package io.protostuff.compiler.model;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -13,6 +10,7 @@ public class Module {
     private String name;
     private List<Proto> protos;
     private String output;
+    private Map<String, String> options;
 
     public Module() {
     }
@@ -27,6 +25,15 @@ public class Module {
 
     public void setOutput(String output) {
         this.output = output;
+    }
+
+
+    public Map<String, String> getOptions() {
+        return options;
+    }
+
+    public void setOptions(Map<String, String> options) {
+        this.options = options;
     }
 
     public List<Proto> getProtos() {

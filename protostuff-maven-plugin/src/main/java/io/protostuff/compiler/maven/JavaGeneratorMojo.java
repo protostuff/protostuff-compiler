@@ -1,5 +1,9 @@
 package io.protostuff.compiler.maven;
 
+import com.google.common.collect.ImmutableMap;
+import io.protostuff.compiler.model.ModuleConfiguration;
+import io.protostuff.generator.ProtostuffCompiler;
+import io.protostuff.generator.java.JavaGenerator;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
@@ -9,17 +13,8 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.FileSystems;
-import java.nio.file.FileVisitResult;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.PathMatcher;
-import java.nio.file.SimpleFileVisitor;
+import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
-
-import io.protostuff.compiler.model.ModuleConfiguration;
-import io.protostuff.generator.ProtostuffCompiler;
-import io.protostuff.generator.java.JavaGenerator;
 
 import static java.util.Collections.singletonList;
 import static org.apache.maven.plugins.annotations.LifecyclePhase.GENERATE_TEST_SOURCES;
@@ -37,6 +32,9 @@ public class JavaGeneratorMojo extends AbstractGeneratorMojo {
     @Parameter
     private File target;
 
+    @Parameter(defaultValue = "java.util.concurrent.CompletableFuture")
+    private String rpcReturnType;
+
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
         super.execute();
@@ -48,6 +46,9 @@ public class JavaGeneratorMojo extends AbstractGeneratorMojo {
                 .name("java")
                 .includePaths(singletonList(sourcePath))
                 .template(JavaGenerator.GENERATOR_NAME)
+                .options(ImmutableMap.<String, String>builder()
+                        .put(JavaGenerator.SERVICE_RETURN_TYPE_OPTION, rpcReturnType)
+                        .build())
                 .output(output);
         PathMatcher protoMatcher = FileSystems.getDefault().getPathMatcher("glob:**/*.proto");
         try {

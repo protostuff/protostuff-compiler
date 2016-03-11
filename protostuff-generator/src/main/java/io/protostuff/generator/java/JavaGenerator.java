@@ -19,6 +19,7 @@ import java.util.Map;
 public class JavaGenerator implements ProtoCompiler {
     public static final String GENERATOR_NAME = "java";
 
+    public static final String SERVICE_RETURN_TYPE_OPTION = "rpcAsyncReturnType";
     private final ProtoCompiler messageGenerator;
     private final ProtoCompiler enumGenerator;
     private final ProtoCompiler serviceGenerator;
@@ -93,6 +94,10 @@ public class JavaGenerator implements ProtoCompiler {
                         .build())
                 .put(Service.class, SimpleObjectExtender.<Service>newBuilder()
                         .property("javaName", ServiceUtil::getClassName)
+                        .build())
+                .put(ServiceMethod.class, SimpleObjectExtender.<ServiceMethod>newBuilder()
+                        .property("javaName", ServiceUtil::getMethodName)
+                        .property("asyncReturnType", ServiceUtil::getAsyncReturnType)
                         .build())
                 .build();
         messageGenerator = compilerFactory.create("io/protostuff/generator/java/message.stg", rendererMap, extenderMap);

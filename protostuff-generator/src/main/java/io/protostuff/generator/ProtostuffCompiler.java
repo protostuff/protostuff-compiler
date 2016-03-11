@@ -50,10 +50,13 @@ public class ProtostuffCompiler {
             importedFiles.put(path, proto);
         }
         Module module = new Module();
+        module.setOptions(configuration.getOptions());
         module.setName(configuration.getName());
         module.setOutput(configuration.getOutput());
         for (Map.Entry<String, Proto> entry : importedFiles.entrySet()) {
-            module.addProto(entry.getValue());
+            Proto proto = entry.getValue();
+            module.addProto(proto);
+            proto.setModule(module);
         }
         compiler.compile(module);
     }

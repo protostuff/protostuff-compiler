@@ -14,6 +14,7 @@ import io.protostuff.compiler.parser.ProtoContext;
  */
 public class Proto extends AbstractUserTypeContainer implements UserTypeContainer {
 
+    protected Module module;
     protected ProtoContext context;
     protected String filename;
     protected Syntax syntax;
@@ -157,5 +158,13 @@ public class Proto extends AbstractUserTypeContainer implements UserTypeContaine
             return name;
         }
         return aPackage + "." + name;
+    }
+
+    public Module getModule() {
+        return module;
+    }
+
+    public void setModule(Module module) {
+        this.module = module;
     }
 }

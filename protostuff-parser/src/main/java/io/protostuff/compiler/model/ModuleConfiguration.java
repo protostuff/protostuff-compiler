@@ -4,7 +4,9 @@ import com.google.common.base.MoreObjects;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -16,6 +18,7 @@ public class ModuleConfiguration {
     private final List<String> protoFiles;
     private final String template;
     private final String output;
+    private final Map<String, String> options;
 
     private ModuleConfiguration(Builder builder) {
         name = builder.name;
@@ -23,6 +26,7 @@ public class ModuleConfiguration {
         protoFiles = builder.protoFiles;
         template = builder.template;
         output = builder.output;
+        options = builder.options;
     }
 
     public static Builder newBuilder() {
@@ -36,6 +40,7 @@ public class ModuleConfiguration {
         builder.protoFiles = copy.protoFiles;
         builder.template = copy.template;
         builder.output = copy.output;
+        builder.options = copy.options;
         return builder;
     }
 
@@ -59,6 +64,13 @@ public class ModuleConfiguration {
         return includePaths;
     }
 
+    public Map<String, String> getOptions() {
+        if (options == null) {
+            return Collections.emptyMap();
+        }
+        return options;
+    }
+
     @Override
     public String toString() {
         return MoreObjects.toStringHelper(this)
@@ -71,11 +83,13 @@ public class ModuleConfiguration {
     }
 
     public static final class Builder {
+
         private String name;
         private List<Path> includePaths;
         private List<String> protoFiles;
         private String template;
         private String output;
+        private Map<String, String> options;
 
         private Builder() {
         }
@@ -102,6 +116,11 @@ public class ModuleConfiguration {
 
         public Builder output(String output) {
             this.output = output;
+            return this;
+        }
+
+        public Builder options(Map<String, String> val) {
+            options = val;
             return this;
         }
 
