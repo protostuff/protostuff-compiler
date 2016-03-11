@@ -9,8 +9,6 @@ service_compiler_template(service) ::= "<service:service()>"
 service(service) ::= <<
 package <service.proto.javaPackage>;
 
-import java.util.concurrent.CompletableFuture;
-
 import io.protostuff.Service;
 import io.protostuff.Rpc;
 import io.protostuff.Request;
@@ -50,5 +48,5 @@ service_method_declaration(method) ::= <<
 @Rpc
 @Request("<method:request_action()>")
 @Response("<method:response_action()>")
-CompletableFuture\<<method.returnType.name>\> <method.name>(<method.argType.name> request);
+<method.asyncReturnType> <method.javaName>(<method.argType.name> request);
 >>
