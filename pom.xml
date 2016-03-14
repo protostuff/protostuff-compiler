@@ -7,7 +7,12 @@
     <version>2.0.0-alpha2-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <name>Protostuff Compiler - Parent</name>
+    <name>Protostuff Compiler</name>
+
+    <description>Proto parser, code and documentation generator</description>
+    <url>http://www.protostuff.io/</url>
+    <inceptionYear>2015</inceptionYear>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -15,6 +20,41 @@
         <guice.version>4.0</guice.version>
         <guava.version>18.0</guava.version>
     </properties>
+
+    <developers>
+        <developer>
+            <id>kshchepanovskyi</id>
+            <name>Kostiantyn Shchepanovskyi</name>
+            <email>schepanovsky+protostuff@gmail.com</email>
+            <timezone>+2</timezone>
+        </developer>
+    </developers>
+
+    <distributionManagement>
+        <repository>
+            <id>sonatype-nexus-staging</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+        </repository>
+        <snapshotRepository>
+            <id>sonatype-nexus-snapshots</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+    <scm>
+        <url>https://github.com/protostuff/protostuff-compiler</url>
+        <connection>scm:git:https://github.com/protostuff/protostuff-compiler.git</connection>
+        <developerConnection>scm:git:git@github.com:protostuff/protostuff-compiler.git</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
+
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
 
     <modules>
         <module>protostuff-parser</module>
@@ -169,20 +209,5 @@
             </build>
         </profile>
     </profiles>
-
-    <distributionManagement>
-        <repository>
-            <id>bintray</id>
-            <url>https://api.bintray.com/maven/protostuff/preview/io.protostuff</url>
-        </repository>
-    </distributionManagement>
-
-    <scm>
-        <connection>scm:git:https://github.com/protostuff/protostuff-compiler.git</connection>
-        <developerConnection>scm:git:git@github.com:protostuff/protostuff-compiler.git
-        </developerConnection>
-        <url>https://github.com/protostuff/protostuff-compiler</url>
-        <tag>HEAD</tag>
-    </scm>
 
 </project>
