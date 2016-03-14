@@ -8,6 +8,29 @@ Usage
 
 * [maven plugin](https://github.com/protostuff/protostuff-compiler/wiki/Maven-Plugin)
 * [command-line interface](https://github.com/protostuff/protostuff-compiler/wiki/Command-line-interface)
+ 
+```xml
+        <plugins>
+            <plugin>
+                <artifactId>protostuff-maven-plugin</artifactId>
+                <groupId>io.protostuff</groupId>
+                <version>2.0.0-alpha4</version>
+                <executions>
+                    <execution>
+                        <id>generate-java-sources</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                        <configuration>
+                            <rpcReturnType>com.google.common.util.concurrent.ListenableFuture</rpcReturnType>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+```
 
 Java Source Code Generator
 --------------------------
