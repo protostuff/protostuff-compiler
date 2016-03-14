@@ -10,6 +10,7 @@ Usage
 * [command-line interface](https://github.com/protostuff/protostuff-compiler/wiki/Command-line-interface)
  
 ```xml
+    </build>
         <plugins>
             <plugin>
                 <artifactId>protostuff-maven-plugin</artifactId>
