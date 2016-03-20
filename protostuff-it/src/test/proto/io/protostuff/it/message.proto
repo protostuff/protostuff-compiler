@@ -66,3 +66,7 @@ message TestOneof {
         bytes foo_bytes = 12;
     }
 }
+
+message TestFieldNamedClass {
+    int32 class = 1;
+}

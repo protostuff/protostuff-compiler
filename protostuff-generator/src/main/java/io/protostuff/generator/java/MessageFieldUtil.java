@@ -51,7 +51,11 @@ public class MessageFieldUtil {
     }
 
     public static String getFieldGetterName(Field field) {
-        return GETTER_PREFIX + Formatter.toPascalCase(field.getName());
+        String getterName = GETTER_PREFIX + Formatter.toPascalCase(field.getName());
+        if ("getClass".equals(getterName)) {
+            return getterName + "_";
+        }
+        return getterName;
     }
 
     public static String getFieldSetterName(Field field) {

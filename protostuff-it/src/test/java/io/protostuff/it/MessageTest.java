@@ -254,4 +254,11 @@ public class MessageTest {
         assertEquals("TestOneof{fooInt=42}", a1.toString());
     }
 
+    @Test
+    public void testFieldNamedClass() throws Exception {
+        TestFieldNamedClass message = TestFieldNamedClass.newBuilder()
+                .setClass(42)
+                .build();
+        Assert.assertEquals(42, message.getClass_());
+    }
 }
