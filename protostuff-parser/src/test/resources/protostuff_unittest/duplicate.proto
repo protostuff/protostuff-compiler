@@ -1,0 +1,11 @@
+syntax = "proto2";
+
+package protostuff_unittest;
+
+message A {
+
+}
+
+enum A {
+
+}

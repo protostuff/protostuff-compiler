@@ -1,5 +1,7 @@
 package io.protostuff.compiler.parser;
 
+import io.protostuff.compiler.model.Element;
+import io.protostuff.compiler.model.UserType;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +23,7 @@ public class ProtoContext {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ProtoContext.class);
 
+    private final String filename;
     private final Map<String, Type> symbolTable;
     private final Deque<Object> declarationStack;
     private final Proto proto;
@@ -32,6 +35,7 @@ public class ProtoContext {
     private FileReader fileReader;
 
     public ProtoContext(String filename) {
+        this.filename = filename;
         symbolTable = new HashMap<>();
         declarationStack = new ArrayDeque<>();
         imports = new ArrayList<>();
@@ -77,9 +81,9 @@ public class ProtoContext {
     /**
      * Register user type in symbol table. Full name should start with ".".
      */
-    public void register(String fullyQualifiedName, Type type) {
-        if (symbolTable.containsKey(fullyQualifiedName)) {
-            LOGGER.error("{} already registered", fullyQualifiedName);
+    public <T extends Type & Element> void register(String fullyQualifiedName, T type) {
+        if (resolve(fullyQualifiedName) != null) {
+            throw new ParserException(type, "Cannot register duplicate type: %s", fullyQualifiedName);
         }
         symbolTable.put(fullyQualifiedName, type);
     }
@@ -188,5 +192,10 @@ public class ProtoContext {
 
     public void setFileReader(FileReader fileReader) {
         this.fileReader = fileReader;
+    }
+
+    @Override
+    public String toString() {
+        return "ProtoContext{'" + filename + "'}";
     }
 }

@@ -4,10 +4,12 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
 import io.protostuff.compiler.ParserModule;
 import io.protostuff.compiler.model.Import;
+import org.junit.rules.ExpectedException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -17,6 +19,10 @@ import static org.junit.Assert.assertNull;
  * @author Kostiantyn Shchepanovskyi
  */
 public class ImportsTest {
+
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     private Injector injector;
 
@@ -36,5 +42,14 @@ public class ImportsTest {
         assertNotNull(context.resolve(".protostuff_unittest.B"));
         assertNotNull(context.resolve(".protostuff_unittest.C"));
         assertNull(context.resolve(".protostuff_unittest.D"));
+    }
+
+    @Test
+    public void duplicate() throws Exception {
+        Importer importer = injector.getInstance(Importer.class);
+        thrown.expect(ParserException.class);
+        thrown.expectMessage("Cannot register duplicate type: .protostuff_unittest.A " +
+                "[protostuff_unittest/imports_duplicate.proto:7]");
+        importer.importFile(new ClasspathFileReader(), "protostuff_unittest/imports_duplicate.proto");
     }
 }

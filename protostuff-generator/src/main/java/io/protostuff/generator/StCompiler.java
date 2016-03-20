@@ -88,27 +88,27 @@ public class StCompiler extends AbstractProtoCompiler {
     }
 
     @Override
-    protected void compile(Module module, Writer writer) {
+    protected void compileModule(Module module, Writer writer) {
         compile(MODULE_COMPILER_TEMPLATE, MODULE, module, writer);
     }
 
     @Override
-    protected void compile(Proto proto, Writer writer) {
+    protected void compileProto(Proto proto, Writer writer) {
         compile(PROTO_COMPILER_TEMPLATE, PROTO, proto, writer);
     }
 
     @Override
-    protected void compile(Message message, Writer writer) {
+    protected void compileMessage(Message message, Writer writer) {
         compile(MESSAGE_COMPILER_TEMPLATE, MESSAGE, message, writer);
     }
 
     @Override
-    protected void compile(io.protostuff.compiler.model.Enum anEnum, Writer writer) {
+    protected void compileEnum(io.protostuff.compiler.model.Enum anEnum, Writer writer) {
         compile(ENUM_COMPILER_TEMPLATE, ENUM, anEnum, writer);
     }
 
     @Override
-    protected void compile(Service service, Writer writer) {
+    protected void compileService(Service service, Writer writer) {
         compile(SERVICE_COMPILER_TEMPLATE, SERVICE, service, writer);
     }
 
@@ -127,56 +127,56 @@ public class StCompiler extends AbstractProtoCompiler {
     }
 
     @Override
-    protected boolean canProcess(Module module) {
+    protected boolean canProcessModule(Module module) {
         return getBoolean(MODULE_COMPILER_ENABLED, MODULE, module);
     }
 
     @Override
-    protected boolean canProcess(Proto proto) {
+    protected boolean canProcessProto(Proto proto) {
         return getBoolean(PROTO_COMPILER_ENABLED, PROTO, proto);
     }
 
     @Override
-    protected boolean canProcess(Message message) {
+    protected boolean canProcessMessage(Message message) {
         return getBoolean(MESSAGE_COMPILER_ENABLED, MESSAGE, message);
     }
 
     @Override
-    protected boolean canProcess(Enum anEnum) {
+    protected boolean canProcessEnum(Enum anEnum) {
         return getBoolean(ENUM_COMPILER_ENABLED, ENUM, anEnum);
     }
 
     @Override
-    protected boolean canProcess(Service service) {
+    protected boolean canProcessService(Service service) {
         return getBoolean(SERVICE_COMPILER_ENABLED, SERVICE, service);
     }
 
     @Override
-    protected String getOutputFileName(String basedir, Module module) {
+    protected String getModuleOutputFileName(String basedir, Module module) {
         String filename = getString(MODULE_COMPILER_OUTPUT, MODULE, module);
         return appendBasedir(basedir, filename);
     }
 
     @Override
-    protected String getOutputFileName(String basedir, Proto proto) {
+    protected String getProtoOutputFileName(String basedir, Proto proto) {
         String filename = getString(PROTO_COMPILER_OUTPUT, PROTO, proto);
         return appendBasedir(basedir, filename);
     }
 
     @Override
-    protected String getOutputFileName(String basedir, Message message) {
+    protected String getMessageOutputFileName(String basedir, Message message) {
         String filename = getString(MESSAGE_COMPILER_OUTPUT, MESSAGE, message);
         return appendBasedir(basedir, filename);
     }
 
     @Override
-    protected String getOutputFileName(String basedir, Enum anEnum) {
+    protected String getEnumOutputFileName(String basedir, Enum anEnum) {
         String filename = getString(ENUM_COMPILER_OUTPUT, ENUM, anEnum);
         return appendBasedir(basedir, filename);
     }
 
     @Override
-    protected String getOutputFileName(String basedir, Service service) {
+    protected String getServiceOutputFileName(String basedir, Service service) {
         String filename = getString(SERVICE_COMPILER_OUTPUT, SERVICE, service);
         return appendBasedir(basedir, filename);
     }
