@@ -4,7 +4,7 @@
     <parent>
         <groupId>io.protostuff</groupId>
         <artifactId>protostuff-compiler</artifactId>
-        <version>2.0.0-alpha6-SNAPSHOT</version>
+        <version>2.0.0-alpha6</version>
     </parent>
     <artifactId>protostuff-parser</artifactId>
     <name>Protostuff Compiler - Core</name>
