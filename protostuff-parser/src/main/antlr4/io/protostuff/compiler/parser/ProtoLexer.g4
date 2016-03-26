@@ -70,6 +70,7 @@ COMMENT
 LINE_COMMENT
     : '//' .*? '\r'? '\n' -> channel(HIDDEN)
     ;
+
 WS
     : [ \t\r\n]+ -> channel(HIDDEN)
     ;
@@ -194,3 +195,13 @@ fragment OCTAL_ESC
 fragment UNICODE_ESC
     :   '\\' 'u' HEX_DIGIT HEX_DIGIT HEX_DIGIT HEX_DIGIT
     ;
+
+/** "catch all" rule for any char not matche in a token rule of your
+ *  grammar. Lexers in Intellij must return all tokens good and bad.
+ *  There must be a token to cover all characters, which makes sense, for
+ *  an IDE. The parser however should not see these bad tokens because
+ *  it just confuses the issue. Hence, the hidden channel.
+ */
+ERRCHAR
+	:	.	-> channel(HIDDEN)
+	;
