@@ -34,14 +34,14 @@ optionEntry
     : OPTION option SEMICOLON
     ;
 enumBlock
-    : ENUM NAME LCURLY enumBlockEntry* RCURLY SEMICOLON?
+    : ENUM name LCURLY enumBlockEntry* RCURLY SEMICOLON?
     ;
 enumBlockEntry
     : enumConstant
     | optionEntry
     ;
 enumConstant
-    : NAME ASSIGN INTEGER_VALUE fieldOptions? SEMICOLON
+    : name ASSIGN INTEGER_VALUE fieldOptions? SEMICOLON
     ;
 extendBlock
     : EXTEND typeReference LCURLY extendBlockEntry* RCURLY SEMICOLON?
@@ -65,7 +65,7 @@ rpcMethodOptions
     : LCURLY optionEntry* RCURLY
     ;
 messageBlock
-    : MESSAGE NAME LCURLY messageBlockEntry* RCURLY SEMICOLON?
+    : MESSAGE name LCURLY messageBlockEntry* RCURLY SEMICOLON?
     ;
 messageBlockEntry
     : field

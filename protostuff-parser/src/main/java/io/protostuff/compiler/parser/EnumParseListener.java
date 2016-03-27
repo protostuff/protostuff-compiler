@@ -27,7 +27,7 @@ public class EnumParseListener extends AbstractProtoParserListener {
     public void exitEnumBlock(ProtoParser.EnumBlockContext ctx) {
         Enum e = context.pop(Enum.class);
         EnumContainer container = context.peek(EnumContainer.class);
-        String name = ctx.NAME().getText();
+        String name = ctx.name().getText();
         e.setName(name);
         e.setSourceCodeLocation(getSourceCodeLocation(ctx));
         container.addEnum(e);
@@ -45,7 +45,7 @@ public class EnumParseListener extends AbstractProtoParserListener {
     public void exitEnumConstant(ProtoParser.EnumConstantContext ctx) {
         EnumConstant enumConstant = context.pop(EnumConstant.class);
         Enum e = context.peek(Enum.class);
-        String name = ctx.NAME().getText();
+        String name = ctx.name().getText();
         int number = Integer.decode(ctx.INTEGER_VALUE().getText());
         enumConstant.setName(name);
         enumConstant.setValue(number);

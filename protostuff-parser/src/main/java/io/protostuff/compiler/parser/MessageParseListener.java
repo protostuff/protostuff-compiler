@@ -33,7 +33,7 @@ public class MessageParseListener extends AbstractProtoParserListener {
     public void exitMessageBlock(ProtoParser.MessageBlockContext ctx) {
         Message message = context.pop(Message.class);
         MessageContainer container = context.peek(MessageContainer.class);
-        String name = ctx.NAME().getText();
+        String name = ctx.name().getText();
         message.setName(name);
         message.setSourceCodeLocation(getSourceCodeLocation(ctx));
         container.addMessage(message);
