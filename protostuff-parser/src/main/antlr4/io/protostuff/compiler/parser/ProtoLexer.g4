@@ -68,7 +68,7 @@ COMMENT
     : '/*' .*? '*/' -> channel(HIDDEN)
     ;
 LINE_COMMENT
-    : '//' .*? '\r'? '\n' -> channel(HIDDEN)
+    : '//' .*? '\r'? ('\n'|EOF) -> channel(HIDDEN)
     ;
 
 WS

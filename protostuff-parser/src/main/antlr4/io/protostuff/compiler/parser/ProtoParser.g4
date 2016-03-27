@@ -6,7 +6,7 @@ options {
 
 proto
     // syntax should be first statement in the file
-    : syntax? statement*
+    : syntax? statement* EOF
     ;
 syntax
     // only proto3 is supported
