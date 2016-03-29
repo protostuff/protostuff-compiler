@@ -22,11 +22,14 @@ import io.protostuff.generator.ProtostuffCompiler;
 import io.protostuff.generator.html.HtmlGenerator;
 
 import static java.util.Collections.singletonList;
+import static org.apache.maven.plugins.annotations.ResolutionScope.COMPILE_PLUS_RUNTIME;
 
 /**
  * @author Kostiantyn Shchepanovskyi
  */
-@Mojo(name = "html")
+@Mojo(name = "html",
+        configurator = "include-project-dependencies",
+        requiresDependencyResolution = COMPILE_PLUS_RUNTIME)
 public class HtmlGeneratorMojo extends AbstractGeneratorMojo {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(HtmlGeneratorMojo.class);
