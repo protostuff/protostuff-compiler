@@ -15,6 +15,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.version>3.3.3</maven.version>
         <maven-plugin.version>3.4</maven-plugin.version>
+        <plexus.version>1.5.5</plexus.version>
     </properties>
 
     <build>
@@ -42,6 +43,18 @@
                 </executions>
             </plugin>
             <plugin>
+                <groupId>org.codehaus.plexus</groupId>
+                <artifactId>plexus-component-metadata</artifactId>
+                <version>${plexus.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate-metadata</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.sonatype.plugins</groupId>
                 <artifactId>sisu-maven-plugin</artifactId>
                 <version>1.1</version>
@@ -53,6 +66,19 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <configuration>
+                    <tagletArtifacts>
+                        <tagletArtifact>
+                            <groupId>org.apache.maven.plugin-tools</groupId>
+                            <artifactId>maven-plugin-tools-javadoc</artifactId>
+                            <version>2.5</version>
+                        </tagletArtifact>
+                    </tagletArtifacts>
+                </configuration>
             </plugin>
         </plugins>
     </build>

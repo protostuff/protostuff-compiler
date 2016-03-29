@@ -18,11 +18,14 @@ import java.nio.file.attribute.BasicFileAttributes;
 
 import static java.util.Collections.singletonList;
 import static org.apache.maven.plugins.annotations.LifecyclePhase.GENERATE_TEST_SOURCES;
+import static org.apache.maven.plugins.annotations.ResolutionScope.COMPILE_PLUS_RUNTIME;
 
 /**
  * @author Kostiantyn Shchepanovskyi
  */
-@Mojo(name = "java")
+@Mojo(name = "java",
+        configurator = "include-project-dependencies",
+        requiresDependencyResolution = COMPILE_PLUS_RUNTIME)
 public class JavaGeneratorMojo extends AbstractGeneratorMojo {
 
     public static final String GENERATED_SOURCES = "/generated-sources/proto";
