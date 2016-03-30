@@ -95,7 +95,18 @@ map
     : MAP LT mapKey COMMA mapValue GT name ASSIGN tag fieldOptions? SEMICOLON
     ;
 mapKey
-    : typeReference
+    : INT32
+    | INT64
+    | UINT32
+    | UINT64
+    | SINT32
+    | SINT64
+    | FIXED32
+    | FIXED64
+    | SFIXED32
+    | SFIXED64
+    | BOOL
+    | STRING
     ;
 mapValue
     : typeReference
@@ -135,7 +146,22 @@ fieldModifier
     | REPEATED
     ;
 typeReference
-    : DOT? name (DOT name)*
+    : DOUBLE
+    | FLOAT
+    | INT32
+    | INT64
+    | UINT32
+    | UINT64
+    | SINT32
+    | SINT64
+    | FIXED32
+    | FIXED64
+    | SFIXED32
+    | SFIXED64
+    | BOOL
+    | STRING
+    | BYTES
+    | DOT? name (DOT name)*
     ;
 fieldOptions
     : LSQUARE (option (COMMA option)* )? RSQUARE
@@ -196,4 +222,19 @@ name
     | RETURNS
     | MAP
     | BOOLEAN_VALUE
+    | DOUBLE
+    | FLOAT
+    | INT32
+    | INT64
+    | UINT32
+    | UINT64
+    | SINT32
+    | SINT64
+    | FIXED32
+    | FIXED64
+    | SFIXED32
+    | SFIXED64
+    | BOOL
+    | STRING
+    | BYTES
     ;

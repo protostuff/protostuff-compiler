@@ -3,7 +3,6 @@ package io.protostuff.generator.java;
 import io.protostuff.compiler.model.*;
 import io.protostuff.compiler.model.Enum;
 import io.protostuff.generator.Formatter;
-import io.protostuff.generator.GeneratorException;
 
 import static io.protostuff.compiler.model.ScalarFieldType.BOOL;
 import static io.protostuff.compiler.model.ScalarFieldType.BYTES;
@@ -305,16 +304,8 @@ public class MessageFieldUtil {
             throw new IllegalArgumentException(field.toString());
         }
         Message entryType = (Message) type;
-        FieldType fieldType = entryType.getField(MAP_ENTRY_KEY).getType();
-        if (fieldType instanceof ScalarFieldType) {
-            ScalarFieldType keyType = (ScalarFieldType) fieldType;
-            return ScalarFieldTypeUtil.getWrapperType(keyType);
-        } else if (fieldType instanceof Enum) {
-            Enum keyType = (Enum) fieldType;
-            return UserTypeUtil.getCanonicalName(keyType);
-        } else {
-            throw new GeneratorException("Invalid map key type: %s", fieldType.getCanonicalName());
-        }
+        ScalarFieldType keyType = (ScalarFieldType) entryType.getField(MAP_ENTRY_KEY).getType();
+        return ScalarFieldTypeUtil.getWrapperType(keyType);
     }
 
     public static String getMapFieldValueType(Field field) {
