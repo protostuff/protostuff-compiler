@@ -51,6 +51,11 @@ message SimpleMessage {
     repeated int32 repeated_int32 = 12;
     repeated string repeated_string = 13;
     TestMessage message = 14;
+    Enum enum = 15;
+
+    enum Enum {
+        CONSTANT = 0;
+    }
 }
 
 message MessageWithoutFields {

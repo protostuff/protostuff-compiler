@@ -186,6 +186,7 @@ public <field.javaType> <field.javaGetterName>() {
 
 public <field.parent.javaName> <field.javaSetterName>(<field.javaType> value) {
     <field:check_field_modification_lock()>
+    <check_field_value_is_not_null(field=field, var="value")>
     this.<field.oneof.javaFieldName> = value;
     this.<field.oneof.javaCaseFieldName> = <field.oneof.javaName>.<field.javaOneofConstantName>;
     return this;
@@ -232,21 +233,25 @@ public <field.parent.javaName> <field.javaRepeatedSetterName>(<field.javaRepeate
     return this;
 }
 
-public <field.parent.javaName> <field.javaRepeatedAdderName>(<field.javaType> <field.javaName>) {
+public <field.parent.javaName> <field.javaRepeatedAdderName>(<field.javaType> value) {
     <field:check_field_modification_lock()>
+    <check_field_value_is_not_null(field=field, var="value")>
     if (this.<field.javaName> == null) {
         this.<field.javaName> = new java.util.ArrayList\<>();
     }
-    this.<field.javaName>.add(<field.javaName>);
+    this.<field.javaName>.add(value);
     return this;
 }
 
-public <field.parent.javaName> <field.javaRepeatedAdderName>(<field.javaRepeatedType> <field.javaName>) {
+public <field.parent.javaName> <field.javaRepeatedAdderName>(<field.javaRepeatedType> values) {
     <field:check_field_modification_lock()>
+    if (values == null) {
+        throw new NullPointerException("Cannot set <field.parent.javaName>#<field.javaName> to null");
+    }
     if (this.<field.javaName> == null) {
         this.<field.javaName> = new java.util.ArrayList\<>();
     }
-    this.<field.javaName>.addAll(<field.javaName>);
+    this.<field.javaName>.addAll(values);
     return this;
 }
 
@@ -267,6 +272,7 @@ public <field.javaType> <field.javaGetterName>() {
 
 public <field.parent.javaName> <field.javaSetterName>(<field.javaType> value) {
     <field:check_field_modification_lock()>
+    <check_field_value_is_not_null(field=field, var="value")>
     this.<field.javaName> = value;
     <field.javaBitFieldName> |= <field.javaBitFieldMask>;
     return this;
@@ -282,6 +288,14 @@ check_field_modification_lock(field) ::= <<
 if(__lock) {
     throw new IllegalStateException("Could not update <field.parent.javaName>.<field.javaName>");
 }
+>>
+
+check_field_value_is_not_null(field, var) ::= <<
+<if(field.type.message || field.type.enum || field.type.scalar && field.javaIsScalarNullableType)>
+if (<var> == null) {
+    throw new NullPointerException("Cannot set <field.parent.javaName>#<field.javaName> to null");
+}
+<endif>
 >>
 
 field_toString_part(field) ::= <<

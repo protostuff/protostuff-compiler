@@ -261,4 +261,38 @@ public class MessageTest {
                 .build();
         Assert.assertEquals(42, message.getClass_());
     }
+
+    @Test
+    public void setStringFieldToNull() throws Exception {
+        thrown.expect(NullPointerException.class);
+        thrown.expectMessage("Cannot set SimpleMessage#string to null");
+        SimpleMessage.newBuilder()
+                .setString(null);
+    }
+
+    @Test
+    public void setMessageFieldToNull() throws Exception {
+        thrown.expect(NullPointerException.class);
+        thrown.expectMessage("Cannot set SimpleMessage#message to null");
+        SimpleMessage.newBuilder()
+                .setMessage(null);
+    }
+
+    @Test
+    public void setEnumFieldToNull() throws Exception {
+        thrown.expect(NullPointerException.class);
+        thrown.expectMessage("Cannot set SimpleMessage#enum_ to null");
+        SimpleMessage.newBuilder()
+                .setEnum(null);
+    }
+
+    @Test
+    @SuppressWarnings("ConstantConditions")
+    public void setRepeatedStringFieldToNull() throws Exception {
+        thrown.expect(NullPointerException.class);
+        thrown.expectMessage("Cannot set SimpleMessage#repeatedString to null");
+        String nullString = null;
+        SimpleMessage.newBuilder()
+                .addRepeatedString(nullString);
+    }
 }
