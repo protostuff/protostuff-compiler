@@ -200,9 +200,12 @@ public <field.javaMapType> <field.javaMapGetterName>() {
     return <field.javaName>;
 }
 
-public <field.parent.javaName> <field.javaMapSetterName>(<field.javaMapType> <field.javaName>) {
+public <field.parent.javaName> <field.javaMapSetterName>(<field.javaMapType> map) {
     <field:check_field_modification_lock()>
-    this.<field.javaName> = <field.javaName>;
+    if (map == null) {
+        throw new NullPointerException("Cannot set <field.parent.javaName>#<field.javaName> to null");
+    }
+    this.<field.javaName> = map;
     return this;
 }
 
@@ -210,6 +213,12 @@ public <field.parent.javaName> <field.javaMapAdderName>(<field.javaMapKeyType> k
     <field:check_field_modification_lock()>
     if (this.<field.javaName> == null) {
         this.<field.javaName> = new java.util.HashMap\<>();
+    }
+    if (key == null) {
+        throw new NullPointerException("Cannot set <field.parent.javaName>#<field.javaName> - map key is null");
+    }
+    if (value == null) {
+        throw new NullPointerException("Cannot set <field.parent.javaName>#<field.javaName> - map value is null");
     }
     this.<field.javaName>.put(key, value);
     return this;
@@ -227,9 +236,12 @@ public <field.javaRepeatedType> <field.javaRepeatedGetterName>() {
     return <field.javaName>;
 }
 
-public <field.parent.javaName> <field.javaRepeatedSetterName>(<field.javaRepeatedType> <field.javaName>) {
+public <field.parent.javaName> <field.javaRepeatedSetterName>(<field.javaRepeatedType> list) {
     <field:check_field_modification_lock()>
-    this.<field.javaName> = <field.javaName>;
+    if (list == null) {
+        throw new NullPointerException("Cannot set <field.parent.javaName>#<field.javaName> to null");
+    }
+    this.<field.javaName> = list;
     return this;
 }
 

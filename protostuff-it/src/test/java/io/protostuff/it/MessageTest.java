@@ -288,11 +288,51 @@ public class MessageTest {
 
     @Test
     @SuppressWarnings("ConstantConditions")
-    public void setRepeatedStringFieldToNull() throws Exception {
+    public void addRepeatedStringFieldNull() throws Exception {
         thrown.expect(NullPointerException.class);
         thrown.expectMessage("Cannot set SimpleMessage#repeatedString to null");
         String nullString = null;
         SimpleMessage.newBuilder()
                 .addRepeatedString(nullString);
+    }
+
+    @Test
+    public void setRepeatedStringFieldNull() throws Exception {
+        thrown.expect(NullPointerException.class);
+        thrown.expectMessage("Cannot set SimpleMessage#repeatedString to null");
+        SimpleMessage.newBuilder()
+                .setRepeatedStringList(null);
+    }
+
+    @Test
+    public void setOneofStringToNull() throws Exception {
+        thrown.expect(NullPointerException.class);
+        thrown.expectMessage("Cannot set TestOneof#fooString");
+        TestOneof.newBuilder()
+                .setFooString(null);
+    }
+
+    @Test
+    public void setMapValueNull() throws Exception {
+        thrown.expect(NullPointerException.class);
+        thrown.expectMessage("Cannot set TestMap#mapBoolBool - map value is null");
+        TestMap.newBuilder()
+                .putMapBoolBool(true, null);
+    }
+
+    @Test
+    public void setMapKeyNull() throws Exception {
+        thrown.expect(NullPointerException.class);
+        thrown.expectMessage("Cannot set TestMap#mapBoolBool - map key is null");
+        TestMap.newBuilder()
+                .putMapBoolBool(null, true);
+    }
+
+    @Test
+    public void setMapFieldNull() throws Exception {
+        thrown.expect(NullPointerException.class);
+        thrown.expectMessage("Cannot set TestMap#mapBoolBool to null");
+        TestMap.newBuilder()
+                .setMapBoolBoolMap(null);
     }
 }
