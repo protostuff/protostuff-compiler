@@ -81,7 +81,8 @@ public class ScalarTest {
     public void scalarGetters() throws Exception {
         ScalarFieldTestMsg msg = ScalarFieldTestMsg.newBuilder()
                 .setDouble(0.1d)
-                .setFloat(0.2f);
+                .setFloat(0.2f)
+                .build();
         assertEquals(0.1d, msg.getDouble(), 0d);
         assertEquals(0.2f, msg.getFloat(), 0f);
     }
@@ -96,7 +97,7 @@ public class ScalarTest {
     @Test
     public void repeatedScalarConstructedObject_usingSetter() throws Exception {
         RepeatedScalarFieldTestMsg msg = RepeatedScalarFieldTestMsg.newBuilder()
-                .setInt32List(Arrays.asList(1, 2, 3))
+                .addAllInt32(Arrays.asList(1, 2, 3))
                 .build();
         assertEquals(3, msg.getInt32Count());
         assertEquals(1, (int) msg.getInt32(0));

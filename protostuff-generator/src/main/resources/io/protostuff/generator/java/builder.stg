@@ -1,25 +1,48 @@
 delimiters "<", ">"
 
+import "io/protostuff/generator/java/message-base.stg"
+
 builder(message) ::= <<
 public static final class Builder {
 
-    <message.fields:builder_field_declaration(); separator="\n">
+    <message.fields:field_declaration(); separator="\n">
+    <message.javaBitFieldNames:message_bit_field(); separator="\n">
+    <message.oneofs:oneof_fields(); separator="\n">
 
-    private Builder() {}
+    private Builder() {
+        <message.fields:builder_field_initializer(); separator="\n">
+    }
 
     <message.fields:builder_field_accessors(); separator="\n">
 
     public <message.javaName> build() {
-        return new <message.javaName>(this);
+        <message.javaFullName> result = new <message.javaFullName>();
+        <message.javaBitFieldNames:copy_bit_field(); separator="\n">
+        <message.fields:copy_field(); separator="\n">
+        <message.oneofs:copy_oneof_field(); separator="\n">
+        return result;
     }
 
 }
 >>
 
-builder_constructor(message) ::= <<
-private <message.javaName>(Builder builder) {
-    <message.fields:builder_field_constructor_init(); separator="\n">
-}
+copy_bit_field(name) ::= <<
+result.<name> = <name>;
+>>
+
+copy_field(field) ::= <<
+<if(field.map)>
+result.<field.javaName> = java.util.Collections.unmodifiableMap(<field.javaName>);
+<elseif(field.repeated)>
+result.<field.javaName> = java.util.Collections.unmodifiableList(<field.javaName>);
+<else>
+result.<field.javaName> = <field.javaName>;
+<endif>
+>>
+
+copy_oneof_field(oneOf) ::= <<
+result.<oneOf.javaCaseFieldName> = <oneOf.javaCaseFieldName>;
+result.<oneOf.javaFieldName> = <oneOf.javaFieldName>;
 >>
 
 builder_factory_method(message) ::= <<
@@ -28,10 +51,18 @@ public static Builder newBuilder() {
 }
 >>
 
+builder_field_initializer(field) ::= <%
+<if(field.map)>
+this.<field.javaName> = java.util.Collections.emptyMap();
+<elseif(field.repeated)>
+this.<field.javaName> = java.util.Collections.emptyList();
+<endif>
+%>
 
+/*
 builder_field_constructor_init(field) ::= <%
 <if(field.repeated)>
-this.<field.javaName> = builder.<field.javaBuilderRepeatedGetterName>();
+this.<field.javaName> = builder.<field.javaRepeatedGetterName>();
 <else>
 <if(field.javaIsScalarNullableType)>
 this.<field.javaName> = builder.<field.javaName> == null ? <field.javaDefaultValue> : builder.<field.javaName>;
@@ -40,54 +71,124 @@ this.<field.javaName> = builder.<field.javaName>;
 <endif>
 <endif>
 %>
+*/
 
+builder_field_accessors(field) ::= <<
+<if(field.oneofPart)>
+public <field.javaType> <field.javaGetterName>() {
+    if (<field.oneof.javaCaseFieldName> == <field.oneof.javaName>.<field.javaOneofConstantName>) {
+        return (<field.javaType>) <field.oneof.javaFieldName>;
+    }
+    return <field.javaDefaultValue>;
+}
 
+public Builder <field.javaSetterName>(<field.javaType> value) {
+    <check_field_value_is_not_null(field=field, var="value")>
+    this.<field.oneof.javaFieldName> = value;
+    this.<field.oneof.javaCaseFieldName> = <field.oneof.javaName>.<field.javaOneofConstantName>;
+    return this;
+}
 
-builder_field_declaration(field) ::= <<
-<if(field.repeated)>
-private <field.javaRepeatedType> <field.javaName>;
+public boolean <field.javaHasMethodName>() {
+    return <field.oneof.javaCaseFieldName> == <field.oneof.javaName>.<field.javaOneofConstantName>;
+}
+<elseif(field.map)>
+public <field.javaMapType> <field.javaMapGetterName>() {
+    return <field.javaName>;
+}
+
+public Builder <field.javaMapAdderName>(<field.javaMapKeyType> key, <field.javaMapValueType> value) {
+    if (key == null) {
+        throw new NullPointerException("Cannot set <field.parent.javaName>#<field.javaName> - map key is null");
+    }
+    if (value == null) {
+        throw new NullPointerException("Cannot set <field.parent.javaName>#<field.javaName> - map value is null");
+    }
+    <field:ensure_mutable()>
+    this.<field.javaName>.put(key, value);
+    return this;
+}
+
+public Builder <field.javaMapAddAllName>(java.util.Map\<<field.javaMapKeyType>, <field.javaMapValueType>\> map) {
+    if (map == null) {
+        throw new NullPointerException("Cannot set <field.parent.javaName>#<field.javaName> to null");
+    }
+    <field:ensure_mutable()>
+    this.<field.javaName>.putAll(map);
+    return this;
+}
+
+public int <field.javaRepeatedGetCountMethodName>() {
+    return <field.javaName>.size();
+}
+
+public <field.javaMapValueType> <field.javaMapGetByKeyMethodName>(<field.javaMapKeyType> key) {
+    return <field.javaName>.get(key);
+}
+<elseif(field.repeated)>
+public <field.javaRepeatedType> <field.javaRepeatedGetterName>() {
+    return <field.javaName>;
+}
+
+public Builder <field.javaRepeatedAdderName>(<field.javaType> value) {
+    <check_field_value_is_not_null(field=field, var="value")>
+    <field:ensure_mutable()>
+    this.<field.javaName>.add(value);
+    return this;
+}
+
+public Builder <field.javaRepeatedAddAllName>(<field.javaRepeatedType> values) {
+    if (values == null) {
+        throw new NullPointerException("Cannot set <field.parent.javaName>#<field.javaName> to null");
+    }
+    <field:ensure_mutable()>
+    this.<field.javaName>.addAll(values);
+    return this;
+}
+
+public int <field.javaRepeatedGetCountMethodName>() {
+    return <field.javaName>.size();
+}
+
+public <field.javaType> <field.javaRepeatedGetByIndexMethodName>(int index) {
+    return <field.javaName>.get(index);
+}
 <else>
-private <field.javaType> <field.javaName>;
+public <field.javaType> <field.javaGetterName>() {
+    if ((<field.javaBitFieldName> & <field.javaBitFieldMask>) == 0) {
+        return <field.javaDefaultValue>;
+    }
+    return <field.javaName>;
+}
+
+public Builder <field.javaSetterName>(<field.javaType> value) {
+    <check_field_value_is_not_null(field=field, var="value")>
+    this.<field.javaName> = value;
+    <field.javaBitFieldName> |= <field.javaBitFieldMask>;
+    return this;
+}
+
+public boolean <field.javaHasMethodName>() {
+    return (<field.javaBitFieldName> & <field.javaBitFieldMask>) == <field.javaBitFieldMask>;
+}
 <endif>
 >>
 
-builder_field_accessors(field) ::= <<
-<if(field.repeated)>
-public <field.javaRepeatedType> <field.javaBuilderRepeatedGetterName>() {
-    if (this.<field.javaName> == null) {
-        return java.util.Collections.emptyList();
-    }
-    return java.util.Collections.unmodifiableList(this.<field.javaName>);    
+ensure_mutable(field) ::= <<
+if(!((<field.javaBitFieldName> & <field.javaBitFieldMask>) == <field.javaBitFieldMask>)) {
+<if(field.map)>
+    this.<field.javaName> = new java.util.HashMap\<>();
+<elseif(field.repeated)>
+    this.<field.javaName> = new java.util.ArrayList\<>();
+<endif>
+    <field.javaBitFieldName> |= <field.javaBitFieldMask>;
 }
+>>
 
-public Builder <field.javaBuilderRepeatedSetterName>(<field.javaRepeatedType> <field.javaName>) {
-    this.<field.javaName> = <field.javaName>;
-    return this;
-}
-
-public Builder <field.javaBuilderRepeatedAdderName>(<field.javaType> <field.javaName>) {
-    if (this.<field.javaName> == null) {
-        this.<field.javaName> = new java.util.ArrayList\<>();
-    } 
-    this.<field.javaName>.add(<field.javaName>);
-    return this;
-}
-
-public Builder <field.javaBuilderRepeatedAdderName>(<field.javaRepeatedType> <field.javaName>) {
-    if (this.<field.javaName> == null) {
-        this.<field.javaName> = new java.util.ArrayList\<>();
-    } 
-    this.<field.javaName>.addAll(<field.javaName>);
-    return this;
-}
-<else>
-public Builder <field.javaBuilderSetterName>(<field.javaType> <field.javaName>) {
-    this.<field.javaName> = <field.javaName>;
-    return this;
-}
-
-public <field.javaType> <field.javaBuilderGetterName>() {
-    return <field.javaName>;
+check_field_value_is_not_null(field, var) ::= <<
+<if(field.type.message || field.type.enum || field.type.scalar && field.javaIsScalarNullableType)>
+if (<var> == null) {
+    throw new NullPointerException("Cannot set <field.parent.javaName>#<field.javaName> to null");
 }
 <endif>
 >>

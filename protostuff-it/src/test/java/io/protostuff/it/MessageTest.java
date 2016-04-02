@@ -123,34 +123,6 @@ public class MessageTest {
     }
 
     @Test
-    public void testModifyConstructedMessage_normal_setter() throws Exception {
-        SimpleMessage message = SimpleMessage.newBuilder().build();
-        thrown.expect(IllegalStateException.class);
-        message.setInt32(1);
-    }
-
-    @Test
-    public void testModifyConstructedMessage_repeated_setter() throws Exception {
-        SimpleMessage message = SimpleMessage.newBuilder().build();
-        thrown.expect(IllegalStateException.class);
-        message.setRepeatedInt32List(Collections.emptyList());
-    }
-
-    @Test
-    public void testModifyConstructedMessage_adder_single() throws Exception {
-        SimpleMessage message = SimpleMessage.newBuilder().build();
-        thrown.expect(IllegalStateException.class);
-        message.addRepeatedInt32(1);
-    }
-
-    @Test
-    public void testModifyConstructedMessage_adder_list() throws Exception {
-        SimpleMessage message = SimpleMessage.newBuilder().build();
-        thrown.expect(IllegalStateException.class);
-        message.addRepeatedInt32(1);
-    }
-
-    @Test
     public void testMap_getter_map() throws Exception {
         Map<String, String> expected = new HashMap<>();
         expected.put("key", "value");
@@ -174,24 +146,9 @@ public class MessageTest {
         map.put("key", "value");
         map.put("test", "test");
         TestMap instance = TestMap.newBuilder()
-                .setMapStringStringMap(map)
+                .putAllMapStringString(map)
                 .build();
         Assert.assertEquals(map, instance.getMapStringStringMap());
-    }
-
-    @Test
-    public void testModifyConstructedMap_setter_map() throws Exception {
-        Map<String, String> map = new HashMap<>();
-        map.put("key", "value");
-        map.put("test", "test");
-        thrown.expect(IllegalStateException.class);
-        TEST_MAP.setMapStringStringMap(map);
-    }
-
-    @Test
-    public void testMap_setter_single() throws Exception {
-        thrown.expect(IllegalStateException.class);
-        TEST_MAP.putMapStringString("a", "b");
     }
 
     @Test
@@ -301,7 +258,7 @@ public class MessageTest {
         thrown.expect(NullPointerException.class);
         thrown.expectMessage("Cannot set SimpleMessage#repeatedString to null");
         SimpleMessage.newBuilder()
-                .setRepeatedStringList(null);
+                .addAllRepeatedString(null);
     }
 
     @Test
@@ -321,6 +278,12 @@ public class MessageTest {
     }
 
     @Test
+    public void mapListGetter_returnImmutableMap() throws Exception {
+        thrown.expect(UnsupportedOperationException.class);
+        TEST_MAP.getMapStringStringMap().put("1", "2");
+    }
+
+    @Test
     public void setMapKeyNull() throws Exception {
         thrown.expect(NullPointerException.class);
         thrown.expectMessage("Cannot set TestMap#mapBoolBool - map key is null");
@@ -333,6 +296,6 @@ public class MessageTest {
         thrown.expect(NullPointerException.class);
         thrown.expectMessage("Cannot set TestMap#mapBoolBool to null");
         TestMap.newBuilder()
-                .setMapBoolBoolMap(null);
+                .putAllMapBoolBool(null);
     }
 }

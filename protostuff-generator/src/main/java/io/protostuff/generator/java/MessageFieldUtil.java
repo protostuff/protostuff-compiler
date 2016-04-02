@@ -150,6 +150,10 @@ public class MessageFieldUtil {
         return "add" + Formatter.toPascalCase(field.getName());
     }
 
+    public static String getRepeatedFieldAddAllName(Field field) {
+        return "addAll" + Formatter.toPascalCase(field.getName());
+    }
+
     public static String toStringPart(Field field) {
         String getterName;
         if (field.isMap()) {
@@ -350,6 +354,13 @@ public class MessageFieldUtil {
     public static String getMapFieldAdderName(Field field) {
         if (field.isMap()) {
             return PUT_PREFIX + Formatter.toPascalCase(field.getName());
+        }
+        throw new IllegalArgumentException(field.toString());
+    }
+
+    public static String getMapFieldAddAllName(Field field) {
+        if (field.isMap()) {
+            return "putAll" + Formatter.toPascalCase(field.getName());
         }
         throw new IllegalArgumentException(field.toString());
     }

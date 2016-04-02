@@ -7,7 +7,7 @@
         <version>2.0.0-alpha11-SNAPSHOT</version>
     </parent>
     <artifactId>protostuff-parser</artifactId>
-    <name>Protostuff Compiler - Core</name>
+    <name>Protostuff Compiler - Parser</name>
 
     <build>
         <plugins>

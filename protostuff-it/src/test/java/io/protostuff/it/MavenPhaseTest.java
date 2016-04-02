@@ -12,13 +12,13 @@ public class MavenPhaseTest {
     public void testGenerateTestSources() throws Exception {
         // check that class generated during 'generate-test-sources' exists
         // otherwise we will get compilation error
-        new TestGenerateTestSourcesPhase();
+        TestGenerateTestSourcesPhase.newBuilder();
     }
 
     @Test
     public void testGenerateSources() throws Exception {
         // check that class generated during 'generate-sources' exists
         // otherwise we will get compilation error
-        new TestGenerateTestSourcesPhase();
+        TestGenerateTestSourcesPhase.newBuilder();
     }
 }
