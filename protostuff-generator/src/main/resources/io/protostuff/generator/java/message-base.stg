@@ -19,3 +19,13 @@ message_bit_field(name) ::= <<
 private int <name>;
 >>
 
+field_initializer(field) ::= <%
+<if(field.map)>
+this.<field.javaName> = java.util.Collections.emptyMap();
+<elseif(field.repeated)>
+this.<field.javaName> = java.util.Collections.emptyList();
+<elseif(field.oneofPart)>
+<else>
+this.<field.javaName> = <field.javaDefaultValue>;
+<endif>
+%>

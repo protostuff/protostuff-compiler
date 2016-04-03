@@ -33,10 +33,10 @@ public <if(message.nested)>static <endif>final class <message.javaName>
     <message.oneofs:oneof_fields(); separator="\n">
 
     private <message.javaName>() {
+        <message.fields:field_initializer(); separator="\n">
     }
 
-    private void initialize() {
-        <message.fields:field_initializer(); separator="\n">
+    private <message.javaName>(Builder builder) {
     }
 
     public static Builder newBuilder() {
@@ -156,22 +156,6 @@ message_bit_field(name) ::= <<
 private int <name>;
 >>
 
-field_initializer(field) ::= <<
-<if(field.map)>
-if (<field.javaName> == null) {
-    <field.javaName> = java.util.Collections.emptyMap();
-} else {
-    <field.javaName> = java.util.Collections.unmodifiableMap(<field.javaName>);
-}
-<elseif(field.repeated)>
-if (<field.javaName> == null) {
-    <field.javaName> = java.util.Collections.emptyList();
-} else {
-    <field.javaName> = java.util.Collections.unmodifiableList(<field.javaName>);
-}
-<endif>
->>
-
 field_accessors(field) ::= <<
 <if(field.oneofPart)>
 public <field.javaType> <field.javaGetterName>() {
@@ -210,9 +194,6 @@ public <field.javaType> <field.javaRepeatedGetByIndexMethodName>(int index) {
 }
 <else>
 public <field.javaType> <field.javaGetterName>() {
-    if ((<field.javaBitFieldName> & <field.javaBitFieldMask>) == 0) {
-        return <field.javaDefaultValue>;
-    }
     return <field.javaName>;
 }
 

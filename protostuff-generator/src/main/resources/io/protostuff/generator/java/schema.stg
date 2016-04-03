@@ -55,7 +55,7 @@ public static final class Schema implements io.protostuff.Schema\<<message.javaN
                     input.handleUnknownField(number, this);
             }
     	}
-        instance.initialize();
+        <message.fields:make_unmodifiable(); separator="\n">
     }
 
     @Override
@@ -80,6 +80,28 @@ public static final class Schema implements io.protostuff.Schema\<<message.javaN
 }
 >>
 
+make_unmodifiable(field) ::= <<
+<if(field.map)>
+if((instance.<field.javaBitFieldName> & <field.javaBitFieldMask>) == <field.javaBitFieldMask>) {
+    instance.<field.javaName> = java.util.Collections.unmodifiableMap(instance.<field.javaName>);
+}
+<elseif(field.repeated)>
+if((instance.<field.javaBitFieldName> & <field.javaBitFieldMask>) == <field.javaBitFieldMask>) {
+    instance.<field.javaName> = java.util.Collections.unmodifiableList(instance.<field.javaName>);
+}
+<endif>
+>>
+
+schema_ensure_mutable(field) ::= <<
+if(!((instance.<field.javaBitFieldName> & <field.javaBitFieldMask>) == <field.javaBitFieldMask>)) {
+<if(field.map)>
+    instance.<field.javaName> = new java.util.HashMap\<>();
+<elseif(field.repeated)>
+    instance.<field.javaName> = new java.util.ArrayList\<>();
+<endif>
+    instance.<field.javaBitFieldName> |= <field.javaBitFieldMask>;
+}
+>>
 
 field_merge_switch(field) ::= <<
 case <field.tag>:
@@ -121,9 +143,7 @@ oneof_field_merge_switch(field) ::= <<
 
 map_field_merge_switch(field) ::= <<
 {
-    if(instance.<field.javaName> == null) {
-        instance.<field.javaName> = new java.util.HashMap\<>();
-    }
+    <field:schema_ensure_mutable()>
     <field.javaType> entry = input.mergeObject(null, <field.javaType>.getSchema());
     instance.<field.javaName>.put(entry.getKey(), entry.getValue());
 }
@@ -131,19 +151,13 @@ map_field_merge_switch(field) ::= <<
 
 repeated_field_merge_switch(field) ::= <<
 <if(field.type.message)>
-if(instance.<field.javaName> == null) {
-	instance.<field.javaName> = new java.util.ArrayList\<>();
-}
+<field:schema_ensure_mutable()>
 instance.<field.javaName>.add(input.mergeObject(null, <field.javaType>.getSchema()));
 <elseif(field.type.enum)>
-if(instance.<field.javaName> == null) {
-	instance.<field.javaName> = new java.util.ArrayList\<>();
-}
+<field:schema_ensure_mutable()>
 instance.<field.javaName>.add(<field.javaType>.valueOf(input.readEnum()));
 <else>
-if(instance.<field.javaName> == null) {
-	instance.<field.javaName> = new java.util.ArrayList\<>();
-}
+<field:schema_ensure_mutable()>
 instance.<field.javaName>.add(input.<field.protostuffReadMethod>());
 <endif>
 >>

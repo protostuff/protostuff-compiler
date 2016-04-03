@@ -10,7 +10,7 @@ public static final class Builder {
     <message.oneofs:oneof_fields(); separator="\n">
 
     private Builder() {
-        <message.fields:builder_field_initializer(); separator="\n">
+        <message.fields:field_initializer(); separator="\n">
     }
 
     <message.fields:builder_field_accessors(); separator="\n">
@@ -50,28 +50,6 @@ public static Builder newBuilder() {
     return new Builder();
 }
 >>
-
-builder_field_initializer(field) ::= <%
-<if(field.map)>
-this.<field.javaName> = java.util.Collections.emptyMap();
-<elseif(field.repeated)>
-this.<field.javaName> = java.util.Collections.emptyList();
-<endif>
-%>
-
-/*
-builder_field_constructor_init(field) ::= <%
-<if(field.repeated)>
-this.<field.javaName> = builder.<field.javaRepeatedGetterName>();
-<else>
-<if(field.javaIsScalarNullableType)>
-this.<field.javaName> = builder.<field.javaName> == null ? <field.javaDefaultValue> : builder.<field.javaName>;
-<else>
-this.<field.javaName> = builder.<field.javaName>;
-<endif>
-<endif>
-%>
-*/
 
 builder_field_accessors(field) ::= <<
 <if(field.oneofPart)>
@@ -155,9 +133,6 @@ public <field.javaType> <field.javaRepeatedGetByIndexMethodName>(int index) {
 }
 <else>
 public <field.javaType> <field.javaGetterName>() {
-    if ((<field.javaBitFieldName> & <field.javaBitFieldMask>) == 0) {
-        return <field.javaDefaultValue>;
-    }
     return <field.javaName>;
 }
 
