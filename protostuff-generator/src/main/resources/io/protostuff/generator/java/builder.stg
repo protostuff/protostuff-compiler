@@ -13,6 +13,11 @@ public static final class Builder {
         <message.fields:field_initializer(); separator="\n">
     }
 
+    public Builder mergeFrom(<message.javaName> instance) {
+        <message.fields:builder_merge_from(); separator="\n">
+        return this;
+    }
+
     <message.fields:builder_field_accessors(); separator="\n">
 
     <message.oneofs:oneof_case(); separator="\n">
@@ -28,6 +33,18 @@ public static final class Builder {
     }
 
 }
+>>
+
+builder_merge_from(field) ::= <<
+<if(field.map)>
+this.<field.javaMapAddAllName>(instance.<field.javaMapGetterName>());
+<elseif(field.repeated)>
+this.<field.javaRepeatedAddAllName>(instance.<field.javaRepeatedGetterName>());
+<else>
+if (instance.<field.javaHasMethodName>()) {
+    this.<field.javaSetterName>(instance.<field.javaGetterName>());
+}
+<endif>
 >>
 
 oneof_cleaner(oneOf) ::= <<

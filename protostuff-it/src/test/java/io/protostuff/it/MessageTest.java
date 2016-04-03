@@ -56,6 +56,25 @@ public class MessageTest {
     }
 
     @Test
+    public void builder_mergeFrom() throws Exception {
+        ParentMsg source = ParentMsg.newBuilder()
+                .setNestedMsg(NestedMsg.newBuilder()
+                        .setName("1")
+                        .build())
+                .addNestedRepeatedMsg(NestedMsg.newBuilder()
+                        .setName("2")
+                        .build())
+                .build();
+        ParentMsg instance = ParentMsg.newBuilder()
+                .mergeFrom(source)
+                .build();
+        assertTrue(instance.hasNestedMsg());
+        assertEquals("1", instance.getNestedMsg().getName());
+        assertEquals(1, instance.getNestedRepeatedMsgCount());
+        assertEquals("2", instance.getNestedRepeatedMsg(0).getName());
+    }
+
+    @Test
     public void clearScalar() throws Exception {
         SimpleMessage.Builder buider = SimpleMessage.newBuilder()
                 .setInt32(10);
@@ -167,6 +186,13 @@ public class MessageTest {
     }
 
     @Test
+    public void testMap_builder_mergeFrom() throws Exception {
+        Assert.assertEquals("value", TestMap.newBuilder()
+                .mergeFrom(TEST_MAP)
+                .getMapStringString("key"));
+    }
+
+    @Test
     public void testMap_getter_count() throws Exception {
         Assert.assertEquals(2, TEST_MAP.getMapStringStringCount());
     }
@@ -207,6 +233,20 @@ public class MessageTest {
 
     @Test
     public void testOneof_builder() throws Exception {
+        TestOneof source = TestOneof.newBuilder()
+                .setFooInt(42)
+                .build();
+        TestOneof.Builder testOneof = TestOneof.newBuilder()
+                .mergeFrom(source);
+        assertEquals(FOO_INT, testOneof.getOneofNameCase());
+        assertTrue(testOneof.hasFooInt());
+        assertFalse(testOneof.hasFooString());
+        assertEquals(42, testOneof.getFooInt());
+        assertEquals("", testOneof.getFooString());
+    }
+
+    @Test
+    public void testOneof_builder_mergeFrom() throws Exception {
         TestOneof.Builder testOneof = TestOneof.newBuilder()
                 .setFooInt(42);
         assertEquals(FOO_INT, testOneof.getOneofNameCase());
