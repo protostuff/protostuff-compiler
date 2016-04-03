@@ -125,13 +125,34 @@ public class MessageSerializationTest {
         ScalarFieldTestMsg msg = ScalarFieldTestMsg.newBuilder()
                 .setDouble(0.1d)
                 .build();
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        Schema<ScalarFieldTestMsg> schema = ScalarFieldTestMsg.getSchema();
-        JsonIOUtil.writeTo(stream, msg, schema, false);
-        String json = new String(stream.toByteArray());
+        Schema<ScalarFieldTestMsg> schema =  msg.cachedSchema();
+        String json = serialize(msg);
         Assert.assertEquals("{\"double\":0.1}", json);
-        ScalarFieldTestMsg result = schema.newMessage();
+        ScalarFieldTestMsg deserialized = deserialize(json, schema);
+        Assert.assertEquals(msg, deserialized);
+    }
+
+    @Test
+    public void oneofSerialization() throws Exception {
+        TestOneof msg = TestOneof.newBuilder()
+                .setFooString("foo")
+                .build();
+        String json = serialize(msg);
+        Assert.assertEquals("{\"fooString\":\"foo\"}", json);
+        TestOneof deserialzied = deserialize(json, TestOneof.getSchema());
+        Assert.assertEquals(msg, deserialzied);
+    }
+
+    private <T> T deserialize(String json, Schema<T> schema) throws java.io.IOException {
+        T result = schema.newMessage();
         JsonIOUtil.mergeFrom(json.getBytes(), result, schema, false);
-        Assert.assertEquals(msg, result);
+        return result;
+    }
+
+    @SuppressWarnings("unchecked")
+    private String serialize(Message msg) throws java.io.IOException {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        JsonIOUtil.writeTo(stream, msg, msg.cachedSchema(), false);
+        return new String(stream.toByteArray());
     }
 }

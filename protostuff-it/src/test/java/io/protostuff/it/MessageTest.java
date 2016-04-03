@@ -159,6 +159,7 @@ public class MessageTest {
         assertFalse(testOneof.hasFooString());
         assertEquals(0, testOneof.getFooInt());
         assertEquals("", testOneof.getFooString());
+        assertSame(SimpleMessage.getDefaultInstance(), testOneof.getSimpleMessage());
     }
 
     @Test
