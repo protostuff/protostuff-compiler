@@ -219,6 +219,7 @@ for(java.util.Map.Entry\<<field.javaMapKeyType>, <field.javaMapValueType>\> entr
         .build();
     output.writeObject(<field.tag>, value, <field.javaType>.getSchema(), true);
 }
+
 >>
 
 repeated_field_write_switch(field) ::= <<
