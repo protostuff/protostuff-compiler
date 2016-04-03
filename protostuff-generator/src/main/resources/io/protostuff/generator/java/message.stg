@@ -25,8 +25,10 @@ message_body(message) ::= <<
 public <if(message.nested)>static <endif>final class <message.javaName>
         implements io.protostuff.Message\<<message.javaName>\>{
 
+    private static final <message.javaName> DEFAULT_INSTANCE = newBuilder().build();
+
     <message.fields:field_declaration(); separator="\n">
-    private boolean __lock = false;
+    private boolean __merge_lock = false;
     <message.javaBitFieldNames:message_bit_field(); separator="\n">
     <message.oneofs:oneof_fields(); separator="\n">
 
@@ -41,6 +43,10 @@ public <if(message.nested)>static <endif>final class <message.javaName>
         return new Builder();
     }
 
+    public static <message.javaName> getDefaultInstance() {
+        return DEFAULT_INSTANCE;
+    }
+
     public static io.protostuff.Schema\<<message.javaName>\> getSchema()
     {
     	return Schema.INSTANCE;
@@ -49,12 +55,6 @@ public <if(message.nested)>static <endif>final class <message.javaName>
     <message.fields:field_accessors(); separator="\n">
 
     <message.oneofs:oneof_case(); separator="\n">
-
-    public <message.javaName> build() {
-        initialize();
-        this.__lock = true;
-        return this;
-    }
 
     @Override
     public io.protostuff.Schema\<<message.javaName>\> cachedSchema() {

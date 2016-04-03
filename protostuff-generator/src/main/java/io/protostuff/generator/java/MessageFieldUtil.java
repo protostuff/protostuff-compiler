@@ -80,7 +80,8 @@ public class MessageFieldUtil {
             return ScalarFieldTypeUtil.getDefaultValue((ScalarFieldType) type);
         }
         if (type instanceof Message) {
-            return NULL;
+            Message m = (Message) type;
+            return UserTypeUtil.getCanonicalName(m) + ".getDefaultInstance()";
         }
         if (type instanceof Enum) {
             Enum anEnum = (Enum) type;

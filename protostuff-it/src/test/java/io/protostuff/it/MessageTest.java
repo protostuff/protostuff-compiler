@@ -298,4 +298,10 @@ public class MessageTest {
         TestMap.newBuilder()
                 .putAllMapBoolBool(null);
     }
+
+    @Test
+    public void defaultMessageFieldValue() throws Exception {
+        SimpleMessage message = SimpleMessage.newBuilder().build();
+        Assert.assertSame(TestMessage.getDefaultInstance(), message.getMessage());
+    }
 }
