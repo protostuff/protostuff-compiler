@@ -39,10 +39,10 @@ public static final class Schema implements io.protostuff.Schema\<<message.javaN
 
     @Override
     public void mergeFrom(io.protostuff.Input input, <message.javaName> instance) throws java.io.IOException {
-    	if (instance.__lock) {
+    	if (instance.__merge_lock) {
     		throw new IllegalStateException("Cannot reuse message instance");
     	} else {
-    		instance.__lock = true;
+    		instance.__merge_lock = true;
     	}
     	while(true) {
     		int number = input.readFieldNumber(this);

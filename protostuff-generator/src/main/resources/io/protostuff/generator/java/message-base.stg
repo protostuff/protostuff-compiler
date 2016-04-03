@@ -1,0 +1,21 @@
+delimiters "<", ">"
+
+field_declaration(field) ::= <<
+<if(field.map)>
+private <field.javaMapType> <field.javaName>;
+<elseif(field.repeated)>
+private <field.javaRepeatedType> <field.javaName>;
+<else>
+private <field.javaType> <field.javaName>;
+<endif>
+>>
+
+oneof_fields(oneOf) ::= <<
+private <oneOf.javaName> <oneOf.javaCaseFieldName> = <oneOf.javaName>.<oneOf.javaNotSetConstantName>;
+private Object <oneOf.javaFieldName> = null;
+>>
+
+message_bit_field(name) ::= <<
+private int <name>;
+>>
+

@@ -4,6 +4,8 @@ import "io/protostuff/generator/java/generator.stg"
 import "io/protostuff/generator/java/enum.stg"
 import "io/protostuff/generator/java/schema.stg"
 import "io/protostuff/generator/java/oneof.stg"
+import "io/protostuff/generator/java/builder.stg"
+import "io/protostuff/generator/java/message-base.stg"
 
 message_compiler_enabled(message) ::= <%
 <if(message.nested)>false<else>true<endif>
@@ -23,17 +25,26 @@ message_body(message) ::= <<
 public <if(message.nested)>static <endif>final class <message.javaName>
         implements io.protostuff.Message\<<message.javaName>\>{
 
+    private static final <message.javaName> DEFAULT_INSTANCE = newBuilder().build();
+
     <message.fields:field_declaration(); separator="\n">
-    private boolean __lock = false;
+    private boolean __merge_lock = false;
     <message.javaBitFieldNames:message_bit_field(); separator="\n">
     <message.oneofs:oneof_fields(); separator="\n">
+
+    private <message.javaName>() {
+    }
 
     private void initialize() {
         <message.fields:field_initializer(); separator="\n">
     }
 
-    public static <message.javaName> newBuilder() {
-        return new <message.javaName>();
+    public static Builder newBuilder() {
+        return new Builder();
+    }
+
+    public static <message.javaName> getDefaultInstance() {
+        return DEFAULT_INSTANCE;
     }
 
     public static io.protostuff.Schema\<<message.javaName>\> getSchema()
@@ -44,12 +55,6 @@ public <if(message.nested)>static <endif>final class <message.javaName>
     <message.fields:field_accessors(); separator="\n">
 
     <message.oneofs:oneof_case(); separator="\n">
-
-    public <message.javaName> build() {
-        initialize();
-        this.__lock = true;
-        return this;
-    }
 
     @Override
     public io.protostuff.Schema\<<message.javaName>\> cachedSchema() {
@@ -94,6 +99,8 @@ public <if(message.nested)>static <endif>final class <message.javaName>
     }
 
     <message:schema()>
+
+    <message:builder()>
 
     <message.messages:message_body(); separator="\n">
     
@@ -165,16 +172,6 @@ if (<field.javaName> == null) {
 <endif>
 >>
 
-field_declaration(field) ::= <<
-<if(field.map)>
-private <field.javaMapType> <field.javaName>;
-<elseif(field.repeated)>
-private <field.javaRepeatedType> <field.javaName>;
-<else>
-private <field.javaType> <field.javaName>;
-<endif>
->>
-
 field_accessors(field) ::= <<
 <if(field.oneofPart)>
 public <field.javaType> <field.javaGetterName>() {
@@ -184,44 +181,12 @@ public <field.javaType> <field.javaGetterName>() {
     return <field.javaDefaultValue>;
 }
 
-public <field.parent.javaName> <field.javaSetterName>(<field.javaType> value) {
-    <field:check_field_modification_lock()>
-    <check_field_value_is_not_null(field=field, var="value")>
-    this.<field.oneof.javaFieldName> = value;
-    this.<field.oneof.javaCaseFieldName> = <field.oneof.javaName>.<field.javaOneofConstantName>;
-    return this;
-}
-
 public boolean <field.javaHasMethodName>() {
     return <field.oneof.javaCaseFieldName> == <field.oneof.javaName>.<field.javaOneofConstantName>;
 }
 <elseif(field.map)>
 public <field.javaMapType> <field.javaMapGetterName>() {
     return <field.javaName>;
-}
-
-public <field.parent.javaName> <field.javaMapSetterName>(<field.javaMapType> map) {
-    <field:check_field_modification_lock()>
-    if (map == null) {
-        throw new NullPointerException("Cannot set <field.parent.javaName>#<field.javaName> to null");
-    }
-    this.<field.javaName> = map;
-    return this;
-}
-
-public <field.parent.javaName> <field.javaMapAdderName>(<field.javaMapKeyType> key, <field.javaMapValueType> value) {
-    <field:check_field_modification_lock()>
-    if (this.<field.javaName> == null) {
-        this.<field.javaName> = new java.util.HashMap\<>();
-    }
-    if (key == null) {
-        throw new NullPointerException("Cannot set <field.parent.javaName>#<field.javaName> - map key is null");
-    }
-    if (value == null) {
-        throw new NullPointerException("Cannot set <field.parent.javaName>#<field.javaName> - map value is null");
-    }
-    this.<field.javaName>.put(key, value);
-    return this;
 }
 
 public int <field.javaRepeatedGetCountMethodName>() {
@@ -234,37 +199,6 @@ public <field.javaMapValueType> <field.javaMapGetByKeyMethodName>(<field.javaMap
 <elseif(field.repeated)>
 public <field.javaRepeatedType> <field.javaRepeatedGetterName>() {
     return <field.javaName>;
-}
-
-public <field.parent.javaName> <field.javaRepeatedSetterName>(<field.javaRepeatedType> list) {
-    <field:check_field_modification_lock()>
-    if (list == null) {
-        throw new NullPointerException("Cannot set <field.parent.javaName>#<field.javaName> to null");
-    }
-    this.<field.javaName> = list;
-    return this;
-}
-
-public <field.parent.javaName> <field.javaRepeatedAdderName>(<field.javaType> value) {
-    <field:check_field_modification_lock()>
-    <check_field_value_is_not_null(field=field, var="value")>
-    if (this.<field.javaName> == null) {
-        this.<field.javaName> = new java.util.ArrayList\<>();
-    }
-    this.<field.javaName>.add(value);
-    return this;
-}
-
-public <field.parent.javaName> <field.javaRepeatedAdderName>(<field.javaRepeatedType> values) {
-    <field:check_field_modification_lock()>
-    if (values == null) {
-        throw new NullPointerException("Cannot set <field.parent.javaName>#<field.javaName> to null");
-    }
-    if (this.<field.javaName> == null) {
-        this.<field.javaName> = new java.util.ArrayList\<>();
-    }
-    this.<field.javaName>.addAll(values);
-    return this;
 }
 
 public int <field.javaRepeatedGetCountMethodName>() {
@@ -282,30 +216,8 @@ public <field.javaType> <field.javaGetterName>() {
     return <field.javaName>;
 }
 
-public <field.parent.javaName> <field.javaSetterName>(<field.javaType> value) {
-    <field:check_field_modification_lock()>
-    <check_field_value_is_not_null(field=field, var="value")>
-    this.<field.javaName> = value;
-    <field.javaBitFieldName> |= <field.javaBitFieldMask>;
-    return this;
-}
-
 public boolean <field.javaHasMethodName>() {
     return (<field.javaBitFieldName> & <field.javaBitFieldMask>) == <field.javaBitFieldMask>;
-}
-<endif>
->>
-
-check_field_modification_lock(field) ::= <<
-if(__lock) {
-    throw new IllegalStateException("Could not update <field.parent.javaName>.<field.javaName>");
-}
->>
-
-check_field_value_is_not_null(field, var) ::= <<
-<if(field.type.message || field.type.enum || field.type.scalar && field.javaIsScalarNullableType)>
-if (<var> == null) {
-    throw new NullPointerException("Cannot set <field.parent.javaName>#<field.javaName> to null");
 }
 <endif>
 >>

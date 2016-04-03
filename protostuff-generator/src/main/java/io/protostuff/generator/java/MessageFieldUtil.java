@@ -80,7 +80,8 @@ public class MessageFieldUtil {
             return ScalarFieldTypeUtil.getDefaultValue((ScalarFieldType) type);
         }
         if (type instanceof Message) {
-            return NULL;
+            Message m = (Message) type;
+            return UserTypeUtil.getCanonicalName(m) + ".getDefaultInstance()";
         }
         if (type instanceof Enum) {
             Enum anEnum = (Enum) type;
@@ -148,6 +149,10 @@ public class MessageFieldUtil {
 
     public static String getRepeatedFieldAdderName(Field field) {
         return "add" + Formatter.toPascalCase(field.getName());
+    }
+
+    public static String getRepeatedFieldAddAllName(Field field) {
+        return "addAll" + Formatter.toPascalCase(field.getName());
     }
 
     public static String toStringPart(Field field) {
@@ -350,6 +355,13 @@ public class MessageFieldUtil {
     public static String getMapFieldAdderName(Field field) {
         if (field.isMap()) {
             return PUT_PREFIX + Formatter.toPascalCase(field.getName());
+        }
+        throw new IllegalArgumentException(field.toString());
+    }
+
+    public static String getMapFieldAddAllName(Field field) {
+        if (field.isMap()) {
+            return "putAll" + Formatter.toPascalCase(field.getName());
         }
         throw new IllegalArgumentException(field.toString());
     }
