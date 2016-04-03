@@ -155,7 +155,7 @@ public class ScalarTest {
                 .addInt32(2)
                 .addInt32(3)
                 .build();
-        thrown.expect(NullPointerException.class);
+        thrown.expect(UnsupportedOperationException.class);
         msg.getInt32List().add(4);
     }
 
