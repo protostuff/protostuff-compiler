@@ -19,6 +19,7 @@ public class MessageFieldUtil {
     public static final String GETTER_PREFIX = "get";
     public static final String SETTER_PREFIX = "set";
     public static final String LIST = "java.util.List";
+    public static final String ITERABLE = "java.lang.Iterable";
     public static final String GETTER_REPEATED_SUFFIX = "List";
     public static final String NULL = "null";
     public static final String MAP_SUFFIX = "Map";
@@ -120,6 +121,32 @@ public class MessageFieldUtil {
         throw new IllegalArgumentException(field.toString());
     }
 
+    public static String getIterableFieldType(Field field) {
+        FieldType type = field.getType();
+        if (type instanceof ScalarFieldType) {
+            ScalarFieldType scalarFieldType = (ScalarFieldType) type;
+            return ITERABLE + "<" + ScalarFieldTypeUtil.getWrapperType(scalarFieldType) + ">";
+        }
+        if (type instanceof UserType) {
+            UserType userType = (UserType) type;
+            return ITERABLE + "<" + UserTypeUtil.getCanonicalName(userType) + ">";
+        }
+        throw new IllegalArgumentException(field.toString());
+    }
+
+    public static String getWrapperFieldType(Field field) {
+        FieldType type = field.getType();
+        if (type instanceof ScalarFieldType) {
+            ScalarFieldType scalarFieldType = (ScalarFieldType) type;
+            return ScalarFieldTypeUtil.getWrapperType(scalarFieldType);
+        }
+        if (type instanceof UserType) {
+            UserType userType = (UserType) type;
+            return UserTypeUtil.getCanonicalName(userType);
+        }
+        throw new IllegalArgumentException(field.toString());
+    }
+
     public static String getRepeatedFieldGetterName(Field field) {
         if (field.isRepeated()) {
             return GETTER_PREFIX + Formatter.toPascalCase(field.getName()) + GETTER_REPEATED_SUFFIX;
@@ -129,7 +156,7 @@ public class MessageFieldUtil {
 
     public static String getRepeatedFieldSetterName(Field field) {
         if (field.isRepeated()) {
-            return SETTER_PREFIX + Formatter.toPascalCase(field.getName()) + GETTER_REPEATED_SUFFIX;
+            return SETTER_PREFIX + Formatter.toPascalCase(field.getName());
         }
         throw new IllegalArgumentException(field.toString());
     }

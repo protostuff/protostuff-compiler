@@ -143,6 +143,13 @@ public <field.javaRepeatedType> <field.javaRepeatedGetterName>() {
     return <field.javaName>;
 }
 
+public Builder <field.javaRepeatedSetterName>(int index, <field.javaType> value) {
+    <check_field_value_is_not_null(field=field, var="value")>
+    <field:ensure_mutable()>
+    this.<field.javaName>.set(index, value);
+    return this;
+}
+
 public Builder <field.javaRepeatedAdderName>(<field.javaType> value) {
     <check_field_value_is_not_null(field=field, var="value")>
     <field:ensure_mutable()>
@@ -150,12 +157,17 @@ public Builder <field.javaRepeatedAdderName>(<field.javaType> value) {
     return this;
 }
 
-public Builder <field.javaRepeatedAddAllName>(<field.javaRepeatedType> values) {
+public Builder <field.javaRepeatedAddAllName>(<field.javaIterableType> values) {
     if (values == null) {
         throw new NullPointerException("Cannot set <field.parent.javaName>#<field.javaName> to null");
     }
     <field:ensure_mutable()>
-    this.<field.javaName>.addAll(values);
+    for (final <field.javaWrapperType> value : values) {
+        if (value == null) {
+           throw new NullPointerException("Cannot set <field.parent.javaName>#<field.javaName> to null");
+        }
+        this.<field.javaName>.add(value);
+    }
     return this;
 }
 

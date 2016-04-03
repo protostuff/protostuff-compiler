@@ -47,6 +47,8 @@ public class JavaGenerator implements ProtoCompiler {
                 .put(Field.class, SimpleObjectExtender.<Field>newBuilder()
                         .property("javaType", MessageFieldUtil::getFieldType)
                         .property("javaRepeatedType", MessageFieldUtil::getRepeatedFieldType)
+                        .property("javaIterableType", MessageFieldUtil::getIterableFieldType)
+                        .property("javaWrapperType", MessageFieldUtil::getWrapperFieldType)
                         .property("javaName", MessageFieldUtil::getFieldName)
                         .property("jsonName", MessageFieldUtil::getJsonFieldName)
                         .property("javaGetterName", MessageFieldUtil::getFieldGetterName)
@@ -54,6 +56,7 @@ public class JavaGenerator implements ProtoCompiler {
                         .property("javaCleanerName", MessageFieldUtil::getFieldCleanerName)
 
                         .property("javaRepeatedGetterName", MessageFieldUtil::getRepeatedFieldGetterName)
+                        .property("javaRepeatedSetterName", MessageFieldUtil::getRepeatedFieldSetterName)
                         .property("javaRepeatedAdderName", MessageFieldUtil::getRepeatedFieldAdderName)
                         .property("javaRepeatedAddAllName", MessageFieldUtil::getRepeatedFieldAddAllName)
                         .property("javaRepeatedGetCountMethodName", MessageFieldUtil::repeatedGetCountMethodName)
