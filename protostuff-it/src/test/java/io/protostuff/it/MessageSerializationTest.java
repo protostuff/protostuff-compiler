@@ -1,13 +1,11 @@
 package io.protostuff.it;
 
-import io.protostuff.JsonIOUtil;
-import io.protostuff.LinkedBuffer;
-import io.protostuff.ProtobufIOUtil;
-import io.protostuff.Schema;
+import io.protostuff.*;
 import io.protostuff.it.message_test.SimpleMessage;
 import io.protostuff.it.message_test.TestMap;
 import io.protostuff.it.message_test.TestMessage;
 import io.protostuff.it.message_test.TestOneof;
+import io.protostuff.it.scalar_test.ScalarFieldTestMsg;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -120,5 +118,20 @@ public class MessageSerializationTest {
         TestOneof newInstance = TestOneof.getSchema().newMessage();
         ProtobufIOUtil.mergeFrom(bytes, newInstance, TestOneof.getSchema());
         Assert.assertEquals(a, newInstance);
+    }
+
+    @Test
+    public void JSON_fieldNameIsPreservedForJavaReservedKeyword() throws Exception {
+        ScalarFieldTestMsg msg = ScalarFieldTestMsg.newBuilder()
+                .setDouble(0.1d)
+                .build();
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        Schema<ScalarFieldTestMsg> schema = ScalarFieldTestMsg.getSchema();
+        JsonIOUtil.writeTo(stream, msg, schema, false);
+        String json = new String(stream.toByteArray());
+        Assert.assertEquals("{\"double\":0.1}", json);
+        ScalarFieldTestMsg result = schema.newMessage();
+        JsonIOUtil.mergeFrom(json.getBytes(), result, schema, false);
+        Assert.assertEquals(msg, result);
     }
 }

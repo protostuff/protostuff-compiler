@@ -237,11 +237,10 @@ for(<field.javaType> <field.javaName> : instance.<field.javaName>) {
 <endif>
 >>
 
-
 field_switch_case(field) ::= <<
-case <field.tag>: return "<field.javaName>";
+case <field.tag>: return "<field.jsonName>";
 >>
 
 field_map(field) ::= <<
-__fieldMap.put("<field.javaName>", <field.tag>);
+__fieldMap.put("<field.jsonName>", <field.tag>);
 >>

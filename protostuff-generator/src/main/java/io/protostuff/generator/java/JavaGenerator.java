@@ -48,6 +48,7 @@ public class JavaGenerator implements ProtoCompiler {
                         .property("javaType", MessageFieldUtil::getFieldType)
                         .property("javaRepeatedType", MessageFieldUtil::getRepeatedFieldType)
                         .property("javaName", MessageFieldUtil::getFieldName)
+                        .property("jsonName", MessageFieldUtil::getJsonFieldName)
                         .property("javaGetterName", MessageFieldUtil::getFieldGetterName)
                         .property("javaSetterName", MessageFieldUtil::getFieldSetterName)
 

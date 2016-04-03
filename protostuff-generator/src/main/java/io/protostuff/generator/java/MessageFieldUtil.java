@@ -46,6 +46,11 @@ public class MessageFieldUtil {
         return formattedName;
     }
 
+    public static String getJsonFieldName(Field field) {
+        String name = field.getName();
+        return Formatter.toCamelCase(name);
+    }
+
     private static boolean isReservedKeyword(String formattedName) {
         return JavaConstants.RESERVED_KEYWORDS.contains(formattedName);
     }
