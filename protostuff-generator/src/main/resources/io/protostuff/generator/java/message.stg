@@ -140,18 +140,6 @@ result = 31 * result + <oneof.javaCaseFieldName>.hashCode();
 result = 31 * result + (<oneof.javaFieldName> == null ? 0 : <oneof.javaFieldName>.hashCode());
 >>
 
-oneof_case(oneOf) ::= <<
-public <oneOf.javaName> <oneOf.javaCaseGetterName>() {
-    return <oneOf.javaCaseFieldName>;
-}
->>
-
-
-oneof_fields(oneOf) ::= <<
-private <oneOf.javaName> <oneOf.javaCaseFieldName> = <oneOf.javaName>.<oneOf.javaNotSetConstantName>;
-private Object <oneOf.javaFieldName> = null;
->>
-
 message_bit_field(name) ::= <<
 private int <name>;
 >>

@@ -51,6 +51,7 @@ public class JavaGenerator implements ProtoCompiler {
                         .property("jsonName", MessageFieldUtil::getJsonFieldName)
                         .property("javaGetterName", MessageFieldUtil::getFieldGetterName)
                         .property("javaSetterName", MessageFieldUtil::getFieldSetterName)
+                        .property("javaCleanerName", MessageFieldUtil::getFieldCleanerName)
 
                         .property("javaRepeatedGetterName", MessageFieldUtil::getRepeatedFieldGetterName)
                         .property("javaRepeatedAdderName", MessageFieldUtil::getRepeatedFieldAdderName)
@@ -87,6 +88,7 @@ public class JavaGenerator implements ProtoCompiler {
                         .property("javaName", MessageUtil::getOneofEnumClassName)
                         .property("javaNotSetConstantName", MessageUtil::getOneofNotSetConstantName)
                         .property("javaCaseGetterName", MessageUtil::getOneofCaseGetterName)
+                        .property("javaCaseCleanerName", MessageUtil::getOneofCaseCleanerName)
                         .property("javaFieldName", MessageUtil::getOneofFieldName)
                         .property("javaCaseFieldName", MessageUtil::getOneofCaseFieldName)
                         .build())
@@ -105,6 +107,8 @@ public class JavaGenerator implements ProtoCompiler {
                         .property("asyncReturnType", ServiceUtil::getAsyncReturnType)
                         .build())
                 .build();
+
+        int n = 1;
         messageGenerator = compilerFactory.create("io/protostuff/generator/java/message.stg", rendererMap, extenderMap);
         enumGenerator = compilerFactory.create("io/protostuff/generator/java/enum.stg", rendererMap, extenderMap);
         serviceGenerator = compilerFactory.create("io/protostuff/generator/java/service.stg", rendererMap, extenderMap);

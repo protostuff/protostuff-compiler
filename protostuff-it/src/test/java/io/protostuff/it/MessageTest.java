@@ -56,6 +56,37 @@ public class MessageTest {
     }
 
     @Test
+    public void clearScalar() throws Exception {
+        SimpleMessage.Builder buider = SimpleMessage.newBuilder()
+                .setInt32(10);
+        Assert.assertTrue(buider.hasInt32());
+        Assert.assertEquals(10, buider.getInt32());
+        buider.clearInt32();
+        Assert.assertFalse(buider.hasInt32());
+        Assert.assertEquals(0, buider.getInt32());
+    }
+
+    @Test
+    public void clearRepeatedScalar() throws Exception {
+        SimpleMessage.Builder buider = SimpleMessage.newBuilder()
+                .addRepeatedInt32(10);
+        Assert.assertEquals(1, buider.getRepeatedInt32Count());
+        Assert.assertEquals(10, buider.getRepeatedInt32(0));
+        buider.clearRepeatedInt32();
+        Assert.assertEquals(0, buider.getRepeatedInt32Count());
+    }
+
+    @Test
+    public void clearMap() throws Exception {
+        TestMap.Builder buider = TestMap.newBuilder()
+                .putMapInt32Int32(10, 10);
+        Assert.assertEquals(1, buider.getMapInt32Int32Count());
+        Assert.assertEquals(10, buider.getMapInt32Int32(10).intValue());
+        buider.clearMapInt32Int32();
+        Assert.assertEquals(0, buider.getMapInt32Int32Count());
+    }
+
+    @Test
     public void testEquals() throws Exception {
         assertEquals(A, A_COPY);
         assertNotEquals(A, B);
@@ -171,6 +202,29 @@ public class MessageTest {
         assertTrue(testOneof.hasFooInt());
         assertFalse(testOneof.hasFooString());
         assertEquals(42, testOneof.getFooInt());
+        assertEquals("", testOneof.getFooString());
+    }
+
+    @Test
+    public void testOneof_builder() throws Exception {
+        TestOneof.Builder testOneof = TestOneof.newBuilder()
+                .setFooInt(42);
+        assertEquals(FOO_INT, testOneof.getOneofNameCase());
+        assertTrue(testOneof.hasFooInt());
+        assertFalse(testOneof.hasFooString());
+        assertEquals(42, testOneof.getFooInt());
+        assertEquals("", testOneof.getFooString());
+    }
+
+    @Test
+    public void testOneof_builder_clear() throws Exception {
+        TestOneof.Builder testOneof = TestOneof.newBuilder()
+                .setFooInt(42)
+                .clearOneofName();
+        assertEquals(ONEOF_NAME_NOT_SET, testOneof.getOneofNameCase());
+        assertFalse(testOneof.hasFooInt());
+        assertFalse(testOneof.hasFooString());
+        assertEquals(0, testOneof.getFooInt());
         assertEquals("", testOneof.getFooString());
     }
 

@@ -10,6 +10,12 @@ private <field.javaType> <field.javaName>;
 <endif>
 >>
 
+oneof_case(oneOf) ::= <<
+public <oneOf.javaName> <oneOf.javaCaseGetterName>() {
+    return <oneOf.javaCaseFieldName>;
+}
+>>
+
 oneof_fields(oneOf) ::= <<
 private <oneOf.javaName> <oneOf.javaCaseFieldName> = <oneOf.javaName>.<oneOf.javaNotSetConstantName>;
 private Object <oneOf.javaFieldName> = null;

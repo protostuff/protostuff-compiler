@@ -15,6 +15,10 @@ public static final class Builder {
 
     <message.fields:builder_field_accessors(); separator="\n">
 
+    <message.oneofs:oneof_case(); separator="\n">
+
+    <message.oneofs:oneof_cleaner(); separator="\n">
+
     public <message.javaName> build() {
         <message.javaFullName> result = new <message.javaFullName>();
         <message.javaBitFieldNames:copy_bit_field(); separator="\n">
@@ -23,6 +27,14 @@ public static final class Builder {
         return result;
     }
 
+}
+>>
+
+oneof_cleaner(oneOf) ::= <<
+public Builder <oneOf.javaCaseCleanerName>() {
+    <oneOf.javaCaseFieldName> = <oneOf.javaName>.<oneOf.javaNotSetConstantName>;
+    <oneOf.javaFieldName> = null;
+    return this;
 }
 >>
 
@@ -96,6 +108,12 @@ public Builder <field.javaMapAddAllName>(java.util.Map\<<field.javaMapKeyType>, 
     return this;
 }
 
+public Builder <field.javaCleanerName>() {
+    this.<field.javaName> = java.util.Collections.emptyMap();;
+    <field.javaBitFieldName> &= ~<field.javaBitFieldMask>;
+    return this;
+}
+
 public int <field.javaRepeatedGetCountMethodName>() {
     return <field.javaName>.size();
 }
@@ -124,6 +142,12 @@ public Builder <field.javaRepeatedAddAllName>(<field.javaRepeatedType> values) {
     return this;
 }
 
+public Builder <field.javaCleanerName>() {
+    this.<field.javaName> = java.util.Collections.emptyList();;
+    <field.javaBitFieldName> &= ~<field.javaBitFieldMask>;
+    return this;
+}
+
 public int <field.javaRepeatedGetCountMethodName>() {
     return <field.javaName>.size();
 }
@@ -140,6 +164,12 @@ public Builder <field.javaSetterName>(<field.javaType> value) {
     <check_field_value_is_not_null(field=field, var="value")>
     this.<field.javaName> = value;
     <field.javaBitFieldName> |= <field.javaBitFieldMask>;
+    return this;
+}
+
+public Builder <field.javaCleanerName>() {
+    this.<field.javaName> = <field.javaDefaultValue>;
+    <field.javaBitFieldName> &= ~<field.javaBitFieldMask>;
     return this;
 }
 

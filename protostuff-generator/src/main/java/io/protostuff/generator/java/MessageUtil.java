@@ -46,6 +46,11 @@ public class MessageUtil {
         return "get" + Formatter.toPascalCase(name) + "Case";
     }
 
+    public static String getOneofCaseCleanerName(Oneof oneof) {
+        String name = oneof.getName();
+        return "clear" + Formatter.toPascalCase(name);
+    }
+
     public static String getOneofFieldName(Oneof oneof) {
         String name = oneof.getName();
         return Formatter.toCamelCase(name) + "__";

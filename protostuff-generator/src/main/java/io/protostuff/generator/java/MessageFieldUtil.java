@@ -67,6 +67,10 @@ public class MessageFieldUtil {
         return SETTER_PREFIX + Formatter.toPascalCase(field.getName());
     }
 
+    public static String getFieldCleanerName(Field field) {
+        return "clear" + Formatter.toPascalCase(field.getName());
+    }
+
     public static boolean isMessage(Field field) {
         return field.getType() instanceof Message;
     }
