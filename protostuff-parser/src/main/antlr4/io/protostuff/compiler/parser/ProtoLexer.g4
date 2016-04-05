@@ -60,6 +60,9 @@ RPC
 RETURNS
     : 'returns'
     ;
+STREAM
+    : 'stream'
+    ;
 MAP
     : 'map'
     ;

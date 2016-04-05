@@ -58,8 +58,11 @@ serviceBlockEntry
     | optionEntry
     ;
 rpcMethod
-    : RPC name LPAREN typeReference RPAREN 
-      RETURNS LPAREN typeReference RPAREN rpcMethodOptions? SEMICOLON?
+    : RPC name LPAREN rpcType  RPAREN
+      RETURNS LPAREN rpcType RPAREN rpcMethodOptions? SEMICOLON?
+    ;
+rpcType
+    : STREAM? typeReference
     ;
 rpcMethodOptions
     : LCURLY optionEntry* RCURLY
@@ -230,6 +233,7 @@ name
     | SERVICE
     | RPC
     | RETURNS
+    | STREAM
     | MAP
     | BOOLEAN_VALUE
     | DOUBLE

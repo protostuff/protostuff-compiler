@@ -46,11 +46,15 @@ public class ServiceParseListener extends AbstractProtoParserListener {
         ServiceMethod method = context.pop(ServiceMethod.class);
         Service service = context.peek(Service.class);
         String name = ctx.name().getText();
-        String arg = ctx.typeReference(0).getText();
-        String ret = ctx.typeReference(1).getText();
+        String arg = ctx.rpcType(0).typeReference().getText();
+        boolean argStream = ctx.rpcType(0).STREAM() != null;
+        String ret = ctx.rpcType(1).typeReference().getText();
+        boolean retStream = ctx.rpcType(1).STREAM() != null;
         method.setName(name);
         method.setArgTypeName(arg);
+        method.setArgStream(argStream);
         method.setReturnTypeName(ret);
+        method.setReturnStream(retStream);
         method.setSourceCodeLocation(getSourceCodeLocation(ctx));
         service.addMethod(method);
         attachComments(ctx, method, true);
