@@ -143,6 +143,20 @@ public class MessageSerializationTest {
         Assert.assertEquals(msg, deserialzied);
     }
 
+    @Test
+    public void testDefaultInstanceIsNotUsedForDeserialization() throws Exception {
+        SimpleMessage message = SimpleMessage.newBuilder()
+                .setMessage(TestMessage.newBuilder()
+                        .setA(2)
+                        .build())
+                .build();
+        byte[] data = ProtobufIOUtil.toByteArray(message, SCHEMA, LinkedBuffer.allocate());
+        // used to catch one special defect when data is merged to a default instance
+        // due to a defect in code generator
+        ProtobufIOUtil.mergeFrom(data, SCHEMA.newMessage(), SCHEMA);
+        ProtobufIOUtil.mergeFrom(data, SCHEMA.newMessage(), SCHEMA);
+    }
+
     private <T> T deserialize(String json, Schema<T> schema) throws java.io.IOException {
         T result = schema.newMessage();
         JsonIOUtil.mergeFrom(json.getBytes(), result, schema, false);

@@ -119,7 +119,7 @@ case <field.tag>:
 
 singular_field_merge_switch(field) ::= <<
 <if(field.type.message)>
-instance.<field.javaName> = input.mergeObject(instance.<field.javaName>, <field.javaType>.getSchema());
+instance.<field.javaName> = input.mergeObject(null, <field.javaType>.getSchema());
 <elseif(field.type.enum)>
 instance.<field.javaName> = <field.javaType>.valueOf(input.readEnum());
 <else>
@@ -131,7 +131,7 @@ instance.<field.javaBitFieldName> |= <field.javaBitFieldMask>;
 oneof_field_merge_switch(field) ::= <<
 {
     <if(field.type.message)>
-    instance.<field.oneof.javaFieldName> = input.mergeObject(instance.<field.javaName>, <field.javaType>.getSchema());
+    instance.<field.oneof.javaFieldName> = input.mergeObject(null, <field.javaType>.getSchema());
     <elseif(field.type.enum)>
     instance.<field.oneof.javaFieldName> = <field.javaType>.valueOf(input.readEnum());
     <else>

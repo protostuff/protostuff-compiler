@@ -37,6 +37,7 @@ public <if(message.nested)>static <endif>final class <message.javaName>
     }
 
     private <message.javaName>(Builder builder) {
+        __merge_lock = true;
     }
 
     public static Builder newBuilder() {
