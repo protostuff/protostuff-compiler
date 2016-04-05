@@ -45,6 +45,9 @@ TO
 MAX
     : 'max'
     ;
+RESERVED
+    : 'reserved'
+    ;
 ENUM
     : 'enum'
     ;

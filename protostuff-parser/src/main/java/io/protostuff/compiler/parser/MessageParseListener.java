@@ -3,6 +3,10 @@ package io.protostuff.compiler.parser;
 import io.protostuff.compiler.model.*;
 import io.protostuff.compiler.model.DynamicMessage.Value;
 import org.antlr.v4.runtime.BufferedTokenStream;
+import org.antlr.v4.runtime.tree.TerminalNode;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static io.protostuff.compiler.model.FieldModifier.OPTIONAL;
 import static io.protostuff.compiler.model.FieldModifier.REPEATED;
@@ -38,6 +42,26 @@ public class MessageParseListener extends AbstractProtoParserListener {
         message.setSourceCodeLocation(getSourceCodeLocation(ctx));
         container.addMessage(message);
         attachComments(ctx, message, false);
+    }
+
+    @Override
+    public void exitReserved(ProtoParser.ReservedContext ctx) {
+        Message message = context.peek(Message.class);
+        ProtoParser.RangesContext ranges = ctx.ranges();
+        if (ranges != null) {
+            List<Range> result = getRanges(message, ranges);
+            for (Range range : result) {
+                message.addReservedFieldRange(range);
+            }
+        }
+        ProtoParser.FieldNamesContext fieldNamesContext = ctx.fieldNames();
+        if (fieldNamesContext != null) {
+            for (ProtoParser.FieldNameContext fieldNameContext : fieldNamesContext.fieldName()) {
+                String fieldName = fieldNameContext.getText();
+                fieldName = Util.removeFirstAndLastChar(fieldName);
+                message.addReservedFieldName(fieldName);
+            }
+        }
     }
 
     @Override
@@ -236,19 +260,36 @@ public class MessageParseListener extends AbstractProtoParserListener {
 
     @Override
     public void exitExtensions(ProtoParser.ExtensionsContext ctx) {
-        String fromString = ctx.from().getText();
-        String toString = ctx.to() == null ? fromString : ctx.to().getText();
-        int from = Integer.decode(fromString);
-        int to;
-        if (MAX.equals(toString)) {
-            to = Field.MAX_TAG_VALUE;
-        } else {
-            to = Integer.decode(toString);
-        }
         Message message = context.peek(Message.class);
-        ExtensionRange range = new ExtensionRange(message, from, to);
-        range.setSourceCodeLocation(getSourceCodeLocation(ctx));
-        message.addExtensionRange(range);
+        ProtoParser.RangesContext ranges = ctx.ranges();
+        List<Range> result = getRanges(message, ranges);
+        for (Range range : result) {
+            message.addExtensionRange(range);
+        }
+    }
+
+    private List<Range> getRanges(Message message, ProtoParser.RangesContext ranges) {
+        List<Range> result = new ArrayList<>();
+        for (ProtoParser.RangeContext rangeContext :  ranges.range()) {
+            TerminalNode fromNode = rangeContext.INTEGER_VALUE(0);
+            TerminalNode toNode = rangeContext.INTEGER_VALUE(1);
+            if (toNode == null) {
+                toNode = rangeContext.MAX();
+            }
+            int from = Integer.decode(fromNode.getText());
+            int to;
+            if (toNode == null) {
+                to = from;
+            } else if (MAX.equals(toNode.getText())) {
+                to = Field.MAX_TAG_VALUE;
+            } else {
+                to = Integer.decode(toNode.getText());
+            }
+            Range range = new Range(message, from, to);
+            range.setSourceCodeLocation(getSourceCodeLocation(rangeContext));
+            result.add(range);
+        }
+        return result;
     }
 
     private void updateModifier(ProtoParser.FieldModifierContext modifierContext, Field field) {

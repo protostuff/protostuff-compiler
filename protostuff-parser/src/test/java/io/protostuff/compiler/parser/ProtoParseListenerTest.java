@@ -18,15 +18,15 @@ import static org.junit.Assert.assertEquals;
 public class ProtoParseListenerTest {
 
     public static final String PROTO_WITH_SYNTAX_PACKAGE_IMPORTS = Joiner.on('\n').join(
-            "syntax = \"proto3\";",
+            "syntax = 'proto3';",
             "package pt.test;",
-            "import \"foo.proto\";",
-            "import \"bar/baz.proto\";"
+            "import 'foo.proto';",
+            "import 'bar/baz.proto';"
     );
 
     public static final String PROTO_WITH_OPTIONS = Joiner.on('\n').join(
-            "option java_package = \"io.protostuff.test\";",
-            "option (google.protobuf.objectivec_file_options).class_prefix = \"LV2\";"
+            "option java_package = 'io.protostuff.test';",
+            "option (google.protobuf.objectivec_file_options).class_prefix = 'LV2';"
     );
 
     @Test

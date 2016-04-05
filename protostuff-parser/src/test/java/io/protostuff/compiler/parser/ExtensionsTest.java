@@ -3,6 +3,7 @@ package io.protostuff.compiler.parser;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
+import io.protostuff.compiler.model.*;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -12,11 +13,6 @@ import org.junit.rules.ExpectedException;
 import java.util.Map;
 
 import io.protostuff.compiler.ParserModule;
-import io.protostuff.compiler.model.ExtensionRange;
-import io.protostuff.compiler.model.Field;
-import io.protostuff.compiler.model.Message;
-import io.protostuff.compiler.model.Proto;
-import io.protostuff.compiler.model.ScalarFieldType;
 
 import static org.junit.Assert.assertEquals;
 
@@ -52,9 +48,9 @@ public class ExtensionsTest {
         assertEquals(ScalarFieldType.INT32, az.getType());
         assertEquals(43, az.getTag());
         assertEquals(1, a.getExtensionRanges().size());
-        ExtensionRange aRange = a.getExtensionRanges().get(0);
-        assertEquals(10, aRange.getMin());
-        assertEquals(Field.MAX_TAG_VALUE, aRange.getMax());
+        Range aRange = a.getExtensionRanges().get(0);
+        assertEquals(10, aRange.getFrom());
+        assertEquals(Field.MAX_TAG_VALUE, aRange.getTo());
 
         Message b = context.resolve(Message.class, ".protostuff_unittest.A.B");
         Map<String, Field> bFields = er.getExtensionFields(b);
@@ -66,9 +62,9 @@ public class ExtensionsTest {
         assertEquals(ScalarFieldType.INT32, bz.getType());
         assertEquals(53, bz.getTag());
         assertEquals(1, b.getExtensionRanges().size());
-        ExtensionRange bRange = b.getExtensionRanges().get(0);
-        assertEquals(10, bRange.getMin());
-        assertEquals(1000, bRange.getMax());
+        Range bRange = b.getExtensionRanges().get(0);
+        assertEquals(10, bRange.getFrom());
+        assertEquals(1000, bRange.getTo());
     }
 
     @Test

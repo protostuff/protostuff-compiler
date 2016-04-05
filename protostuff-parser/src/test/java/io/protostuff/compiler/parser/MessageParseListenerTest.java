@@ -2,18 +2,23 @@ package io.protostuff.compiler.parser;
 
 import com.google.common.base.Joiner;
 
+import io.protostuff.compiler.model.Range;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
 import io.protostuff.compiler.model.Field;
 import io.protostuff.compiler.model.Message;
 import io.protostuff.compiler.model.Proto;
 
+import java.util.List;
+
 import static io.protostuff.compiler.model.FieldModifier.OPTIONAL;
 import static io.protostuff.compiler.model.FieldModifier.REPEATED;
 import static io.protostuff.compiler.model.FieldModifier.REQUIRED;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -21,32 +26,14 @@ import static org.junit.Assert.assertEquals;
  */
 public class MessageParseListenerTest {
 
-    public static final String SIMPLE_MESSAGE = Joiner.on('\n').join(
-            "message A {",
-            "  int32 x = 1;",
-            "}"
-    );
-
-    public static final String MESSAGE_WITH_MODIFIERS = Joiner.on('\n').join(
-            "message A {",
-            "  optional int32 x = 1;",
-            "  required int32 y = 2;",
-            "  repeated int32 z = 3;",
-            "}"
-    );
-
-    public static final String EMBEDDED_MESSAGE = Joiner.on('\n').join(
-            "message A {",
-            "  int32 x = 1;",
-            "  message B {",
-            "    int32 y = 0x02;",
-            "  }",
-            "}"
-    );
-
     @Test
     public void parseSimpleMessage() throws Exception {
-        Message message = parseMessage(SIMPLE_MESSAGE);
+        String input = Joiner.on('\n').join(
+                "message A {",
+                "  int32 x = 1;",
+                "}"
+        );
+        Message message = parseMessage(input);
         assertEquals("A", message.getName());
         assertEquals(1, message.getFields().size());
         Field field = message.getFields().get(0);
@@ -59,7 +46,14 @@ public class MessageParseListenerTest {
     @Test
     @SuppressWarnings("ConstantConditions")
     public void modifiers() throws Exception {
-        Message message = parseMessage(MESSAGE_WITH_MODIFIERS);
+        String input = Joiner.on('\n').join(
+                "message A {",
+                "  optional int32 x = 1;",
+                "  required int32 y = 2;",
+                "  repeated int32 z = 3;",
+                "}"
+        );
+        Message message = parseMessage(input);
         assertEquals(OPTIONAL, message.getField("x").getModifier());
         assertEquals(REQUIRED, message.getField("y").getModifier());
         assertEquals(REPEATED, message.getField("z").getModifier());
@@ -67,7 +61,11 @@ public class MessageParseListenerTest {
 
     @Test
     public void parseMessageWithFieldModifiers() throws Exception {
-        Message message = parseMessage(SIMPLE_MESSAGE);
+        Message message = parseMessage(Joiner.on('\n').join(
+                "message A {",
+                "  int32 x = 1;",
+                "}"
+        ));
         assertEquals("A", message.getName());
         assertEquals(1, message.getFields().size());
         Field field = message.getFields().get(0);
@@ -78,7 +76,33 @@ public class MessageParseListenerTest {
 
     @Test
     public void parseEmbeddedMessage() throws Exception {
-        Message message = parseMessage(EMBEDDED_MESSAGE);
+        String input = Joiner.on('\n').join(
+                "message A {",
+                "  int32 x = 1;",
+                "  message B {",
+                "    int32 y = 0x02;",
+                "  }",
+                "}"
+        );
+        Message message = parseMessage(input);
+    }
+
+    @Test
+    public void parseMessageWithReservedTags() throws Exception {
+        String input = Joiner.on('\n').join(
+                "message A {",
+                "  reserved 2, 15, 9 to 11;",
+                "  reserved 'foo', 'bar';",
+                "}"
+        );
+        Message message = parseMessage(input);
+        List<Range> fieldRanges = message.getReservedFieldRanges();
+        assertThat(fieldRanges).contains(
+                new Range(message, 2, 2),
+                new Range(message, 15, 15),
+                new Range(message, 9, 11));
+        List<String> fieldNames = message.getReservedFieldNames();
+        assertThat(fieldNames).contains("foo", "bar");
     }
 
     private Message parseMessage(String input) {

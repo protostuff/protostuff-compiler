@@ -20,7 +20,9 @@ public class Message extends AbstractUserTypeContainer
     protected Proto proto;
     protected String fullyQualifiedName;
 
-    protected List<ExtensionRange> extensionRanges;
+    protected List<Range> extensionRanges;
+    protected List<Range> reservedFieldRanges;
+    protected List<String> reservedFieldNames;
 
     public Message(UserTypeContainer parent) {
         super(parent);
@@ -175,22 +177,58 @@ public class Message extends AbstractUserTypeContainer
         groups.add(group);
     }
 
-    public List<ExtensionRange> getExtensionRanges() {
+    public List<Range> getExtensionRanges() {
         if (extensionRanges == null) {
             return Collections.emptyList();
         }
         return extensionRanges;
     }
 
-    public void setExtensionRanges(List<ExtensionRange> extensionRanges) {
+    public void setExtensionRanges(List<Range> extensionRanges) {
         this.extensionRanges = extensionRanges;
     }
 
-    public void addExtensionRange(ExtensionRange range) {
+    public void addExtensionRange(Range range) {
         if (extensionRanges == null) {
             extensionRanges = new ArrayList<>();
         }
         extensionRanges.add(range);
+    }
+
+    public List<Range> getReservedFieldRanges() {
+        if (reservedFieldRanges == null) {
+            return Collections.emptyList();
+        }
+        return reservedFieldRanges;
+    }
+
+    public void setReservedFieldRanges(List<Range> reservedFieldRanges) {
+        this.reservedFieldRanges = reservedFieldRanges;
+    }
+
+    public void addReservedFieldRange(Range range) {
+        if (reservedFieldRanges == null) {
+            reservedFieldRanges = new ArrayList<>();
+        }
+        reservedFieldRanges.add(range);
+    }
+
+    public List<String> getReservedFieldNames() {
+        if (reservedFieldNames == null) {
+            return Collections.emptyList();
+        }
+        return reservedFieldNames;
+    }
+
+    public void setReservedFieldNames(List<String> reservedFieldNames) {
+        this.reservedFieldNames = reservedFieldNames;
+    }
+
+    public void addReservedFieldName(String name) {
+        if (reservedFieldNames == null) {
+            reservedFieldNames = new ArrayList<>();
+        }
+        reservedFieldNames.add(name);
     }
 
     @Override

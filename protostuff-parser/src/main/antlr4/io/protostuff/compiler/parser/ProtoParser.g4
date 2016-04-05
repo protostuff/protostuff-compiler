@@ -77,6 +77,7 @@ messageBlockEntry
     | groupBlock
     | oneof
     | map
+    | reserved
     ;
 oneof
     : ONEOF name LCURLY oneofEntry* RCURLY SEMICOLON?
@@ -128,14 +129,22 @@ groupBlockEntry
     | groupBlock
     ;
 extensions
-    : EXTENSIONS from (TO to)? SEMICOLON
+    : EXTENSIONS ranges SEMICOLON
     ;
-from
-    : INTEGER_VALUE
+ranges
+    : range (COMMA range)*
     ;
-to
-    : INTEGER_VALUE
-    | MAX
+range
+    : INTEGER_VALUE ( TO ( INTEGER_VALUE | MAX ) )?
+    ;
+reserved
+    : RESERVED (ranges | fieldNames) SEMICOLON
+    ;
+fieldNames
+    : fieldName (COMMA fieldName)*
+    ;
+fieldName
+    : STRING_VALUE
     ;
 field
     : fieldModifier? typeReference name ASSIGN INTEGER_VALUE fieldOptions? SEMICOLON
@@ -216,6 +225,7 @@ name
     | EXTENSIONS
     | TO
     | MAX
+    | RESERVED
     | ENUM
     | SERVICE
     | RPC

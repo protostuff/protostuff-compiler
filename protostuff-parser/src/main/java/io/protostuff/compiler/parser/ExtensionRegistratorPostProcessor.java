@@ -2,11 +2,7 @@ package io.protostuff.compiler.parser;
 
 import java.util.List;
 
-import io.protostuff.compiler.model.Extension;
-import io.protostuff.compiler.model.ExtensionRange;
-import io.protostuff.compiler.model.Field;
-import io.protostuff.compiler.model.Message;
-import io.protostuff.compiler.model.UserTypeContainer;
+import io.protostuff.compiler.model.*;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -23,15 +19,15 @@ public class ExtensionRegistratorPostProcessor implements ProtoContextPostProces
         List<Extension> extensions = container.getDeclaredExtensions();
         for (Extension extension : extensions) {
             Message extendee = extension.getExtendee();
-            List<ExtensionRange> ranges = extendee.getExtensionRanges();
+            List<Range> ranges = extendee.getExtensionRanges();
             List<Field> fields = extension.getFields();
             for (Field field : fields) {
                 int tag = field.getTag();
                 boolean inRange = false;
-                for (ExtensionRange range : ranges) {
-                    int min = range.getMin();
-                    int max = range.getMax();
-                    if (tag >= min && tag <= max) {
+                for (Range range : ranges) {
+                    int from = range.getFrom();
+                    int to = range.getTo();
+                    if (tag >= from && tag <= to) {
                         inRange = true;
                     }
                 }
