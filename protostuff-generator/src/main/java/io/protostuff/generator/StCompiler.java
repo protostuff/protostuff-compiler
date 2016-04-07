@@ -152,45 +152,28 @@ public class StCompiler extends AbstractProtoCompiler {
     }
 
     @Override
-    protected String getModuleOutputFileName(String basedir, Module module) {
-        String filename = getString(MODULE_COMPILER_OUTPUT, MODULE, module);
-        return appendBasedir(basedir, filename);
+    protected String getModuleOutputFileName(Module module) {
+        return getString(MODULE_COMPILER_OUTPUT, MODULE, module);
     }
 
     @Override
-    protected String getProtoOutputFileName(String basedir, Proto proto) {
-        String filename = getString(PROTO_COMPILER_OUTPUT, PROTO, proto);
-        return appendBasedir(basedir, filename);
+    protected String getProtoOutputFileName(Proto proto) {
+        return getString(PROTO_COMPILER_OUTPUT, PROTO, proto);
     }
 
     @Override
-    protected String getMessageOutputFileName(String basedir, Message message) {
-        String filename = getString(MESSAGE_COMPILER_OUTPUT, MESSAGE, message);
-        return appendBasedir(basedir, filename);
+    protected String getMessageOutputFileName(Message message) {
+        return getString(MESSAGE_COMPILER_OUTPUT, MESSAGE, message);
     }
 
     @Override
-    protected String getEnumOutputFileName(String basedir, Enum anEnum) {
-        String filename = getString(ENUM_COMPILER_OUTPUT, ENUM, anEnum);
-        return appendBasedir(basedir, filename);
+    protected String getEnumOutputFileName(Enum anEnum) {
+        return getString(ENUM_COMPILER_OUTPUT, ENUM, anEnum);
     }
 
     @Override
-    protected String getServiceOutputFileName(String basedir, Service service) {
-        String filename = getString(SERVICE_COMPILER_OUTPUT, SERVICE, service);
-        return appendBasedir(basedir, filename);
-    }
-
-    protected String appendBasedir(String basedir, String relativeFilename) {
-        if (basedir.charAt(basedir.length() - 1) == getFolderSeparator()) {
-            return basedir + relativeFilename;
-        } else {
-            return basedir + getFolderSeparator() + relativeFilename;
-        }
-    }
-
-    protected char getFolderSeparator() {
-        return File.separatorChar;
+    protected String getServiceOutputFileName( Service service) {
+        return getString(SERVICE_COMPILER_OUTPUT, SERVICE, service);
     }
 
     private boolean getBoolean(String stName, String arg, Object value) {

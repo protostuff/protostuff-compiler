@@ -25,26 +25,24 @@ public abstract class AbstractProtoCompiler implements ProtoCompiler {
     @Override
     public void compile(Module module) {
         try {
+            String moduleOutput = module.getOutput();
             if (canProcessModule(module)) {
-                String outputFileName = getModuleOutputFileName(module.getOutput(), module);
-                LOGGER.info("Write {}", outputFileName);
-                try (Writer writer = getWriter(outputFileName)) {
+                String outputFileName = getModuleOutputFileName(module);
+                try (Writer writer = getWriter(moduleOutput, outputFileName)) {
                     compileModule(module, writer);
                 }
             }
             for (Proto proto : module.getProtos()) {
                 if (canProcessProto(proto)) {
-                    String outputFileName = getProtoOutputFileName(module.getOutput(), proto);
-                    LOGGER.info("Write {}", outputFileName);
-                    try (Writer writer = getWriter(outputFileName)) {
+                    String outputFileName = getProtoOutputFileName(proto);
+                    try (Writer writer = getWriter(moduleOutput, outputFileName)) {
                         compileProto(proto, writer);
                     }
                 }
                 for (Service service : proto.getServices()) {
                     if (canProcessService(service)) {
-                        String outputFileName = getServiceOutputFileName(module.getOutput(), service);
-                        LOGGER.info("Write {}", outputFileName);
-                        try (Writer writer = getWriter(outputFileName)) {
+                        String outputFileName = getServiceOutputFileName(service);
+                        try (Writer writer = getWriter(moduleOutput, outputFileName)) {
                             compileService(service, writer);
                         }
                     }
@@ -59,12 +57,11 @@ public abstract class AbstractProtoCompiler implements ProtoCompiler {
     private void processUserTypes(Module module, UserTypeContainer container) throws IOException {
         List<Message> messages = container.getMessages();
         List<io.protostuff.compiler.model.Enum> enums = container.getEnums();
-
+        String basedir = module.getOutput();
         for (Message message : messages) {
             if (canProcessMessage(message)) {
-                String outputFileName = getMessageOutputFileName(module.getOutput(), message);
-                LOGGER.info("Write {}", outputFileName);
-                try (Writer writer = getWriter(outputFileName)) {
+                String outputFileName = getMessageOutputFileName(message);
+                try (Writer writer = getWriter(basedir, outputFileName)) {
                     compileMessage(message, writer);
                 }
             }
@@ -73,17 +70,30 @@ public abstract class AbstractProtoCompiler implements ProtoCompiler {
         }
         for (Enum anEnum : enums) {
             if (canProcessEnum(anEnum)) {
-                String outputFileName = getEnumOutputFileName(module.getOutput(), anEnum);
-                LOGGER.info("Write {}", outputFileName);
-                try (Writer writer = getWriter(outputFileName)) {
+                String outputFileName = getEnumOutputFileName(anEnum);
+                try (Writer writer = getWriter(basedir, outputFileName)) {
                     compileEnum(anEnum, writer);
                 }
             }
         }
     }
 
-    private Writer getWriter(String outputFileName) {
-        OutputStream outputStream = outputStreamFactory.createStream(outputFileName);
+    protected String appendBasedir(String basedir, String relativeFilename) {
+        if (basedir.charAt(basedir.length() - 1) == getFolderSeparator()) {
+            return basedir + relativeFilename;
+        } else {
+            return basedir + getFolderSeparator() + relativeFilename;
+        }
+    }
+
+    protected char getFolderSeparator() {
+        return File.separatorChar;
+    }
+
+    private Writer getWriter(String basedir, String outputFileName) {
+        LOGGER.info("Generate {}", outputFileName);
+        String fullFileLocation = appendBasedir(basedir, outputFileName);
+        OutputStream outputStream = outputStreamFactory.createStream(fullFileLocation);
         OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream);
         return new BufferedWriter(outputStreamWriter);
     }
@@ -108,14 +118,14 @@ public abstract class AbstractProtoCompiler implements ProtoCompiler {
 
     protected abstract boolean canProcessService(Service service);
 
-    protected abstract String getModuleOutputFileName(String basedir, Module module);
+    protected abstract String getModuleOutputFileName(Module module);
 
-    protected abstract String getProtoOutputFileName(String basedir, Proto proto);
+    protected abstract String getProtoOutputFileName(Proto proto);
 
-    protected abstract String getMessageOutputFileName(String basedir, Message message);
+    protected abstract String getMessageOutputFileName(Message message);
 
-    protected abstract String getEnumOutputFileName(String basedir, Enum anEnum);
+    protected abstract String getEnumOutputFileName(Enum anEnum);
 
-    protected abstract String getServiceOutputFileName(String basedir, Service service);
+    protected abstract String getServiceOutputFileName(Service service);
 
 }
