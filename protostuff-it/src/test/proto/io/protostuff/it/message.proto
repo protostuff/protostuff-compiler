@@ -69,6 +69,15 @@ message TestOneof {
         SimpleMessage simple_message = 10;
         MapEnum map_enum = 11;
         bytes foo_bytes = 12;
+        string v1 = 101;
+        string v2 = 102;
+        string v3 = 103;
+        string v4 = 104;
+        string v5 = 105;
+        string v6 = 106;
+        string v7 = 107;
+        string v8 = 108;
+        string v9 = 109;
     }
 }
 

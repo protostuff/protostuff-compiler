@@ -59,15 +59,16 @@ copy_bit_field(name) ::= <<
 result.<name> = <name>;
 >>
 
-copy_field(field) ::= <<
-<if(field.map)>
+copy_field(field) ::= <%
+<if(field.oneofPart)>
+<elseif(field.map)>
 result.<field.javaName> = java.util.Collections.unmodifiableMap(<field.javaName>);
 <elseif(field.repeated)>
 result.<field.javaName> = java.util.Collections.unmodifiableList(<field.javaName>);
 <else>
 result.<field.javaName> = <field.javaName>;
 <endif>
->>
+%>
 
 copy_oneof_field(oneOf) ::= <<
 result.<oneOf.javaCaseFieldName> = <oneOf.javaCaseFieldName>;

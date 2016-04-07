@@ -1,14 +1,15 @@
 delimiters "<", ">"
 
-field_declaration(field) ::= <<
-<if(field.map)>
+field_declaration(field) ::= <%
+<if(field.oneofPart)>
+<elseif(field.map)>
 private <field.javaMapType> <field.javaName>;
 <elseif(field.repeated)>
 private <field.javaRepeatedType> <field.javaName>;
 <else>
 private <field.javaType> <field.javaName>;
 <endif>
->>
+%>
 
 oneof_case(oneOf) ::= <<
 public <oneOf.javaName> <oneOf.javaCaseGetterName>() {
