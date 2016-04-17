@@ -6,20 +6,18 @@ options {
 
 proto
     // syntax should be first statement in the file
-    : syntax? statement* EOF
+    : syntax?
+        ( packageStatement
+        | importStatement
+        | optionEntry
+        | enumBlock
+        | messageBlock
+        | extendBlock
+        | serviceBlock)*
+    EOF
     ;
 syntax
-    // only proto3 is supported
     : SYNTAX ASSIGN STRING_VALUE SEMICOLON
-    ;
-statement
-    : packageStatement
-    | importStatement
-    | optionEntry
-    | enumBlock
-    | messageBlock
-    | extendBlock
-    | serviceBlock
     ;
 packageStatement
     : PACKAGE packageName SEMICOLON
@@ -34,11 +32,7 @@ optionEntry
     : OPTION option SEMICOLON
     ;
 enumBlock
-    : ENUM name LCURLY enumBlockEntry* RCURLY SEMICOLON?
-    ;
-enumBlockEntry
-    : enumConstant
-    | optionEntry
+    : ENUM name LCURLY (enumConstant | optionEntry)* RCURLY SEMICOLON?
     ;
 enumConstant
     : name ASSIGN INTEGER_VALUE fieldOptions? SEMICOLON
@@ -51,11 +45,7 @@ extendBlockEntry
     | groupBlock
     ;
 serviceBlock
-    : SERVICE name LCURLY serviceBlockEntry* RCURLY SEMICOLON?
-    ;
-serviceBlockEntry
-    : rpcMethod
-    | optionEntry
+    : SERVICE name LCURLY (rpcMethod | optionEntry)* RCURLY SEMICOLON?
     ;
 rpcMethod
     : RPC name LPAREN rpcType  RPAREN
@@ -68,32 +58,35 @@ rpcMethodOptions
     : LCURLY optionEntry* RCURLY
     ;
 messageBlock
-    : MESSAGE name LCURLY messageBlockEntry* RCURLY SEMICOLON?
-    ;
-messageBlockEntry
-    : field
-    | optionEntry
-    | messageBlock
-    | enumBlock
-    | extensions
-    | extendBlock
-    | groupBlock
-    | oneof
-    | map
-    | reserved
+    : MESSAGE name LCURLY
+        (field
+        | optionEntry
+        | messageBlock
+        | enumBlock
+        | extensions
+        | extendBlock
+        | groupBlock
+        | oneof
+        | map
+        | reserved)*
+   RCURLY SEMICOLON?
     ;
 oneof
-    : ONEOF name LCURLY oneofEntry* RCURLY SEMICOLON?
-    ;
-oneofEntry
-    : oneofField
-    | oneofGroup
+    : ONEOF name LCURLY (oneofField | oneofGroup)* RCURLY SEMICOLON?
     ;
 oneofField
     : typeReference name ASSIGN INTEGER_VALUE fieldOptions? SEMICOLON
     ;
 oneofGroup
-    : GROUP name ASSIGN INTEGER_VALUE LCURLY groupBlockEntry* RCURLY SEMICOLON?
+    : GROUP name ASSIGN INTEGER_VALUE LCURLY
+        (field
+        | optionEntry
+        | messageBlock
+        | enumBlock
+        | extensions
+        | extendBlock
+        | groupBlock)*
+    RCURLY SEMICOLON?
     ;
 map
     : MAP LT mapKey COMMA mapValue GT name ASSIGN tag fieldOptions? SEMICOLON
@@ -119,18 +112,17 @@ tag
     : INTEGER_VALUE
     ;
 groupBlock
-    : fieldModifier GROUP name ASSIGN INTEGER_VALUE 
-      LCURLY groupBlockEntry* RCURLY SEMICOLON?
+    : fieldModifier GROUP name ASSIGN INTEGER_VALUE LCURLY
+        (field
+        | optionEntry
+        | messageBlock
+        | enumBlock
+        | extensions
+        | extendBlock
+        | groupBlock)*
+    RCURLY SEMICOLON?
     ;
-groupBlockEntry
-    : field
-    | optionEntry
-    | messageBlock
-    | enumBlock
-    | extensions
-    | extendBlock
-    | groupBlock
-    ;
+
 extensions
     : EXTENSIONS ranges SEMICOLON
     ;
