@@ -129,16 +129,16 @@ if (!(java.util.Objects.equals(this.<oneof.javaCaseFieldName>, that.<oneof.javaC
 field_hashCode_part(field) ::= <<
 <if(!field.oneofPart)>
 <if(!field.repeated && (field.javaIsNumericType || field.javaIsBooleanType))>
-result = 31 * result + <field.type.javaWrapperType>.hashCode(<field.javaName>);
+result = 31 * result + <field.type.javaWrapperType>.hashCode(this.<field.javaName>);
 <else>
-result = 31 * result + (<field.javaName> == null ? 0 : <field.javaName>.hashCode());
+result = 31 * result + (this.<field.javaName> == null ? 0 : this.<field.javaName>.hashCode());
 <endif>
 <endif>
 >>
 
 oneof_field_hashCode_part(oneof) ::= <<
-result = 31 * result + <oneof.javaCaseFieldName>.hashCode();
-result = 31 * result + (<oneof.javaFieldName> == null ? 0 : <oneof.javaFieldName>.hashCode());
+result = 31 * result + this.<oneof.javaCaseFieldName>.hashCode();
+result = 31 * result + (this.<oneof.javaFieldName> == null ? 0 : this.<oneof.javaFieldName>.hashCode());
 >>
 
 message_bit_field(name) ::= <<

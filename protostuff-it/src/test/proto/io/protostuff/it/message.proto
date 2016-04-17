@@ -84,3 +84,9 @@ message TestOneof {
 message TestFieldNamedClass {
     int32 class = 1;
 }
+
+message TestReservedNames {
+
+    // https://github.com/protostuff/protostuff-compiler/issues/24
+    string result = 1;
+}

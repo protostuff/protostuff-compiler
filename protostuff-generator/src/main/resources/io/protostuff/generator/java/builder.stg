@@ -62,17 +62,17 @@ result.<name> = <name>;
 copy_field(field) ::= <%
 <if(field.oneofPart)>
 <elseif(field.map)>
-result.<field.javaName> = java.util.Collections.unmodifiableMap(<field.javaName>);
+result.<field.javaName> = java.util.Collections.unmodifiableMap(this.<field.javaName>);
 <elseif(field.repeated)>
-result.<field.javaName> = java.util.Collections.unmodifiableList(<field.javaName>);
+result.<field.javaName> = java.util.Collections.unmodifiableList(this.<field.javaName>);
 <else>
-result.<field.javaName> = <field.javaName>;
+result.<field.javaName> = this.<field.javaName>;
 <endif>
 %>
 
 copy_oneof_field(oneOf) ::= <<
-result.<oneOf.javaCaseFieldName> = <oneOf.javaCaseFieldName>;
-result.<oneOf.javaFieldName> = <oneOf.javaFieldName>;
+result.<oneOf.javaCaseFieldName> = this.<oneOf.javaCaseFieldName>;
+result.<oneOf.javaFieldName> = this.<oneOf.javaFieldName>;
 >>
 
 builder_factory_method(message) ::= <<
