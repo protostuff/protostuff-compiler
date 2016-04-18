@@ -1,0 +1,21 @@
+import "io/protostuff/generator/java/enum.stg"
+import "io/protostuff/generator/java/message.stg"
+import "io/protostuff/generator/java/service.stg"
+
+enum_compiler_enabled(enum) ::= <%
+<if(enum.nested)>false<else>true<endif>
+%>
+
+enum_compiler_output(enum) ::= "<enum.proto.javaPackagePath>/<enum.javaName>.java"
+enum_compiler_template(enum) ::= "<enum:enum()>"
+
+message_compiler_enabled(message) ::= <%
+<if(message.nested)>false<else>true<endif>
+%>
+
+message_compiler_output(message) ::= "<message.proto.javaPackagePath>/<message.javaName>.java"
+message_compiler_template(message) ::= "<message:message()>"
+
+service_compiler_enabled(service) ::= "true"
+service_compiler_output(service) ::= "<service.proto.javaPackagePath>/<service.javaName>.java"
+service_compiler_template(service) ::= "<service:service()>"

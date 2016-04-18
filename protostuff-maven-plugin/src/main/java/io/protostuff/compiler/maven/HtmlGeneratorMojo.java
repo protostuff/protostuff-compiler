@@ -46,7 +46,7 @@ public class HtmlGeneratorMojo extends AbstractGeneratorMojo {
         ModuleConfiguration.Builder builder = ModuleConfiguration.newBuilder()
                 .name("html")
                 .includePaths(singletonList(sourcePath))
-                .template(HtmlGenerator.GENERATOR_NAME)
+                .generator(HtmlGenerator.GENERATOR_NAME)
                 .output(target.getAbsolutePath());
         PathMatcher protoMatcher = FileSystems.getDefault().getPathMatcher("glob:**/*.proto");
         try {

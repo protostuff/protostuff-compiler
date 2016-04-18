@@ -47,6 +47,9 @@
                         <goals>
                             <goal>java</goal>
                         </goals>
+                        <configuration>
+                            <template>${project.basedir}/src/main/stg/io/protostuff/it/extension.stg</template>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>

@@ -35,8 +35,8 @@ public class JavaGeneratorMojo extends AbstractGeneratorMojo {
     @Parameter
     private File target;
 
-    @Parameter(defaultValue = "java.util.concurrent.CompletableFuture")
-    private String rpcReturnType;
+    @Parameter(defaultValue = "io/protostuff/generator/java/main.stg")
+    private String template;
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
@@ -48,10 +48,8 @@ public class JavaGeneratorMojo extends AbstractGeneratorMojo {
         ModuleConfiguration.Builder builder = ModuleConfiguration.newBuilder()
                 .name("java")
                 .includePaths(singletonList(sourcePath))
-                .template(JavaGenerator.GENERATOR_NAME)
-                .options(ImmutableMap.<String, String>builder()
-                        .put(JavaGenerator.SERVICE_RETURN_TYPE_OPTION, rpcReturnType)
-                        .build())
+                .generator(JavaGenerator.GENERATOR_NAME)
+                .template(template)
                 .output(output);
         PathMatcher protoMatcher = FileSystems.getDefault().getPathMatcher("glob:**/*.proto");
         try {

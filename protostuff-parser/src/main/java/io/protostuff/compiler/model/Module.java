@@ -10,7 +10,7 @@ public class Module {
     private String name;
     private List<Proto> protos;
     private String output;
-    private Map<String, String> options;
+    private String template;
 
     public Module() {
     }
@@ -25,15 +25,6 @@ public class Module {
 
     public void setOutput(String output) {
         this.output = output;
-    }
-
-
-    public Map<String, String> getOptions() {
-        return options;
-    }
-
-    public void setOptions(Map<String, String> options) {
-        this.options = options;
     }
 
     public List<Proto> getProtos() {
@@ -61,5 +52,13 @@ public class Module {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setTemplate(String template) {
+        this.template = template;
+    }
+
+    public String getTemplate() {
+        return template;
     }
 }

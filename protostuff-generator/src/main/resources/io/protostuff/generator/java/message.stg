@@ -7,13 +7,6 @@ import "io/protostuff/generator/java/oneof.stg"
 import "io/protostuff/generator/java/builder.stg"
 import "io/protostuff/generator/java/message-base.stg"
 
-message_compiler_enabled(message) ::= <%
-<if(message.nested)>false<else>true<endif>
-%>
-
-message_compiler_output(message) ::= "<message.proto.javaPackagePath>/<message.javaName>.java"
-message_compiler_template(message) ::= "<message:message()>"
-
 message(message) ::= <<
 package <message.proto.javaPackage>;
 
