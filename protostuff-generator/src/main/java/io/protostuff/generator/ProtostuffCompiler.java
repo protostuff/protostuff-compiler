@@ -37,9 +37,9 @@ public class ProtostuffCompiler {
         FileReaderFactory fileReaderFactory = injector.getInstance(FileReaderFactory.class);
         Importer importer = injector.getInstance(Importer.class);
         CompilerRegistry registry = injector.getInstance(CompilerRegistry.class);
-        ProtoCompiler compiler = registry.findCompiler(configuration.getTemplate());
+        ProtoCompiler compiler = registry.findCompiler(configuration.getGenerator());
         if (compiler == null) {
-            throw new GeneratorException("Unknown template: %s", configuration.getTemplate());
+            throw new GeneratorException("Unknown template: %s", configuration.getGenerator());
         }
         FileReader fileReader = fileReaderFactory.create(configuration.getIncludePaths());
         Map<String, Proto> importedFiles = new HashMap<>();
@@ -50,7 +50,7 @@ public class ProtostuffCompiler {
             importedFiles.put(path, proto);
         }
         Module module = new Module();
-        module.setOptions(configuration.getOptions());
+        module.setTemplate(configuration.getTemplate());
         module.setName(configuration.getName());
         module.setOutput(configuration.getOutput());
         for (Map.Entry<String, Proto> entry : importedFiles.entrySet()) {

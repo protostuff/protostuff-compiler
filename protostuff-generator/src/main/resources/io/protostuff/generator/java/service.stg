@@ -44,9 +44,13 @@ response_qualifier(method) ::= <%
 <namespace(method.service)>/<response_action(method)>
 %>
 
+rpc_return_type(method) ::= <%
+<method.returnType.javaFullName>
+%>
+
 service_method_declaration(method) ::= <<
 @Rpc
 @Request("<method:request_action()>")
 @Response("<method:response_action()>")
-<method.asyncReturnType> <method.javaName>(<method.argType.name> request);
+<method:rpc_return_type()> <method.javaName>(<method.argType.name> request);
 >>

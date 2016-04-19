@@ -19,16 +19,16 @@ import java.util.Map;
 public class JavaGenerator implements ProtoCompiler {
     public static final String GENERATOR_NAME = "java";
 
-    public static final String SERVICE_RETURN_TYPE_OPTION = "rpcAsyncReturnType";
-    private final ProtoCompiler messageGenerator;
-    private final ProtoCompiler enumGenerator;
-    private final ProtoCompiler serviceGenerator;
+    private final Map<Class<?>, AttributeRenderer> rendererMap;
+    private final Map<Class<?>, ObjectExtender<?>> extenderMap;
+    private final StCompilerFactory compilerFactory;
 
     @Inject
     public JavaGenerator(StCompilerFactory compilerFactory) {
+        this.compilerFactory = compilerFactory;
         // TODO initialization should be lazy - usually only one generator is used
-        Map<Class<?>, AttributeRenderer> rendererMap = new HashMap<>();
-        Map<Class<?>, ObjectExtender<?>> extenderMap = ImmutableMap.<Class<?>, ObjectExtender<?>>builder()
+        rendererMap = new HashMap<>();
+        extenderMap = ImmutableMap.<Class<?>, ObjectExtender<?>>builder()
                 .put(Proto.class, SimpleObjectExtender.<Proto>newBuilder()
                         .property("generator", ProtoUtil::getGeneratorInfo)
                         .property("javaPackage", ProtoUtil::getPackage)
@@ -107,14 +107,8 @@ public class JavaGenerator implements ProtoCompiler {
                         .build())
                 .put(ServiceMethod.class, SimpleObjectExtender.<ServiceMethod>newBuilder()
                         .property("javaName", ServiceUtil::getMethodName)
-                        .property("asyncReturnType", ServiceUtil::getAsyncReturnType)
                         .build())
                 .build();
-
-        int n = 1;
-        messageGenerator = compilerFactory.create("io/protostuff/generator/java/message.stg", rendererMap, extenderMap);
-        enumGenerator = compilerFactory.create("io/protostuff/generator/java/enum.stg", rendererMap, extenderMap);
-        serviceGenerator = compilerFactory.create("io/protostuff/generator/java/service.stg", rendererMap, extenderMap);
     }
 
     @Override
@@ -124,8 +118,7 @@ public class JavaGenerator implements ProtoCompiler {
 
     @Override
     public void compile(Module module) {
-        messageGenerator.compile(module);
-        enumGenerator.compile(module);
-        serviceGenerator.compile(module);
+        ProtoCompiler generator = compilerFactory.create(module.getTemplate(), rendererMap, extenderMap);
+        generator.compile(module);
     }
 }

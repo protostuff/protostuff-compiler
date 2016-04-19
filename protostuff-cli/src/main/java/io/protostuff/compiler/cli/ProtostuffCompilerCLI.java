@@ -31,7 +31,7 @@ import io.protostuff.generator.ProtostuffCompiler;
 public class ProtostuffCompilerCLI extends ProtostuffCompiler {
 
     public static final String __VERSION = ProtostuffCompilerCLI.class.getPackage().getImplementationVersion();
-    public static final String TEMPLATE = "template";
+    public static final String GENERATOR = "generator";
     public static final String OUTPUT = "output";
     public static final String DEBUG = "debug";
     public static final String HELP = "help";
@@ -55,7 +55,7 @@ public class ProtostuffCompilerCLI extends ProtostuffCompiler {
                         " given, the current working directory is used.")
                 .build();
         Option templateOption = Option.builder("t")
-                .longOpt(TEMPLATE)
+                .longOpt(GENERATOR)
                 .argName("name")
                 .numberOfArgs(1)
                 .desc("Specify an template template for compiler:\n" +
@@ -79,7 +79,7 @@ public class ProtostuffCompilerCLI extends ProtostuffCompiler {
         options.addOption(templateOption);
 
         List<String> protoFiles;
-        String template;
+        String generator;
         String output;
         List<Path> includePaths = new ArrayList<>();
         CommandLineParser parser = new DefaultParser();
@@ -94,8 +94,8 @@ public class ProtostuffCompilerCLI extends ProtostuffCompiler {
             if (cmd.hasOption(DEBUG)) {
                 changeLogLevel(Level.DEBUG);
             }
-            if (cmd.hasOption(TEMPLATE)) {
-                template = cmd.getOptionValue(TEMPLATE);
+            if (cmd.hasOption(GENERATOR)) {
+                generator = cmd.getOptionValue(GENERATOR);
             } else {
                 LOGGER.error("Template is not set.");
                 return;
@@ -130,7 +130,7 @@ public class ProtostuffCompilerCLI extends ProtostuffCompiler {
                 .name("main")
                 .includePaths(includePaths)
                 .protoFiles(protoFiles)
-                .template(template)
+                .generator(generator)
                 .output(output)
                 .build();
 
@@ -138,7 +138,7 @@ public class ProtostuffCompilerCLI extends ProtostuffCompiler {
             LOGGER.error("Missing input file.");
             return;
         }
-        if (configuration.getTemplate() == null) {
+        if (configuration.getGenerator() == null) {
             LOGGER.error("Missing template directives.");
             return;
         }
