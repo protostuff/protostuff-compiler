@@ -24,6 +24,12 @@ public static final class Builder {
 
     <message.oneofs:oneof_cleaner(); separator="\n">
 
+    <message:equals()>
+
+    <message:hash_code()>
+
+    <message:to_string()>
+
     public <message.javaName> build() {
         <message.javaFullName> result = new <message.javaFullName>();
         <message.javaBitFieldNames:copy_bit_field(); separator="\n">

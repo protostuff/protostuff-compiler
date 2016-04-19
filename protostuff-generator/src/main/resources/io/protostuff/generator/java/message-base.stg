@@ -36,3 +36,46 @@ this.<field.javaName> = java.util.Collections.emptyList();
 this.<field.javaName> = <field.javaDefaultValue>;
 <endif>
 %>
+
+equals(message) ::= <<
+@Override
+public boolean equals(Object obj) {
+    if (this == obj) {
+        return true;
+    }
+    if (obj == null || this.getClass() != obj.getClass()) {
+        return false;
+    }
+    <message.javaName> that = (<message.javaName>) obj;
+    <if(message.hasFields)>
+    <message.fields:field_equals_part()>
+    <message.oneofs:oneof_field_equals_part()>
+    return true;
+    <else>
+    return true;
+    <endif>
+}
+>>
+
+hash_code(message) ::= <<
+@Override
+public int hashCode() {
+    <if(message.hasFields)>
+    int result = 1;
+    <message.fields:field_hashCode_part()>
+    <message.oneofs:oneof_field_hashCode_part()>
+    return result;
+    <else>
+    return 0;
+    <endif>
+}
+>>
+
+to_string(message) ::= <<
+@Override
+public String toString() {
+    java.util.List\<String> parts = new java.util.ArrayList\<>();
+    <message.fields:field_toString_part()>
+    return "<message.javaName>{" + String.join(", ", parts) + "}";
+}
+>>
