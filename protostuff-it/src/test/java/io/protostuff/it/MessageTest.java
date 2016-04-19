@@ -111,6 +111,22 @@ public class MessageTest {
         assertNotEquals(A, B);
     }
 
+	@Test
+	public void testEquals_Builder() throws Exception {
+		SimpleMessage.Builder a = SimpleMessage.newBuilder()
+				.setInt32(42)
+				.setString("abra");
+		SimpleMessage.Builder copy = SimpleMessage.newBuilder()
+				.setInt32(42)
+				.setString("abra");
+		SimpleMessage.Builder b = SimpleMessage.newBuilder()
+				.setInt32(43)
+				.setString("cadabra");
+		assertEquals(a, copy);
+		assertNotEquals(a, b);
+	}
+
+
     @Test
     public void testHashCode() throws Exception {
         assertEquals(A.hashCode(), A_COPY.hashCode());

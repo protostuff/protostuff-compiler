@@ -24,7 +24,7 @@ public static final class Builder {
 
     <message.oneofs:oneof_cleaner(); separator="\n">
 
-    <message:equals()>
+    <equals(message=message, builder=true)>
 
     <message:hash_code()>
 

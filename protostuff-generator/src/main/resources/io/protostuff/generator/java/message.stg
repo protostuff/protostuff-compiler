@@ -55,7 +55,7 @@ public <if(message.nested)>static <endif>final class <message.javaName>
         return Schema.INSTANCE;
     }
 
-    <message:equals()>
+    <equals(message=message, builder=false)>
 
     <message:hash_code()>
 

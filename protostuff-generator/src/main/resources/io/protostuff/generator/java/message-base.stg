@@ -37,7 +37,7 @@ this.<field.javaName> = <field.javaDefaultValue>;
 <endif>
 %>
 
-equals(message) ::= <<
+equals(message, builder) ::= <<
 @Override
 public boolean equals(Object obj) {
     if (this == obj) {
@@ -46,7 +46,11 @@ public boolean equals(Object obj) {
     if (obj == null || this.getClass() != obj.getClass()) {
         return false;
     }
+    <if(builder)>
+    Builder that = (Builder) obj;
+    <else>
     <message.javaName> that = (<message.javaName>) obj;
+    <endif>
     <if(message.hasFields)>
     <message.fields:field_equals_part()>
     <message.oneofs:oneof_field_equals_part()>
