@@ -38,6 +38,9 @@ public class JavaGeneratorMojo extends AbstractGeneratorMojo {
     @Parameter(defaultValue = "io/protostuff/generator/java/main.stg")
     private String template;
 
+    @Parameter
+    private String initializer;
+
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
         super.execute();
@@ -50,6 +53,7 @@ public class JavaGeneratorMojo extends AbstractGeneratorMojo {
                 .includePaths(singletonList(sourcePath))
                 .generator(JavaGenerator.GENERATOR_NAME)
                 .template(template)
+                .initializer(initializer)
                 .output(output);
         PathMatcher protoMatcher = FileSystems.getDefault().getPathMatcher("glob:**/*.proto");
         try {

@@ -18,6 +18,7 @@ public class ModuleConfiguration {
     private final List<String> protoFiles;
     private final String generator;
     private final String template;
+    private final String initializer;
     private final String output;
 
     private ModuleConfiguration(Builder builder) {
@@ -26,6 +27,7 @@ public class ModuleConfiguration {
         protoFiles = builder.protoFiles;
         generator = builder.generator;
         template = builder.template;
+        initializer = builder.initializer;
         output = builder.output;
     }
 
@@ -39,6 +41,8 @@ public class ModuleConfiguration {
         builder.includePaths = copy.includePaths;
         builder.protoFiles = copy.protoFiles;
         builder.generator = copy.generator;
+        builder.template = copy.template;
+        builder.initializer = copy.initializer;
         builder.output = copy.output;
         return builder;
     }
@@ -67,6 +71,10 @@ public class ModuleConfiguration {
         return includePaths;
     }
 
+    public String getInitializer() {
+        return initializer;
+    }
+
     @Override
     public String toString() {
         return MoreObjects.toStringHelper(this)
@@ -74,10 +82,12 @@ public class ModuleConfiguration {
                 .add("includePaths", includePaths)
                 .add("protoFiles", protoFiles)
                 .add("template", template)
+                .add("initializer", initializer)
                 .add("generator", generator)
                 .add("output", output)
                 .toString();
     }
+
 
     public static final class Builder {
 
@@ -86,6 +96,7 @@ public class ModuleConfiguration {
         private List<String> protoFiles;
         private String generator;
         private String template;
+        private String initializer;
         private String output;
 
         private Builder() {
@@ -113,6 +124,11 @@ public class ModuleConfiguration {
 
         public Builder template(String val) {
             template = val;
+            return this;
+        }
+
+        public Builder initializer(String val) {
+            initializer = val;
             return this;
         }
 

@@ -51,6 +51,7 @@ public class ProtostuffCompiler {
         }
         Module module = new Module();
         module.setTemplate(configuration.getTemplate());
+        module.setInitializer(configuration.getInitializer());
         module.setName(configuration.getName());
         module.setOutput(configuration.getOutput());
         for (Map.Entry<String, Proto> entry : importedFiles.entrySet()) {

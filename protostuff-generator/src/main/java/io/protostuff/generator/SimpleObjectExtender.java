@@ -9,19 +9,7 @@ import java.util.function.Function;
  */
 public class SimpleObjectExtender<ObjectT> implements ObjectExtender<ObjectT> {
 
-    private final Map<String, Function<ObjectT, ?>> propertyProviders;
-
-    public SimpleObjectExtender(Map<String, Function<ObjectT, ?>> propertyProviders) {
-        this.propertyProviders = propertyProviders;
-    }
-
-    private SimpleObjectExtender(Builder<ObjectT> builder) {
-        propertyProviders = builder.propertyProviders;
-    }
-
-    public static <ObjectT> Builder<ObjectT> newBuilder() {
-        return new Builder<ObjectT>();
-    }
+    private final Map<String, Function<ObjectT, ?>> propertyProviders = new HashMap<>();
 
     @Override
     public boolean hasProperty(String propertyName) {
@@ -37,20 +25,9 @@ public class SimpleObjectExtender<ObjectT> implements ObjectExtender<ObjectT> {
         return provider.apply(object);
     }
 
-
-    public static final class Builder<ObjectT> {
-        private Map<String, Function<ObjectT, ?>> propertyProviders = new HashMap<>();
-
-        private Builder() {
-        }
-
-        public Builder<ObjectT> property(String name, Function<ObjectT, ?> valueProvider) {
-            propertyProviders.put(name, valueProvider);
-            return this;
-        }
-
-        public SimpleObjectExtender<ObjectT> build() {
-            return new SimpleObjectExtender<>(this);
-        }
+    @Override
+    public void register(String property, Function<ObjectT, ?> function) {
+        propertyProviders.put(property, function);
     }
+
 }

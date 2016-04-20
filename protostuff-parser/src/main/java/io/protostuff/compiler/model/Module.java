@@ -11,6 +11,7 @@ public class Module {
     private List<Proto> protos;
     private String output;
     private String template;
+    private String initializer;
 
     public Module() {
     }
@@ -60,5 +61,13 @@ public class Module {
 
     public String getTemplate() {
         return template;
+    }
+
+    public String getInitializer() {
+        return initializer;
+    }
+
+    public void setInitializer(String initializer) {
+        this.initializer = initializer;
     }
 }

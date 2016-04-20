@@ -1,114 +1,93 @@
 package io.protostuff.generator.java;
 
-import com.google.common.collect.ImmutableMap;
 import io.protostuff.compiler.model.Enum;
 import io.protostuff.compiler.model.*;
-import io.protostuff.generator.ObjectExtender;
-import io.protostuff.generator.ProtoCompiler;
-import io.protostuff.generator.SimpleObjectExtender;
+import io.protostuff.generator.AbstractGenerator;
 import io.protostuff.generator.StCompilerFactory;
-import org.stringtemplate.v4.AttributeRenderer;
 
 import javax.inject.Inject;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author Kostiantyn Shchepanovskyi
  */
-public class JavaGenerator implements ProtoCompiler {
-    public static final String GENERATOR_NAME = "java";
+public class JavaGenerator extends AbstractGenerator {
 
-    private final Map<Class<?>, AttributeRenderer> rendererMap;
-    private final Map<Class<?>, ObjectExtender<?>> extenderMap;
-    private final StCompilerFactory compilerFactory;
+    public static final String GENERATOR_NAME = "java";
 
     @Inject
     public JavaGenerator(StCompilerFactory compilerFactory) {
-        this.compilerFactory = compilerFactory;
-        // TODO initialization should be lazy - usually only one generator is used
-        rendererMap = new HashMap<>();
-        extenderMap = ImmutableMap.<Class<?>, ObjectExtender<?>>builder()
-                .put(Proto.class, SimpleObjectExtender.<Proto>newBuilder()
-                        .property("generator", ProtoUtil::getGeneratorInfo)
-                        .property("javaPackage", ProtoUtil::getPackage)
-                        .property("javaPackagePath", ProtoUtil::getPackagePath)
-                        .build())
-                .put(ScalarFieldType.class, SimpleObjectExtender.<ScalarFieldType>newBuilder()
-                        .property("javaWrapperType", ScalarFieldTypeUtil::getWrapperType)
-                        .property("javaPrimitiveType", ScalarFieldTypeUtil::getPrimitiveType)
-                        .build())
-                .put(Message.class, SimpleObjectExtender.<Message>newBuilder()
-                        .property("javaName", UserTypeUtil::getClassName)
-                        .property("javaFullName", UserTypeUtil::getCanonicalName)
-                        .property("hasFields", MessageUtil::hasFields)
-                        .property("javaBitFieldNames", MessageUtil::bitFieldNames)
-                        .build())
-                .put(Field.class, SimpleObjectExtender.<Field>newBuilder()
-                        .property("javaType", MessageFieldUtil::getFieldType)
-                        .property("javaRepeatedType", MessageFieldUtil::getRepeatedFieldType)
-                        .property("javaIterableType", MessageFieldUtil::getIterableFieldType)
-                        .property("javaWrapperType", MessageFieldUtil::getWrapperFieldType)
-                        .property("javaName", MessageFieldUtil::getFieldName)
-                        .property("jsonName", MessageFieldUtil::getJsonFieldName)
-                        .property("javaGetterName", MessageFieldUtil::getFieldGetterName)
-                        .property("javaSetterName", MessageFieldUtil::getFieldSetterName)
-                        .property("javaCleanerName", MessageFieldUtil::getFieldCleanerName)
+        super(compilerFactory);
 
-                        .property("javaRepeatedGetterName", MessageFieldUtil::getRepeatedFieldGetterName)
-                        .property("javaRepeatedSetterName", MessageFieldUtil::getRepeatedFieldSetterName)
-                        .property("javaRepeatedAdderName", MessageFieldUtil::getRepeatedFieldAdderName)
-                        .property("javaRepeatedAddAllName", MessageFieldUtil::getRepeatedFieldAddAllName)
-                        .property("javaRepeatedGetCountMethodName", MessageFieldUtil::repeatedGetCountMethodName)
-                        .property("javaRepeatedGetByIndexMethodName", MessageFieldUtil::repeatedGetByIndexMethodName)
+        extend(Proto.class, "generator", ProtoUtil::getGeneratorInfo);
+        extend(Proto.class, "generator", ProtoUtil::getGeneratorInfo);
+        extend(Proto.class, "javaPackage", ProtoUtil::getPackage);
+        extend(Proto.class, "javaPackagePath", ProtoUtil::getPackagePath);
 
-                        .property("javaMapGetterName", MessageFieldUtil::getMapGetterName)
-                        .property("javaMapType", MessageFieldUtil::getMapFieldType)
-                        .property("javaMapKeyType", MessageFieldUtil::getMapFieldKeyType)
-                        .property("javaMapValueType", MessageFieldUtil::getMapFieldValueType)
-                        .property("javaMapAdderName", MessageFieldUtil::getMapFieldAdderName)
-                        .property("javaMapAddAllName", MessageFieldUtil::getMapFieldAddAllName)
-                        .property("javaMapGetByKeyMethodName", MessageFieldUtil::mapGetByKeyMethodName)
+        extend(ScalarFieldType.class, "javaWrapperType", ScalarFieldTypeUtil::getWrapperType);
+        extend(ScalarFieldType.class, "javaPrimitiveType", ScalarFieldTypeUtil::getPrimitiveType);
 
-                        .property("javaIsMessage", MessageFieldUtil::isMessage)
-                        .property("javaHasMethodName", MessageFieldUtil::getHasMethodName)
-                        .property("javaBuilderGetterName", MessageFieldUtil::getBuilderGetterName)
-                        .property("javaBuilderSetterName", MessageFieldUtil::getBuilderSetterName)
-                        .property("javaBuilderRepeatedSetterName", MessageFieldUtil::getRepeatedBuilderSetterName)
-                        .property("javaDefaultValue", MessageFieldUtil::getDefaultValue)
-                        .property("javaIsNumericType", MessageFieldUtil::isNumericType)
-                        .property("javaIsBooleanType", MessageFieldUtil::isBooleanType)
-                        .property("javaIsScalarNullableType", MessageFieldUtil::isScalarNullableType)
-                        .property("protostuffReadMethod", MessageFieldUtil::protostuffReadMethod)
-                        .property("protostuffWriteMethod", MessageFieldUtil::protostuffWriteMethod)
-                        .property("toStringPart", MessageFieldUtil::toStringPart)
-                        .property("javaBitFieldName", MessageFieldUtil::bitFieldName)
-                        .property("javaBitFieldIndex", MessageFieldUtil::bitFieldIndex)
-                        .property("javaBitFieldMask", MessageFieldUtil::bitFieldMask)
-                        .property("javaOneofConstantName", MessageFieldUtil::javaOneofConstantName)
-                        .build())
-                .put(Oneof.class, SimpleObjectExtender.<Oneof>newBuilder()
-                        .property("javaName", MessageUtil::getOneofEnumClassName)
-                        .property("javaNotSetConstantName", MessageUtil::getOneofNotSetConstantName)
-                        .property("javaCaseGetterName", MessageUtil::getOneofCaseGetterName)
-                        .property("javaCaseCleanerName", MessageUtil::getOneofCaseCleanerName)
-                        .property("javaFieldName", MessageUtil::getOneofFieldName)
-                        .property("javaCaseFieldName", MessageUtil::getOneofCaseFieldName)
-                        .build())
-                .put(Enum.class, SimpleObjectExtender.<Enum>newBuilder()
-                        .property("javaName", UserTypeUtil::getClassName)
-                        .property("javaFullName", UserTypeUtil::getCanonicalName)
-                        .build())
-                .put(EnumConstant.class, SimpleObjectExtender.<EnumConstant>newBuilder()
-                        .property("javaName", EnumUtil::getName)
-                        .build())
-                .put(Service.class, SimpleObjectExtender.<Service>newBuilder()
-                        .property("javaName", ServiceUtil::getClassName)
-                        .build())
-                .put(ServiceMethod.class, SimpleObjectExtender.<ServiceMethod>newBuilder()
-                        .property("javaName", ServiceUtil::getMethodName)
-                        .build())
-                .build();
+        extend(Message.class, "javaName", UserTypeUtil::getClassName);
+        extend(Message.class, "javaFullName", UserTypeUtil::getCanonicalName);
+        extend(Message.class, "hasFields", MessageUtil::hasFields);
+        extend(Message.class, "javaBitFieldNames", MessageUtil::bitFieldNames);
+
+        extend(Field.class, "javaType", MessageFieldUtil::getFieldType);
+        extend(Field.class, "javaRepeatedType", MessageFieldUtil::getRepeatedFieldType);
+        extend(Field.class, "javaIterableType", MessageFieldUtil::getIterableFieldType);
+        extend(Field.class, "javaWrapperType", MessageFieldUtil::getWrapperFieldType);
+        extend(Field.class, "javaName", MessageFieldUtil::getFieldName);
+        extend(Field.class, "jsonName", MessageFieldUtil::getJsonFieldName);
+        extend(Field.class, "javaGetterName", MessageFieldUtil::getFieldGetterName);
+        extend(Field.class, "javaSetterName", MessageFieldUtil::getFieldSetterName);
+        extend(Field.class, "javaCleanerName", MessageFieldUtil::getFieldCleanerName);
+
+        extend(Field.class, "javaRepeatedGetterName", MessageFieldUtil::getRepeatedFieldGetterName);
+        extend(Field.class, "javaRepeatedSetterName", MessageFieldUtil::getRepeatedFieldSetterName);
+        extend(Field.class, "javaRepeatedAdderName", MessageFieldUtil::getRepeatedFieldAdderName);
+        extend(Field.class, "javaRepeatedAddAllName", MessageFieldUtil::getRepeatedFieldAddAllName);
+        extend(Field.class, "javaRepeatedGetCountMethodName", MessageFieldUtil::repeatedGetCountMethodName);
+        extend(Field.class, "javaRepeatedGetByIndexMethodName", MessageFieldUtil::repeatedGetByIndexMethodName);
+
+        extend(Field.class, "javaMapGetterName", MessageFieldUtil::getMapGetterName);
+        extend(Field.class, "javaMapType", MessageFieldUtil::getMapFieldType);
+        extend(Field.class, "javaMapKeyType", MessageFieldUtil::getMapFieldKeyType);
+        extend(Field.class, "javaMapValueType", MessageFieldUtil::getMapFieldValueType);
+        extend(Field.class, "javaMapAdderName", MessageFieldUtil::getMapFieldAdderName);
+        extend(Field.class, "javaMapAddAllName", MessageFieldUtil::getMapFieldAddAllName);
+        extend(Field.class, "javaMapGetByKeyMethodName", MessageFieldUtil::mapGetByKeyMethodName);
+
+        extend(Field.class, "javaIsMessage", MessageFieldUtil::isMessage);
+        extend(Field.class, "javaHasMethodName", MessageFieldUtil::getHasMethodName);
+        extend(Field.class, "javaBuilderGetterName", MessageFieldUtil::getBuilderGetterName);
+        extend(Field.class, "javaBuilderSetterName", MessageFieldUtil::getBuilderSetterName);
+        extend(Field.class, "javaBuilderRepeatedSetterName", MessageFieldUtil::getRepeatedBuilderSetterName);
+        extend(Field.class, "javaDefaultValue", MessageFieldUtil::getDefaultValue);
+        extend(Field.class, "javaIsNumericType", MessageFieldUtil::isNumericType);
+        extend(Field.class, "javaIsBooleanType", MessageFieldUtil::isBooleanType);
+        extend(Field.class, "javaIsScalarNullableType", MessageFieldUtil::isScalarNullableType);
+        extend(Field.class, "protostuffReadMethod", MessageFieldUtil::protostuffReadMethod);
+        extend(Field.class, "protostuffWriteMethod", MessageFieldUtil::protostuffWriteMethod);
+        extend(Field.class, "toStringPart", MessageFieldUtil::toStringPart);
+        extend(Field.class, "javaBitFieldName", MessageFieldUtil::bitFieldName);
+        extend(Field.class, "javaBitFieldIndex", MessageFieldUtil::bitFieldIndex);
+        extend(Field.class, "javaBitFieldMask", MessageFieldUtil::bitFieldMask);
+        extend(Field.class, "javaOneofConstantName", MessageFieldUtil::javaOneofConstantName);
+
+        extend(Oneof.class, "javaName", MessageUtil::getOneofEnumClassName);
+        extend(Oneof.class, "javaNotSetConstantName", MessageUtil::getOneofNotSetConstantName);
+        extend(Oneof.class, "javaCaseGetterName", MessageUtil::getOneofCaseGetterName);
+        extend(Oneof.class, "javaCaseCleanerName", MessageUtil::getOneofCaseCleanerName);
+        extend(Oneof.class, "javaFieldName", MessageUtil::getOneofFieldName);
+        extend(Oneof.class, "javaCaseFieldName", MessageUtil::getOneofCaseFieldName);
+
+        extend(Enum.class, "javaName", UserTypeUtil::getClassName);
+        extend(Enum.class, "javaFullName", UserTypeUtil::getCanonicalName);
+
+        extend(EnumConstant.class, "javaName", EnumUtil::getName);
+
+        extend(Service.class, "javaName", ServiceUtil::getClassName);
+
+        extend(ServiceMethod.class, "javaName", ServiceUtil::getMethodName);
     }
 
     @Override
@@ -116,9 +95,4 @@ public class JavaGenerator implements ProtoCompiler {
         return GENERATOR_NAME;
     }
 
-    @Override
-    public void compile(Module module) {
-        ProtoCompiler generator = compilerFactory.create(module.getTemplate(), rendererMap, extenderMap);
-        generator.compile(module);
-    }
 }

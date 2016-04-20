@@ -48,6 +48,7 @@
                             <goal>java</goal>
                         </goals>
                         <configuration>
+                            <initializer>io.protostuff.it.CustomInitializer</initializer>
                             <template>${project.basedir}/src/main/stg/io/protostuff/it/extension.stg</template>
                         </configuration>
                     </execution>
@@ -58,24 +59,28 @@
 
     <dependencies>
         <dependency>
+            <groupId>io.protostuff</groupId>
+            <artifactId>protostuff-generator</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
         </dependency>
         <dependency>
             <groupId>io.protostuff</groupId>
             <artifactId>protostuff-api</artifactId>
-            <version>1.3.8</version>
+            <version>${protostuff.version}</version>
         </dependency>
         <dependency>
             <groupId>io.protostuff</groupId>
             <artifactId>protostuff-core</artifactId>
-            <version>1.3.8</version>
+            <version>${protostuff.version}</version>
         </dependency>
         <dependency>
             <groupId>io.protostuff</groupId>
             <artifactId>protostuff-json</artifactId>
-            <version>1.3.8</version>
+            <version>${protostuff.version}</version>
         </dependency>
-
     </dependencies>
 </project>
