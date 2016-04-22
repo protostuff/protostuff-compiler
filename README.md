@@ -15,7 +15,7 @@ Usage
             <plugin>
                 <artifactId>protostuff-maven-plugin</artifactId>
                 <groupId>io.protostuff</groupId>
-                <version>2.0.0-alpha4</version>
+                <version>2.0.0-alpha16</version>
                 <executions>
                     <execution>
                         <id>generate-java-sources</id>
@@ -23,9 +23,6 @@ Usage
                         <goals>
                             <goal>java</goal>
                         </goals>
-                        <configuration>
-                            <rpcReturnType>com.google.common.util.concurrent.ListenableFuture</rpcReturnType>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -54,8 +51,8 @@ Requirements
 
 | Component                                 | Version   |
 |-------------------------------------------|-----------|
-| JDK                                       | 1.8.0_45+ |  
-| [Apache Maven](https://maven.apache.org/) | 3.0.5+    |
+| JDK                                       | 1.8+      |  
+| [Apache Maven](https://maven.apache.org/) | 3.x       |
 
 Build
 -----
