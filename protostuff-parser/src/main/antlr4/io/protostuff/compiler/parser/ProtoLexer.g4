@@ -119,11 +119,13 @@ COMMENT
     : '/*' .*? '*/' -> channel(HIDDEN)
     ;
 LINE_COMMENT
-    : '//' .*? '\r'? ('\n'|EOF) -> channel(HIDDEN)
+    : '//' ~('\r' | '\n')* -> channel(HIDDEN)
     ;
-
+NL
+    : '\r'? '\n' -> channel(HIDDEN)
+    ;
 WS
-    : [ \t\r\n]+ -> channel(HIDDEN)
+    : [ \t]+ -> channel(HIDDEN)
     ;
 LCURLY
     :   '{'

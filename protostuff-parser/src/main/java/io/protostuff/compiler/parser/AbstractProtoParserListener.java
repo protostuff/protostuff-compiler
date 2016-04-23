@@ -39,14 +39,10 @@ public abstract class AbstractProtoParserListener extends ProtoParserBaseListene
         Token start = ctx.getStart();
         List<Token> tokensBefore = tokens.getHiddenTokensToLeft(start.getTokenIndex(), ProtoLexer.HIDDEN);
         if (tokensBefore != null) {
-            int i = tokensBefore.size();
-            while (i > 0 && !usedComments.get(tokensBefore.get(i - 1).getLine()) &&
-                    (tokensBefore.get(i - 1).getType() == ProtoLexer.LINE_COMMENT
-                            || !tokensBefore.get(i - 1).getText().contains("\n"))) {
-                i--;
-            }
-            for (; i < tokensBefore.size(); i++) {
-                Token token = tokensBefore.get(i);
+            for (Token token : tokensBefore) {
+                if (usedComments.get(token.getLine())) {
+                    continue;
+                }
                 if (token.getType() == ProtoLexer.LINE_COMMENT) {
                     String text = getTextFromLineCommentToken(token);
                     comments.add(text);

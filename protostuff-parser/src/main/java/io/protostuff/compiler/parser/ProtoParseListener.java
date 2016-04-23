@@ -44,7 +44,9 @@ public class ProtoParseListener extends AbstractProtoParserListener {
                 && tokens.get(i).getChannel() == ProtoLexer.HIDDEN
                 && tokens.get(i).getType() == ProtoLexer.LINE_COMMENT) {
             // consume all consecutive line comments
-            Token token = tokens.get(i++);
+            Token token = tokens.get(i);
+            // skip processed LINE_COMMENT and following NL
+            i += 2;
             String text = getTextFromLineCommentToken(token);
             comments.add(text);
         }

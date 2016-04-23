@@ -24,7 +24,7 @@ public class CommentsTest extends AbstractParserTest {
     }
 
     @Test
-    public void testMProtoComments() throws Exception {
+    public void testProtoComments() throws Exception {
         Proto proto = context.getProto();
         assertEquals("Proto file comment.\nMultiline.", proto.getComments());
     }
