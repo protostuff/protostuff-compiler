@@ -49,13 +49,10 @@ serviceBlock
     ;
 rpcMethod
     : RPC name LPAREN rpcType  RPAREN
-      RETURNS LPAREN rpcType RPAREN rpcMethodOptions? SEMICOLON?
+      RETURNS LPAREN rpcType RPAREN (LCURLY optionEntry* RCURLY)? SEMICOLON?
     ;
 rpcType
     : STREAM? typeReference
-    ;
-rpcMethodOptions
-    : LCURLY optionEntry* RCURLY
     ;
 messageBlock
     : MESSAGE name LCURLY
