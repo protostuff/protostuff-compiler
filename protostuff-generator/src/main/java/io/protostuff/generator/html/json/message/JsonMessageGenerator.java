@@ -24,11 +24,6 @@ public class JsonMessageGenerator extends AbstractJsonGenerator {
     }
 
     @Override
-    public String getName() {
-        return "html-data-message";
-    }
-
-    @Override
     public void compile(Module module) {
         module.getProtos().stream()
                 .forEach(proto -> rec(module, proto));

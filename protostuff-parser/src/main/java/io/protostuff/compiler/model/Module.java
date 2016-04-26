@@ -1,73 +1,22 @@
 package io.protostuff.compiler.model;
 
-import java.util.*;
+import org.immutables.value.Value;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Kostiantyn Shchepanovskyi
  */
-public class Module {
+@Value.Immutable
+public interface Module {
 
-    private String name;
-    private List<Proto> protos;
-    private String output;
-    private String template;
-    private String initializer;
+    String getName();
 
-    public Module() {
-    }
+    List<Proto> getProtos();
 
-    public Module(Proto... protos) {
-        this.protos = Arrays.asList(protos);
-    }
+    String getOutput();
 
-    public String getOutput() {
-        return output;
-    }
+    Map<String, String> getOptions();
 
-    public void setOutput(String output) {
-        this.output = output;
-    }
-
-    public List<Proto> getProtos() {
-        if (protos == null) {
-            return Collections.emptyList();
-        }
-        return protos;
-    }
-
-    public void setProtos(List<Proto> protos) {
-        this.protos = protos;
-    }
-
-    public void addProto(Proto proto) {
-        if (protos == null) {
-            protos = new ArrayList<>();
-        }
-        protos.add(proto);
-    }
-
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setTemplate(String template) {
-        this.template = template;
-    }
-
-    public String getTemplate() {
-        return template;
-    }
-
-    public String getInitializer() {
-        return initializer;
-    }
-
-    public void setInitializer(String initializer) {
-        this.initializer = initializer;
-    }
 }

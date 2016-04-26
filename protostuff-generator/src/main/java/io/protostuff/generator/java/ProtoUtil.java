@@ -16,14 +16,6 @@ public class ProtoUtil {
 
     private static final LocalDate DATE = LocalDate.now();
 
-    public static GeneratorInfo getGeneratorInfo(Proto proto) {
-        return GeneratorInfo.newBuilder()
-                .name(JavaGenerator.class.getCanonicalName())
-                .date(DATE.format(DateTimeFormatter.ISO_DATE))
-                .version(JavaGenerator.class.getPackage().getImplementationVersion())
-                .build();
-    }
-
     public static String getPackage(Proto proto) {
         DynamicMessage.Value javaPackage = proto.getOptions().get(OPTION_JAVA_PACKAGE);
         if (javaPackage != null) {

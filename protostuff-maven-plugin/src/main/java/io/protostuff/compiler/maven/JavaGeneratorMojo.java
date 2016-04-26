@@ -1,9 +1,9 @@
 package io.protostuff.compiler.maven;
 
-import com.google.common.collect.ImmutableMap;
+import io.protostuff.compiler.model.ImmutableModuleConfiguration;
 import io.protostuff.compiler.model.ModuleConfiguration;
+import io.protostuff.generator.CompilerModule;
 import io.protostuff.generator.ProtostuffCompiler;
-import io.protostuff.generator.java.JavaGenerator;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
@@ -35,12 +35,6 @@ public class JavaGeneratorMojo extends AbstractGeneratorMojo {
     @Parameter
     private File target;
 
-    @Parameter(defaultValue = "io/protostuff/generator/java/main.stg")
-    private String template;
-
-    @Parameter
-    private String initializer;
-
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
         super.execute();
@@ -48,12 +42,10 @@ public class JavaGeneratorMojo extends AbstractGeneratorMojo {
         ProtostuffCompiler compiler = new ProtostuffCompiler();
         final Path sourcePath = getSourcePath();
         String output = calculateOutput();
-        ModuleConfiguration.Builder builder = ModuleConfiguration.newBuilder()
+        ImmutableModuleConfiguration.Builder builder = ImmutableModuleConfiguration.builder()
                 .name("java")
                 .includePaths(singletonList(sourcePath))
-                .generator(JavaGenerator.GENERATOR_NAME)
-                .template(template)
-                .initializer(initializer)
+                .generator("java")
                 .output(output);
         PathMatcher protoMatcher = FileSystems.getDefault().getPathMatcher("glob:**/*.proto");
         try {
@@ -62,7 +54,7 @@ public class JavaGeneratorMojo extends AbstractGeneratorMojo {
                 public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
                     if (protoMatcher.matches(file)) {
                         String protoFile = sourcePath.relativize(file).toString();
-                        builder.addProtoFile(normalizeProtoPath(protoFile));
+                        builder.addProtoFiles(normalizeProtoPath(protoFile));
                     }
                     return super.visitFile(file, attrs);
                 }

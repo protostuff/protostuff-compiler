@@ -1,5 +1,7 @@
 package io.protostuff.it;
 
+import com.google.common.util.concurrent.Futures;
+import com.google.common.util.concurrent.ListenableFuture;
 import io.protostuff.Request;
 import io.protostuff.Response;
 import io.protostuff.Rpc;
@@ -12,7 +14,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.lang.reflect.Method;
-import java.util.concurrent.CompletableFuture;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -22,15 +23,6 @@ public class ServiceTest {
     private Class<TestService> serviceClass;
     private Method serviceMethod;
 
-    static class TestServiceImpl implements TestService {
-
-        @Override
-        public CompletableFuture<ResponseMessage> test(RequestMessage request) {
-            ResponseMessage responseMessage = ResponseMessage.newBuilder().build();
-            return CompletableFuture.completedFuture(responseMessage);
-        }
-    }
-
     @Before
     public void setUp() throws Exception {
         serviceClass = TestService.class;
@@ -39,7 +31,7 @@ public class ServiceTest {
 
     @Test
     public void simpleSignatureCheck() throws Exception {
-        CompletableFuture<ResponseMessage> result = new TestServiceImpl().test(RequestMessage.newBuilder().build());
+        ListenableFuture<ResponseMessage> result = new TestServiceImpl().test(RequestMessage.newBuilder().build());
         Assert.assertTrue(result.isDone());
     }
 
@@ -65,5 +57,14 @@ public class ServiceTest {
     public void response_annotation() throws Exception {
         Response annotation = serviceMethod.getAnnotation(Response.class);
         Assert.assertEquals("testResponse", annotation.value());
+    }
+
+    static class TestServiceImpl implements TestService {
+
+        @Override
+        public ListenableFuture<ResponseMessage> test(RequestMessage request) {
+            ResponseMessage responseMessage = ResponseMessage.newBuilder().build();
+            return Futures.immediateFuture(responseMessage);
+        }
     }
 }

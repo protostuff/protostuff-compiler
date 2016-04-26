@@ -5,7 +5,7 @@ import java.util.function.Function;
 /**
  * @author Kostiantyn Shchepanovskyi
  */
-public interface ObjectExtender<ObjectT> {
+public interface PropertyProvider<ObjectT> {
 
     boolean hasProperty(String propertyName);
 

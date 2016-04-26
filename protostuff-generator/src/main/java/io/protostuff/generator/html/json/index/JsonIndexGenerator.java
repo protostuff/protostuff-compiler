@@ -22,11 +22,6 @@ public final class JsonIndexGenerator extends AbstractJsonGenerator {
     }
 
     @Override
-    public String getName() {
-        return "html-data-index";
-    }
-
-    @Override
     public void compile(Module module) {
         List<JsonTreeNode> root = new ArrayList<>();
         module.getProtos().stream()
