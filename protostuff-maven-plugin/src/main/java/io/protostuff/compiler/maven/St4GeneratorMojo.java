@@ -1,7 +1,9 @@
 package io.protostuff.compiler.maven;
 
 import io.protostuff.compiler.model.ImmutableModuleConfiguration;
+import io.protostuff.compiler.model.ModuleConfiguration;
 import io.protostuff.generator.CompilerModule;
+import io.protostuff.generator.ProtostuffCompiler;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
@@ -11,33 +13,34 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.FileSystems;
-import java.nio.file.FileVisitResult;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.PathMatcher;
-import java.nio.file.SimpleFileVisitor;
+import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 
-import io.protostuff.compiler.model.ModuleConfiguration;
-import io.protostuff.generator.ProtostuffCompiler;
-import io.protostuff.generator.html.HtmlGenerator;
-
 import static java.util.Collections.singletonList;
+import static org.apache.maven.plugins.annotations.LifecyclePhase.GENERATE_TEST_SOURCES;
 import static org.apache.maven.plugins.annotations.ResolutionScope.COMPILE_PLUS_RUNTIME;
 
 /**
  * @author Kostiantyn Shchepanovskyi
  */
-@Mojo(name = "html",
+@Mojo(name = "st4",
         configurator = "include-project-dependencies",
         requiresDependencyResolution = COMPILE_PLUS_RUNTIME)
-public class HtmlGeneratorMojo extends AbstractGeneratorMojo {
+public class St4GeneratorMojo extends AbstractGeneratorMojo {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(HtmlGeneratorMojo.class);
+    public static final String GENERATED_SOURCES = "/generated-sources/proto";
+    public static final String GENERATED_TEST_SOURCES = "/generated-test-sources/proto";
+    private static final Logger LOGGER = LoggerFactory.getLogger(St4GeneratorMojo.class);
 
-    @Parameter(defaultValue = "${project.build.directory}/generated-html")
+    @Parameter
     private File target;
+
+
+    @Parameter(defaultValue = "io/protostuff/generator/java/main.stg")
+    private String template;
+
+    @Parameter
+    private String extensions;
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
@@ -45,11 +48,14 @@ public class HtmlGeneratorMojo extends AbstractGeneratorMojo {
 
         ProtostuffCompiler compiler = new ProtostuffCompiler();
         final Path sourcePath = getSourcePath();
+        String output = calculateOutput();
         ImmutableModuleConfiguration.Builder builder = ImmutableModuleConfiguration.builder()
-                .name("html")
+                .name("java")
                 .includePaths(singletonList(sourcePath))
-                .generator(CompilerModule.HTML_COMPILER)
-                .output(target.getAbsolutePath());
+                .generator(CompilerModule.ST4_COMPILER)
+                .putOptions(CompilerModule.TEMPLATE_OPTION, template)
+                .putOptions(CompilerModule.EXTENSIONS_OPTION, extensions)
+                .output(output);
         PathMatcher protoMatcher = FileSystems.getDefault().getPathMatcher("glob:**/*.proto");
         try {
             Files.walkFileTree(sourcePath, new SimpleFileVisitor<Path>() {
@@ -69,7 +75,33 @@ public class HtmlGeneratorMojo extends AbstractGeneratorMojo {
 
         LOGGER.debug("Module configuration = {}", moduleConfiguration);
         compiler.compile(moduleConfiguration);
+        addGeneratedSourcesToProject(output);
+    }
 
+    private void addGeneratedSourcesToProject(String output) {
+        // Include generated directory to the list of compilation sources
+        if (GENERATE_TEST_SOURCES.id().equals(execution.getLifecyclePhase())) {
+            project.addTestCompileSourceRoot(output);
+        } else {
+            project.addCompileSourceRoot(output);
+        }
+    }
+
+    private String calculateOutput() {
+        String output;
+        if (target != null) {
+            output = target.getAbsolutePath();
+        } else {
+            String phase = execution.getLifecyclePhase();
+            String buildDirectory = project.getBuild().getDirectory();
+            if (GENERATE_TEST_SOURCES.id().equals(phase)) {
+                output = buildDirectory + GENERATED_TEST_SOURCES;
+            } else {
+                output = buildDirectory + GENERATED_SOURCES;
+            }
+        }
+        LOGGER.debug("output = {}", output);
+        return output;
     }
 
 }

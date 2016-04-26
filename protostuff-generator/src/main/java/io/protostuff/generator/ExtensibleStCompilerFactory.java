@@ -7,8 +7,7 @@ import java.util.Map;
 /**
  * @author Kostiantyn Shchepanovskyi
  */
-public interface StCompilerFactory {
+public interface ExtensibleStCompilerFactory {
 
-    ProtoCompiler create(String template);
-
+    ProtoCompiler create(String template, ExtensionProvider extensionProvider);
 }

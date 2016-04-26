@@ -2,21 +2,19 @@ package io.protostuff.generator;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.HashMap;
-import java.util.Map;
-
 import io.protostuff.compiler.ParserModule;
-import io.protostuff.compiler.model.Module;
+import io.protostuff.compiler.model.ImmutableModule;
 import io.protostuff.compiler.model.ModuleConfiguration;
 import io.protostuff.compiler.model.Proto;
 import io.protostuff.compiler.parser.FileReader;
 import io.protostuff.compiler.parser.FileReaderFactory;
 import io.protostuff.compiler.parser.Importer;
 import io.protostuff.compiler.parser.ProtoContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -25,7 +23,7 @@ public class ProtostuffCompiler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ProtostuffCompiler.class);
 
-    private final Injector injector;
+    protected final Injector injector;
 
     public ProtostuffCompiler() {
         injector = Guice.createInjector(
@@ -49,14 +47,15 @@ public class ProtostuffCompiler {
             Proto proto = context.getProto();
             importedFiles.put(path, proto);
         }
-        Module module = new Module();
-        module.setTemplate(configuration.getTemplate());
-        module.setInitializer(configuration.getInitializer());
-        module.setName(configuration.getName());
-        module.setOutput(configuration.getOutput());
-        for (Map.Entry<String, Proto> entry : importedFiles.entrySet()) {
-            Proto proto = entry.getValue();
-            module.addProto(proto);
+        ImmutableModule.Builder builder = ImmutableModule.builder();
+        builder.name(configuration.getName());
+        builder.output(configuration.getOutput());
+        builder.options(configuration.getOptions());
+        for (Proto proto : importedFiles.values()) {
+            builder.addProtos(proto);
+        }
+        ImmutableModule module = builder.build();
+        for (Proto proto : importedFiles.values()) {
             proto.setModule(module);
         }
         compiler.compile(module);

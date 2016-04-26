@@ -11,7 +11,6 @@ import org.stringtemplate.v4.STGroupFile;
 import org.stringtemplate.v4.misc.ObjectModelAdaptor;
 import org.stringtemplate.v4.misc.STNoSuchPropertyException;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Map;
@@ -23,11 +22,14 @@ import io.protostuff.compiler.model.Proto;
 import io.protostuff.compiler.model.Service;
 
 /**
+ * Proto compiler based on StringTemplate 4.
+ *
+ * Given {@code templateFileName} should contain set of templates that define
+ * generated code.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public class StCompiler extends AbstractProtoCompiler {
-
-    public static final String GENERATOR_NAME = "st4";
 
     public static final String MODULE = "module";
     public static final String MODULE_COMPILER_ENABLED = "module_compiler_enabled";
@@ -56,35 +58,17 @@ public class StCompiler extends AbstractProtoCompiler {
 
     private final STGroup stGroup;
 
-    private final Map<Class<?>, ObjectExtender<?>> extenderMap;
-
     @Inject
     public StCompiler(OutputStreamFactory outputStreamFactory,
-                      @Assisted String templateFileName,
-                      @Assisted Map<Class<?>, AttributeRenderer> attributeRendererMap,
-                      @Assisted Map<Class<?>, ObjectExtender<?>> extenderMap) {
+                      @Assisted String templateFileName) {
         super(outputStreamFactory);
-        this.extenderMap = extenderMap;
         STGroup group = new STGroupFile(templateFileName);
-        for (java.util.Map.Entry<Class<?>, AttributeRenderer> entry : attributeRendererMap.entrySet()) {
-            group.registerRenderer(entry.getKey(), entry.getValue());
-        }
         group.setListener(new StErrorListener());
-        for (Map.Entry<Class<?>, ObjectExtender<?>> entry : extenderMap.entrySet()) {
-            Class<?> objectClass = entry.getKey();
-            ObjectExtender<Object> extender = (ObjectExtender<Object>) entry.getValue();
-            group.registerModelAdaptor(objectClass, new ObjectModelAdaptor() {
-                @Override
-                public synchronized Object getProperty(Interpreter interp, ST self, Object o, Object property, String propertyName) throws STNoSuchPropertyException {
-                    if (extender.hasProperty(propertyName)) {
-                        return extender.getProperty(o, propertyName);
-                    }
-                    return super.getProperty(interp, self, o, property, propertyName);
-                }
-            });
-        }
-
         this.stGroup = group;
+    }
+
+    final STGroup getStGroup() {
+        return stGroup;
     }
 
     @Override
@@ -188,11 +172,6 @@ public class StCompiler extends AbstractProtoCompiler {
         }
         st.add(arg, value);
         return st.render();
-    }
-
-    @Override
-    public String getName() {
-        return GENERATOR_NAME;
     }
 
 }

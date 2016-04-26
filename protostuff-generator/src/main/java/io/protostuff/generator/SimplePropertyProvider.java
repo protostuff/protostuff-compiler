@@ -7,7 +7,7 @@ import java.util.function.Function;
 /**
  * @author Kostiantyn Shchepanovskyi
  */
-public class SimpleObjectExtender<ObjectT> implements ObjectExtender<ObjectT> {
+public class SimplePropertyProvider<ObjectT> implements PropertyProvider<ObjectT> {
 
     private final Map<String, Function<ObjectT, ?>> propertyProviders = new HashMap<>();
 

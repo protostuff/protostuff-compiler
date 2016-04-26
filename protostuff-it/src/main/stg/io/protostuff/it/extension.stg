@@ -1,5 +1,5 @@
 import "io/protostuff/generator/java/main.stg"
 
 rpc_return_type(method) ::= <%
-java.util.concurrent.CompletableFuture\<<method.javaReturnTypeFullName>>
+com.google.common.util.concurrent.ListenableFuture\<<method.javaReturnTypeFullName>>
 %>

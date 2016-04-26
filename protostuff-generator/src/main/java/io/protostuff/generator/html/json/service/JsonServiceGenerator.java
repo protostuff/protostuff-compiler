@@ -21,11 +21,6 @@ public class JsonServiceGenerator extends AbstractJsonGenerator {
     }
 
     @Override
-    public String getName() {
-        return "html-data-service";
-    }
-
-    @Override
     public void compile(Module module) {
         module.getProtos().stream()
                 .forEach(proto -> proto.getServices().stream()

@@ -1,6 +1,7 @@
 package io.protostuff.generator;
 
 import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -20,6 +21,10 @@ public class CompilerRegistry {
     @Nullable
     public ProtoCompiler findCompiler(String name) {
         return compilers.get(name);
+    }
+
+    public Set<String> availableCompilers() {
+        return compilers.keySet();
     }
 
 }

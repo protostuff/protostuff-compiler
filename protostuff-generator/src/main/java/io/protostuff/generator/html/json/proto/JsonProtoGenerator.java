@@ -19,11 +19,6 @@ public class JsonProtoGenerator extends AbstractJsonGenerator {
     }
 
     @Override
-    public String getName() {
-        return "html-data-proto";
-    }
-
-    @Override
     public void compile(Module module) {
         module.getProtos().stream()
                 .forEach(proto -> process(module, proto));

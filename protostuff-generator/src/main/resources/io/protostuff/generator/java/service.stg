@@ -45,7 +45,7 @@ response_qualifier(method) ::= <%
 %>
 
 rpc_return_type(method) ::= <%
-<method.returnType.javaFullName>
+java.util.concurrent.CompletableFuture\<<method.javaReturnTypeFullName>>
 %>
 
 service_method_declaration(method) ::= <<

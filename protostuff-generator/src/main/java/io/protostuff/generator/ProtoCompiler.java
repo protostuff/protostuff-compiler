@@ -7,7 +7,5 @@ import io.protostuff.compiler.model.Module;
  */
 public interface ProtoCompiler {
 
-    String getName();
-
     void compile(Module module);
 }

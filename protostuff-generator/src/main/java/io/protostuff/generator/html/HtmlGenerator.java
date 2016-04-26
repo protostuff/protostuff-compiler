@@ -19,7 +19,6 @@ import io.protostuff.generator.html.json.service.JsonServiceGenerator;
  */
 public class HtmlGenerator implements ProtoCompiler {
 
-    public static final String GENERATOR_NAME = "html";
     public static final String HTML_RESOURCE_BASE = "io/protostuff/generator/html/";
     public static final String[] STATIC_RESOURCES = new String[]{
             "index.html",
@@ -78,11 +77,6 @@ public class HtmlGenerator implements ProtoCompiler {
         this.messageGenerator = messageGenerator;
         this.serviceGenerator = serviceGenerator;
         this.protoGenerator = protoGenerator;
-    }
-
-    @Override
-    public String getName() {
-        return GENERATOR_NAME;
     }
 
     @Override

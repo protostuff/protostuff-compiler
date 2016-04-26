@@ -22,11 +22,6 @@ public class JsonEnumGenerator extends AbstractJsonGenerator {
     }
 
     @Override
-    public String getName() {
-        return "html-data-enum";
-    }
-
-    @Override
     public void compile(Module module) {
         module.getProtos().stream()
                 .forEach(proto -> rec(module, proto));
