@@ -89,6 +89,36 @@ public static Builder newBuilder() {
 
 builder_field_accessors(field) ::= <<
 <if(field.oneofPart)>
+<if(field.type.enum)>
+public <field.javaType> <field.javaGetterName>() {
+    if (<field.oneof.javaCaseFieldName> == <field.oneof.javaName>.<field.javaOneofConstantName>) {
+        return <field.javaType>.valueOf((int) <field.oneof.javaFieldName>);
+    }
+    return <field.javaDefaultValue>;
+}
+
+
+public Builder <field.javaSetterName>(<field.javaType> value) {
+    <check_field_value_is_not_null(field=field, var="value")>
+    <check_field_value_is_not_unrecognized(field=field, var="value")>
+    this.<field.oneof.javaFieldName> = value.getNumber();
+    this.<field.oneof.javaCaseFieldName> = <field.oneof.javaName>.<field.javaOneofConstantName>;
+    return this;
+}
+
+public int <field.javaEnumValueGetterName>() {
+    if (<field.oneof.javaCaseFieldName> == <field.oneof.javaName>.<field.javaOneofConstantName>) {
+        return (int) <field.oneof.javaFieldName>;
+    }
+    return 0;
+}
+
+public Builder <field.javaEnumValueSetterName>(int value) {
+    this.<field.oneof.javaFieldName> = value;
+    this.<field.oneof.javaCaseFieldName> = <field.oneof.javaName>.<field.javaOneofConstantName>;
+    return this;
+}
+<else>
 public <field.javaType> <field.javaGetterName>() {
     if (<field.oneof.javaCaseFieldName> == <field.oneof.javaName>.<field.javaOneofConstantName>) {
         return (<field.javaType>) <field.oneof.javaFieldName>;
@@ -102,6 +132,7 @@ public Builder <field.javaSetterName>(<field.javaType> value) {
     this.<field.oneof.javaCaseFieldName> = <field.oneof.javaName>.<field.javaOneofConstantName>;
     return this;
 }
+<endif>
 
 public boolean <field.javaHasMethodName>() {
     return <field.oneof.javaCaseFieldName> == <field.oneof.javaName>.<field.javaOneofConstantName>;
@@ -133,7 +164,7 @@ public Builder <field.javaMapAddAllName>(java.util.Map\<<field.javaMapKeyType>, 
 }
 
 public Builder <field.javaCleanerName>() {
-    this.<field.javaName> = java.util.Collections.emptyMap();;
+    this.<field.javaName> = java.util.Collections.emptyMap();
     <field.javaBitFieldName> &= ~<field.javaBitFieldMask>;
     return this;
 }
@@ -146,6 +177,91 @@ public <field.javaMapValueType> <field.javaMapGetByKeyMethodName>(<field.javaMap
     return <field.javaName>.get(key);
 }
 <elseif(field.repeated)>
+<if(field.type.enum)>
+public <field.javaType> <field.javaRepeatedGetByIndexMethodName>(int index) {
+    return <field.javaType>.valueOf(<field.javaName>.get(index));
+}
+
+public <field.javaRepeatedType> <field.javaRepeatedGetterName>() {
+    return new io.protostuff.ListAdapter\<>(<field.javaName>, <field.javaType>::valueOf);
+}
+
+public int <field.javaRepeatedGetCountMethodName>() {
+    return <field.javaName>.size();
+}
+
+public java.util.List\<Integer> <field.javaRepeatedEnumValueGetterName>() {
+    return <field.javaName>;
+}
+
+public int <field.javaRepeatedEnumValueGetterByIndexName>(int index) {
+    return <field.javaName>.get(index);
+}
+
+public Builder <field.javaRepeatedSetterName>(int index, <field.javaType> value) {
+    <check_field_value_is_not_null(field=field, var="value")>
+    <check_field_value_is_not_unrecognized(field=field, var="value")>
+    <field:ensure_mutable()>
+    this.<field.javaName>.set(index, value.getNumber());
+    return this;
+}
+
+public Builder <field.javaRepeatedEnumValueSetterName>(int index, int value) {
+    <field:ensure_mutable()>
+    this.<field.javaName>.set(index, value);
+    return this;
+}
+
+public Builder <field.javaRepeatedAdderName>(<field.javaType> value) {
+    <check_field_value_is_not_null(field=field, var="value")>
+    <check_field_value_is_not_unrecognized(field=field, var="value")>
+    <field:ensure_mutable()>
+    this.<field.javaName>.add(value.getNumber());
+    return this;
+}
+
+public Builder <field.javaRepeatedEnumValueAdderName>(int value) {
+    <field:ensure_mutable()>
+    this.<field.javaName>.add(value);
+    return this;
+}
+
+public Builder <field.javaRepeatedAddAllName>(<field.javaIterableType> values) {
+    if (values == null) {
+        throw new NullPointerException("Cannot set <field.parent.javaName>#<field.javaName> to null");
+    }
+    <field:ensure_mutable()>
+    for (final <field.javaWrapperType> value : values) {
+        if (value == null) {
+           throw new NullPointerException("Cannot set <field.parent.javaName>#<field.javaName> to null");
+        }
+        <check_field_value_is_not_unrecognized(field=field, var="value")>
+        this.<field.javaName>.add(value.getNumber());
+    }
+    return this;
+}
+
+public Builder <field.javaRepeatedEnumValueAddAllName>(java.lang.Iterable\<Integer> values) {
+    if (values == null) {
+        throw new NullPointerException("Cannot set <field.parent.javaName>#<field.javaName> to null");
+    }
+    <field:ensure_mutable()>
+    for (Integer value : values) {
+        if (value == null) {
+           throw new NullPointerException("Cannot set <field.parent.javaName>#<field.javaName> to null");
+        }
+        this.<field.javaName>.add(value);
+    }
+    return this;
+}
+
+public Builder <field.javaCleanerName>() {
+    this.<field.javaName> = java.util.Collections.emptyList();
+    <field.javaBitFieldName> &= ~<field.javaBitFieldMask>;
+    return this;
+}
+
+<else>
 public <field.javaRepeatedType> <field.javaRepeatedGetterName>() {
     return <field.javaName>;
 }
@@ -179,7 +295,7 @@ public Builder <field.javaRepeatedAddAllName>(<field.javaIterableType> values) {
 }
 
 public Builder <field.javaCleanerName>() {
-    this.<field.javaName> = java.util.Collections.emptyList();;
+    this.<field.javaName> = java.util.Collections.emptyList();
     <field.javaBitFieldName> &= ~<field.javaBitFieldMask>;
     return this;
 }
@@ -190,6 +306,39 @@ public int <field.javaRepeatedGetCountMethodName>() {
 
 public <field.javaType> <field.javaRepeatedGetByIndexMethodName>(int index) {
     return <field.javaName>.get(index);
+}
+<endif>
+<elseif(field.type.enum)>
+public <field.javaType> <field.javaGetterName>() {
+    return <field.javaType>.valueOf(<field.javaName>);
+}
+
+public int <field.javaEnumValueGetterName>() {
+    return <field.javaName>;
+}
+
+public Builder <field.javaSetterName>(<field.javaType> value) {
+    <check_field_value_is_not_null(field=field, var="value")>
+    <check_field_value_is_not_unrecognized(field=field, var="value")>
+    this.<field.javaName> = value.getNumber();
+    <field.javaBitFieldName> |= <field.javaBitFieldMask>;
+    return this;
+}
+
+public Builder <field.javaEnumValueSetterName>(int value) {
+    this.<field.javaName> = value;
+    <field.javaBitFieldName> |= <field.javaBitFieldMask>;
+    return this;
+}
+
+public Builder <field.javaCleanerName>() {
+    this.<field.javaName> = 0;
+    <field.javaBitFieldName> &= ~<field.javaBitFieldMask>;
+    return this;
+}
+
+public boolean <field.javaHasMethodName>() {
+    return (<field.javaBitFieldName> & <field.javaBitFieldMask>) == <field.javaBitFieldMask>;
 }
 <else>
 public <field.javaType> <field.javaGetterName>() {
@@ -230,6 +379,14 @@ check_field_value_is_not_null(field, var) ::= <<
 <if(field.type.message || field.type.enum || field.type.scalar && field.javaIsScalarNullableType)>
 if (<var> == null) {
     throw new NullPointerException("Cannot set <field.parent.javaName>#<field.javaName> to null");
+}
+<endif>
+>>
+
+check_field_value_is_not_unrecognized(field, var) ::= <<
+<if(field.type.enum)>
+if (<var> == <field.javaType>.UNRECOGNIZED) {
+    throw new IllegalArgumentException("Cannot set <field.parent.javaName>#<field.javaName> to UNRECOGNIZED");
 }
 <endif>
 >>

@@ -121,7 +121,7 @@ singular_field_merge_switch(field) ::= <<
 <if(field.type.message)>
 instance.<field.javaName> = input.mergeObject(null, <field.javaType>.getSchema());
 <elseif(field.type.enum)>
-instance.<field.javaName> = <field.javaType>.valueOf(input.readEnum());
+instance.<field.javaName> = input.readEnum();
 <else>
 instance.<field.javaName> = input.<field.protostuffReadMethod>();
 <endif>
@@ -133,7 +133,7 @@ oneof_field_merge_switch(field) ::= <<
     <if(field.type.message)>
     instance.<field.oneof.javaFieldName> = input.mergeObject(null, <field.javaType>.getSchema());
     <elseif(field.type.enum)>
-    instance.<field.oneof.javaFieldName> = <field.javaType>.valueOf(input.readEnum());
+    instance.<field.oneof.javaFieldName> = input.readEnum();
     <else>
     instance.<field.oneof.javaFieldName> = input.<field.protostuffReadMethod>();
     <endif>
@@ -155,7 +155,7 @@ repeated_field_merge_switch(field) ::= <<
 instance.<field.javaName>.add(input.mergeObject(null, <field.javaType>.getSchema()));
 <elseif(field.type.enum)>
 <field:schema_ensure_mutable()>
-instance.<field.javaName>.add(<field.javaType>.valueOf(input.readEnum()));
+instance.<field.javaName>.add(input.readEnum());
 <else>
 <field:schema_ensure_mutable()>
 instance.<field.javaName>.add(input.<field.protostuffReadMethod>());
@@ -186,7 +186,7 @@ if((instance.<field.javaBitFieldName> & <field.javaBitFieldMask>) == <field.java
 }
 <elseif(field.type.enum)>
 if((instance.<field.javaBitFieldName> & <field.javaBitFieldMask>) == <field.javaBitFieldMask>) {
-	output.writeEnum(<field.tag>, instance.<field.javaName>.getNumber(), false);
+	output.writeEnum(<field.tag>, instance.<field.javaName>, false);
 }
 <else>
 if((instance.<field.javaBitFieldName> & <field.javaBitFieldMask>) == <field.javaBitFieldMask>) {
@@ -202,7 +202,7 @@ if(instance.<field.oneof.javaCaseFieldName> == <field.oneof.javaName>.<field.jav
 }
 <elseif(field.type.enum)>
 if(instance.<field.oneof.javaCaseFieldName> == <field.oneof.javaName>.<field.javaOneofConstantName>) {
-	output.writeEnum(<field.tag>, ((<field.javaType>) instance.<field.oneof.javaFieldName>).getNumber(), false);
+	output.writeEnum(<field.tag>, (int) instance.<field.oneof.javaFieldName>, false);
 }
 <else>
 if(instance.<field.oneof.javaCaseFieldName> == <field.oneof.javaName>.<field.javaOneofConstantName>) {
@@ -228,8 +228,8 @@ for(<field.javaType> <field.javaName> : instance.<field.javaName>) {
     output.writeObject(<field.tag>, <field.javaName>, <field.javaType>.getSchema(), true);
 }
 <elseif(field.type.enum)>
-for(<field.javaType> <field.javaName> : instance.<field.javaName>) {
-    output.writeEnum(<field.tag>, <field.javaName>.getNumber(), true);
+for(int <field.javaName> : instance.<field.javaName>) {
+    output.writeEnum(<field.tag>, <field.javaName>, true);
 }
 <else>
 for(<field.javaType> <field.javaName> : instance.<field.javaName>) {

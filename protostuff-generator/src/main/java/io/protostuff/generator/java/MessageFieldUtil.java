@@ -1,12 +1,12 @@
 package io.protostuff.generator.java;
 
-import io.protostuff.compiler.model.*;
 import io.protostuff.compiler.model.Enum;
+import io.protostuff.compiler.model.*;
 import io.protostuff.generator.Formatter;
 
-import static io.protostuff.compiler.model.ScalarFieldType.BOOL;
-import static io.protostuff.compiler.model.ScalarFieldType.BYTES;
-import static io.protostuff.compiler.model.ScalarFieldType.STRING;
+import java.util.List;
+
+import static io.protostuff.compiler.model.ScalarFieldType.*;
 import static io.protostuff.compiler.parser.MessageParseListener.MAP_ENTRY_KEY;
 import static io.protostuff.compiler.parser.MessageParseListener.MAP_ENTRY_VALUE;
 
@@ -68,6 +68,14 @@ public class MessageFieldUtil {
         return SETTER_PREFIX + Formatter.toPascalCase(field.getName());
     }
 
+    public static <T> String getEnumFieldValueGetterName(Field field) {
+        return GETTER_PREFIX + Formatter.toPascalCase(field.getName()) + "Value";
+    }
+
+    public static <T> String getEnumFieldValueSetterName(Field field) {
+        return SETTER_PREFIX + Formatter.toPascalCase(field.getName()) + "Value";
+    }
+
     public static String getFieldCleanerName(Field field) {
         return "clear" + Formatter.toPascalCase(field.getName());
     }
@@ -95,7 +103,14 @@ public class MessageFieldUtil {
         }
         if (type instanceof Enum) {
             Enum anEnum = (Enum) type;
-            return UserTypeUtil.getCanonicalName(anEnum) + "." + anEnum.getConstants().get(0).getName();
+            String defaultValue;
+            List<EnumConstant> constants = anEnum.getConstants();
+            if (constants.isEmpty()) {
+                defaultValue = "UNRECOGNIZED";
+            } else {
+                defaultValue = constants.get(0).getName();
+            }
+            return UserTypeUtil.getCanonicalName(anEnum) + "." + defaultValue;
         }
         throw new IllegalArgumentException(String.valueOf(type));
     }
@@ -154,9 +169,37 @@ public class MessageFieldUtil {
         throw new IllegalArgumentException(field.toString());
     }
 
+    public static String getRepeatedEnumFieldValueGetterName(Field field) {
+        if (field.isRepeated()) {
+            return GETTER_PREFIX + Formatter.toPascalCase(field.getName()) + "ValueList";
+        }
+        throw new IllegalArgumentException(field.toString());
+    }
+
+    public static String javaRepeatedEnumValueGetterByIndexName(Field field) {
+        if (field.isRepeated()) {
+            return GETTER_PREFIX + Formatter.toPascalCase(field.getName()) + "Value";
+        }
+        throw new IllegalArgumentException(field.toString());
+    }
+
+    public static String getRepeatedEnumConverterName(Field field) {
+        if (field.isRepeated()) {
+            return "__" + Formatter.toCamelCase(field.getName()) + "Converter";
+        }
+        throw new IllegalArgumentException(field.toString());
+    }
+
     public static String getRepeatedFieldSetterName(Field field) {
         if (field.isRepeated()) {
             return SETTER_PREFIX + Formatter.toPascalCase(field.getName());
+        }
+        throw new IllegalArgumentException(field.toString());
+    }
+
+    public static String getRepeatedEnumValueSetterName(Field field) {
+        if (field.isRepeated()) {
+            return SETTER_PREFIX + Formatter.toPascalCase(field.getName()) + "Value";
         }
         throw new IllegalArgumentException(field.toString());
     }
@@ -189,6 +232,14 @@ public class MessageFieldUtil {
 
     public static String getRepeatedFieldAddAllName(Field field) {
         return "addAll" + Formatter.toPascalCase(field.getName());
+    }
+
+    public static String getRepeatedEnumValueAdderName(Field field) {
+        return "add" + Formatter.toPascalCase(field.getName()) + "Value";
+    }
+
+    public static String getRepeatedEnumValueAddAllName(Field field) {
+        return "addAll" + Formatter.toPascalCase(field.getName()) + "Value";
     }
 
     public static String toStringPart(Field field) {
@@ -359,7 +410,7 @@ public class MessageFieldUtil {
         String v;
         if (valueType instanceof ScalarFieldType) {
             ScalarFieldType vType = (ScalarFieldType) valueType;
-            v= ScalarFieldTypeUtil.getWrapperType(vType);
+            v = ScalarFieldTypeUtil.getWrapperType(vType);
         } else {
             UserType userType = (UserType) valueType;
             v = UserTypeUtil.getCanonicalName(userType);
@@ -417,4 +468,5 @@ public class MessageFieldUtil {
     public static boolean isBooleanType(Field field) {
         return BOOL.equals(field.getType());
     }
+
 }

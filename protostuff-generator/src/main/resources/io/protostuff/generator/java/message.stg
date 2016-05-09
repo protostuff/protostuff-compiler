@@ -73,48 +73,34 @@ public <if(message.nested)>static <endif>final class <message.javaName>
 }
 >>
 
-field_equals_part(field) ::= <<
-<if(!field.oneofPart)>
-if (!java.util.Objects.equals(this.<field.javaName>, that.<field.javaName>)) {
-    return false;
-}
-<endif>
->>
-
-oneof_field_equals_part(oneof) ::= <<
-if (!(java.util.Objects.equals(this.<oneof.javaCaseFieldName>, that.<oneof.javaCaseFieldName>)
-        && java.util.Objects.equals(this.<oneof.javaFieldName>, that.<oneof.javaFieldName>))) {
-    return false;
-}
->>
-
-field_hashCode_part(field) ::= <<
-<if(!field.oneofPart)>
-<if(!field.repeated && (field.javaIsNumericType || field.javaIsBooleanType))>
-result = 31 * result + <field.type.javaWrapperType>.hashCode(this.<field.javaName>);
-<else>
-result = 31 * result + (this.<field.javaName> == null ? 0 : this.<field.javaName>.hashCode());
-<endif>
-<endif>
->>
-
-oneof_field_hashCode_part(oneof) ::= <<
-result = 31 * result + this.<oneof.javaCaseFieldName>.hashCode();
-result = 31 * result + (this.<oneof.javaFieldName> == null ? 0 : this.<oneof.javaFieldName>.hashCode());
->>
-
 message_bit_field(name) ::= <<
 private int <name>;
 >>
 
 field_accessors(field) ::= <<
 <if(field.oneofPart)>
+<if(field.type.enum)>
+public <field.javaType> <field.javaGetterName>() {
+    if (<field.oneof.javaCaseFieldName> == <field.oneof.javaName>.<field.javaOneofConstantName>) {
+        return <field.javaType>.valueOf((int) <field.oneof.javaFieldName>);
+    }
+    return <field.javaDefaultValue>;
+}
+
+public int <field.javaEnumValueGetterName>() {
+    if (<field.oneof.javaCaseFieldName> == <field.oneof.javaName>.<field.javaOneofConstantName>) {
+        return (int) <field.oneof.javaFieldName>;
+    }
+    return 0;
+}
+<else>
 public <field.javaType> <field.javaGetterName>() {
     if (<field.oneof.javaCaseFieldName> == <field.oneof.javaName>.<field.javaOneofConstantName>) {
         return (<field.javaType>) <field.oneof.javaFieldName>;
     }
     return <field.javaDefaultValue>;
 }
+<endif>
 
 public boolean <field.javaHasMethodName>() {
     return <field.oneof.javaCaseFieldName> == <field.oneof.javaName>.<field.javaOneofConstantName>;
@@ -132,6 +118,27 @@ public <field.javaMapValueType> <field.javaMapGetByKeyMethodName>(<field.javaMap
     return <field.javaName>.get(key);
 }
 <elseif(field.repeated)>
+<if(field.type.enum)>
+public <field.javaRepeatedType> <field.javaRepeatedGetterName>() {
+    return new io.protostuff.ListAdapter\<>(<field.javaName>, <field.javaType>::valueOf);
+}
+
+public <field.javaType> <field.javaRepeatedGetByIndexMethodName>(int index) {
+    return <field.javaType>.valueOf(<field.javaName>.get(index));
+}
+
+public java.util.List\<Integer> <field.javaRepeatedEnumValueGetterName>() {
+    return <field.javaName>;
+}
+
+public int <field.javaRepeatedEnumValueGetterByIndexName>(int index) {
+    return <field.javaName>.get(index);
+}
+
+public int <field.javaRepeatedGetCountMethodName>() {
+    return <field.javaName>.size();
+}
+<else>
 public <field.javaRepeatedType> <field.javaRepeatedGetterName>() {
     return <field.javaName>;
 }
@@ -142,6 +149,19 @@ public int <field.javaRepeatedGetCountMethodName>() {
 
 public <field.javaType> <field.javaRepeatedGetByIndexMethodName>(int index) {
     return <field.javaName>.get(index);
+}
+<endif>
+<elseif(field.type.enum)>
+public <field.javaType> <field.javaGetterName>() {
+    return <field.javaType>.valueOf(<field.javaName>);
+}
+
+public int <field.javaEnumValueGetterName>() {
+    return <field.javaName>;
+}
+
+public boolean <field.javaHasMethodName>() {
+    return (<field.javaBitFieldName> & <field.javaBitFieldMask>) == <field.javaBitFieldMask>;
 }
 <else>
 public <field.javaType> <field.javaGetterName>() {

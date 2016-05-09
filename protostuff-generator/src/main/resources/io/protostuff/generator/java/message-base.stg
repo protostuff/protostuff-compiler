@@ -1,15 +1,21 @@
 delimiters "<", ">"
 
-field_declaration(field) ::= <%
+field_declaration(field) ::= <<
 <if(field.oneofPart)>
 <elseif(field.map)>
 private <field.javaMapType> <field.javaName>;
 <elseif(field.repeated)>
+<if(field.type.enum)>
+private java.util.List\<Integer> <field.javaName>;
+<else>
 private <field.javaRepeatedType> <field.javaName>;
+<endif>
+<elseif(field.type.enum)>
+private int <field.javaName>;
 <else>
 private <field.javaType> <field.javaName>;
 <endif>
-%>
+>>
 
 oneof_case(oneOf) ::= <<
 public <oneOf.javaName> <oneOf.javaCaseGetterName>() {
@@ -32,6 +38,8 @@ this.<field.javaName> = java.util.Collections.emptyMap();
 <elseif(field.repeated)>
 this.<field.javaName> = java.util.Collections.emptyList();
 <elseif(field.oneofPart)>
+<elseif(field.type.enum)>
+this.<field.javaName> = 0;
 <else>
 this.<field.javaName> = <field.javaDefaultValue>;
 <endif>
@@ -82,4 +90,37 @@ public String toString() {
     <message.fields:field_toString_part()>
     return "<message.javaName>{" + String.join(", ", parts) + "}";
 }
+>>
+
+
+field_equals_part(field) ::= <<
+<if(!field.oneofPart)>
+if (!java.util.Objects.equals(this.<field.javaName>, that.<field.javaName>)) {
+    return false;
+}
+<endif>
+>>
+
+oneof_field_equals_part(oneof) ::= <<
+if (!(java.util.Objects.equals(this.<oneof.javaCaseFieldName>, that.<oneof.javaCaseFieldName>)
+        && java.util.Objects.equals(this.<oneof.javaFieldName>, that.<oneof.javaFieldName>))) {
+    return false;
+}
+>>
+
+field_hashCode_part(field) ::= <<
+<if(!field.oneofPart)>
+<if(!field.repeated && (field.javaIsNumericType || field.javaIsBooleanType))>
+result = 31 * result + <field.type.javaWrapperType>.hashCode(this.<field.javaName>);
+<elseif(!field.repeated && field.type.enum)>
+result = 31 * result + Integer.hashCode(this.<field.javaName>);
+<else>
+result = 31 * result + (this.<field.javaName> == null ? 0 : this.<field.javaName>.hashCode());
+<endif>
+<endif>
+>>
+
+oneof_field_hashCode_part(oneof) ::= <<
+result = 31 * result + this.<oneof.javaCaseFieldName>.hashCode();
+result = 31 * result + (this.<oneof.javaFieldName> == null ? 0 : this.<oneof.javaFieldName>.hashCode());
 >>

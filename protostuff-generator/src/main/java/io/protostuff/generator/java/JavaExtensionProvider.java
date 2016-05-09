@@ -30,11 +30,20 @@ public class JavaExtensionProvider extends AbstractExtensionProvider {
         registerProperty(Field.class, "javaGetterName", MessageFieldUtil::getFieldGetterName);
         registerProperty(Field.class, "javaSetterName", MessageFieldUtil::getFieldSetterName);
         registerProperty(Field.class, "javaCleanerName", MessageFieldUtil::getFieldCleanerName);
+        registerProperty(Field.class, "javaEnumValueGetterName", MessageFieldUtil::getEnumFieldValueGetterName);
+        registerProperty(Field.class, "javaEnumValueSetterName", MessageFieldUtil::getEnumFieldValueSetterName);
 
         registerProperty(Field.class, "javaRepeatedGetterName", MessageFieldUtil::getRepeatedFieldGetterName);
+        registerProperty(Field.class, "javaRepeatedEnumConverterName", MessageFieldUtil::getRepeatedEnumConverterName);
         registerProperty(Field.class, "javaRepeatedSetterName", MessageFieldUtil::getRepeatedFieldSetterName);
         registerProperty(Field.class, "javaRepeatedAdderName", MessageFieldUtil::getRepeatedFieldAdderName);
         registerProperty(Field.class, "javaRepeatedAddAllName", MessageFieldUtil::getRepeatedFieldAddAllName);
+        registerProperty(Field.class, "javaRepeatedEnumValueSetterName", MessageFieldUtil::getRepeatedEnumValueSetterName);
+        registerProperty(Field.class, "javaRepeatedEnumValueAdderName", MessageFieldUtil::getRepeatedEnumValueAdderName);
+        registerProperty(Field.class, "javaRepeatedEnumValueAddAllName", MessageFieldUtil::getRepeatedEnumValueAddAllName);
+        registerProperty(Field.class, "javaRepeatedEnumValueGetterName", MessageFieldUtil::getRepeatedEnumFieldValueGetterName);
+        registerProperty(Field.class, "javaRepeatedEnumValueGetterByIndexName", MessageFieldUtil::javaRepeatedEnumValueGetterByIndexName);
+
         registerProperty(Field.class, "javaRepeatedGetCountMethodName", MessageFieldUtil::repeatedGetCountMethodName);
         registerProperty(Field.class, "javaRepeatedGetByIndexMethodName", MessageFieldUtil::repeatedGetByIndexMethodName);
 

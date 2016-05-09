@@ -19,7 +19,7 @@
         <antlr4.version>4.5</antlr4.version>
         <guice.version>4.0</guice.version>
         <guava.version>18.0</guava.version>
-        <protostuff.version>1.4.0</protostuff.version>
+        <protostuff.version>1.4.2</protostuff.version>
     </properties>
 
     <developers>

@@ -1,10 +1,9 @@
 package io.protostuff.it;
 
 import io.protostuff.*;
-import io.protostuff.it.message_test.SimpleMessage;
-import io.protostuff.it.message_test.TestMap;
-import io.protostuff.it.message_test.TestMessage;
-import io.protostuff.it.message_test.TestOneof;
+import io.protostuff.it.enum_test.NestedEnum;
+import io.protostuff.it.enum_test.ParentEnumMsg;
+import io.protostuff.it.message_test.*;
 import io.protostuff.it.scalar_test.ScalarFieldTestMsg;
 import org.junit.Assert;
 import org.junit.Test;
@@ -111,6 +110,7 @@ public class MessageSerializationTest {
     public void testOneof_serialization_deserialization() throws Exception {
         TestOneof a = TestOneof.newBuilder()
                 .setFooString("abra")
+                .setMapEnum(MapEnum.MAP_ENUM_BAZ)
                 .build();
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         ProtobufIOUtil.writeTo(stream, a, TestOneof.getSchema(), LinkedBuffer.allocate());
@@ -118,6 +118,26 @@ public class MessageSerializationTest {
         TestOneof newInstance = TestOneof.getSchema().newMessage();
         ProtobufIOUtil.mergeFrom(bytes, newInstance, TestOneof.getSchema());
         Assert.assertEquals(a, newInstance);
+    }
+
+    @Test
+    public void testEnum_serialization_deserialization() throws Exception {
+        ParentEnumMsg a = ParentEnumMsg.newBuilder()
+                .setFirst(NestedEnum.HUNDRED)
+                .addNestedRepeatedEnum(NestedEnum.FIRST)
+                .addNestedRepeatedEnum(NestedEnum.FIRST)
+                .addNestedRepeatedEnum(NestedEnum.SECOND)
+                .build();
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        ProtobufIOUtil.writeTo(stream, a, ParentEnumMsg.getSchema(), LinkedBuffer.allocate());
+        byte[] bytes = stream.toByteArray();
+        ParentEnumMsg newInstance = ParentEnumMsg.getSchema().newMessage();
+        ProtobufIOUtil.mergeFrom(bytes, newInstance, ParentEnumMsg.getSchema());
+        Assert.assertEquals(a, newInstance);
+        Assert.assertEquals(NestedEnum.HUNDRED, newInstance.getFirst());
+        Assert.assertEquals(NestedEnum.FIRST, newInstance.getNestedRepeatedEnum(0));
+        Assert.assertEquals(NestedEnum.FIRST, newInstance.getNestedRepeatedEnum(1));
+        Assert.assertEquals(NestedEnum.SECOND, newInstance.getNestedRepeatedEnum(2));
     }
 
     @Test
