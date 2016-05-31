@@ -113,4 +113,13 @@ public class EnumTest {
         Assert.assertEquals(42, msg.getNestedRepeatedEnumValue(0));
     }
 
+    @Test
+    public void ordinals() throws Exception {
+        Assert.assertEquals(0, NestedEnum.ZERO.ordinal());
+        Assert.assertEquals(1, NestedEnum.FIRST.ordinal());
+        Assert.assertEquals(2, NestedEnum.SECOND.ordinal());
+        Assert.assertEquals(3, NestedEnum.HUNDRED.ordinal());
+        // Unrecognized goes last
+        Assert.assertEquals(4, NestedEnum.UNRECOGNIZED.ordinal());
+    }
 }
