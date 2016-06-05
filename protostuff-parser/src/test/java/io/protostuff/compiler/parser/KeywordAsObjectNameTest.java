@@ -16,7 +16,7 @@ public class KeywordAsObjectNameTest {
         String input = "message message{}";
         ProtoParser parser = createParser(input);
         ProtoParser.MessageBlockContext context = parser.messageBlock();
-        Assert.assertEquals("message", context.name().getText());
+        Assert.assertEquals("message", context.messageName().getText());
     }
 
     @Test
@@ -24,15 +24,15 @@ public class KeywordAsObjectNameTest {
         String input = "enum enum{}";
         ProtoParser parser = createParser(input);
         ProtoParser.EnumBlockContext context = parser.enumBlock();
-        Assert.assertEquals("enum", context.name().getText());
+        Assert.assertEquals("enum", context.enumName().getText());
     }
 
     @Test
     public void enumConstantNamedEnum() {
         String input = "enum = 1;";
         ProtoParser parser = createParser(input);
-        ProtoParser.EnumConstantContext context = parser.enumConstant();
-        Assert.assertEquals("enum", context.name().getText());
+        ProtoParser.EnumFieldContext context = parser.enumField();
+        Assert.assertEquals("enum", context.enumFieldName().getText());
     }
 
     @Test
@@ -40,7 +40,7 @@ public class KeywordAsObjectNameTest {
         String input = "optional int32 message = 1;";
         ProtoParser parser = createParser(input);
         ProtoParser.FieldContext context = parser.field();
-        Assert.assertEquals("message", context.name().getText());
+        Assert.assertEquals("message", context.fieldName().getText());
     }
 
     private ProtoParser createParser(String input) {

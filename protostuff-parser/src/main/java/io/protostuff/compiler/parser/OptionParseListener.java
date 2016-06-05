@@ -56,8 +56,8 @@ public class OptionParseListener extends AbstractProtoParserListener {
             String text = optionValueContext.STRING_VALUE().getText();
             // TODO: unescape
             optionValue = DynamicMessage.Value.createString(sourceCodeLocation, Util.removeFirstAndLastChar(text));
-        } else if (optionValueContext.NAME() != null) {
-            String text = optionValueContext.NAME().getText();
+        } else if (optionValueContext.IDENT() != null) {
+            String text = optionValueContext.IDENT().getText();
             optionValue = DynamicMessage.Value.createEnum(sourceCodeLocation, text);
         } else if (optionValueContext.FLOAT_VALUE() != null) {
             String text = optionValueContext.FLOAT_VALUE().getText();
@@ -119,7 +119,7 @@ public class OptionParseListener extends AbstractProtoParserListener {
     @Override
     public void exitTextFormatEntry(ProtoParser.TextFormatEntryContext ctx) {
         String optionName;
-        if (ctx.textFormatOptionName().name() != null) {
+        if (ctx.textFormatOptionName().ident() != null) {
             // standard option key
             optionName = ctx.textFormatOptionName().getText();
         } else {
@@ -146,8 +146,8 @@ public class OptionParseListener extends AbstractProtoParserListener {
             String text = ctx.textFormatOptionValue().STRING_VALUE().getText();
             // TODO: unescape
             optionValue = DynamicMessage.Value.createString(sourceCodeLocation, Util.removeFirstAndLastChar(text));
-        } else if (ctx.textFormatOptionValue().NAME() != null) {
-            String text = ctx.textFormatOptionValue().NAME().getText();
+        } else if (ctx.textFormatOptionValue().IDENT() != null) {
+            String text = ctx.textFormatOptionValue().IDENT().getText();
             optionValue = DynamicMessage.Value.createEnum(sourceCodeLocation, text);
         } else if (ctx.textFormatOptionValue().FLOAT_VALUE() != null) {
             String text = ctx.textFormatOptionValue().FLOAT_VALUE().getText();

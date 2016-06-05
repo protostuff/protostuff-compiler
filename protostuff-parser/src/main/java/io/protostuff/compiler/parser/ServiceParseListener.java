@@ -27,7 +27,7 @@ public class ServiceParseListener extends AbstractProtoParserListener {
     public void exitServiceBlock(ProtoParser.ServiceBlockContext ctx) {
         Service service = context.pop(Service.class);
         Proto proto = context.peek(Proto.class);
-        String name = ctx.name().getText();
+        String name = ctx.serviceName().getText();
         service.setName(name);
         service.setSourceCodeLocation(getSourceCodeLocation(ctx));
         proto.addService(service);
@@ -45,7 +45,7 @@ public class ServiceParseListener extends AbstractProtoParserListener {
     public void exitRpcMethod(ProtoParser.RpcMethodContext ctx) {
         ServiceMethod method = context.pop(ServiceMethod.class);
         Service service = context.peek(Service.class);
-        String name = ctx.name().getText();
+        String name = ctx.rpcName().getText();
         String arg = ctx.rpcType(0).typeReference().getText();
         boolean argStream = ctx.rpcType(0).STREAM() != null;
         String ret = ctx.rpcType(1).typeReference().getText();

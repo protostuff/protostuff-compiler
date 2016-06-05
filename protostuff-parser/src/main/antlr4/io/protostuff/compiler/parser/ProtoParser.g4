@@ -23,7 +23,7 @@ packageStatement
     : PACKAGE packageName SEMICOLON
     ;
 packageName
-    : name (DOT name)*
+    : fullIdent
     ;
 importStatement
     : IMPORT PUBLIC? STRING_VALUE SEMICOLON
@@ -32,10 +32,16 @@ optionEntry
     : OPTION option SEMICOLON
     ;
 enumBlock
-    : ENUM name LCURLY (enumConstant | optionEntry)* RCURLY SEMICOLON?
+    : ENUM enumName LCURLY (enumField | optionEntry)* RCURLY SEMICOLON?
     ;
-enumConstant
-    : name ASSIGN INTEGER_VALUE fieldOptions? SEMICOLON
+enumName
+    : ident
+    ;
+enumField
+    : enumFieldName ASSIGN INTEGER_VALUE fieldOptions? SEMICOLON
+    ;
+enumFieldName
+    : ident
     ;
 extendBlock
     : EXTEND typeReference LCURLY extendBlockEntry* RCURLY SEMICOLON?
@@ -45,17 +51,23 @@ extendBlockEntry
     | groupBlock
     ;
 serviceBlock
-    : SERVICE name LCURLY (rpcMethod | optionEntry)* RCURLY SEMICOLON?
+    : SERVICE serviceName LCURLY (rpcMethod | optionEntry)* RCURLY SEMICOLON?
+    ;
+serviceName
+    : ident
     ;
 rpcMethod
-    : RPC name LPAREN rpcType  RPAREN
+    : RPC rpcName LPAREN rpcType  RPAREN
       RETURNS LPAREN rpcType RPAREN (LCURLY optionEntry* RCURLY)? SEMICOLON?
+    ;
+rpcName
+    : ident
     ;
 rpcType
     : STREAM? typeReference
     ;
 messageBlock
-    : MESSAGE name LCURLY
+    : MESSAGE messageName LCURLY
         (field
         | optionEntry
         | messageBlock
@@ -68,14 +80,20 @@ messageBlock
         | reserved)*
    RCURLY SEMICOLON?
     ;
+messageName
+    : ident
+    ;
 oneof
-    : ONEOF name LCURLY (oneofField | oneofGroup)* RCURLY SEMICOLON?
+    : ONEOF oneofName LCURLY (oneofField | oneofGroup)* RCURLY SEMICOLON?
+    ;
+oneofName
+    : ident
     ;
 oneofField
-    : typeReference name ASSIGN INTEGER_VALUE fieldOptions? SEMICOLON
+    : typeReference fieldName ASSIGN INTEGER_VALUE fieldOptions? SEMICOLON
     ;
 oneofGroup
-    : GROUP name ASSIGN INTEGER_VALUE LCURLY
+    : GROUP fieldName ASSIGN INTEGER_VALUE LCURLY
         (field
         | optionEntry
         | messageBlock
@@ -86,7 +104,7 @@ oneofGroup
     RCURLY SEMICOLON?
     ;
 map
-    : MAP LT mapKey COMMA mapValue GT name ASSIGN tag fieldOptions? SEMICOLON
+    : MAP LT mapKey COMMA mapValue GT fieldName ASSIGN tag fieldOptions? SEMICOLON
     ;
 mapKey
     : INT32
@@ -109,7 +127,7 @@ tag
     : INTEGER_VALUE
     ;
 groupBlock
-    : fieldModifier GROUP name ASSIGN INTEGER_VALUE LCURLY
+    : fieldModifier GROUP groupName ASSIGN INTEGER_VALUE LCURLY
         (field
         | optionEntry
         | messageBlock
@@ -119,7 +137,9 @@ groupBlock
         | groupBlock)*
     RCURLY SEMICOLON?
     ;
-
+groupName
+    : ident
+    ;
 extensions
     : EXTENSIONS ranges SEMICOLON
     ;
@@ -133,13 +153,16 @@ reserved
     : RESERVED (ranges | fieldNames) SEMICOLON
     ;
 fieldNames
-    : fieldName (COMMA fieldName)*
+    : fieldNameString (COMMA fieldNameString)*
     ;
-fieldName
+fieldNameString
     : STRING_VALUE
     ;
 field
-    : fieldModifier? typeReference name ASSIGN INTEGER_VALUE fieldOptions? SEMICOLON
+    : fieldModifier? typeReference fieldName ASSIGN INTEGER_VALUE fieldOptions? SEMICOLON
+    ;
+fieldName
+    : ident
     ;
 fieldModifier
     : OPTIONAL
@@ -162,7 +185,7 @@ typeReference
     | BOOL
     | STRING
     | BYTES
-    | DOT? name (DOT name)*
+    | DOT? ident (DOT ident)*
     ;
 fieldOptions
     : LSQUARE (option (COMMA option)* )? RSQUARE
@@ -171,7 +194,7 @@ option
     : optionName ASSIGN optionValue
     ;
 optionName
-    : name (DOT name)*
+    : ident (DOT ident)*
     | LPAREN typeReference RPAREN (DOT optionName)*    
     ;
 optionValue
@@ -179,14 +202,14 @@ optionValue
     | FLOAT_VALUE
     | BOOLEAN_VALUE
     | STRING_VALUE
-    | NAME
+    | IDENT
     | textFormat
     ;
 textFormat
     : LCURLY textFormatEntry* RCURLY
     ;
 textFormatOptionName
-    : name
+    : ident
     | LSQUARE typeReference RSQUARE
     ;
 textFormatEntry
@@ -198,10 +221,13 @@ textFormatOptionValue
     | FLOAT_VALUE
     | BOOLEAN_VALUE
     | STRING_VALUE
-    | NAME
+    | IDENT
     ;
-name
-    : NAME
+fullIdent
+    : ident (DOT ident)*
+    ;
+ident
+    : IDENT
     | PACKAGE
     | SYNTAX
     | IMPORT

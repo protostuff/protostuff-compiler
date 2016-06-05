@@ -37,7 +37,7 @@ public class MessageParseListener extends AbstractProtoParserListener {
     public void exitMessageBlock(ProtoParser.MessageBlockContext ctx) {
         Message message = context.pop(Message.class);
         MessageContainer container = context.peek(MessageContainer.class);
-        String name = ctx.name().getText();
+        String name = ctx.messageName().getText();
         message.setName(name);
         message.setSourceCodeLocation(getSourceCodeLocation(ctx));
         container.addMessage(message);
@@ -56,7 +56,7 @@ public class MessageParseListener extends AbstractProtoParserListener {
         }
         ProtoParser.FieldNamesContext fieldNamesContext = ctx.fieldNames();
         if (fieldNamesContext != null) {
-            for (ProtoParser.FieldNameContext fieldNameContext : fieldNamesContext.fieldName()) {
+            for (ProtoParser.FieldNameStringContext fieldNameContext : fieldNamesContext.fieldNameString()) {
                 String fieldName = fieldNameContext.getText();
                 fieldName = Util.removeFirstAndLastChar(fieldName);
                 message.addReservedFieldName(fieldName);
@@ -75,7 +75,7 @@ public class MessageParseListener extends AbstractProtoParserListener {
     public void exitField(ProtoParser.FieldContext ctx) {
         Field field = context.pop(Field.class);
         FieldContainer fieldContainer = context.peek(FieldContainer.class);
-        String name = ctx.name().getText();
+        String name = ctx.fieldName().getText();
         String type = ctx.typeReference().getText();
         Integer tag = Integer.decode(ctx.INTEGER_VALUE().getText());
         updateModifier(ctx.fieldModifier(), field);
@@ -123,7 +123,7 @@ public class MessageParseListener extends AbstractProtoParserListener {
     @Override
     public void exitGroupBlock(ProtoParser.GroupBlockContext ctx) {
         Group group = context.pop(Group.class);
-        group.setName(ctx.name().getText());
+        group.setName(ctx.groupName().getText());
         group.setSourceCodeLocation(getSourceCodeLocation(ctx));
         GroupContainer groupContainer = context.peek(GroupContainer.class);
         FieldContainer fieldContainer = context.peek(FieldContainer.class);
@@ -151,7 +151,7 @@ public class MessageParseListener extends AbstractProtoParserListener {
     public void exitOneof(ProtoParser.OneofContext ctx) {
         Oneof oneof = context.pop(Oneof.class);
         Message message = context.peek(Message.class);
-        oneof.setName(ctx.name().getText());
+        oneof.setName(ctx.oneofName().getText());
         oneof.setSourceCodeLocation(getSourceCodeLocation(ctx));
         message.addOneof(oneof);
         attachComments(ctx, oneof, false);
@@ -171,7 +171,7 @@ public class MessageParseListener extends AbstractProtoParserListener {
         Field field = context.pop(Field.class);
         Oneof oneOf = context.peek(Oneof.class);
         Message message = oneOf.getParent();
-        String name = ctx.name().getText();
+        String name = ctx.fieldName().getText();
         String type = ctx.typeReference().getText();
         Integer tag = Integer.decode(ctx.INTEGER_VALUE().getText());
         field.setName(name);
@@ -210,7 +210,7 @@ public class MessageParseListener extends AbstractProtoParserListener {
     public void exitMap(ProtoParser.MapContext ctx) {
         Field field = context.pop(Field.class);
         Message message = context.peek(Message.class);
-        String name = ctx.name().getText();
+        String name = ctx.fieldName().getText();
         String keyTypeName = ctx.mapKey().getText();
         String valueTypeName = ctx.mapValue().getText();
         SourceCodeLocation codeLocation = getSourceCodeLocation(ctx);
