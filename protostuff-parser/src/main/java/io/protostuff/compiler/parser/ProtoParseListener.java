@@ -89,7 +89,7 @@ public class ProtoParseListener extends AbstractProtoParserListener {
     @Override
     public void exitImportStatement(ProtoParser.ImportStatementContext ctx) {
         Proto proto = context.peek(Proto.class);
-        String text = ctx.STRING_VALUE().getText();
+        String text = ctx.fileReference().getText();
         String fileName = Util.removeFirstAndLastChar(text);
         Import anImport = new Import(proto, fileName, ctx.PUBLIC() != null);
         anImport.setSourceCodeLocation(getSourceCodeLocation(ctx));

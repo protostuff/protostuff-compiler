@@ -26,7 +26,10 @@ packageName
     : fullIdent
     ;
 importStatement
-    : IMPORT PUBLIC? STRING_VALUE SEMICOLON
+    : IMPORT PUBLIC? fileReference SEMICOLON
+    ;
+fileReference
+    : STRING_VALUE
     ;
 optionEntry
     : OPTION option SEMICOLON
