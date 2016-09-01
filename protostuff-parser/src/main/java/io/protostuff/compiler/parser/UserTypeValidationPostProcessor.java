@@ -1,9 +1,8 @@
 package io.protostuff.compiler.parser;
 
 import com.google.common.annotations.VisibleForTesting;
-import io.protostuff.compiler.model.Field;
-import io.protostuff.compiler.model.Message;
-import io.protostuff.compiler.model.Range;
+import io.protostuff.compiler.model.*;
+import io.protostuff.compiler.model.Enum;
 
 import java.util.*;
 
@@ -12,6 +11,7 @@ import java.util.*;
  */
 public class UserTypeValidationPostProcessor implements ProtoContextPostProcessor {
 
+    public static final String ALLOW_ALIAS = "allow_alias";
     private final int MIN_TAG = 1;
     private final int MAX_TAG = Field.MAX_TAG_VALUE;
     private final int SYS_RESERVED_START = 19000;
@@ -21,19 +21,55 @@ public class UserTypeValidationPostProcessor implements ProtoContextPostProcesso
     public void process(ProtoContext context) {
         ProtoWalker.newInstance(context)
                 .onMessage(this::processMessage)
+                .onEnum(this::processEnum)
                 .walk();
+    }
+
+    private void processEnum(ProtoContext context, Enum anEnum) {
+        List<EnumConstant> constants = anEnum.getConstants();
+        checkDuplicateEnumConstantNames(constants);
+        checkDuplicateEnumConstantValues(anEnum, constants);
+    }
+
+    private void checkDuplicateEnumConstantValues(Enum anEnum, List<EnumConstant> constants) {
+        DynamicMessage.Value allowAlias = anEnum.getOptions().get(ALLOW_ALIAS);
+        if (allowAlias != null
+                && allowAlias.isBooleanType()
+                && allowAlias.getBoolean()) {
+            // skip this check if aliases are allowed
+            return;
+        }
+        Map<Integer, EnumConstant> constantByValue = new HashMap<>();
+        for (EnumConstant constant : constants) {
+            Integer value = constant.getValue();
+            if (constantByValue.containsKey(value)) {
+                throw new ParserException(constant, "Duplicate enum constant value: %d", value);
+            }
+            constantByValue.put(value, constant);
+        }
+    }
+
+    private void checkDuplicateEnumConstantNames(List<EnumConstant> constants) {
+        Map<String, EnumConstant> constantByName = new HashMap<>();
+        for (EnumConstant constant : constants) {
+            String name = constant.getName();
+            if (constantByName.containsKey(name)) {
+                throw new ParserException(constant, "Duplicate enum constant name: '%s'", name);
+            }
+            constantByName.put(name, constant);
+        }
     }
 
     private void processMessage(ProtoContext context, Message message) {
         List<Field> fields = message.getFields();
-        checkInvalidTags(fields);
-        checkDuplicateTags(fields);
-        checkDuplicateNames(fields);
-        checkReservedTags(message, fields);
-        checkReservedNames(message, fields);
+        checkInvalidFieldTags(fields);
+        checkDuplicateFieldTags(fields);
+        checkDuplicateFieldNames(fields);
+        checkReservedFieldTags(message, fields);
+        checkReservedFieldNames(message, fields);
     }
 
-    private void checkReservedTags(Message message, List<Field> fields) {
+    private void checkReservedFieldTags(Message message, List<Field> fields) {
         List<Range> ranges = message.getReservedFieldRanges();
         for (Field field : fields) {
             int tag = field.getTag();
@@ -45,7 +81,7 @@ public class UserTypeValidationPostProcessor implements ProtoContextPostProcesso
         }
     }
 
-    private void checkReservedNames(Message message, List<Field> fields) {
+    private void checkReservedFieldNames(Message message, List<Field> fields) {
         Set<String> names = new HashSet<>(message.getReservedFieldNames());
         for (Field field : fields) {
             String name = field.getName();
@@ -55,7 +91,7 @@ public class UserTypeValidationPostProcessor implements ProtoContextPostProcesso
         }
     }
 
-    private void checkInvalidTags(List<Field> fields) {
+    private void checkInvalidFieldTags(List<Field> fields) {
         for (Field field : fields) {
             int tag = field.getTag();
             if (!isValidTagValue(tag)) {
@@ -71,7 +107,7 @@ public class UserTypeValidationPostProcessor implements ProtoContextPostProcesso
                 && !(tag >= SYS_RESERVED_START && tag <= SYS_RESERVED_END);
     }
 
-    private void checkDuplicateTags(List<Field> fields) {
+    private void checkDuplicateFieldTags(List<Field> fields) {
         Map<Integer, Field> fieldByTag = new HashMap<>();
         for (Field field : fields) {
             int tag = field.getTag();
@@ -82,7 +118,7 @@ public class UserTypeValidationPostProcessor implements ProtoContextPostProcesso
         }
     }
 
-    private void checkDuplicateNames(List<Field> fields) {
+    private void checkDuplicateFieldNames(List<Field> fields) {
         Map<String, Field> fieldByName = new HashMap<>();
         for (Field field : fields) {
             String name = field.getName();
