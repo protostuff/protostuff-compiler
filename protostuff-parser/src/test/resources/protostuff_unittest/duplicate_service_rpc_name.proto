@@ -1,0 +1,11 @@
+syntax = "proto2";
+
+package protostuff_unittest;
+
+service A {
+    rpc action (M) returns (M);
+    rpc action (M) returns (M);
+}
+
+message M {
+}

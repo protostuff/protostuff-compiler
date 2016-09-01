@@ -22,7 +22,24 @@ public class UserTypeValidationPostProcessor implements ProtoContextPostProcesso
         ProtoWalker.newInstance(context)
                 .onMessage(this::processMessage)
                 .onEnum(this::processEnum)
+                .onService(this::processService)
                 .walk();
+    }
+
+    private void processService(ProtoContext context, Service service) {
+        List<ServiceMethod> methods = service.getMethods();
+        checkDuplicateServiceMethodNames(methods);
+    }
+
+    private void checkDuplicateServiceMethodNames(List<ServiceMethod> methods) {
+        Map<String, ServiceMethod> methodsByName = new HashMap<>();
+        for (ServiceMethod method : methods) {
+            String name = method.getName();
+            if (methodsByName.containsKey(name)) {
+                throw new ParserException(method, "Duplicate service method name: '%s'", name);
+            }
+            methodsByName.put(name, method);
+        }
     }
 
     private void processEnum(ProtoContext context, Enum anEnum) {
