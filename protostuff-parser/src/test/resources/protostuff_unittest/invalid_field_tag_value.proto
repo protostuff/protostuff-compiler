@@ -1,0 +1,8 @@
+syntax = "proto2";
+
+package protostuff_unittest;
+
+message A {
+    // reserved for internal protobuf usage
+    optional int32 x = 19001;
+}

@@ -42,4 +42,12 @@ public class ServiceTest extends AbstractParserTest {
                 "[protostuff_unittest/services_bad_return_type.proto:7]");
         importer.importFile(new ClasspathFileReader(), "protostuff_unittest/services_bad_return_type.proto");
     }
+
+    @Test
+    public void duplicateMethodName() throws Exception {
+        thrown.expect(ParserException.class);
+        thrown.expectMessage("Duplicate service method name: 'action' " +
+                "[protostuff_unittest/duplicate_service_rpc_name.proto:7]");
+        importer.importFile(new ClasspathFileReader(), "protostuff_unittest/duplicate_service_rpc_name.proto");
+    }
 }

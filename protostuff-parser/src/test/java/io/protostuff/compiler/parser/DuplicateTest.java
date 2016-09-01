@@ -28,11 +28,12 @@ public class DuplicateTest {
     }
 
     @Test
-    public void duplicate() throws Exception {
+    public void duplicate_type() throws Exception {
         Importer importer = injector.getInstance(Importer.class);
         thrown.expect(ParserException.class);
         thrown.expectMessage("Cannot register duplicate type: .protostuff_unittest.A " +
                 "[protostuff_unittest/duplicate.proto:9]");
         importer.importFile(new ClasspathFileReader(), "protostuff_unittest/duplicate.proto");
     }
+
 }

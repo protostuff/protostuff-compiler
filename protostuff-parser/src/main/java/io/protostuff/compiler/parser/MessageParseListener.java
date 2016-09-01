@@ -17,7 +17,6 @@ import static io.protostuff.compiler.model.FieldModifier.REQUIRED;
  */
 public class MessageParseListener extends AbstractProtoParserListener {
 
-    public static final String MAX = "max";
     public static final String OPTION_MAP_ENTRY = ".google.protobuf.map_entry";
     public static final String MAP_ENTRY_KEY = "key";
     public static final String MAP_ENTRY_VALUE = "value";
@@ -77,7 +76,7 @@ public class MessageParseListener extends AbstractProtoParserListener {
         FieldContainer fieldContainer = context.peek(FieldContainer.class);
         String name = ctx.fieldName().getText();
         String type = ctx.typeReference().getText();
-        Integer tag = Integer.decode(ctx.INTEGER_VALUE().getText());
+        Integer tag = Integer.decode(ctx.tag().getText());
         updateModifier(ctx.fieldModifier(), field);
         field.setName(name);
         field.setTag(tag);
@@ -129,7 +128,7 @@ public class MessageParseListener extends AbstractProtoParserListener {
         FieldContainer fieldContainer = context.peek(FieldContainer.class);
         Field field = new Field(fieldContainer);
         field.setName(group.getName().toLowerCase()); // same behavior as in protoc
-        int tag = Integer.decode(ctx.INTEGER_VALUE().getText());
+        int tag = Integer.decode(ctx.tag().getText());
         field.setTag(tag);
         field.setIndex(fieldContainer.getFieldCount()+1);
         field.setTypeName(group.getName());
@@ -173,7 +172,7 @@ public class MessageParseListener extends AbstractProtoParserListener {
         Message message = oneOf.getParent();
         String name = ctx.fieldName().getText();
         String type = ctx.typeReference().getText();
-        Integer tag = Integer.decode(ctx.INTEGER_VALUE().getText());
+        Integer tag = Integer.decode(ctx.tag().getText());
         field.setName(name);
         field.setTag(tag);
         field.setIndex(message.getFieldCount()+1);
@@ -271,19 +270,17 @@ public class MessageParseListener extends AbstractProtoParserListener {
     private List<Range> getRanges(Message message, ProtoParser.RangesContext ranges) {
         List<Range> result = new ArrayList<>();
         for (ProtoParser.RangeContext rangeContext :  ranges.range()) {
-            TerminalNode fromNode = rangeContext.INTEGER_VALUE(0);
-            TerminalNode toNode = rangeContext.INTEGER_VALUE(1);
-            if (toNode == null) {
-                toNode = rangeContext.MAX();
-            }
+            ProtoParser.RangeFromContext fromNode = rangeContext.rangeFrom();
+            ProtoParser.RangeToContext toNode = rangeContext.rangeTo();
+            TerminalNode maxNode = rangeContext.MAX();
             int from = Integer.decode(fromNode.getText());
             int to;
-            if (toNode == null) {
-                to = from;
-            } else if (MAX.equals(toNode.getText())) {
+            if (toNode != null) {
+                to = Integer.decode(toNode.getText());
+            } else if (maxNode != null) {
                 to = Field.MAX_TAG_VALUE;
             } else {
-                to = Integer.decode(toNode.getText());
+                to = from;
             }
             Range range = new Range(message, from, to);
             range.setSourceCodeLocation(getSourceCodeLocation(rangeContext));

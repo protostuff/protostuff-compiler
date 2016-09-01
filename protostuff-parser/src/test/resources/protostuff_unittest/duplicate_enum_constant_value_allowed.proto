@@ -1,0 +1,9 @@
+syntax = "proto2";
+
+package protostuff_unittest;
+
+enum A {
+    option allow_alias = true;
+    X = 0;
+    Y = 0;
+}

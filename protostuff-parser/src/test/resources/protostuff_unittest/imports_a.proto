@@ -6,5 +6,5 @@ import "protostuff_unittest/imports_b.proto";
 
 message A {
     B b = 1;
-    C c = 1;
+    C c = 2;
 }

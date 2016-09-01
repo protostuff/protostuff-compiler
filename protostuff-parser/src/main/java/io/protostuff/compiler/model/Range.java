@@ -32,6 +32,10 @@ public class Range extends AbstractElement {
         return to;
     }
 
+    public boolean contains(int tag) {
+        return tag >= from && tag <= to;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

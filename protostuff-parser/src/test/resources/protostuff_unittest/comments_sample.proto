@@ -13,13 +13,14 @@ message Message {
     int32 c = 3 ; // another trailing field comment
 
     // leading map field comment
-    map<int32, int32> m1 = 3;
-    map<int32, int32> m2 = 4; // trailing map field comment
+    map<int32, int32> m1 = 4;
+    map<int32, int32> m2 = 5; // trailing map field comment
 
     // Oneof comment
     oneof Oneof {
         // leading oneof field comment
-        int32 x = 5; int32 y = 6; // trailing oneof field comment
+        int32 x = 6;
+        int32 y = 7; // trailing oneof field comment
     }
 }
 
