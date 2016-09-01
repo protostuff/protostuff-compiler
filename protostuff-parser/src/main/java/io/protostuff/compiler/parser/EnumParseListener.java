@@ -46,7 +46,7 @@ public class EnumParseListener extends AbstractProtoParserListener {
         EnumConstant enumConstant = context.pop(EnumConstant.class);
         Enum e = context.peek(Enum.class);
         String name = ctx.enumFieldName().getText();
-        int number = Integer.decode(ctx.INTEGER_VALUE().getText());
+        int number = Integer.decode(ctx.enumFieldValue().getText());
         enumConstant.setName(name);
         enumConstant.setValue(number);
         enumConstant.setSourceCodeLocation(getSourceCodeLocation(ctx));

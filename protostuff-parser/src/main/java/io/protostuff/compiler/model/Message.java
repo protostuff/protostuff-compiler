@@ -33,6 +33,9 @@ public class Message extends AbstractUserTypeContainer
         return DescriptorType.MESSAGE;
     }
 
+    /**
+     * Returns all fields in this message, including group fields and oneof fields.
+     */
     public List<Field> getFields() {
         if (fields == null) {
             return Collections.emptyList();

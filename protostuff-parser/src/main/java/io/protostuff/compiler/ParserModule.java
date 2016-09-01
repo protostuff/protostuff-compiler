@@ -5,26 +5,10 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.multibindings.Multibinder;
 import com.google.inject.name.Names;
 
+import io.protostuff.compiler.parser.*;
 import org.antlr.v4.runtime.ANTLRErrorListener;
 import org.antlr.v4.runtime.ANTLRErrorStrategy;
 import org.antlr.v4.runtime.BailErrorStrategy;
-
-import io.protostuff.compiler.parser.DefaultDescriptorProtoProvider;
-import io.protostuff.compiler.parser.ExtensionRegistratorPostProcessor;
-import io.protostuff.compiler.parser.FileDescriptorLoader;
-import io.protostuff.compiler.parser.FileDescriptorLoaderImpl;
-import io.protostuff.compiler.parser.FileReader;
-import io.protostuff.compiler.parser.FileReaderFactory;
-import io.protostuff.compiler.parser.Importer;
-import io.protostuff.compiler.parser.ImporterImpl;
-import io.protostuff.compiler.parser.ImportsPostProcessor;
-import io.protostuff.compiler.parser.OptionsPostProcessor;
-import io.protostuff.compiler.parser.ParseErrorLogger;
-import io.protostuff.compiler.parser.ProtoContext;
-import io.protostuff.compiler.parser.ProtoContextPostProcessor;
-import io.protostuff.compiler.parser.ProtoFileReader;
-import io.protostuff.compiler.parser.TypeRegistratorPostProcessor;
-import io.protostuff.compiler.parser.TypeResolverPostProcessor;
 
 import static io.protostuff.compiler.parser.DefaultDescriptorProtoProvider.DESCRIPTOR_PROTO;
 
@@ -50,6 +34,7 @@ public class ParserModule extends AbstractModule {
         postProcessors.addBinding().to(TypeResolverPostProcessor.class);
         postProcessors.addBinding().to(ExtensionRegistratorPostProcessor.class);
         postProcessors.addBinding().to(OptionsPostProcessor.class);
+        postProcessors.addBinding().to(UserTypeValidationPostProcessor.class);
 
         install(new FactoryModuleBuilder()
                 .implement(FileReader.class, ProtoFileReader.class)

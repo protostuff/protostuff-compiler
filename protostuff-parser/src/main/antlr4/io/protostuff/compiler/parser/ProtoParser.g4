@@ -41,10 +41,13 @@ enumName
     : ident
     ;
 enumField
-    : enumFieldName ASSIGN INTEGER_VALUE fieldOptions? SEMICOLON
+    : enumFieldName ASSIGN enumFieldValue fieldOptions? SEMICOLON
     ;
 enumFieldName
     : ident
+    ;
+enumFieldValue
+    : INTEGER_VALUE
     ;
 extendBlock
     : EXTEND typeReference LCURLY extendBlockEntry* RCURLY SEMICOLON?
@@ -93,10 +96,10 @@ oneofName
     : ident
     ;
 oneofField
-    : typeReference fieldName ASSIGN INTEGER_VALUE fieldOptions? SEMICOLON
+    : typeReference fieldName ASSIGN tag fieldOptions? SEMICOLON
     ;
 oneofGroup
-    : GROUP fieldName ASSIGN INTEGER_VALUE LCURLY
+    : GROUP fieldName ASSIGN tag LCURLY
         (field
         | optionEntry
         | messageBlock
@@ -130,7 +133,7 @@ tag
     : INTEGER_VALUE
     ;
 groupBlock
-    : fieldModifier GROUP groupName ASSIGN INTEGER_VALUE LCURLY
+    : fieldModifier GROUP groupName ASSIGN tag LCURLY
         (field
         | optionEntry
         | messageBlock
@@ -150,7 +153,13 @@ ranges
     : range (COMMA range)*
     ;
 range
-    : INTEGER_VALUE ( TO ( INTEGER_VALUE | MAX ) )?
+    : rangeFrom ( TO ( rangeTo | MAX ) )?
+    ;
+rangeFrom
+    : INTEGER_VALUE
+    ;
+rangeTo
+    : INTEGER_VALUE
     ;
 reserved
     : RESERVED (ranges | fieldNames) SEMICOLON
@@ -162,7 +171,7 @@ fieldNameString
     : STRING_VALUE
     ;
 field
-    : fieldModifier? typeReference fieldName ASSIGN INTEGER_VALUE fieldOptions? SEMICOLON
+    : fieldModifier? typeReference fieldName ASSIGN tag fieldOptions? SEMICOLON
     ;
 fieldName
     : ident
