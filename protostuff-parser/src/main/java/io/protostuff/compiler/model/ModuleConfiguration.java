@@ -49,6 +49,6 @@ public interface ModuleConfiguration {
     /**
      * Map of custom settings passed to the generator.
      */
-    Map<String, String> getOptions();
+    Map<String, Object> getOptions();
 
 }

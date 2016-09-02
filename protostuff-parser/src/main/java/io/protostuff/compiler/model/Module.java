@@ -17,6 +17,6 @@ public interface Module {
 
     String getOutput();
 
-    Map<String, String> getOptions();
+    Map<String, Object> getOptions();
 
 }

@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -132,7 +133,8 @@ public class ProtostuffCompilerCLI extends ProtostuffCompiler {
                 return;
             }
             if (cmd.hasOption(TEMPLATE)) {
-                builder.putOptions(CompilerModule.TEMPLATE_OPTION, cmd.getOptionValue(TEMPLATE));
+                List<String> templates = Collections.singletonList(cmd.getOptionValue(TEMPLATE));
+                builder.putOptions(CompilerModule.TEMPLATES_OPTION, templates);
             }
             if (cmd.hasOption(EXTENSIONS)) {
                 builder.putOptions(CompilerModule.EXTENSIONS_OPTION, cmd.getOptionValue(EXTENSIONS));

@@ -15,6 +15,9 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
 import static java.util.Collections.singletonList;
 import static org.apache.maven.plugins.annotations.LifecyclePhase.GENERATE_TEST_SOURCES;
@@ -36,8 +39,11 @@ public class St4GeneratorMojo extends AbstractGeneratorMojo {
     private File target;
 
 
-    @Parameter(defaultValue = "io/protostuff/generator/java/main.stg")
+    @Parameter
     private String template;
+
+    @Parameter
+    private List<String> templates;
 
     @Parameter
     private String extensions;
@@ -49,11 +55,18 @@ public class St4GeneratorMojo extends AbstractGeneratorMojo {
         ProtostuffCompiler compiler = new ProtostuffCompiler();
         final Path sourcePath = getSourcePath();
         String output = calculateOutput();
+        Set<String> allTemplates = new LinkedHashSet<>();
+        if (template != null) {
+            allTemplates.add(template);
+        }
+        if (templates != null) {
+            allTemplates.addAll(templates);
+        }
         ImmutableModuleConfiguration.Builder builder = ImmutableModuleConfiguration.builder()
                 .name("java")
                 .includePaths(singletonList(sourcePath))
                 .generator(CompilerModule.ST4_COMPILER)
-                .putOptions(CompilerModule.TEMPLATE_OPTION, template)
+                .putOptions(CompilerModule.TEMPLATES_OPTION, allTemplates)
                 .putOptions(CompilerModule.EXTENSIONS_OPTION, extensions)
                 .output(output);
         PathMatcher protoMatcher = FileSystems.getDefault().getPathMatcher("glob:**/*.proto");
