@@ -32,6 +32,11 @@ message_bit_field(name) ::= <<
 private int <name>;
 >>
 
+
+default_enum_value(enum) ::= <%
+<first(enum.constants):{constant|<constant.javaName>}>
+%>
+
 field_initializer(field) ::= <%
 <if(field.map)>
 this.<field.javaName> = java.util.Collections.emptyMap();
@@ -39,7 +44,7 @@ this.<field.javaName> = java.util.Collections.emptyMap();
 this.<field.javaName> = java.util.Collections.emptyList();
 <elseif(field.oneofPart)>
 <elseif(field.type.enum)>
-this.<field.javaName> = 0;
+this.<field.javaName> = <field.javaType>.<field.type:default_enum_value()>.getNumber();
 <else>
 this.<field.javaName> = <field.javaDefaultValue>;
 <endif>
