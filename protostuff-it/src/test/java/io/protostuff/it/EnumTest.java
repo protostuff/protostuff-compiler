@@ -1,5 +1,7 @@
 package io.protostuff.it;
 
+import io.protostuff.it.enum_test.Proto2EnumDefaultValueNonZero;
+import io.protostuff.it.enum_test.Proto2Message;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
@@ -121,5 +123,11 @@ public class EnumTest {
         Assert.assertEquals(3, NestedEnum.HUNDRED.ordinal());
         // Unrecognized goes last
         Assert.assertEquals(4, NestedEnum.UNRECOGNIZED.ordinal());
+    }
+
+    @Test
+    public void proto2_enumDefaultValue() throws Exception {
+        Proto2Message message = Proto2Message.getDefaultInstance();
+        Assert.assertEquals(Proto2EnumDefaultValueNonZero.FIRST, message.getE());
     }
 }

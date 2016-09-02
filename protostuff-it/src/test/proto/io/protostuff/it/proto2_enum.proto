@@ -1,0 +1,15 @@
+syntax = "proto2";
+
+package io.protostuff.it;
+
+option java_package = "io.protostuff.it.enum_test";
+
+enum Proto2EnumDefaultValueNonZero {
+    FIRST = 1;
+    SECOND = 2;
+    HUNDRED = 100;
+}
+
+message Proto2Message {
+    optional Proto2EnumDefaultValueNonZero e = 1;
+}
