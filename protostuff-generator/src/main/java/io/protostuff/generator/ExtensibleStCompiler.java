@@ -10,23 +10,30 @@ import org.stringtemplate.v4.STGroup;
 import org.stringtemplate.v4.misc.ObjectModelAdaptor;
 import org.stringtemplate.v4.misc.STNoSuchPropertyException;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 public class ExtensibleStCompiler implements ProtoCompiler {
 
     private final StCompilerFactory compilerFactory;
-    private final StCompiler stCompiler;
+    private final List<StCompiler> compilers;
 
 
     @Inject
     protected ExtensibleStCompiler(StCompilerFactory compilerFactory,
-                                   @Assisted String templateFileName,
+                                   @Assisted Collection<String> templates,
                                    @Assisted ExtensionProvider extensionProvider) {
         this.compilerFactory = compilerFactory;
-        stCompiler = (StCompiler) this.compilerFactory.create(templateFileName);
-        STGroup group = stCompiler.getStGroup();
-        addRenderExtensions(group, extensionProvider);
-        addPropertyExtensions(group, extensionProvider);
+        this.compilers = new ArrayList<>();
+        for (String template : templates) {
+            StCompiler compiler = (StCompiler) this.compilerFactory.create(template);
+            STGroup group = compiler.getStGroup();
+            addRenderExtensions(group, extensionProvider);
+            addPropertyExtensions(group, extensionProvider);
+            compilers.add(compiler);
+        }
     }
 
     private void addPropertyExtensions(STGroup group, ExtensionProvider extensionProvider) {
@@ -55,7 +62,9 @@ public class ExtensibleStCompiler implements ProtoCompiler {
 
     @Override
     public void compile(Module module) {
-        stCompiler.compile(module);
+        for (StCompiler compiler : compilers) {
+            compiler.compile(module);
+        }
     }
 
 }
