@@ -83,7 +83,8 @@ messageBlock
         | groupBlock
         | oneof
         | map
-        | reserved)*
+        | reservedFieldRanges
+        | reservedFieldNames)*
    RCURLY SEMICOLON?
     ;
 messageName
@@ -147,10 +148,7 @@ groupName
     : ident
     ;
 extensions
-    : EXTENSIONS ranges SEMICOLON
-    ;
-ranges
-    : range (COMMA range)*
+    : EXTENSIONS range (COMMA range)* SEMICOLON
     ;
 range
     : rangeFrom ( TO ( rangeTo | MAX ) )?
@@ -161,13 +159,13 @@ rangeFrom
 rangeTo
     : INTEGER_VALUE
     ;
-reserved
-    : RESERVED (ranges | fieldNames) SEMICOLON
+reservedFieldRanges
+    : RESERVED range (COMMA range)* SEMICOLON
     ;
-fieldNames
-    : fieldNameString (COMMA fieldNameString)*
+reservedFieldNames
+    : RESERVED reservedFieldName (COMMA reservedFieldName)* SEMICOLON
     ;
-fieldNameString
+reservedFieldName
     : STRING_VALUE
     ;
 field

@@ -8,9 +8,7 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 import java.util.ArrayList;
 import java.util.List;
 
-import static io.protostuff.compiler.model.FieldModifier.OPTIONAL;
-import static io.protostuff.compiler.model.FieldModifier.REPEATED;
-import static io.protostuff.compiler.model.FieldModifier.REQUIRED;
+import static io.protostuff.compiler.model.FieldModifier.*;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -44,22 +42,21 @@ public class MessageParseListener extends AbstractProtoParserListener {
     }
 
     @Override
-    public void exitReserved(ProtoParser.ReservedContext ctx) {
+    public void exitReservedFieldRanges(ProtoParser.ReservedFieldRangesContext ctx) {
         Message message = context.peek(Message.class);
-        ProtoParser.RangesContext ranges = ctx.ranges();
-        if (ranges != null) {
-            List<Range> result = getRanges(message, ranges);
-            for (Range range : result) {
-                message.addReservedFieldRange(range);
-            }
+        List<Range> result = getRanges(message, ctx.range());
+        for (Range range : result) {
+            message.addReservedFieldRange(range);
         }
-        ProtoParser.FieldNamesContext fieldNamesContext = ctx.fieldNames();
-        if (fieldNamesContext != null) {
-            for (ProtoParser.FieldNameStringContext fieldNameContext : fieldNamesContext.fieldNameString()) {
-                String fieldName = fieldNameContext.getText();
-                fieldName = Util.removeFirstAndLastChar(fieldName);
-                message.addReservedFieldName(fieldName);
-            }
+    }
+
+    @Override
+    public void exitReservedFieldNames(ProtoParser.ReservedFieldNamesContext ctx) {
+        Message message = context.peek(Message.class);
+        for (ProtoParser.ReservedFieldNameContext fieldNameContext : ctx.reservedFieldName()) {
+            String fieldName = fieldNameContext.getText();
+            fieldName = Util.removeFirstAndLastChar(fieldName);
+            message.addReservedFieldName(fieldName);
         }
     }
 
@@ -80,7 +77,7 @@ public class MessageParseListener extends AbstractProtoParserListener {
         updateModifier(ctx.fieldModifier(), field);
         field.setName(name);
         field.setTag(tag);
-        field.setIndex(fieldContainer.getFieldCount()+1);
+        field.setIndex(fieldContainer.getFieldCount() + 1);
         field.setTypeName(type);
         field.setSourceCodeLocation(getSourceCodeLocation(ctx));
         fieldContainer.addField(field);
@@ -109,10 +106,10 @@ public class MessageParseListener extends AbstractProtoParserListener {
         Element parent = context.peek(Element.class);
         if (parent instanceof Extension) {
             // hack: use extension's parent
-            Group group = new Group(((Extension)parent).getParent());
+            Group group = new Group(((Extension) parent).getParent());
             context.push(group);
         } else if (parent instanceof UserTypeContainer) {
-            Group group = new Group(((UserTypeContainer)parent));
+            Group group = new Group(((UserTypeContainer) parent));
             context.push(group);
         } else {
             throw new IllegalStateException();
@@ -130,7 +127,7 @@ public class MessageParseListener extends AbstractProtoParserListener {
         field.setName(group.getName().toLowerCase()); // same behavior as in protoc
         int tag = Integer.decode(ctx.tag().getText());
         field.setTag(tag);
-        field.setIndex(fieldContainer.getFieldCount()+1);
+        field.setIndex(fieldContainer.getFieldCount() + 1);
         field.setTypeName(group.getName());
         field.setType(group);
         field.setSourceCodeLocation(getSourceCodeLocation(ctx));
@@ -175,7 +172,7 @@ public class MessageParseListener extends AbstractProtoParserListener {
         Integer tag = Integer.decode(ctx.tag().getText());
         field.setName(name);
         field.setTag(tag);
-        field.setIndex(message.getFieldCount()+1);
+        field.setIndex(message.getFieldCount() + 1);
         field.setTypeName(type);
         field.setSourceCodeLocation(getSourceCodeLocation(ctx));
         oneOf.addField(field);
@@ -225,7 +222,7 @@ public class MessageParseListener extends AbstractProtoParserListener {
         Integer tag = Integer.decode(ctx.tag().getText());
         field.setName(name);
         field.setTag(tag);
-        field.setIndex(message.getFieldCount()+1);
+        field.setIndex(message.getFieldCount() + 1);
         field.setModifier(REPEATED);
         field.setTypeName(mapEntryTypeName);
         field.setType(map);
@@ -260,16 +257,15 @@ public class MessageParseListener extends AbstractProtoParserListener {
     @Override
     public void exitExtensions(ProtoParser.ExtensionsContext ctx) {
         Message message = context.peek(Message.class);
-        ProtoParser.RangesContext ranges = ctx.ranges();
-        List<Range> result = getRanges(message, ranges);
+        List<Range> result = getRanges(message, ctx.range());
         for (Range range : result) {
             message.addExtensionRange(range);
         }
     }
 
-    private List<Range> getRanges(Message message, ProtoParser.RangesContext ranges) {
+    private List<Range> getRanges(Message message, List<ProtoParser.RangeContext> ranges) {
         List<Range> result = new ArrayList<>();
-        for (ProtoParser.RangeContext rangeContext :  ranges.range()) {
+        for (ProtoParser.RangeContext rangeContext : ranges) {
             ProtoParser.RangeFromContext fromNode = rangeContext.rangeFrom();
             ProtoParser.RangeToContext toNode = rangeContext.rangeTo();
             TerminalNode maxNode = rangeContext.MAX();
