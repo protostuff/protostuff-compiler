@@ -33,9 +33,19 @@ public abstract class AbstractUserTypeContainer extends AbstractDescriptor imple
     @Override
     public void addMessage(Message message) {
         if (messages == null) {
-            messages = new ArrayList<>();
+            messages = new ArrayList<Message>();
         }
         messages.add(message);
+    }
+
+    @Override
+    public Message getMessage(String name) {
+        for (Message message : getMessages()) {
+            if (name.equals(message.getName())) {
+                return message;
+            }
+        }
+        return null;
     }
 
     @Override
@@ -53,7 +63,7 @@ public abstract class AbstractUserTypeContainer extends AbstractDescriptor imple
     @Override
     public void addEnum(Enum e) {
         if (enums == null) {
-            enums = new ArrayList<>();
+            enums = new ArrayList<Enum>();
         }
         enums.add(e);
     }
@@ -69,8 +79,18 @@ public abstract class AbstractUserTypeContainer extends AbstractDescriptor imple
     @Override
     public void addDeclaredExtension(Extension extension) {
         if (declaredExtensions == null) {
-            declaredExtensions = new ArrayList<>();
+            declaredExtensions = new ArrayList<Extension>();
         }
         declaredExtensions.add(extension);
+    }
+
+    @Override
+    public Enum getEnum(String name) {
+        for (Enum anEnum : getEnums()) {
+            if (name.equals(anEnum.getName())) {
+                return anEnum;
+            }
+        }
+        return null;
     }
 }

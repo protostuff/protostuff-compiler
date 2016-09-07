@@ -1,6 +1,6 @@
 package io.protostuff.compiler.model;
 
-import java.util.Objects;
+import com.google.common.base.Objects;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -31,12 +31,12 @@ public class Package extends AbstractElement {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Package aPackage = (Package) o;
-        return Objects.equals(value, aPackage.value);
+        return Objects.equal(value, aPackage.value);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(value);
+        return Objects.hashCode(value);
     }
 
     @Override

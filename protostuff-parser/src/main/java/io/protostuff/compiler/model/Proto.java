@@ -1,13 +1,11 @@
 package io.protostuff.compiler.model;
 
 import com.google.common.base.MoreObjects;
+import io.protostuff.compiler.parser.ProtoContext;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
-
-import io.protostuff.compiler.parser.ProtoContext;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -106,15 +104,18 @@ public class Proto extends AbstractUserTypeContainer implements UserTypeContaine
     }
 
     public List<Import> getPublicImports() {
-        return getImports()
-                .stream()
-                .filter(Import::isPublic)
-                .collect(Collectors.toList());
+        List<Import> result = new ArrayList<Import>();
+        for (Import anImport : getImports()) {
+            if (anImport.isPublic()) {
+                result.add(anImport);
+            }
+        }
+        return result;
     }
 
     public void addImport(Import anImport) {
         if (imports == null) {
-            imports = new ArrayList<>();
+            imports = new ArrayList<Import>();
         }
         imports.add(anImport);
     }
@@ -132,9 +133,19 @@ public class Proto extends AbstractUserTypeContainer implements UserTypeContaine
 
     public void addService(Service service) {
         if (services == null) {
-            services = new ArrayList<>();
+            services = new ArrayList<Service>();
         }
         services.add(service);
+    }
+
+    @Override
+    public Message getMessage(String name) {
+        for (Message message : getMessages()) {
+            if (name.equals(message.getName())) {
+                return message;
+            }
+        }
+        return null;
     }
 
     @Override

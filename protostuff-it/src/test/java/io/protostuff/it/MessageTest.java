@@ -6,7 +6,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -190,7 +189,7 @@ public class MessageTest {
 
     @Test
     public void testMap_getter_map() throws Exception {
-        Map<String, String> expected = new HashMap<>();
+        Map<String, String> expected = new HashMap<String, String>();
         expected.put("key", "value");
         expected.put("test", "test");
         Assert.assertEquals(expected, TEST_MAP.getMapStringStringMap());
@@ -215,7 +214,7 @@ public class MessageTest {
 
     @Test
     public void testMap_setter_map() throws Exception {
-        Map<String, String> map = new HashMap<>();
+        Map<String, String> map = new HashMap<String, String>();
         map.put("key", "value");
         map.put("test", "test");
         TestMap instance = TestMap.newBuilder()

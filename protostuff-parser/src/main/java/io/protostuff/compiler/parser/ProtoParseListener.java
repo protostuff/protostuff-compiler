@@ -1,15 +1,14 @@
 package io.protostuff.compiler.parser;
 
+import io.protostuff.compiler.model.Import;
+import io.protostuff.compiler.model.Package;
+import io.protostuff.compiler.model.Proto;
+import io.protostuff.compiler.model.Syntax;
 import org.antlr.v4.runtime.BufferedTokenStream;
 import org.antlr.v4.runtime.Token;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import io.protostuff.compiler.model.Import;
-import io.protostuff.compiler.model.Package;
-import io.protostuff.compiler.model.Proto;
-import io.protostuff.compiler.model.Syntax;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -31,7 +30,7 @@ public class ProtoParseListener extends AbstractProtoParserListener {
     @Override
     public void exitProto(ProtoParser.ProtoContext ctx) {
         int i = 0;
-        List<String> comments = new ArrayList<>();
+        List<String> comments = new ArrayList<String>();
         boolean foundEmptyLine = false;
         while (i < tokens.size()
                 && tokens.get(i).getChannel() == ProtoLexer.HIDDEN

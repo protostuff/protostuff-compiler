@@ -1,6 +1,6 @@
 package io.protostuff.compiler.parser;
 
-import java.nio.file.Path;
+import java.io.File;
 import java.util.List;
 
 /**
@@ -8,5 +8,5 @@ import java.util.List;
  */
 public interface FileReaderFactory {
 
-    FileReader create(List<Path> includePathList);
+    FileReader create(List<File> includePathList);
 }

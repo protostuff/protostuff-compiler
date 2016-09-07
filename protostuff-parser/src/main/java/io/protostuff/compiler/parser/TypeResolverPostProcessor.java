@@ -1,38 +1,23 @@
 package io.protostuff.compiler.parser;
 
+import io.protostuff.compiler.model.*;
+
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
-
-import io.protostuff.compiler.model.Element;
-import io.protostuff.compiler.model.Extension;
-import io.protostuff.compiler.model.Field;
-import io.protostuff.compiler.model.FieldContainer;
-import io.protostuff.compiler.model.FieldType;
-import io.protostuff.compiler.model.GroupContainer;
-import io.protostuff.compiler.model.Message;
-import io.protostuff.compiler.model.Oneof;
-import io.protostuff.compiler.model.Proto;
-import io.protostuff.compiler.model.ScalarFieldType;
-import io.protostuff.compiler.model.Service;
-import io.protostuff.compiler.model.ServiceMethod;
-import io.protostuff.compiler.model.UserType;
-import io.protostuff.compiler.model.UserTypeContainer;
 
 /**
  * @author Kostiantyn Shchepanovskyi
  */
 public class TypeResolverPostProcessor implements ProtoContextPostProcessor {
 
-    public static final String ILLEGAL_KEY_TYPE = "Illegal key type: %s";
-
     // Type name resolution in the protocol buffer language works like C++: first
     // the innermost scope is searched, then the next-innermost, and so on, with
     // each package considered to be "inner" to its parent package.
     public static Deque<String> createScopeLookupList(UserTypeContainer container) {
         String namespace = container.getNamespace();
-        Deque<String> scopeLookupList = new ArrayDeque<>();
+        Deque<String> scopeLookupList = new ArrayDeque<String>();
         int end = 0;
         while (end >= 0) {
             end = namespace.indexOf('.', end);
@@ -98,10 +83,10 @@ public class TypeResolverPostProcessor implements ProtoContextPostProcessor {
             }
         }
 
-        List<Message> messages = new ArrayList<>();
+        List<Message> messages = new ArrayList<Message>();
         messages.addAll(container.getMessages());
         if (container instanceof GroupContainer) {
-            messages.addAll(((GroupContainer)container).getGroups());
+            messages.addAll(((GroupContainer) container).getGroups());
         }
         for (Extension extension : container.getDeclaredExtensions()) {
             messages.addAll(extension.getGroups());
@@ -121,14 +106,13 @@ public class TypeResolverPostProcessor implements ProtoContextPostProcessor {
 
     private void updateFieldTypes(ProtoContext context, Deque<String> scopeLookupList, FieldContainer fieldContainer) {
         // check if field type isn't already set
-        fieldContainer.getFields()
-                .stream()
-                .filter(field -> field.getType() == null) // for map fields it is set by parser
-                .forEach(field -> {
-                    String typeName = field.getTypeName();
-                    FieldType fieldType = resolveFieldType(field, context, scopeLookupList, typeName);
-                    field.setType(fieldType);
-                });
+        for (Field field : fieldContainer.getFields()) {
+            if (field.getType() == null) { // for map fields it is set by parser
+                String typeName = field.getTypeName();
+                FieldType fieldType = resolveFieldType(field, context, scopeLookupList, typeName);
+                field.setType(fieldType);
+            }
+        }
     }
 
     private FieldType resolveFieldType(Element source, ProtoContext context, Deque<String> scopeLookupList, String typeName) {

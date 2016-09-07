@@ -82,21 +82,21 @@ field_accessors(field) ::= <<
 <if(field.type.enum)>
 public <field.javaType> <field.javaGetterName>() {
     if (<field.oneof.javaCaseFieldName> == <field.oneof.javaName>.<field.javaOneofConstantName>) {
-        return <field.javaType>.valueOf((int) <field.oneof.javaFieldName>);
+        return <field.javaType>.valueOf((Integer) <field.oneof.javaFieldName>);
     }
     return <field.javaDefaultValue>;
 }
 
 public int <field.javaEnumValueGetterName>() {
     if (<field.oneof.javaCaseFieldName> == <field.oneof.javaName>.<field.javaOneofConstantName>) {
-        return (int) <field.oneof.javaFieldName>;
+        return (Integer) <field.oneof.javaFieldName>;
     }
     return 0;
 }
 <else>
 public <field.javaType> <field.javaGetterName>() {
     if (<field.oneof.javaCaseFieldName> == <field.oneof.javaName>.<field.javaOneofConstantName>) {
-        return (<field.javaType>) <field.oneof.javaFieldName>;
+        return (<field.javaWrapperType>) <field.oneof.javaFieldName>;
     }
     return <field.javaDefaultValue>;
 }
@@ -120,7 +120,8 @@ public <field.javaMapValueType> <field.javaMapGetByKeyMethodName>(<field.javaMap
 <elseif(field.repeated)>
 <if(field.type.enum)>
 public <field.javaRepeatedType> <field.javaRepeatedGetterName>() {
-    return new io.protostuff.ListAdapter\<>(<field.javaName>, <field.javaType>::valueOf);
+    <field:list_adapter_converter()>
+    return new io.protostuff.ListAdapter(<field.javaName>, converter);
 }
 
 public <field.javaType> <field.javaRepeatedGetByIndexMethodName>(int index) {

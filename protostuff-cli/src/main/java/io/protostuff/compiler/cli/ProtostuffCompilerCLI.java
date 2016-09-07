@@ -1,12 +1,11 @@
 package io.protostuff.compiler.cli;
 
+import com.google.common.base.Joiner;
+import com.google.common.base.MoreObjects;
 import com.google.common.collect.ImmutableMap;
-import io.protostuff.compiler.model.ImmutableModuleConfiguration;
 import io.protostuff.compiler.model.ModuleConfiguration;
-import io.protostuff.compiler.parser.ParserException;
 import io.protostuff.generator.CompilerModule;
 import io.protostuff.generator.CompilerRegistry;
-import io.protostuff.generator.GeneratorException;
 import io.protostuff.generator.ProtostuffCompiler;
 import org.apache.commons.cli.*;
 import org.apache.logging.log4j.Level;
@@ -17,12 +16,8 @@ import org.apache.logging.log4j.core.config.LoggerConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.io.File;
+import java.util.*;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -86,7 +81,7 @@ public class ProtostuffCompilerCLI extends ProtostuffCompiler {
                 .longOpt(GENERATOR)
                 .argName("name")
                 .numberOfArgs(1)
-                .desc("Specify compiler: " + String.join("|", registry.availableCompilers()))
+                .desc("Specify compiler: " + Joiner.on('|').join(registry.availableCompilers()))
                 .build());
         options.addOption(Option.builder("t")
                 .longOpt(TEMPLATE)
@@ -101,8 +96,8 @@ public class ProtostuffCompilerCLI extends ProtostuffCompiler {
                 .desc("[st4] Specify full class name of an extensions provider for st4 compiler")
                 .build());
         CommandLineParser parser = new DefaultParser();
-        ImmutableModuleConfiguration.Builder builder = ImmutableModuleConfiguration.builder();
-        builder.name("main");
+        ModuleConfiguration configuration = new ModuleConfiguration();
+        configuration.setName("main");
         try {
             CommandLine cmd = parser.parse(options, args);
             if (cmd.hasOption(HELP)) {
@@ -120,38 +115,40 @@ public class ProtostuffCompilerCLI extends ProtostuffCompiler {
             }
             if (cmd.hasOption(GENERATOR)) {
                 String generator = cmd.getOptionValue(GENERATOR);
-                builder.generator(generator);
+                configuration.setGenerator(generator);
             } else {
                 LOGGER.error("Generator is not set.");
                 return;
             }
             if (cmd.hasOption(OUTPUT)) {
                 String output = cmd.getOptionValue(OUTPUT);
-                builder.output(output);
+                configuration.setOutput(output);
             } else {
                 LOGGER.error("Output directory is not set.");
                 return;
             }
+            Map<String, Object> moduleOptions = new HashMap<String, Object>();
             if (cmd.hasOption(TEMPLATE)) {
                 List<String> templates = Collections.singletonList(cmd.getOptionValue(TEMPLATE));
-                builder.putOptions(CompilerModule.TEMPLATES_OPTION, templates);
+                moduleOptions.put(CompilerModule.TEMPLATES_OPTION, templates);
             }
             if (cmd.hasOption(EXTENSIONS)) {
-                builder.putOptions(CompilerModule.EXTENSIONS_OPTION, cmd.getOptionValue(EXTENSIONS));
+                moduleOptions.put(CompilerModule.EXTENSIONS_OPTION, cmd.getOptionValue(EXTENSIONS));
             }
-            List<Path> includePaths = new ArrayList<>();
+            configuration.setOptions(moduleOptions);
+            List<File> includePaths = new ArrayList<File>();
             if (cmd.hasOption(PROTO_PATH)) {
                 String[] paths = cmd.getOptionValues(PROTO_PATH);
                 for (String path : paths) {
-                    includePaths.add(Paths.get(path));
+                    includePaths.add(new File(path));
                 }
             }
             if (includePaths.isEmpty()) {
-                includePaths.add(Paths.get("."));
+                includePaths.add(new File("."));
             }
-            builder.includePaths(includePaths);
+            configuration.setIncludePaths(includePaths);
             List<String> protoFiles = cmd.getArgList();
-            builder.protoFiles(protoFiles);
+            configuration.setProtoFiles(protoFiles);
         } catch (ParseException e) {
             if (LOGGER.isDebugEnabled()) {
                 LOGGER.error("Could not parse command", e);
@@ -163,8 +160,6 @@ public class ProtostuffCompilerCLI extends ProtostuffCompiler {
 
         LOGGER.info("Version={}", __VERSION);
 
-        ModuleConfiguration configuration = builder.build();
-
         if (configuration.getProtoFiles().isEmpty()) {
             LOGGER.error("Missing input file.");
             return;
@@ -175,7 +170,7 @@ public class ProtostuffCompilerCLI extends ProtostuffCompiler {
         }
         try {
             compile(configuration);
-        } catch (GeneratorException | ParserException e) {
+        } catch (Exception e) {
             if (LOGGER.isDebugEnabled()) {
                 LOGGER.error("Compilation error", e);
             } else {
@@ -188,7 +183,7 @@ public class ProtostuffCompilerCLI extends ProtostuffCompiler {
         // automatically generate the help statement
         HelpFormatter formatter = new HelpFormatter();
         formatter.setWidth(79);
-        Map<String, Integer> order = ImmutableMap.<String, Integer>builder()
+        final Map<String, Integer> order = ImmutableMap.<String, Integer>builder()
                 .put(HELP, 1)
                 .put(PROTO_PATH, 2)
                 .put(GENERATOR, 3)
@@ -197,9 +192,18 @@ public class ProtostuffCompilerCLI extends ProtostuffCompiler {
                 .put(EXTENSIONS, 6)
                 .put(DEBUG, 100)
                 .build();
-        formatter.setOptionComparator((o1, o2) -> Integer.compare(
-                order.getOrDefault(o1.getLongOpt(), 99),
-                order.getOrDefault(o2.getLongOpt(), 99)));
+        formatter.setOptionComparator(new Comparator<Option>() {
+            @Override
+            public int compare(Option o1, Option o2) {
+                return compare(
+                        MoreObjects.firstNonNull(order.get(o1.getLongOpt()), 99),
+                        MoreObjects.firstNonNull(order.get(o2.getLongOpt()), 99));
+            }
+
+            private int compare(int x, int y) {
+                return (x < y) ? -1 : ((x == y) ? 0 : 1);
+            }
+        });
         formatter.printHelp("protostuff-compiler [options] proto_files", options);
     }
 

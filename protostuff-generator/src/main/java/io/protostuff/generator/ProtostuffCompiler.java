@@ -3,7 +3,7 @@ package io.protostuff.generator;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import io.protostuff.compiler.ParserModule;
-import io.protostuff.compiler.model.ImmutableModule;
+import io.protostuff.compiler.model.Module;
 import io.protostuff.compiler.model.ModuleConfiguration;
 import io.protostuff.compiler.model.Proto;
 import io.protostuff.compiler.parser.FileReader;
@@ -13,6 +13,7 @@ import io.protostuff.compiler.parser.ProtoContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,21 +41,23 @@ public class ProtostuffCompiler {
             throw new GeneratorException("Unknown template: %s", configuration.getGenerator());
         }
         FileReader fileReader = fileReaderFactory.create(configuration.getIncludePaths());
-        Map<String, Proto> importedFiles = new HashMap<>();
+        Map<String, Proto> importedFiles = new HashMap<String, Proto>();
         for (String path : configuration.getProtoFiles()) {
             LOGGER.info("Parse {}", path);
             ProtoContext context = importer.importFile(fileReader, path);
             Proto proto = context.getProto();
             importedFiles.put(path, proto);
         }
-        ImmutableModule.Builder builder = ImmutableModule.builder();
-        builder.name(configuration.getName());
-        builder.output(configuration.getOutput());
-        builder.options(configuration.getOptions());
+        Module module = new Module();
+        module.setName(configuration.getName());
+        module.setOutput(configuration.getOutput());
+        module.setOptions(configuration.getOptions());
+        ArrayList<Proto> protos = new ArrayList<Proto>();
         for (Proto proto : importedFiles.values()) {
-            builder.addProtos(proto);
+            protos.add(proto);
         }
-        ImmutableModule module = builder.build();
+        module.setProtos(protos);
+
         for (Proto proto : importedFiles.values()) {
             proto.setModule(module);
         }

@@ -1,7 +1,8 @@
 package io.protostuff.compiler.maven;
 
-import io.protostuff.compiler.model.ImmutableModuleConfiguration;
+import io.protostuff.compiler.model.ModuleConfiguration;
 import io.protostuff.generator.CompilerModule;
+import io.protostuff.generator.ProtostuffCompiler;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
@@ -10,18 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.FileSystems;
-import java.nio.file.FileVisitResult;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.PathMatcher;
-import java.nio.file.SimpleFileVisitor;
-import java.nio.file.attribute.BasicFileAttributes;
-
-import io.protostuff.compiler.model.ModuleConfiguration;
-import io.protostuff.generator.ProtostuffCompiler;
-import io.protostuff.generator.html.HtmlGenerator;
 
 import static java.util.Collections.singletonList;
 import static org.apache.maven.plugins.annotations.ResolutionScope.COMPILE_PLUS_RUNTIME;
@@ -44,28 +33,13 @@ public class HtmlGeneratorMojo extends AbstractGeneratorMojo {
         super.execute();
 
         ProtostuffCompiler compiler = new ProtostuffCompiler();
-        final Path sourcePath = getSourcePath();
-        ImmutableModuleConfiguration.Builder builder = ImmutableModuleConfiguration.builder()
-                .name("html")
-                .includePaths(singletonList(sourcePath))
-                .generator(CompilerModule.HTML_COMPILER)
-                .output(target.getAbsolutePath());
-        PathMatcher protoMatcher = FileSystems.getDefault().getPathMatcher("glob:**/*.proto");
-        try {
-            Files.walkFileTree(sourcePath, new SimpleFileVisitor<Path>() {
-                @Override
-                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                    if (protoMatcher.matches(file)) {
-                        String protoFile = sourcePath.relativize(file).toString();
-                        builder.addProtoFiles(normalizeProtoPath(protoFile));
-                    }
-                    return super.visitFile(file, attrs);
-                }
-            });
-        } catch (IOException e) {
-            LOGGER.error("Can not build source files list", e);
-        }
-        ModuleConfiguration moduleConfiguration = builder.build();
+        final File sourcePath = getSourcePath();
+        ModuleConfiguration moduleConfiguration = new ModuleConfiguration();
+        moduleConfiguration.setName("html");
+        moduleConfiguration.setIncludePaths(singletonList(sourcePath));
+        moduleConfiguration.setGenerator(CompilerModule.HTML_COMPILER);
+        moduleConfiguration.setOutput(target.getAbsolutePath());
+        addProtoFiles(sourcePath, moduleConfiguration);
 
         LOGGER.debug("Module configuration = {}", moduleConfiguration);
         compiler.compile(moduleConfiguration);

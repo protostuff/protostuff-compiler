@@ -2,11 +2,7 @@ package io.protostuff.compiler.model;
 
 import com.google.common.base.MoreObjects;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.*;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -34,9 +30,11 @@ public class Enum extends AbstractUserType {
         if (constants == null) {
             return Collections.emptySet();
         }
-        return constants.stream()
-                .map(EnumConstant::getName)
-                .collect(Collectors.toSet());
+        Set<String> result = new LinkedHashSet<String>();
+        for (EnumConstant constant : constants) {
+            result.add(constant.getName());
+        }
+        return result;
     }
 
     public EnumConstant getConstant(String name) {
@@ -50,7 +48,7 @@ public class Enum extends AbstractUserType {
 
     public void addConstant(EnumConstant value) {
         if (constants == null) {
-            constants = new ArrayList<>();
+            constants = new ArrayList<EnumConstant>();
         }
         constants.add(value);
     }

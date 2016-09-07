@@ -1,6 +1,5 @@
 package io.protostuff.compiler.maven;
 
-import io.protostuff.compiler.model.ImmutableModuleConfiguration;
 import io.protostuff.compiler.model.ModuleConfiguration;
 import io.protostuff.generator.CompilerModule;
 import io.protostuff.generator.ProtostuffCompiler;
@@ -12,9 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.*;
-import java.nio.file.attribute.BasicFileAttributes;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -53,38 +50,25 @@ public class St4GeneratorMojo extends AbstractGeneratorMojo {
         super.execute();
 
         ProtostuffCompiler compiler = new ProtostuffCompiler();
-        final Path sourcePath = getSourcePath();
+        final File sourcePath = getSourcePath();
         String output = calculateOutput();
-        Set<String> allTemplates = new LinkedHashSet<>();
+        Set<String> allTemplates = new LinkedHashSet<String>();
         if (template != null) {
             allTemplates.add(template);
         }
         if (templates != null) {
             allTemplates.addAll(templates);
         }
-        ImmutableModuleConfiguration.Builder builder = ImmutableModuleConfiguration.builder()
-                .name("java")
-                .includePaths(singletonList(sourcePath))
-                .generator(CompilerModule.ST4_COMPILER)
-                .putOptions(CompilerModule.TEMPLATES_OPTION, allTemplates)
-                .putOptions(CompilerModule.EXTENSIONS_OPTION, extensions)
-                .output(output);
-        PathMatcher protoMatcher = FileSystems.getDefault().getPathMatcher("glob:**/*.proto");
-        try {
-            Files.walkFileTree(sourcePath, new SimpleFileVisitor<Path>() {
-                @Override
-                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                    if (protoMatcher.matches(file)) {
-                        String protoFile = sourcePath.relativize(file).toString();
-                        builder.addProtoFiles(normalizeProtoPath(protoFile));
-                    }
-                    return super.visitFile(file, attrs);
-                }
-            });
-        } catch (IOException e) {
-            LOGGER.error("Can not build source files list", e);
-        }
-        ModuleConfiguration moduleConfiguration = builder.build();
+        ModuleConfiguration moduleConfiguration = new ModuleConfiguration();
+        moduleConfiguration.setName("java");
+        moduleConfiguration.setIncludePaths(singletonList(sourcePath));
+        moduleConfiguration.setGenerator(CompilerModule.ST4_COMPILER);
+        HashMap<String, Object> options = new HashMap<String, Object>();
+        options.put(CompilerModule.TEMPLATES_OPTION, allTemplates);
+        options.put(CompilerModule.EXTENSIONS_OPTION, extensions);
+        moduleConfiguration.setOptions(options);
+        moduleConfiguration.setOutput(output);
+        addProtoFiles(sourcePath, moduleConfiguration);
 
         LOGGER.debug("Module configuration = {}", moduleConfiguration);
         compiler.compile(moduleConfiguration);

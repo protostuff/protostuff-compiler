@@ -2,14 +2,13 @@ package io.protostuff.generator;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Function;
 
 /**
  * @author Kostiantyn Shchepanovskyi
  */
 public class SimplePropertyProvider<ObjectT> implements PropertyProvider<ObjectT> {
 
-    private final Map<String, Function<ObjectT, ?>> propertyProviders = new HashMap<>();
+    private final Map<String, ComputableProperty<ObjectT, ?>> propertyProviders = new HashMap<String, ComputableProperty<ObjectT, ?>>();
 
     @Override
     public boolean hasProperty(String propertyName) {
@@ -18,15 +17,15 @@ public class SimplePropertyProvider<ObjectT> implements PropertyProvider<ObjectT
 
     @Override
     public Object getProperty(ObjectT object, String propertyName) {
-        Function<ObjectT, ?> provider = propertyProviders.get(propertyName);
+        ComputableProperty<ObjectT, ?> provider = propertyProviders.get(propertyName);
         if (provider == null) {
             throw new IllegalArgumentException(propertyName);
         }
-        return provider.apply(object);
+        return provider.compute(object);
     }
 
     @Override
-    public void register(String property, Function<ObjectT, ?> function) {
+    public void register(String property, ComputableProperty<ObjectT, ?> function) {
         propertyProviders.put(property, function);
     }
 

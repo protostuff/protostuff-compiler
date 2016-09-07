@@ -68,7 +68,7 @@ public class Service extends AbstractDescriptor implements Type {
 
     public void addMethod(ServiceMethod method) {
         if (methods == null) {
-            methods = new ArrayList<>();
+            methods = new ArrayList<ServiceMethod>();
         }
         methods.add(method);
     }

@@ -1,8 +1,7 @@
 package io.protostuff.compiler.model;
 
-import java.util.List;
-
 import javax.annotation.Nullable;
+import java.util.List;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -19,14 +18,7 @@ public interface EnumContainer {
      * this container
      */
     @Nullable
-    default Enum getEnum(String name) {
-        for (Enum anEnum : getEnums()) {
-            if (name.equals(anEnum.getName())) {
-                return anEnum;
-            }
-        }
-        return null;
-    }
+    Enum getEnum(String name);
 
     void addEnum(Enum e);
 }

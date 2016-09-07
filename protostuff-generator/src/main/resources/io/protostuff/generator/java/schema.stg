@@ -5,7 +5,7 @@ public static final class Schema implements io.protostuff.Schema\<<message.javaN
 
     private static final Schema INSTANCE = new Schema();
 
-    private static final java.util.Map\<String,Integer> __fieldMap = new java.util.HashMap\<>();
+    private static final java.util.Map\<String,Integer> __fieldMap = new java.util.HashMap\<String,Integer>();
 
     static {
     	<message.fields:field_map(); separator="\n">
@@ -95,9 +95,9 @@ if((instance.<field.javaBitFieldName> & <field.javaBitFieldMask>) == <field.java
 schema_ensure_mutable(field) ::= <<
 if(!((instance.<field.javaBitFieldName> & <field.javaBitFieldMask>) == <field.javaBitFieldMask>)) {
 <if(field.map)>
-    instance.<field.javaName> = new java.util.HashMap\<>();
+    instance.<field.javaName> = new java.util.HashMap();
 <elseif(field.repeated)>
-    instance.<field.javaName> = new java.util.ArrayList\<>();
+    instance.<field.javaName> = new java.util.ArrayList();
 <endif>
     instance.<field.javaBitFieldName> |= <field.javaBitFieldMask>;
 }
@@ -202,11 +202,11 @@ if(instance.<field.oneof.javaCaseFieldName> == <field.oneof.javaName>.<field.jav
 }
 <elseif(field.type.enum)>
 if(instance.<field.oneof.javaCaseFieldName> == <field.oneof.javaName>.<field.javaOneofConstantName>) {
-	output.writeEnum(<field.tag>, (int) instance.<field.oneof.javaFieldName>, false);
+	output.writeEnum(<field.tag>, (Integer) instance.<field.oneof.javaFieldName>, false);
 }
 <else>
 if(instance.<field.oneof.javaCaseFieldName> == <field.oneof.javaName>.<field.javaOneofConstantName>) {
-    output.<field.protostuffWriteMethod>(<field.tag>, (<field.javaType>) instance.<field.oneof.javaFieldName>, false);
+    output.<field.protostuffWriteMethod>(<field.tag>, (<field.javaWrapperType>) instance.<field.oneof.javaFieldName>, false);
 }
 <endif>
 >>

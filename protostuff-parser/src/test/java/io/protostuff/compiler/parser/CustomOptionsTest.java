@@ -60,7 +60,7 @@ public class CustomOptionsTest extends AbstractParserTest {
     @Test
     public void invalidStandardEnumOptionType() throws Exception {
         thrown.expect(ParserException.class);
-        thrown.expectMessage("Cannot set option 'optimize_for': expected enum = [SPEED, LITE_RUNTIME, CODE_SIZE] " +
+        thrown.expectMessage("Cannot set option 'optimize_for': expected enum = [SPEED, CODE_SIZE, LITE_RUNTIME] " +
                 "[protostuff_unittest/options_illegal_enum_name.proto:7]");
         importer.importFile(new ClasspathFileReader(), "protostuff_unittest/options_illegal_enum_name.proto");
     }

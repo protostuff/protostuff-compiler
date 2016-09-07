@@ -5,7 +5,6 @@ import org.stringtemplate.v4.AttributeRenderer;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Function;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -17,14 +16,19 @@ public class AbstractExtensionProvider implements ExtensionProvider {
     private final Map<Class<?>, PropertyProvider<?>> extenderMap;
 
     public AbstractExtensionProvider() {
-        extenderMap = new HashMap<>();
-        attributeRenderers = new HashMap<>();
+        attributeRenderers = new HashMap<Class<?>, AttributeRenderer>();
+        extenderMap = new HashMap<Class<?>, PropertyProvider<?>>();
     }
 
     @SuppressWarnings("unchecked")
-    public final <T> void registerProperty(Class<T> object, String property, Function<T, ?> function) {
-        PropertyProvider<T> extender = (PropertyProvider<T>) extenderMap.computeIfAbsent(object,
-                aClass -> new SimplePropertyProvider<T>());
+    public final <T> void registerProperty(Class<T> object, String property, ComputableProperty<T, ?> function) {
+        PropertyProvider<T> extender;
+        if (extenderMap.containsKey(object)) {
+            extender = (PropertyProvider<T>) extenderMap.get(object);
+        } else {
+            extender = new SimplePropertyProvider<T>();
+            extenderMap.put(object, extender);
+        }
         extender.register(property, function);
     }
 

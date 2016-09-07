@@ -14,10 +14,10 @@ public class ProtoWalker {
     private final ProtoContext context;
     private final Proto proto;
 
-    private final List<Processor<Proto>> protoProcessors = new ArrayList<>();
-    private final List<Processor<Message>> messageProcessors = new ArrayList<>();
-    private final List<Processor<Enum>> enumProcessors = new ArrayList<>();
-    private final List<Processor<Service>> serviceProcessors = new ArrayList<>();
+    private final List<Processor<Proto>> protoProcessors = new ArrayList<Processor<Proto>>();
+    private final List<Processor<Message>> messageProcessors = new ArrayList<Processor<Message>>();
+    private final List<Processor<Enum>> enumProcessors = new ArrayList<Processor<Enum>>();
+    private final List<Processor<Service>> serviceProcessors = new ArrayList<Processor<Service>>();
 
     public ProtoWalker(ProtoContext protoContext) {
         this.context = protoContext;
