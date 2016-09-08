@@ -2,11 +2,10 @@ package io.protostuff.compiler.model;
 
 import com.google.common.base.MoreObjects;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import javax.annotation.Nullable;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -73,7 +72,7 @@ public class Extension extends AbstractElement implements FieldContainer, GroupC
 
     public void addField(Field field) {
         if (fields == null) {
-            fields = new ArrayList<>();
+            fields = new ArrayList<Field>();
         }
         fields.add(field);
     }
@@ -114,7 +113,7 @@ public class Extension extends AbstractElement implements FieldContainer, GroupC
     @Override
     public void addGroup(Group group) {
         if (groups == null) {
-            groups = new ArrayList<>();
+            groups = new ArrayList<Group>();
         }
         groups.add(group);
     }

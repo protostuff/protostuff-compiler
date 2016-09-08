@@ -1,6 +1,7 @@
 package io.protostuff.compiler.maven;
 
 import com.google.common.base.Throwables;
+import io.protostuff.compiler.model.ModuleConfiguration;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecution;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -11,9 +12,10 @@ import org.slf4j.impl.StaticLoggerBinder;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static org.apache.maven.plugins.annotations.LifecyclePhase.GENERATE_TEST_SOURCES;
 
@@ -40,9 +42,24 @@ public abstract class AbstractGeneratorMojo extends AbstractMojo {
     @Parameter
     protected List<String> excludes;
 
-    protected Path getSourcePath() {
+    public static Collection<File> findProtoFilesRecursively(File dir) {
+        Set<File> fileTree = new HashSet<File>();
+        if (dir == null || dir.listFiles() == null) {
+            return fileTree;
+        }
+        for (File entry : dir.listFiles()) {
+            if (entry.isFile() && entry.getName().endsWith(".proto")) {
+                fileTree.add(entry);
+            } else {
+                fileTree.addAll(findProtoFilesRecursively(entry));
+            }
+        }
+        return fileTree;
+    }
+
+    protected File getSourcePath() {
         if (source != null) {
-            return source.toPath();
+            return source;
         }
         String phase = execution.getLifecyclePhase();
         String basedir;
@@ -57,7 +74,7 @@ public abstract class AbstractGeneratorMojo extends AbstractMojo {
         } else {
             sourcePath = basedir + "/src/main/proto/";
         }
-        return Paths.get(sourcePath);
+        return new File(sourcePath);
     }
 
     @Override
@@ -73,6 +90,14 @@ public abstract class AbstractGeneratorMojo extends AbstractMojo {
             normalizedPath = protoFilePath;
         }
         return normalizedPath;
+    }
+
+    protected void addProtoFiles(File sourcePath, ModuleConfiguration configuration) {
+        Collection<File> protoFiles = findProtoFilesRecursively(sourcePath);
+        for (File protoFile : protoFiles) {
+            String path = sourcePath.toURI().relativize(protoFile.toURI()).getPath();
+            configuration.addProtoFile(normalizeProtoPath(path));
+        }
     }
 
 }

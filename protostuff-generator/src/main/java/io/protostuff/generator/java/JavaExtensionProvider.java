@@ -3,6 +3,7 @@ package io.protostuff.generator.java;
 import io.protostuff.compiler.model.Enum;
 import io.protostuff.compiler.model.*;
 import io.protostuff.generator.AbstractExtensionProvider;
+import io.protostuff.generator.ComputableProperty;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -10,82 +11,407 @@ import io.protostuff.generator.AbstractExtensionProvider;
 public class JavaExtensionProvider extends AbstractExtensionProvider {
 
     public JavaExtensionProvider() {
-        registerProperty(Proto.class, "javaPackage", ProtoUtil::getPackage);
-        registerProperty(Proto.class, "javaPackagePath", ProtoUtil::getPackagePath);
+        registerProperty(Proto.class, "javaPackage", new ComputableProperty<Proto, Object>() {
+            @Override
+            public Object compute(Proto object) {
+                return ProtoUtil.getPackage(object);
+            }
+        });
+        registerProperty(Proto.class, "javaPackagePath", new ComputableProperty<Proto, Object>() {
+            @Override
+            public Object compute(Proto object) {
+                return ProtoUtil.getPackagePath(object);
+            }
+        });
 
-        registerProperty(ScalarFieldType.class, "javaWrapperType", ScalarFieldTypeUtil::getWrapperType);
-        registerProperty(ScalarFieldType.class, "javaPrimitiveType", ScalarFieldTypeUtil::getPrimitiveType);
+        registerProperty(ScalarFieldType.class, "javaWrapperType", new ComputableProperty<ScalarFieldType, Object>() {
+            @Override
+            public Object compute(ScalarFieldType object) {
+                return ScalarFieldTypeUtil.getWrapperType(object);
+            }
+        });
+        registerProperty(ScalarFieldType.class, "javaPrimitiveType", new ComputableProperty<ScalarFieldType, Object>() {
+            @Override
+            public Object compute(ScalarFieldType object) {
+                return ScalarFieldTypeUtil.getPrimitiveType(object);
+            }
+        });
 
-        registerProperty(Message.class, "javaName", UserTypeUtil::getClassName);
-        registerProperty(Message.class, "javaFullName", UserTypeUtil::getCanonicalName);
-        registerProperty(Message.class, "hasFields", MessageUtil::hasFields);
-        registerProperty(Message.class, "javaBitFieldNames", MessageUtil::bitFieldNames);
+        registerProperty(Message.class, "javaName", new ComputableProperty<Message, Object>() {
+            @Override
+            public Object compute(Message object) {
+                return UserTypeUtil.getClassName(object);
+            }
+        });
+        registerProperty(Message.class, "javaFullName", new ComputableProperty<Message, Object>() {
+            @Override
+            public Object compute(Message object) {
+                return UserTypeUtil.getCanonicalName(object);
+            }
+        });
+        registerProperty(Message.class, "hasFields", new ComputableProperty<Message, Object>() {
+            @Override
+            public Object compute(Message object) {
+                return MessageUtil.hasFields(object);
+            }
+        });
+        registerProperty(Message.class, "javaBitFieldNames", new ComputableProperty<Message, Object>() {
+            @Override
+            public Object compute(Message object) {
+                return MessageUtil.bitFieldNames(object);
+            }
+        });
 
-        registerProperty(Field.class, "javaType", MessageFieldUtil::getFieldType);
-        registerProperty(Field.class, "javaRepeatedType", MessageFieldUtil::getRepeatedFieldType);
-        registerProperty(Field.class, "javaIterableType", MessageFieldUtil::getIterableFieldType);
-        registerProperty(Field.class, "javaWrapperType", MessageFieldUtil::getWrapperFieldType);
-        registerProperty(Field.class, "javaName", MessageFieldUtil::getFieldName);
-        registerProperty(Field.class, "jsonName", MessageFieldUtil::getJsonFieldName);
-        registerProperty(Field.class, "javaGetterName", MessageFieldUtil::getFieldGetterName);
-        registerProperty(Field.class, "javaSetterName", MessageFieldUtil::getFieldSetterName);
-        registerProperty(Field.class, "javaCleanerName", MessageFieldUtil::getFieldCleanerName);
-        registerProperty(Field.class, "javaEnumValueGetterName", MessageFieldUtil::getEnumFieldValueGetterName);
-        registerProperty(Field.class, "javaEnumValueSetterName", MessageFieldUtil::getEnumFieldValueSetterName);
+        registerProperty(Field.class, "javaType", new ComputableProperty<Field, Object>() {
+            @Override
+            public Object compute(Field object) {
+                return MessageFieldUtil.getFieldType(object);
+            }
+        });
+        registerProperty(Field.class, "javaRepeatedType", new ComputableProperty<Field, Object>() {
+            @Override
+            public Object compute(Field object) {
+                return MessageFieldUtil.getRepeatedFieldType(object);
+            }
+        });
+        registerProperty(Field.class, "javaIterableType", new ComputableProperty<Field, Object>() {
+            @Override
+            public Object compute(Field object) {
+                return MessageFieldUtil.getIterableFieldType(object);
+            }
+        });
+        registerProperty(Field.class, "javaWrapperType", new ComputableProperty<Field, Object>() {
+            @Override
+            public Object compute(Field object) {
+                return MessageFieldUtil.getWrapperFieldType(object);
+            }
+        });
+        registerProperty(Field.class, "javaName", new ComputableProperty<Field, Object>() {
+            @Override
+            public Object compute(Field object) {
+                return MessageFieldUtil.getFieldName(object);
+            }
+        });
+        registerProperty(Field.class, "jsonName", new ComputableProperty<Field, Object>() {
+            @Override
+            public Object compute(Field object) {
+                return MessageFieldUtil.getJsonFieldName(object);
+            }
+        });
+        registerProperty(Field.class, "javaGetterName", new ComputableProperty<Field, Object>() {
+            @Override
+            public Object compute(Field object) {
+                return MessageFieldUtil.getFieldGetterName(object);
+            }
+        });
+        registerProperty(Field.class, "javaSetterName", new ComputableProperty<Field, Object>() {
+            @Override
+            public Object compute(Field object) {
+                return MessageFieldUtil.getFieldSetterName(object);
+            }
+        });
+        registerProperty(Field.class, "javaCleanerName", new ComputableProperty<Field, Object>() {
+            @Override
+            public Object compute(Field object) {
+                return MessageFieldUtil.getFieldCleanerName(object);
+            }
+        });
+        registerProperty(Field.class, "javaEnumValueGetterName", new ComputableProperty<Field, Object>() {
+            @Override
+            public Object compute(Field object) {
+                return MessageFieldUtil.getEnumFieldValueGetterName(object);
+            }
+        });
+        registerProperty(Field.class, "javaEnumValueSetterName", new ComputableProperty<Field, Object>() {
+            @Override
+            public Object compute(Field object) {
+                return MessageFieldUtil.getEnumFieldValueSetterName(object);
+            }
+        });
 
-        registerProperty(Field.class, "javaRepeatedGetterName", MessageFieldUtil::getRepeatedFieldGetterName);
-        registerProperty(Field.class, "javaRepeatedEnumConverterName", MessageFieldUtil::getRepeatedEnumConverterName);
-        registerProperty(Field.class, "javaRepeatedSetterName", MessageFieldUtil::getRepeatedFieldSetterName);
-        registerProperty(Field.class, "javaRepeatedAdderName", MessageFieldUtil::getRepeatedFieldAdderName);
-        registerProperty(Field.class, "javaRepeatedAddAllName", MessageFieldUtil::getRepeatedFieldAddAllName);
-        registerProperty(Field.class, "javaRepeatedEnumValueSetterName", MessageFieldUtil::getRepeatedEnumValueSetterName);
-        registerProperty(Field.class, "javaRepeatedEnumValueAdderName", MessageFieldUtil::getRepeatedEnumValueAdderName);
-        registerProperty(Field.class, "javaRepeatedEnumValueAddAllName", MessageFieldUtil::getRepeatedEnumValueAddAllName);
-        registerProperty(Field.class, "javaRepeatedEnumValueGetterName", MessageFieldUtil::getRepeatedEnumFieldValueGetterName);
-        registerProperty(Field.class, "javaRepeatedEnumValueGetterByIndexName", MessageFieldUtil::javaRepeatedEnumValueGetterByIndexName);
+        registerProperty(Field.class, "javaRepeatedGetterName", new ComputableProperty<Field, Object>() {
+            @Override
+            public Object compute(Field object) {
+                return MessageFieldUtil.getRepeatedFieldGetterName(object);
+            }
+        });
+        registerProperty(Field.class, "javaRepeatedEnumConverterName", new ComputableProperty<Field, Object>() {
+            @Override
+            public Object compute(Field object) {
+                return MessageFieldUtil.getRepeatedEnumConverterName(object);
+            }
+        });
+        registerProperty(Field.class, "javaRepeatedSetterName", new ComputableProperty<Field, Object>() {
+            @Override
+            public Object compute(Field object) {
+                return MessageFieldUtil.getRepeatedFieldSetterName(object);
+            }
+        });
+        registerProperty(Field.class, "javaRepeatedAdderName", new ComputableProperty<Field, Object>() {
+            @Override
+            public Object compute(Field object) {
+                return MessageFieldUtil.getRepeatedFieldAdderName(object);
+            }
+        });
+        registerProperty(Field.class, "javaRepeatedAddAllName", new ComputableProperty<Field, Object>() {
+            @Override
+            public Object compute(Field object) {
+                return MessageFieldUtil.getRepeatedFieldAddAllName(object);
+            }
+        });
+        registerProperty(Field.class, "javaRepeatedEnumValueSetterName", new ComputableProperty<Field, Object>() {
+            @Override
+            public Object compute(Field object) {
+                return MessageFieldUtil.getRepeatedEnumValueSetterName(object);
+            }
+        });
+        registerProperty(Field.class, "javaRepeatedEnumValueAdderName", new ComputableProperty<Field, Object>() {
+            @Override
+            public Object compute(Field object) {
+                return MessageFieldUtil.getRepeatedEnumValueAdderName(object);
+            }
+        });
+        registerProperty(Field.class, "javaRepeatedEnumValueAddAllName", new ComputableProperty<Field, Object>() {
+            @Override
+            public Object compute(Field object) {
+                return MessageFieldUtil.getRepeatedEnumValueAddAllName(object);
+            }
+        });
+        registerProperty(Field.class, "javaRepeatedEnumValueGetterName", new ComputableProperty<Field, Object>() {
+            @Override
+            public Object compute(Field object) {
+                return MessageFieldUtil.getRepeatedEnumFieldValueGetterName(object);
+            }
+        });
+        registerProperty(Field.class, "javaRepeatedEnumValueGetterByIndexName", new ComputableProperty<Field, Object>() {
+            @Override
+            public Object compute(Field object) {
+                return MessageFieldUtil.javaRepeatedEnumValueGetterByIndexName(object);
+            }
+        });
 
-        registerProperty(Field.class, "javaRepeatedGetCountMethodName", MessageFieldUtil::repeatedGetCountMethodName);
-        registerProperty(Field.class, "javaRepeatedGetByIndexMethodName", MessageFieldUtil::repeatedGetByIndexMethodName);
+        registerProperty(Field.class, "javaRepeatedGetCountMethodName", new ComputableProperty<Field, Object>() {
+            @Override
+            public Object compute(Field object) {
+                return MessageFieldUtil.repeatedGetCountMethodName(object);
+            }
+        });
+        registerProperty(Field.class, "javaRepeatedGetByIndexMethodName", new ComputableProperty<Field, Object>() {
+            @Override
+            public Object compute(Field object) {
+                return MessageFieldUtil.repeatedGetByIndexMethodName(object);
+            }
+        });
 
-        registerProperty(Field.class, "javaMapGetterName", MessageFieldUtil::getMapGetterName);
-        registerProperty(Field.class, "javaMapType", MessageFieldUtil::getMapFieldType);
-        registerProperty(Field.class, "javaMapKeyType", MessageFieldUtil::getMapFieldKeyType);
-        registerProperty(Field.class, "javaMapValueType", MessageFieldUtil::getMapFieldValueType);
-        registerProperty(Field.class, "javaMapAdderName", MessageFieldUtil::getMapFieldAdderName);
-        registerProperty(Field.class, "javaMapAddAllName", MessageFieldUtil::getMapFieldAddAllName);
-        registerProperty(Field.class, "javaMapGetByKeyMethodName", MessageFieldUtil::mapGetByKeyMethodName);
+        registerProperty(Field.class, "javaMapGetterName", new ComputableProperty<Field, Object>() {
+            @Override
+            public Object compute(Field object) {
+                return MessageFieldUtil.getMapGetterName(object);
+            }
+        });
+        registerProperty(Field.class, "javaMapType", new ComputableProperty<Field, Object>() {
+            @Override
+            public Object compute(Field object) {
+                return MessageFieldUtil.getMapFieldType(object);
+            }
+        });
+        registerProperty(Field.class, "javaMapKeyType", new ComputableProperty<Field, Object>() {
+            @Override
+            public Object compute(Field object) {
+                return MessageFieldUtil.getMapFieldKeyType(object);
+            }
+        });
+        registerProperty(Field.class, "javaMapValueType", new ComputableProperty<Field, Object>() {
+            @Override
+            public Object compute(Field object) {
+                return MessageFieldUtil.getMapFieldValueType(object);
+            }
+        });
+        registerProperty(Field.class, "javaMapAdderName", new ComputableProperty<Field, Object>() {
+            @Override
+            public Object compute(Field object) {
+                return MessageFieldUtil.getMapFieldAdderName(object);
+            }
+        });
+        registerProperty(Field.class, "javaMapAddAllName", new ComputableProperty<Field, Object>() {
+            @Override
+            public Object compute(Field object) {
+                return MessageFieldUtil.getMapFieldAddAllName(object);
+            }
+        });
+        registerProperty(Field.class, "javaMapGetByKeyMethodName", new ComputableProperty<Field, Object>() {
+            @Override
+            public Object compute(Field object) {
+                return MessageFieldUtil.mapGetByKeyMethodName(object);
+            }
+        });
 
-        registerProperty(Field.class, "javaIsMessage", MessageFieldUtil::isMessage);
-        registerProperty(Field.class, "javaHasMethodName", MessageFieldUtil::getHasMethodName);
-        registerProperty(Field.class, "javaBuilderGetterName", MessageFieldUtil::getBuilderGetterName);
-        registerProperty(Field.class, "javaBuilderSetterName", MessageFieldUtil::getBuilderSetterName);
-        registerProperty(Field.class, "javaBuilderRepeatedSetterName", MessageFieldUtil::getRepeatedBuilderSetterName);
-        registerProperty(Field.class, "javaDefaultValue", MessageFieldUtil::getDefaultValue);
-        registerProperty(Field.class, "javaIsNumericType", MessageFieldUtil::isNumericType);
-        registerProperty(Field.class, "javaIsBooleanType", MessageFieldUtil::isBooleanType);
-        registerProperty(Field.class, "javaIsScalarNullableType", MessageFieldUtil::isScalarNullableType);
-        registerProperty(Field.class, "protostuffReadMethod", MessageFieldUtil::protostuffReadMethod);
-        registerProperty(Field.class, "protostuffWriteMethod", MessageFieldUtil::protostuffWriteMethod);
-        registerProperty(Field.class, "toStringPart", MessageFieldUtil::toStringPart);
-        registerProperty(Field.class, "javaBitFieldName", MessageFieldUtil::bitFieldName);
-        registerProperty(Field.class, "javaBitFieldIndex", MessageFieldUtil::bitFieldIndex);
-        registerProperty(Field.class, "javaBitFieldMask", MessageFieldUtil::bitFieldMask);
-        registerProperty(Field.class, "javaOneofConstantName", MessageFieldUtil::javaOneofConstantName);
+        registerProperty(Field.class, "javaIsMessage", new ComputableProperty<Field, Object>() {
+            @Override
+            public Object compute(Field object) {
+                return MessageFieldUtil.isMessage(object);
+            }
+        });
+        registerProperty(Field.class, "javaHasMethodName", new ComputableProperty<Field, Object>() {
+            @Override
+            public Object compute(Field object) {
+                return MessageFieldUtil.getHasMethodName(object);
+            }
+        });
+        registerProperty(Field.class, "javaBuilderGetterName", new ComputableProperty<Field, Object>() {
+            @Override
+            public Object compute(Field object) {
+                return MessageFieldUtil.getBuilderGetterName(object);
+            }
+        });
+        registerProperty(Field.class, "javaBuilderSetterName", new ComputableProperty<Field, Object>() {
+            @Override
+            public Object compute(Field object) {
+                return MessageFieldUtil.getBuilderSetterName(object);
+            }
+        });
+        registerProperty(Field.class, "javaBuilderRepeatedSetterName", new ComputableProperty<Field, Object>() {
+            @Override
+            public Object compute(Field object) {
+                return MessageFieldUtil.getRepeatedBuilderSetterName(object);
+            }
+        });
+        registerProperty(Field.class, "javaDefaultValue", new ComputableProperty<Field, Object>() {
+            @Override
+            public Object compute(Field object) {
+                return MessageFieldUtil.getDefaultValue(object);
+            }
+        });
+        registerProperty(Field.class, "javaIsNumericType", new ComputableProperty<Field, Object>() {
+            @Override
+            public Object compute(Field object) {
+                return MessageFieldUtil.isNumericType(object);
+            }
+        });
+        registerProperty(Field.class, "javaIsBooleanType", new ComputableProperty<Field, Object>() {
+            @Override
+            public Object compute(Field object) {
+                return MessageFieldUtil.isBooleanType(object);
+            }
+        });
+        registerProperty(Field.class, "javaIsScalarNullableType", new ComputableProperty<Field, Object>() {
+            @Override
+            public Object compute(Field object) {
+                return MessageFieldUtil.isScalarNullableType(object);
+            }
+        });
+        registerProperty(Field.class, "protostuffReadMethod", new ComputableProperty<Field, Object>() {
+            @Override
+            public Object compute(Field object) {
+                return MessageFieldUtil.protostuffReadMethod(object);
+            }
+        });
+        registerProperty(Field.class, "protostuffWriteMethod", new ComputableProperty<Field, Object>() {
+            @Override
+            public Object compute(Field object) {
+                return MessageFieldUtil.protostuffWriteMethod(object);
+            }
+        });
+        registerProperty(Field.class, "toStringPart", new ComputableProperty<Field, Object>() {
+            @Override
+            public Object compute(Field object) {
+                return MessageFieldUtil.toStringPart(object);
+            }
+        });
+        registerProperty(Field.class, "javaBitFieldName", new ComputableProperty<Field, Object>() {
+            @Override
+            public Object compute(Field object) {
+                return MessageFieldUtil.bitFieldName(object);
+            }
+        });
+        registerProperty(Field.class, "javaBitFieldIndex", new ComputableProperty<Field, Object>() {
+            @Override
+            public Object compute(Field object) {
+                return MessageFieldUtil.bitFieldIndex(object);
+            }
+        });
+        registerProperty(Field.class, "javaBitFieldMask", new ComputableProperty<Field, Object>() {
+            @Override
+            public Object compute(Field object) {
+                return MessageFieldUtil.bitFieldMask(object);
+            }
+        });
+        registerProperty(Field.class, "javaOneofConstantName", new ComputableProperty<Field, Object>() {
+            @Override
+            public Object compute(Field object) {
+                return MessageFieldUtil.javaOneofConstantName(object);
+            }
+        });
 
-        registerProperty(Oneof.class, "javaName", MessageUtil::getOneofEnumClassName);
-        registerProperty(Oneof.class, "javaNotSetConstantName", MessageUtil::getOneofNotSetConstantName);
-        registerProperty(Oneof.class, "javaCaseGetterName", MessageUtil::getOneofCaseGetterName);
-        registerProperty(Oneof.class, "javaCaseCleanerName", MessageUtil::getOneofCaseCleanerName);
-        registerProperty(Oneof.class, "javaFieldName", MessageUtil::getOneofFieldName);
-        registerProperty(Oneof.class, "javaCaseFieldName", MessageUtil::getOneofCaseFieldName);
+        registerProperty(Oneof.class, "javaName", new ComputableProperty<Oneof, Object>() {
+            @Override
+            public Object compute(Oneof object) {
+                return MessageUtil.getOneofEnumClassName(object);
+            }
+        });
+        registerProperty(Oneof.class, "javaNotSetConstantName", new ComputableProperty<Oneof, Object>() {
+            @Override
+            public Object compute(Oneof object) {
+                return MessageUtil.getOneofNotSetConstantName(object);
+            }
+        });
+        registerProperty(Oneof.class, "javaCaseGetterName", new ComputableProperty<Oneof, Object>() {
+            @Override
+            public Object compute(Oneof object) {
+                return MessageUtil.getOneofCaseGetterName(object);
+            }
+        });
+        registerProperty(Oneof.class, "javaCaseCleanerName", new ComputableProperty<Oneof, Object>() {
+            @Override
+            public Object compute(Oneof object) {
+                return MessageUtil.getOneofCaseCleanerName(object);
+            }
+        });
+        registerProperty(Oneof.class, "javaFieldName", new ComputableProperty<Oneof, Object>() {
+            @Override
+            public Object compute(Oneof object) {
+                return MessageUtil.getOneofFieldName(object);
+            }
+        });
+        registerProperty(Oneof.class, "javaCaseFieldName", new ComputableProperty<Oneof, Object>() {
+            @Override
+            public Object compute(Oneof object) {
+                return MessageUtil.getOneofCaseFieldName(object);
+            }
+        });
 
-        registerProperty(Enum.class, "javaName", UserTypeUtil::getClassName);
-        registerProperty(Enum.class, "javaFullName", UserTypeUtil::getCanonicalName);
+        registerProperty(Enum.class, "javaName", new ComputableProperty<Enum, Object>() {
+            @Override
+            public Object compute(Enum object) {
+                return UserTypeUtil.getClassName(object);
+            }
+        });
+        registerProperty(Enum.class, "javaFullName", new ComputableProperty<Enum, Object>() {
+            @Override
+            public Object compute(Enum object) {
+                return UserTypeUtil.getCanonicalName(object);
+            }
+        });
 
-        registerProperty(EnumConstant.class, "javaName", EnumUtil::getName);
+        registerProperty(EnumConstant.class, "javaName", new ComputableProperty<EnumConstant, Object>() {
+            @Override
+            public Object compute(EnumConstant object) {
+                return EnumUtil.getName(object);
+            }
+        });
 
-        registerProperty(Service.class, "javaName", ServiceUtil::getClassName);
+        registerProperty(Service.class, "javaName", new ComputableProperty<Service, Object>() {
+            @Override
+            public Object compute(Service object) {
+                return ServiceUtil.getClassName(object);
+            }
+        });
 
-        registerProperty(ServiceMethod.class, "javaName", ServiceUtil::getMethodName);
+        registerProperty(ServiceMethod.class, "javaName", new ComputableProperty<ServiceMethod, Object>() {
+            @Override
+            public Object compute(ServiceMethod object) {
+                return ServiceUtil.getMethodName(object);
+            }
+        });
     }
 }

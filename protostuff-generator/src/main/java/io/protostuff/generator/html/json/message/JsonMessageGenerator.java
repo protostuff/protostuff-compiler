@@ -1,17 +1,13 @@
 package io.protostuff.generator.html.json.message;
 
-import java.util.stream.Collectors;
-
-import javax.inject.Inject;
-
-import io.protostuff.compiler.model.Field;
-import io.protostuff.compiler.model.FieldModifier;
-import io.protostuff.compiler.model.Message;
-import io.protostuff.compiler.model.Module;
-import io.protostuff.compiler.model.UserTypeContainer;
+import io.protostuff.compiler.model.*;
 import io.protostuff.generator.OutputStreamFactory;
 import io.protostuff.generator.html.json.AbstractJsonGenerator;
 import io.protostuff.generator.html.json.index.NodeType;
+
+import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -25,43 +21,44 @@ public class JsonMessageGenerator extends AbstractJsonGenerator {
 
     @Override
     public void compile(Module module) {
-        module.getProtos().stream()
-                .forEach(proto -> rec(module, proto));
+        for (Proto proto : module.getProtos()) {
+            rec(module, proto);
+        }
     }
 
     private void rec(Module module, UserTypeContainer container) {
-        container.getMessages().stream()
-                .forEach(message -> {
-                    process(module, message);
-                    rec(module, message);
-                });
+        for (Message message : container.getMessages()) {
+            process(module, message);
+            rec(module, message);
+        }
     }
 
     private void process(Module module, Message message) {
-        ImmutableMessageDescriptor descriptor = ImmutableMessageDescriptor.builder()
-                .type(NodeType.MESSAGE)
-                .name(message.getName())
-                .canonicalName(message.getCanonicalName())
-                .description(message.getComments())
-                .addAllFields(message.getFields().stream()
-                        .map(field -> {
-                            ImmutableMessageField.Builder builder = ImmutableMessageField.builder()
-                                    .name(field.getName())
-                                    .typeId(field.getType().getCanonicalName())
-                                    .modifier(getModifier(field))
-                                    .tag(field.getTag())
-                                    .description(field.getComments())
-                                    .oneof(field.isOneofPart() ? field.getOneof().getName() : null);
-                            boolean isMap = field.isMap();
-                            if (isMap) {
-                                builder.isMap(true);
-                                builder.mapKeyTypeId(getMapKeyType(field));
-                                builder.mapValueTypeId(getMapValueType(field));
-                            }
-                            return builder.build();
-                        })
-                        .collect(Collectors.toList()))
-                .build();
+        List<MessageField> fields = new ArrayList<MessageField>();
+        for (Field field : message.getFields()) {
+            MessageField messageField = new MessageField();
+            messageField.setName(field.getName());
+            messageField.setTypeId(field.getType().getCanonicalName());
+            messageField.setModifier(getModifier(field));
+            messageField.setTag(field.getTag());
+            messageField.setDescription(field.getComments());
+            messageField.setOneof(field.isOneofPart() ? field.getOneof().getName() : null);
+            boolean isMap = field.isMap();
+            if (isMap) {
+                messageField.setMap(true);
+                messageField.setMapKeyTypeId(getMapKeyType(field));
+                messageField.setMapValueTypeId(getMapValueType(field));
+            } else {
+                messageField.setMap(false);
+            }
+            fields.add(messageField);
+        }
+        MessageDescriptor descriptor = new MessageDescriptor();
+        descriptor.setType(NodeType.MESSAGE);
+        descriptor.setName(message.getName());
+        descriptor.setCanonicalName(message.getCanonicalName());
+        descriptor.setDescription(message.getComments());
+        descriptor.setFields(fields);
         String output = module.getOutput() + "/data/type/" + message.getCanonicalName() + ".json";
         write(output, descriptor);
     }

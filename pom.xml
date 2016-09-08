@@ -19,7 +19,7 @@
         <antlr4.version>4.5</antlr4.version>
         <guice.version>4.0</guice.version>
         <guava.version>18.0</guava.version>
-        <protostuff.version>1.4.2</protostuff.version>
+        <protostuff.version>1.5.0</protostuff.version>
     </properties>
 
     <developers>
@@ -79,10 +79,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.2</version>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                    <!-- immutables: prevents endPosTable exception for maven compile -->
-                    <useIncrementalCompilation>false</useIncrementalCompilation>
+                    <source>1.6</source>
+                    <target>1.6</target>
                 </configuration>
             </plugin>
             <plugin>
@@ -146,11 +144,6 @@
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
                 <version>1.7.10</version>
-            </dependency>
-            <dependency>
-                <groupId>org.immutables</groupId>
-                <artifactId>value</artifactId>
-                <version>2.1.0</version>
             </dependency>
             <dependency>
                 <groupId>com.google.code.findbugs</groupId>

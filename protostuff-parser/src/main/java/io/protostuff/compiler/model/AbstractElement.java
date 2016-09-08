@@ -44,7 +44,7 @@ public abstract class AbstractElement implements Element {
 
     public void addComment(String line) {
         if (comments == null) {
-            comments = new ArrayList<>();
+            comments = new ArrayList<String>();
         }
         comments.add(line);
     }

@@ -2,13 +2,15 @@ package io.protostuff.compiler.parser;
 
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.misc.Interval;
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -18,25 +20,25 @@ import static org.junit.Assert.assertNull;
  */
 public class LocalFileReaderTest {
 
-    private Path tempDirectory1;
-    private Path tempDirectory2;
-    private Path file1;
-    private Path file2;
+    @Rule
+    public TemporaryFolder folder = new TemporaryFolder();
+
+    private File tempDirectory1;
+    private File tempDirectory2;
 
     @Before
     public void setUp() throws Exception {
-        tempDirectory1 = Files.createTempDirectory("protostuff-test-");
-        file1 = Files.write(tempDirectory1.resolve("1.proto"), "1".getBytes());
-        tempDirectory2 = Files.createTempDirectory("protostuff-test-");
-        file2 = Files.write(tempDirectory1.resolve("2.proto"), "2".getBytes());
+        tempDirectory1 = folder.newFolder("protostuff-test-1");
+        tempDirectory2 = folder.newFolder("protostuff-test-2");
+        createFile(tempDirectory1, "1.proto", "1");
+        createFile(tempDirectory2, "2.proto", "2");
     }
 
-    @After
-    public void tearDown() throws Exception {
-        Files.delete(file1);
-        Files.delete(file2);
-        Files.delete(tempDirectory1);
-        Files.delete(tempDirectory2);
+    private void createFile(File folder, String name, String content) throws IOException {
+        String file = LocalFileReader.resolveRelativeFile(folder, name);
+        PrintWriter writer = new PrintWriter(file, "UTF-8");
+        writer.print(content);
+        writer.close();
     }
 
     @Test

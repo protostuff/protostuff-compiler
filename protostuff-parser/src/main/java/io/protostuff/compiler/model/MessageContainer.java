@@ -1,8 +1,7 @@
 package io.protostuff.compiler.model;
 
-import java.util.List;
-
 import javax.annotation.Nullable;
+import java.util.List;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -19,14 +18,7 @@ public interface MessageContainer {
      * this container
      */
     @Nullable
-    default Message getMessage(String name) {
-        for (Message message : getMessages()) {
-            if (name.equals(message.getName())) {
-                return message;
-            }
-        }
-        return null;
-    }
+    Message getMessage(String name);
 
     void addMessage(Message message);
 

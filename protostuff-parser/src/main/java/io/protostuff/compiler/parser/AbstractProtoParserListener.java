@@ -1,5 +1,7 @@
 package io.protostuff.compiler.parser;
 
+import io.protostuff.compiler.model.AbstractElement;
+import io.protostuff.compiler.model.SourceCodeLocation;
 import org.antlr.v4.runtime.BufferedTokenStream;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
@@ -7,9 +9,6 @@ import org.antlr.v4.runtime.Token;
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.List;
-
-import io.protostuff.compiler.model.AbstractElement;
-import io.protostuff.compiler.model.SourceCodeLocation;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -34,7 +33,7 @@ public abstract class AbstractProtoParserListener extends ProtoParserBaseListene
     }
 
     protected void attachComments(ParserRuleContext ctx, AbstractElement element, boolean addTrailingComment) {
-        List<String> comments = new ArrayList<>();
+        List<String> comments = new ArrayList<String>();
         Token stop = ctx.getStop();
         Token start = ctx.getStart();
         List<Token> tokensBefore = tokens.getHiddenTokensToLeft(start.getTokenIndex(), ProtoLexer.HIDDEN);
@@ -78,7 +77,7 @@ public abstract class AbstractProtoParserListener extends ProtoParserBaseListene
      * Returns new list instance.
      */
     protected List<String> trim(List<String> comments) {
-        List<String> trimComments = new ArrayList<>();
+        List<String> trimComments = new ArrayList<String>();
         int n = 0;
         boolean tryRemoveWhitespace = true;
         while (tryRemoveWhitespace) {

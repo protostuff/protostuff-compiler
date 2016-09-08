@@ -1,10 +1,9 @@
 package io.protostuff.compiler.parser;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -14,7 +13,7 @@ public class ImporterImpl implements Importer {
 
     private final FileDescriptorLoader loader;
 
-    private Map<String, ProtoContext> cachedImports = new HashMap<>();
+    private Map<String, ProtoContext> cachedImports = new HashMap<String, ProtoContext>();
 
     @Inject
     public ImporterImpl(FileDescriptorLoader loader) {

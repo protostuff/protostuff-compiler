@@ -10,7 +10,7 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.junit.Assert;
 import org.junit.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 /**
@@ -25,7 +25,7 @@ public class ServiceParseListenerTest {
                 "}"
         );
         Service service = parseService(input);
-        assertThat(service.getName()).isEqualTo("A");
+        assertEquals("A", service.getName());
     }
 
     @Test

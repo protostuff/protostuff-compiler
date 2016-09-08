@@ -1,17 +1,11 @@
 package io.protostuff.compiler.parser;
 
+import io.protostuff.compiler.Visitor;
+import io.protostuff.compiler.model.Enum;
+import io.protostuff.compiler.model.*;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
-
-import io.protostuff.compiler.model.Enum;
-import io.protostuff.compiler.model.Extension;
-import io.protostuff.compiler.model.GroupContainer;
-import io.protostuff.compiler.model.Message;
-import io.protostuff.compiler.model.Proto;
-import io.protostuff.compiler.model.Service;
-import io.protostuff.compiler.model.UserType;
-import io.protostuff.compiler.model.UserTypeContainer;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -25,7 +19,7 @@ public class TypeRegistratorPostProcessor implements ProtoContextPostProcessor {
 
     private void registerUserTypes(ProtoContext context) {
         final Proto proto = context.getProto();
-        List<Message> messages = new ArrayList<>();
+        List<Message> messages = new ArrayList<Message>();
         messages.addAll(proto.getMessages());
         for (Extension extension : proto.getDeclaredExtensions()) {
             messages.addAll(extension.getGroups());
@@ -59,25 +53,33 @@ public class TypeRegistratorPostProcessor implements ProtoContextPostProcessor {
 
     }
 
-    private void registerNestedUserTypes(ProtoContext context, UserTypeContainer parent) {
-        List<Message> nestedMessages = new ArrayList<>();
+    private void registerNestedUserTypes(final ProtoContext context, final UserTypeContainer parent) {
+        List<Message> nestedMessages = new ArrayList<Message>();
         nestedMessages.addAll(parent.getMessages());
         if (parent instanceof GroupContainer) {
-            nestedMessages.addAll(((GroupContainer)parent).getGroups());
+            nestedMessages.addAll(((GroupContainer) parent).getGroups());
         }
         for (Extension extension : parent.getDeclaredExtensions()) {
             nestedMessages.addAll(extension.getGroups());
         }
 
         List<Enum> nestedEnums = parent.getEnums();
-        Consumer<UserType> nestedTypeProcessor = type -> {
-            type.setProto(context.getProto());
-            String fullyQualifiedName = parent.getNamespace() + type.getName();
-            type.setFullyQualifiedName(fullyQualifiedName);
-            context.register(fullyQualifiedName, type);
+        Visitor<UserType> nestedTypeProcessor = new Visitor<UserType>() {
+            @Override
+            public void visit(UserType type) {
+                type.setProto(context.getProto());
+                String fullyQualifiedName = parent.getNamespace() + type.getName();
+                type.setFullyQualifiedName(fullyQualifiedName);
+                context.register(fullyQualifiedName, type);
+            }
         };
-        nestedEnums.forEach(nestedTypeProcessor);
-        nestedMessages.forEach(nestedTypeProcessor);
-        nestedMessages.forEach(message -> registerNestedUserTypes(context, message));
+        Visitors.run(nestedEnums, nestedTypeProcessor);
+        Visitors.run(nestedMessages, nestedTypeProcessor);
+        Visitors.run(nestedMessages, new Visitor<Message>() {
+            @Override
+            public void visit(Message message) {
+                registerNestedUserTypes(context, message);
+            }
+        });
     }
 }

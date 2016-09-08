@@ -1,15 +1,15 @@
 package io.protostuff.compiler.parser;
 
+import io.protostuff.compiler.model.Extension;
+import io.protostuff.compiler.model.Import;
+import io.protostuff.compiler.model.Proto;
+
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Deque;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-
-import io.protostuff.compiler.model.Extension;
-import io.protostuff.compiler.model.Import;
-import io.protostuff.compiler.model.Proto;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -18,7 +18,8 @@ public final class ProtoExtensionRegistry extends AbstractExtensionRegistry {
 
     private final ExtensionRegistry localExtensionRegistry;
     private final ProtoContext context;
-    private final ConcurrentMap<String, Collection<Extension>> extensionCache = new ConcurrentHashMap<>();
+    private final ConcurrentMap<String, Collection<Extension>> extensionCache =
+            new ConcurrentHashMap<String, Collection<Extension>>();
     private Proto proto;
 
     public ProtoExtensionRegistry(ProtoContext context) {
@@ -37,20 +38,23 @@ public final class ProtoExtensionRegistry extends AbstractExtensionRegistry {
 
     @Override
     public Collection<Extension> getExtensions(String fullMessageName) {
-        return extensionCache.computeIfAbsent(fullMessageName, name -> {
-            Collection<Extension> result = new ArrayList<>();
-            result.addAll(localExtensionRegistry.getExtensions(name));
-            Deque<Import> queue = new ArrayDeque<>();
+        if (extensionCache.containsKey(fullMessageName)) {
+            return extensionCache.get(fullMessageName);
+        } else {
+            Collection<Extension> result = new ArrayList<Extension>();
+            result.addAll(localExtensionRegistry.getExtensions(fullMessageName));
+            Deque<Import> queue = new ArrayDeque<Import>();
             queue.addAll(proto.getImports());
             while (!queue.isEmpty()) {
                 Import anImport = queue.poll();
                 Proto proto = anImport.getProto();
-                Collection<Extension> extensions = getExtensions(proto, name);
+                Collection<Extension> extensions = getExtensions(proto, fullMessageName);
                 result.addAll(extensions);
                 queue.addAll(proto.getPublicImports());
             }
+            extensionCache.put(fullMessageName, result);
             return result;
-        });
+        }
     }
 
     private Collection<Extension> getExtensions(Proto proto, String name) {

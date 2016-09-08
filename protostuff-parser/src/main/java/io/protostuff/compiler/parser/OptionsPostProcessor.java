@@ -1,28 +1,17 @@
 package io.protostuff.compiler.parser;
 
+import io.protostuff.compiler.model.*;
+import io.protostuff.compiler.model.Enum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Deque;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Provider;
-
-import io.protostuff.compiler.model.Descriptor;
-import io.protostuff.compiler.model.DescriptorType;
-import io.protostuff.compiler.model.DynamicMessage;
-import io.protostuff.compiler.model.Element;
-import io.protostuff.compiler.model.Enum;
-import io.protostuff.compiler.model.Field;
-import io.protostuff.compiler.model.FieldType;
-import io.protostuff.compiler.model.Message;
-import io.protostuff.compiler.model.ProtobufConstants;
-import io.protostuff.compiler.model.ScalarFieldType;
-import io.protostuff.compiler.model.UserTypeContainer;
+import java.util.Deque;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 import static io.protostuff.compiler.parser.DefaultDescriptorProtoProvider.DESCRIPTOR_PROTO;
 import static io.protostuff.compiler.parser.TypeResolverPostProcessor.createScopeLookupList;
@@ -45,8 +34,18 @@ public class OptionsPostProcessor implements ProtoContextPostProcessor {
     @Override
     public void process(ProtoContext context) {
         ProtoWalker.newInstance(context)
-                .onProto(this::processOptions)
-                .onMessage(this::processOptions)
+                .onProto(new ProtoWalker.Processor<Proto>() {
+                    @Override
+                    public void run(ProtoContext context, Proto proto) {
+                        processOptions(context, proto);
+                    }
+                })
+                .onMessage(new ProtoWalker.Processor<Message>() {
+                    @Override
+                    public void run(ProtoContext context, Message message) {
+                        processOptions(context, message);
+                    }
+                })
                 .walk();
     }
 
@@ -66,7 +65,7 @@ public class OptionsPostProcessor implements ProtoContextPostProcessor {
     private void processOptions(ProtoContext context, Message sourceMessage, Descriptor owningDescriptor, DynamicMessage options) {
         ExtensionRegistry extensionRegistry = context.getExtensionRegistry();
         Map<String, Field> extensionFields = extensionRegistry.getExtensionFields(sourceMessage);
-        Map<DynamicMessage.Key, String> fullyQualifiedNames = new HashMap<>();
+        Map<DynamicMessage.Key, String> fullyQualifiedNames = new HashMap<DynamicMessage.Key, String>();
         for (Map.Entry<DynamicMessage.Key, DynamicMessage.Value> entry : options.getFields()) {
             DynamicMessage.Key key = entry.getKey();
             DynamicMessage.Value value = entry.getValue();

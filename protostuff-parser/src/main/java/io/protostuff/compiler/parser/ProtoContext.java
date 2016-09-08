@@ -1,20 +1,13 @@
 package io.protostuff.compiler.parser;
 
 import io.protostuff.compiler.model.Element;
-import io.protostuff.compiler.model.UserType;
+import io.protostuff.compiler.model.Proto;
+import io.protostuff.compiler.model.Type;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import io.protostuff.compiler.model.Proto;
-import io.protostuff.compiler.model.Type;
+import java.util.*;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -36,10 +29,10 @@ public class ProtoContext {
 
     public ProtoContext(String filename) {
         this.filename = filename;
-        symbolTable = new HashMap<>();
-        declarationStack = new ArrayDeque<>();
-        imports = new ArrayList<>();
-        publicImports = new ArrayList<>();
+        symbolTable = new HashMap<String, Type>();
+        declarationStack = new ArrayDeque<Object>();
+        imports = new ArrayList<ProtoContext>();
+        publicImports = new ArrayList<ProtoContext>();
         proto = new Proto();
         proto.setContext(this);
         proto.setFilename(filename);

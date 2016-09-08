@@ -72,6 +72,10 @@ public boolean equals(Object obj) {
     return true;
     <endif>
 }
+
+private  boolean equals(Object a, Object b) {
+    return (a == b) || (a != null && a.equals(b));
+}
 >>
 
 hash_code(message) ::= <<
@@ -91,24 +95,33 @@ public int hashCode() {
 to_string(message) ::= <<
 @Override
 public String toString() {
-    java.util.List\<String> parts = new java.util.ArrayList\<>();
+    java.util.List\<String> parts = new java.util.ArrayList\<String>();
     <message.fields:field_toString_part()>
-    return "<message.javaName>{" + String.join(", ", parts) + "}";
+    StringBuilder sb = new StringBuilder();
+    sb.append("<message.javaName>{");
+    for(int i=0; i\<parts.size(); i++) {
+        if (i!=0) {
+            sb.append(", ");
+        }
+        sb.append(parts.get(i));
+    }
+    sb.append("}");
+    return sb.toString();
 }
 >>
 
 
 field_equals_part(field) ::= <<
 <if(!field.oneofPart)>
-if (!java.util.Objects.equals(this.<field.javaName>, that.<field.javaName>)) {
+if (!equals(this.<field.javaName>, that.<field.javaName>)) {
     return false;
 }
 <endif>
 >>
 
 oneof_field_equals_part(oneof) ::= <<
-if (!(java.util.Objects.equals(this.<oneof.javaCaseFieldName>, that.<oneof.javaCaseFieldName>)
-        && java.util.Objects.equals(this.<oneof.javaFieldName>, that.<oneof.javaFieldName>))) {
+if (!(equals(this.<oneof.javaCaseFieldName>, that.<oneof.javaCaseFieldName>)
+        && equals(this.<oneof.javaFieldName>, that.<oneof.javaFieldName>))) {
     return false;
 }
 >>
@@ -116,9 +129,9 @@ if (!(java.util.Objects.equals(this.<oneof.javaCaseFieldName>, that.<oneof.javaC
 field_hashCode_part(field) ::= <<
 <if(!field.oneofPart)>
 <if(!field.repeated && (field.javaIsNumericType || field.javaIsBooleanType))>
-result = 31 * result + <field.type.javaWrapperType>.hashCode(this.<field.javaName>);
+result = 31 * result + <field.type.javaWrapperType>.valueOf(this.<field.javaName>).hashCode();
 <elseif(!field.repeated && field.type.enum)>
-result = 31 * result + Integer.hashCode(this.<field.javaName>);
+result = 31 * result + Integer.valueOf(this.<field.javaName>).hashCode();
 <else>
 result = 31 * result + (this.<field.javaName> == null ? 0 : this.<field.javaName>.hashCode());
 <endif>
@@ -128,4 +141,13 @@ result = 31 * result + (this.<field.javaName> == null ? 0 : this.<field.javaName
 oneof_field_hashCode_part(oneof) ::= <<
 result = 31 * result + this.<oneof.javaCaseFieldName>.hashCode();
 result = 31 * result + (this.<oneof.javaFieldName> == null ? 0 : this.<oneof.javaFieldName>.hashCode());
+>>
+
+list_adapter_converter(field) ::= <<
+io.protostuff.ListAdapter.Converter\<Integer, <field.javaType>\> converter = new io.protostuff.ListAdapter.Converter\<Integer, <field.javaType>\>() {
+    @Override
+    public <field.javaType> convert(Integer tag) {
+        return <field.javaType>.valueOf(tag);
+    }
+};
 >>

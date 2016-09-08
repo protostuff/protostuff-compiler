@@ -17,8 +17,12 @@ public class ProtoTreeWalker {
                      MessageOperation messageOperation,
                      EnumOperation enumOperation) {
         protoOperation.process(proto);
-        proto.getEnums().forEach(enumOperation::process);
-        proto.getMessages().forEach(messageOperation::process);
+        for (Enum anEnum : proto.getEnums()) {
+            enumOperation.process(anEnum);
+        }
+        for (Message message : proto.getMessages()) {
+            messageOperation.process(message);
+        }
         for (Message message : proto.getMessages()) {
             walk(message, messageOperation, enumOperation);
         }
@@ -27,9 +31,12 @@ public class ProtoTreeWalker {
     public void walk(UserTypeContainer container,
                      MessageOperation messageOperation,
                      EnumOperation enumOperation) {
-
-        container.getMessages().forEach(messageOperation::process);
-        container.getEnums().forEach(enumOperation::process);
+        for (Message message : container.getMessages()) {
+            messageOperation.process(message);
+        }
+        for (Enum anEnum : container.getEnums()) {
+            enumOperation.process(anEnum);
+        }
         for (Message message : container.getMessages()) {
             walk(message, messageOperation, enumOperation);
         }

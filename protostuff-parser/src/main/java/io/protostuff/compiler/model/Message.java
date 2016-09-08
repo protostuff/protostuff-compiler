@@ -49,7 +49,7 @@ public class Message extends AbstractUserTypeContainer
 
     public void addField(Field field) {
         if (fields == null) {
-            fields = new ArrayList<>();
+            fields = new ArrayList<Field>();
         }
         fields.add(field);
     }
@@ -86,7 +86,7 @@ public class Message extends AbstractUserTypeContainer
 
     public void addOneof(Oneof oneof) {
         if (oneofs == null) {
-            oneofs = new ArrayList<>();
+            oneofs = new ArrayList<Oneof>();
         }
         oneofs.add(oneof);
     }
@@ -129,8 +129,22 @@ public class Message extends AbstractUserTypeContainer
     }
 
     @Override
+    public String getCanonicalName() {
+        String fqn = getFullyQualifiedName();
+        if (fqn.startsWith(".")) {
+            return fqn.substring(1);
+        }
+        return fqn;
+    }
+
+    @Override
     public void setFullyQualifiedName(String fullyQualifiedName) {
         this.fullyQualifiedName = fullyQualifiedName;
+    }
+
+    @Override
+    public boolean isNested() {
+        return getParent().getDescriptorType() != DescriptorType.PROTO;
     }
 
     @Override
@@ -175,7 +189,7 @@ public class Message extends AbstractUserTypeContainer
     @Override
     public void addGroup(Group group) {
         if (groups == null) {
-            groups = new ArrayList<>();
+            groups = new ArrayList<Group>();
         }
         groups.add(group);
     }
@@ -193,7 +207,7 @@ public class Message extends AbstractUserTypeContainer
 
     public void addExtensionRange(Range range) {
         if (extensionRanges == null) {
-            extensionRanges = new ArrayList<>();
+            extensionRanges = new ArrayList<Range>();
         }
         extensionRanges.add(range);
     }
@@ -211,7 +225,7 @@ public class Message extends AbstractUserTypeContainer
 
     public void addReservedFieldRange(Range range) {
         if (reservedFieldRanges == null) {
-            reservedFieldRanges = new ArrayList<>();
+            reservedFieldRanges = new ArrayList<Range>();
         }
         reservedFieldRanges.add(range);
     }
@@ -229,7 +243,7 @@ public class Message extends AbstractUserTypeContainer
 
     public void addReservedFieldName(String name) {
         if (reservedFieldNames == null) {
-            reservedFieldNames = new ArrayList<>();
+            reservedFieldNames = new ArrayList<String>();
         }
         reservedFieldNames.add(name);
     }
@@ -245,5 +259,15 @@ public class Message extends AbstractUserTypeContainer
     public boolean isMapEntry() {
         DynamicMessage.Value value = this.getOptions().get(MessageParseListener.OPTION_MAP_ENTRY);
         return value != null && value.isBooleanType() && value.getBoolean();
+    }
+
+    @Override
+    public Enum getEnum(String name) {
+        for (Enum anEnum : getEnums()) {
+            if (name.equals(anEnum.getName())) {
+                return anEnum;
+            }
+        }
+        return null;
     }
 }
