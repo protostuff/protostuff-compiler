@@ -2,11 +2,17 @@ package io.protostuff.compiler.model;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Preconditions;
-import io.protostuff.compiler.parser.ParserException;
-import io.protostuff.compiler.parser.Util;
+
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
-import java.util.*;
+
+import io.protostuff.compiler.parser.ParserException;
+import io.protostuff.compiler.parser.Util;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -20,7 +26,7 @@ public class DynamicMessage implements Map<String, DynamicMessage.Value> {
     private final Map<Key, Value> fields;
 
     public DynamicMessage() {
-        this.fields = new HashMap<Key, Value>();
+        this.fields = new HashMap<>();
     }
 
     /**
@@ -193,11 +199,9 @@ public class DynamicMessage implements Map<String, DynamicMessage.Value> {
     @Nonnull
     public Set<String> keySet() {
         Set<Key> keys = fields.keySet();
-        Set<String> result = new HashSet<String>();
-        for (Key key : keys) {
-            result.add(key.toString());
-        }
-        return result;
+        return keys.stream()
+                .map(Key::toString)
+                .collect(Collectors.toSet());
     }
 
     @Override
@@ -209,7 +213,7 @@ public class DynamicMessage implements Map<String, DynamicMessage.Value> {
     @Override
     @Nonnull
     public Set<Entry<String, Value>> entrySet() {
-        Map<String, Value> map = new HashMap<String, Value>();
+        Map<String, Value> map = new HashMap<>();
         for (Entry<Key, Value> entry : fields.entrySet()) {
             map.put(entry.getKey().toString(), entry.getValue());
         }

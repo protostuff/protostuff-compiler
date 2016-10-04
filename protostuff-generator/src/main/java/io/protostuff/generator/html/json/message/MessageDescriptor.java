@@ -1,61 +1,33 @@
 package io.protostuff.generator.html.json.message;
 
-import io.protostuff.generator.html.json.index.NodeType;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import org.immutables.value.Value;
+
+import java.util.List;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
+
+import io.protostuff.generator.html.json.index.NodeType;
 
 /**
  * @author Kostiantyn Shchepanovskyi
  */
-public class MessageDescriptor {
+@Value.Immutable
+@JsonSerialize(as = ImmutableMessageDescriptor.class)
+@JsonDeserialize(as = ImmutableMessageDescriptor.class)
+public interface MessageDescriptor {
 
-    private String name;
-    private NodeType type;
-    private String canonicalName;
-    @Nullable
-    private String description;
-    private List<MessageField> fields = new ArrayList<MessageField>();
+    String name();
 
-    public String getName() {
-        return name;
-    }
+    NodeType type();
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public NodeType getType() {
-        return type;
-    }
-
-    public void setType(NodeType type) {
-        this.type = type;
-    }
-
-    public String getCanonicalName() {
-        return canonicalName;
-    }
-
-    public void setCanonicalName(String canonicalName) {
-        this.canonicalName = canonicalName;
-    }
+    String canonicalName();
 
     @Nullable
-    public String getDescription() {
-        return description;
-    }
+    String description();
 
-    public void setDescription(@Nullable String description) {
-        this.description = description;
-    }
+    List<MessageField> fields();
 
-    public List<MessageField> getFields() {
-        return fields;
-    }
-
-    public void setFields(List<MessageField> fields) {
-        this.fields = fields;
-    }
 }

@@ -1,17 +1,19 @@
 package io.protostuff.generator.html.json;
 
+import com.google.common.base.Preconditions;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.google.common.base.Preconditions;
-import io.protostuff.generator.GeneratorException;
-import io.protostuff.generator.OutputStreamFactory;
-import io.protostuff.generator.ProtoCompiler;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.io.OutputStream;
+
+import io.protostuff.generator.GeneratorException;
+import io.protostuff.generator.OutputStreamFactory;
+import io.protostuff.generator.ProtoCompiler;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -34,20 +36,10 @@ public abstract class AbstractJsonGenerator implements ProtoCompiler {
         Preconditions.checkNotNull(file);
         Preconditions.checkNotNull(data);
         LOGGER.info("Write {}", file);
-        OutputStream os = null;
-        try {
-            os = outputStreamFactory.createStream(file);
+        try (OutputStream os = outputStreamFactory.createStream(file)) {
             objectMapper.writeValue(os, data);
         } catch (Exception e) {
             throw new GeneratorException("Could not write " + file, e);
-        } finally {
-            if (os != null) {
-                try {
-                    os.close();
-                } catch (IOException e1) {
-                    LOGGER.error("Could not close {} after I/O error", file, e1);
-                }
-            }
         }
     }
 

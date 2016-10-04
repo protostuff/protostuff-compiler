@@ -28,52 +28,22 @@ public abstract class AbstractProtoCompiler implements ProtoCompiler {
             String moduleOutput = module.getOutput();
             if (canProcessModule(module)) {
                 String outputFileName = getModuleOutputFileName(module);
-                Writer writer = null;
-                try {
-                    writer = getWriter(moduleOutput, outputFileName);
+                try (Writer writer = getWriter(moduleOutput, outputFileName)) {
                     compileModule(module, writer);
-                } finally {
-                    if (writer != null) {
-                        try {
-                            writer.close();
-                        } catch (Exception e) {
-                            LOGGER.error("Could not close {}", outputFileName);
-                        }
-                    }
                 }
             }
             for (Proto proto : module.getProtos()) {
                 if (canProcessProto(proto)) {
                     String outputFileName = getProtoOutputFileName(proto);
-                    Writer writer = null;
-                    try {
-                        writer = getWriter(moduleOutput, outputFileName);
+                    try (Writer writer = getWriter(moduleOutput, outputFileName)) {
                         compileProto(proto, writer);
-                    } finally {
-                        if (writer != null) {
-                            try {
-                                writer.close();
-                            } catch (Exception e) {
-                                LOGGER.error("Could not close {}", outputFileName);
-                            }
-                        }
                     }
                 }
                 for (Service service : proto.getServices()) {
                     if (canProcessService(service)) {
                         String outputFileName = getServiceOutputFileName(service);
-                        Writer writer = null;
-                        try {
-                            writer = getWriter(moduleOutput, outputFileName);
+                        try (Writer writer = getWriter(moduleOutput, outputFileName)) {
                             compileService(service, writer);
-                        } finally {
-                            if (writer != null) {
-                                try {
-                                    writer.close();
-                                } catch (Exception e) {
-                                    LOGGER.error("Could not close {}", outputFileName);
-                                }
-                            }
                         }
                     }
                 }
@@ -91,18 +61,8 @@ public abstract class AbstractProtoCompiler implements ProtoCompiler {
         for (Message message : messages) {
             if (canProcessMessage(message)) {
                 String outputFileName = getMessageOutputFileName(message);
-                Writer writer = null;
-                try {
-                    writer = getWriter(basedir, outputFileName);
+                try (Writer writer = getWriter(basedir, outputFileName)) {
                     compileMessage(message, writer);
-                } finally {
-                    if (writer != null) {
-                        try {
-                            writer.close();
-                        } catch (Exception e) {
-                            LOGGER.error("Could not close {}", outputFileName);
-                        }
-                    }
                 }
             }
             // process nested messages and enums
@@ -111,18 +71,8 @@ public abstract class AbstractProtoCompiler implements ProtoCompiler {
         for (Enum anEnum : enums) {
             if (canProcessEnum(anEnum)) {
                 String outputFileName = getEnumOutputFileName(anEnum);
-                Writer writer = null;
-                try {
-                    writer = getWriter(basedir, outputFileName);
+                try (Writer writer = getWriter(basedir, outputFileName)) {
                     compileEnum(anEnum, writer);
-                } finally {
-                    if (writer != null) {
-                        try {
-                            writer.close();
-                        } catch (Exception e) {
-                            LOGGER.error("Could not close {}", outputFileName);
-                        }
-                    }
                 }
             }
         }

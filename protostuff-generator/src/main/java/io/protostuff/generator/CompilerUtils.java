@@ -4,11 +4,13 @@ import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Inject;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+import javax.inject.Inject;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -40,8 +42,8 @@ public class CompilerUtils {
                     String error = "Could not copy file, source file not found: " + name;
                     throw new IllegalStateException(error);
                 }
-                File path = new File(destinationFilename);
-                FileUtils.copyInputStreamToFile(stream, path);
+                Path path = Paths.get(destinationFilename);
+                FileUtils.copyInputStreamToFile(stream, path.toFile());
             } catch (IOException e) {
                 throw new GeneratorException("Could not copy %s", e, name);
             }

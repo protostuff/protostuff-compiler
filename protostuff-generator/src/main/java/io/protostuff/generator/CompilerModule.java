@@ -5,17 +5,18 @@ import com.google.inject.Provider;
 import com.google.inject.Provides;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.multibindings.MapBinder;
-import io.protostuff.compiler.model.Module;
 import io.protostuff.generator.html.HtmlGenerator;
 import io.protostuff.generator.java.JavaExtensionProvider;
 
 import javax.inject.Inject;
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -40,7 +41,7 @@ public class CompilerModule extends AbstractModule {
             Class<?> clazz = Class.forName(className);
             Object instance = clazz.newInstance();
             return type.cast(instance);
-        } catch (Exception e) {
+        } catch (final InstantiationException | IllegalAccessException | ClassNotFoundException e) {
             throw new GeneratorException("Could not instantiate " + className, e);
         }
     }
@@ -63,18 +64,14 @@ public class CompilerModule extends AbstractModule {
 
     @Provides
     OutputStreamFactory outputStreamFactory() {
-        return new OutputStreamFactory() {
-            @Override
-            public OutputStream createStream(String location) {
-                try {
-                    File path = new File(location);
-                    String dir = path.getParent();
-                    //noinspection ResultOfMethodCallIgnored
-                    new File(dir).mkdirs();
-                    return new FileOutputStream(location);
-                } catch (IOException e) {
-                    throw new GeneratorException("Could not create file: %s", e, location);
-                }
+        return location -> {
+            try {
+                Path path = Paths.get(location);
+                Path dir = path.getParent();
+                Files.createDirectories(dir);
+                return new FileOutputStream(location);
+            } catch (IOException e) {
+                throw new GeneratorException("Could not create file: %s", e, location);
             }
         };
     }
@@ -108,21 +105,18 @@ public class CompilerModule extends AbstractModule {
         public ProtoCompiler get() {
             // deffer compiler instantiation until wrapper is called with
             // configured template and extension provider class
-            return new ProtoCompiler() {
-                @Override
-                public void compile(Module module) {
-                    try {
-                        Map<String, Object> options = module.getOptions();
-                        Collection<String> templates = checkNotNull((Collection<String>) options.get(TEMPLATES_OPTION),
-                                TEMPLATES_OPTION + " is not set");
-                        String extProviderClass = checkNotNull((String) options.get(EXTENSIONS_OPTION),
-                                EXTENSIONS_OPTION + " is not set");
-                        ExtensionProvider extensionProvider = instantiate(extProviderClass, ExtensionProvider.class);
-                        ProtoCompiler compiler = factory.create(templates, extensionProvider);
-                        compiler.compile(module);
-                    } catch (Exception e) {
-                        throw new GeneratorException("Could not compile module: %s, module=%s", e, e.getMessage(), module);
-                    }
+            return module -> {
+                try {
+                    Map<String, Object> options = module.getOptions();
+                    Collection<String> templates = checkNotNull((Collection<String>)options.get(TEMPLATES_OPTION),
+                            TEMPLATES_OPTION + " is not set");
+                    String extProviderClass = checkNotNull((String)options.get(EXTENSIONS_OPTION),
+                            EXTENSIONS_OPTION + " is not set");
+                    ExtensionProvider extensionProvider = instantiate(extProviderClass, ExtensionProvider.class);
+                    ProtoCompiler compiler = factory.create(templates, extensionProvider);
+                    compiler.compile(module);
+                } catch (Exception e) {
+                    throw new GeneratorException("Could not compile module: %s, module=%s", e, e.getMessage(), module);
                 }
             };
         }

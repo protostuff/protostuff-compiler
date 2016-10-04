@@ -58,7 +58,7 @@ public class JsonTreeNode {
 
         public Builder addChild(JsonTreeNode val) {
             if (children == null) {
-                children = new ArrayList<JsonTreeNode>();
+                children = new ArrayList<>();
             }
             children.add(val);
             return this;

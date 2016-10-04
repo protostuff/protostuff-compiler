@@ -1,5 +1,11 @@
 package io.protostuff.compiler.maven;
 
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.codehaus.classworlds.ClassRealm;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.configurator.AbstractComponentConfigurator;
@@ -11,12 +17,6 @@ import org.codehaus.plexus.component.configurator.converters.special.ClassRealmC
 import org.codehaus.plexus.component.configurator.expression.ExpressionEvaluationException;
 import org.codehaus.plexus.component.configurator.expression.ExpressionEvaluator;
 import org.codehaus.plexus.configuration.PlexusConfiguration;
-
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A custom ComponentConfigurator which adds the project's runtime classpath elements to the classpath
@@ -70,7 +70,7 @@ public class IncludeProjectDependenciesComponentConfigurator extends AbstractCom
     private URL[] buildURLs(List<String> runtimeClasspathElements) throws ComponentConfigurationException
     {
         // Add the projects classes and dependencies
-        List<URL> urls = new ArrayList<URL>(runtimeClasspathElements.size());
+        List<URL> urls = new ArrayList<>(runtimeClasspathElements.size());
         for (String element : runtimeClasspathElements)
         {
             try

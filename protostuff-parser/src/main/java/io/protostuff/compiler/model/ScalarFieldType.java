@@ -27,7 +27,7 @@ public enum ScalarFieldType implements FieldType {
     STRING,
     BYTES;
 
-    private static Map<String, ScalarFieldType> map = new HashMap<String, ScalarFieldType>();
+    private static Map<String, ScalarFieldType> map = new HashMap<>();
 
     static {
         for (ScalarFieldType type : values()) {
@@ -96,11 +96,6 @@ public enum ScalarFieldType implements FieldType {
 
     public boolean isBytes() {
         return this == BYTES;
-    }
-
-    @Override
-    public String getCanonicalName() {
-        return getName();
     }
 
     @Override

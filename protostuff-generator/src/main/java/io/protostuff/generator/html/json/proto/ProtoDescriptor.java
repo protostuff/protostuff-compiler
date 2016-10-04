@@ -1,59 +1,31 @@
 package io.protostuff.generator.html.json.proto;
 
-import io.protostuff.generator.html.json.index.NodeType;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import org.immutables.value.Value;
 
 import javax.annotation.Nullable;
+
+import io.protostuff.generator.html.json.index.NodeType;
 
 /**
  * @author Kostiantyn Shchepanovskyi
  */
-public class ProtoDescriptor {
+@Value.Immutable
+@JsonSerialize(as = ImmutableProtoDescriptor.class)
+@JsonDeserialize(as = ImmutableProtoDescriptor.class)
+public interface ProtoDescriptor {
 
-    private String name;
-    private NodeType type;
-    private String canonicalName;
-    private String filename;
-    @Nullable
-    private String description;
+    String name();
 
-    public String getName() {
-        return name;
-    }
+    NodeType type();
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    String canonicalName();
 
-    public NodeType getType() {
-        return type;
-    }
-
-    public void setType(NodeType type) {
-        this.type = type;
-    }
-
-    public String getCanonicalName() {
-        return canonicalName;
-    }
-
-    public void setCanonicalName(String canonicalName) {
-        this.canonicalName = canonicalName;
-    }
-
-    public String getFilename() {
-        return filename;
-    }
-
-    public void setFilename(String filename) {
-        this.filename = filename;
-    }
+    String filename();
 
     @Nullable
-    public String getDescription() {
-        return description;
-    }
+    String description();
 
-    public void setDescription(@Nullable String description) {
-        this.description = description;
-    }
 }

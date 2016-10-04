@@ -1,48 +1,26 @@
 package io.protostuff.generator.html.json.service;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import org.immutables.value.Value;
+
 import javax.annotation.Nullable;
 
 /**
  * @author Kostiantyn Shchepanovskyi
  */
-public class ServiceMethod {
+@Value.Immutable
+@JsonSerialize(as = ImmutableServiceMethod.class)
+@JsonDeserialize(as = ImmutableServiceMethod.class)
+public interface ServiceMethod {
 
-    private String name;
-    @Nullable
-    private String description;
-    private String argTypeId;
-    private String returnTypeId;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
+    String name();
 
     @Nullable
-    public String getDescription() {
-        return description;
-    }
+    String description();
 
-    public void setDescription(@Nullable String description) {
-        this.description = description;
-    }
+    String argTypeId();
 
-    public String getArgTypeId() {
-        return argTypeId;
-    }
-
-    public void setArgTypeId(String argTypeId) {
-        this.argTypeId = argTypeId;
-    }
-
-    public String getReturnTypeId() {
-        return returnTypeId;
-    }
-
-    public void setReturnTypeId(String returnTypeId) {
-        this.returnTypeId = returnTypeId;
-    }
+    String returnTypeId();
 }

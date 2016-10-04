@@ -1,13 +1,14 @@
 package io.protostuff.compiler.parser;
 
-import io.protostuff.compiler.model.AbstractDescriptor;
-import io.protostuff.compiler.model.DynamicMessage;
-import io.protostuff.compiler.model.SourceCodeLocation;
 import org.antlr.v4.runtime.BufferedTokenStream;
 
 import java.math.BigInteger;
 import java.util.ArrayDeque;
 import java.util.Deque;
+
+import io.protostuff.compiler.model.AbstractDescriptor;
+import io.protostuff.compiler.model.DynamicMessage;
+import io.protostuff.compiler.model.SourceCodeLocation;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -18,7 +19,7 @@ public class OptionParseListener extends AbstractProtoParserListener {
     public static final int OCT = 8;
     public static final int DECIMAL = 10;
 
-    private final Deque<DynamicMessage> textFormatStack = new ArrayDeque<DynamicMessage>();
+    private final Deque<DynamicMessage> textFormatStack = new ArrayDeque<>();
     private DynamicMessage currentTextFormat;
     private DynamicMessage lastTextFormat;
 

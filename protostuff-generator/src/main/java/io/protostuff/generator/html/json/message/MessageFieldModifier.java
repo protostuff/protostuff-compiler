@@ -1,7 +1,8 @@
 package io.protostuff.generator.html.json.message;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Preconditions;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -19,17 +20,15 @@ public enum MessageFieldModifier {
 
     public static MessageFieldModifier fromString(String s) {
         Preconditions.checkNotNull(s);
-
-        String mod = s.toLowerCase();
-        if ("optional".equals(mod)) {
-            return OPTIONAL;
+        switch (s.toLowerCase()) {
+            case "optional":
+                return OPTIONAL;
+            case "required":
+                return REQUIRED;
+            case "repeated":
+                return REPEATED;
+            default:
+                throw new IllegalArgumentException(s);
         }
-        if ("required".equals(mod)) {
-            return REQUIRED;
-        }
-        if ("repeated".equals(mod)) {
-            return REPEATED;
-        }
-        throw new IllegalArgumentException(s);
     }
 }

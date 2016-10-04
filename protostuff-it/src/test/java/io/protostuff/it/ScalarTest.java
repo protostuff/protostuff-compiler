@@ -161,7 +161,7 @@ public class ScalarTest {
 
     @Test
     public void repeatedScalarConstructObject_addAllWithNull() throws Exception {
-        List<Integer> numbers = new ArrayList<Integer>();
+        List<Integer> numbers = new ArrayList<>();
         numbers.add(1);
         numbers.add(null);
         numbers.add(3);

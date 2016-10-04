@@ -64,7 +64,7 @@ public class Oneof extends AbstractElement implements FieldContainer, GroupConta
 
     public void addField(Field field) {
         if (fields == null) {
-            fields = new ArrayList<Field>();
+            fields = new ArrayList<>();
         }
         fields.add(field);
     }
@@ -104,7 +104,7 @@ public class Oneof extends AbstractElement implements FieldContainer, GroupConta
     @Override
     public void addGroup(Group group) {
         if (groups == null) {
-            groups = new ArrayList<Group>();
+            groups = new ArrayList<>();
         }
         groups.add(group);
     }

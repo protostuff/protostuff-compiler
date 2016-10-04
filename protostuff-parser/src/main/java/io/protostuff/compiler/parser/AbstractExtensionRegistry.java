@@ -1,14 +1,14 @@
 package io.protostuff.compiler.parser;
 
-import io.protostuff.compiler.model.Extension;
-import io.protostuff.compiler.model.Field;
-import io.protostuff.compiler.model.Message;
-
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+
+import io.protostuff.compiler.model.Extension;
+import io.protostuff.compiler.model.Field;
+import io.protostuff.compiler.model.Message;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -18,7 +18,7 @@ public abstract class AbstractExtensionRegistry implements ExtensionRegistry {
     private final ConcurrentMap<String, Map<String, Field>> fieldCache;
 
     protected AbstractExtensionRegistry() {
-        fieldCache = new ConcurrentHashMap<String, Map<String, Field>>();
+        fieldCache = new ConcurrentHashMap<>();
     }
 
     @Override
@@ -35,20 +35,17 @@ public abstract class AbstractExtensionRegistry implements ExtensionRegistry {
 
     @Override
     public Map<String, Field> getExtensionFields(String fullMessageName) {
-        if (fieldCache.containsKey(fullMessageName)) {
-            return fieldCache.get(fullMessageName);
-        } else {
-            Map<String, Field> map = new HashMap<String, Field>();
-            Collection<Extension> extensions = getExtensions(fullMessageName);
+        return fieldCache.computeIfAbsent(fullMessageName, messageName -> {
+            Map<String, Field> map = new HashMap<>();
+            Collection<Extension> extensions = getExtensions(messageName);
             for (Extension extension : extensions) {
                 for (Field field : extension.getFields()) {
                     String key = extension.getNamespace() + field.getName();
                     map.put(key, field);
                 }
             }
-            fieldCache.put(fullMessageName, map);
             return map;
-        }
+        });
     }
 
     @Override

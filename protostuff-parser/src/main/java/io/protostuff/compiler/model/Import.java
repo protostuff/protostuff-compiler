@@ -1,6 +1,6 @@
 package io.protostuff.compiler.model;
 
-import com.google.common.base.Objects;
+import java.util.Objects;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -44,13 +44,13 @@ public final class Import extends AbstractElement {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Import anImport = (Import) o;
-        return Objects.equal(aPublic, anImport.aPublic) &&
-                Objects.equal(value, anImport.value);
+        return Objects.equals(aPublic, anImport.aPublic) &&
+                Objects.equals(value, anImport.value);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(value, aPublic);
+        return Objects.hash(value, aPublic);
     }
 
     @Override

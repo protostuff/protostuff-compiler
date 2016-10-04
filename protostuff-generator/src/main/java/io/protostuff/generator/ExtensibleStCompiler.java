@@ -26,7 +26,7 @@ public class ExtensibleStCompiler implements ProtoCompiler {
                                    @Assisted Collection<String> templates,
                                    @Assisted ExtensionProvider extensionProvider) {
         this.compilerFactory = compilerFactory;
-        this.compilers = new ArrayList<StCompiler>();
+        this.compilers = new ArrayList<>();
         for (String template : templates) {
             StCompiler compiler = (StCompiler) this.compilerFactory.create(template);
             STGroup group = compiler.getStGroup();
@@ -40,7 +40,7 @@ public class ExtensibleStCompiler implements ProtoCompiler {
         Map<Class<?>, PropertyProvider<?>> extenderMap = extensionProvider.propertyProviders();
         for (Map.Entry<Class<?>, PropertyProvider<?>> entry : extenderMap.entrySet()) {
             Class<?> objectClass = entry.getKey();
-            final PropertyProvider<Object> extender = (PropertyProvider<Object>) entry.getValue();
+            PropertyProvider<Object> extender = (PropertyProvider<Object>) entry.getValue();
             group.registerModelAdaptor(objectClass, new ObjectModelAdaptor() {
                 @Override
                 public synchronized Object getProperty(Interpreter interp, ST self, Object o, Object property, String propertyName) throws STNoSuchPropertyException {

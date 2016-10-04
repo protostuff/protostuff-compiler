@@ -20,24 +20,9 @@ public class UserTypeValidationPostProcessor implements ProtoContextPostProcesso
     @Override
     public void process(ProtoContext context) {
         ProtoWalker.newInstance(context)
-                .onMessage(new ProtoWalker.Processor<Message>() {
-                    @Override
-                    public void run(ProtoContext context, Message message) {
-                        processMessage(context, message);
-                    }
-                })
-                .onEnum(new ProtoWalker.Processor<Enum>() {
-                    @Override
-                    public void run(ProtoContext context, Enum anEnum) {
-                        processEnum(context, anEnum);
-                    }
-                })
-                .onService(new ProtoWalker.Processor<Service>() {
-                    @Override
-                    public void run(ProtoContext context, Service service) {
-                        processService(context, service);
-                    }
-                })
+                .onMessage(this::processMessage)
+                .onEnum(this::processEnum)
+                .onService(this::processService)
                 .walk();
     }
 
@@ -47,7 +32,7 @@ public class UserTypeValidationPostProcessor implements ProtoContextPostProcesso
     }
 
     private void checkDuplicateServiceMethodNames(List<ServiceMethod> methods) {
-        Map<String, ServiceMethod> methodsByName = new HashMap<String, ServiceMethod>();
+        Map<String, ServiceMethod> methodsByName = new HashMap<>();
         for (ServiceMethod method : methods) {
             String name = method.getName();
             if (methodsByName.containsKey(name)) {
@@ -71,7 +56,7 @@ public class UserTypeValidationPostProcessor implements ProtoContextPostProcesso
             // skip this check if aliases are allowed
             return;
         }
-        Map<Integer, EnumConstant> constantByValue = new HashMap<Integer, EnumConstant>();
+        Map<Integer, EnumConstant> constantByValue = new HashMap<>();
         for (EnumConstant constant : constants) {
             Integer value = constant.getValue();
             if (constantByValue.containsKey(value)) {
@@ -82,7 +67,7 @@ public class UserTypeValidationPostProcessor implements ProtoContextPostProcesso
     }
 
     private void checkDuplicateEnumConstantNames(List<EnumConstant> constants) {
-        Map<String, EnumConstant> constantByName = new HashMap<String, EnumConstant>();
+        Map<String, EnumConstant> constantByName = new HashMap<>();
         for (EnumConstant constant : constants) {
             String name = constant.getName();
             if (constantByName.containsKey(name)) {
@@ -114,7 +99,7 @@ public class UserTypeValidationPostProcessor implements ProtoContextPostProcesso
     }
 
     private void checkReservedFieldNames(Message message, List<Field> fields) {
-        Set<String> names = new HashSet<String>(message.getReservedFieldNames());
+        Set<String> names = new HashSet<>(message.getReservedFieldNames());
         for (Field field : fields) {
             String name = field.getName();
             if (names.contains(name)) {
@@ -140,7 +125,7 @@ public class UserTypeValidationPostProcessor implements ProtoContextPostProcesso
     }
 
     private void checkDuplicateFieldTags(List<Field> fields) {
-        Map<Integer, Field> fieldByTag = new HashMap<Integer, Field>();
+        Map<Integer, Field> fieldByTag = new HashMap<>();
         for (Field field : fields) {
             int tag = field.getTag();
             if (fieldByTag.containsKey(tag)) {
@@ -151,7 +136,7 @@ public class UserTypeValidationPostProcessor implements ProtoContextPostProcesso
     }
 
     private void checkDuplicateFieldNames(List<Field> fields) {
-        Map<String, Field> fieldByName = new HashMap<String, Field>();
+        Map<String, Field> fieldByName = new HashMap<>();
         for (Field field : fields) {
             String name = field.getName();
             if (fieldByName.containsKey(name)) {

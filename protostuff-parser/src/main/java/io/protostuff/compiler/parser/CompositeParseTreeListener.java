@@ -4,18 +4,21 @@ import com.google.common.base.MoreObjects;
 import com.google.common.collect.ImmutableList;
 import com.google.common.reflect.AbstractInvocationHandler;
 import com.google.common.reflect.Reflection;
+
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
-import javax.annotation.ParametersAreNonnullByDefault;
 import java.lang.reflect.Method;
+
+import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * @author Kostiantyn Shchepanovskyi
  */
 public class CompositeParseTreeListener {
 
+    @SafeVarargs
     public static <T extends ParseTreeListener> T create(Class<T> type, T... delegates) {
-        final ImmutableList<T> listeners = ImmutableList.copyOf(delegates);
+        ImmutableList<T> listeners = ImmutableList.copyOf(delegates);
         return Reflection.newProxy(type, new AbstractInvocationHandler() {
 
             @Override

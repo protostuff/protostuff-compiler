@@ -264,7 +264,7 @@ public class MessageParseListener extends AbstractProtoParserListener {
     }
 
     private List<Range> getRanges(Message message, List<ProtoParser.RangeContext> ranges) {
-        List<Range> result = new ArrayList<Range>();
+        List<Range> result = new ArrayList<>();
         for (ProtoParser.RangeContext rangeContext : ranges) {
             ProtoParser.RangeFromContext fromNode = rangeContext.rangeFrom();
             ProtoParser.RangeToContext toNode = rangeContext.rangeTo();

@@ -1,60 +1,31 @@
 package io.protostuff.generator.html.json.service;
 
-import io.protostuff.generator.html.json.index.NodeType;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import org.immutables.value.Value;
+
+import java.util.List;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
+
+import io.protostuff.generator.html.json.index.NodeType;
 
 /**
  * @author Kostiantyn Shchepanovskyi
  */
-public class ServiceDescriptor {
-    private String name;
-    private NodeType type;
-    private String canonicalName;
-    @Nullable
-    private String description;
-    private List<ServiceMethod> methods = new ArrayList<ServiceMethod>();
+@Value.Immutable
+@JsonSerialize(as = ImmutableServiceDescriptor.class)
+@JsonDeserialize(as = ImmutableServiceDescriptor.class)
+public interface ServiceDescriptor {
+    String name();
 
-    public String getName() {
-        return name;
-    }
+    NodeType type();
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public NodeType getType() {
-        return type;
-    }
-
-    public void setType(NodeType type) {
-        this.type = type;
-    }
-
-    public String getCanonicalName() {
-        return canonicalName;
-    }
-
-    public void setCanonicalName(String canonicalName) {
-        this.canonicalName = canonicalName;
-    }
+    String canonicalName();
 
     @Nullable
-    public String getDescription() {
-        return description;
-    }
+    String description();
 
-    public void setDescription(@Nullable String description) {
-        this.description = description;
-    }
-
-    public List<ServiceMethod> getMethods() {
-        return methods;
-    }
-
-    public void setMethods(List<ServiceMethod> methods) {
-        this.methods = methods;
-    }
+    List<ServiceMethod> methods();
 }

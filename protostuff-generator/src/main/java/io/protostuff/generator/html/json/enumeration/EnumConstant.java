@@ -1,39 +1,24 @@
 package io.protostuff.generator.html.json.enumeration;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import org.immutables.value.Value;
+
 import javax.annotation.Nullable;
 
 /**
  * @author Kostiantyn Shchepanovskyi
  */
-public class EnumConstant {
+@Value.Immutable
+@JsonSerialize(as = ImmutableEnumConstant.class)
+@JsonDeserialize(as = ImmutableEnumConstant.class)
+public interface EnumConstant {
 
-    private String name;
-    @Nullable
-    private String description;
-    private int value;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
+    String name();
 
     @Nullable
-    public String getDescription() {
-        return description;
-    }
+    String description();
 
-    public void setDescription(@Nullable String description) {
-        this.description = description;
-    }
-
-    public int getValue() {
-        return value;
-    }
-
-    public void setValue(int value) {
-        this.value = value;
-    }
+    int value();
 }

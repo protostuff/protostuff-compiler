@@ -1,98 +1,41 @@
 package io.protostuff.generator.html.json.message;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import org.immutables.value.Value;
+
 import javax.annotation.Nullable;
 
 /**
  * @author Kostiantyn Shchepanovskyi
  */
-public class MessageField {
-    private String name;
-    private String typeId;
-    private MessageFieldModifier modifier;
-    private int tag;
+@Value.Immutable
+@JsonSerialize(as = ImmutableMessageField.class)
+@JsonDeserialize(as = ImmutableMessageField.class)
+public interface MessageField {
+    String name();
+
+    String typeId();
+
+    MessageFieldModifier modifier();
+
+    int tag();
+
     @Nullable
-    private String description;
-    private boolean map;
-    @Nullable
-    private String mapKeyTypeId;
-    @Nullable
-    private String mapValueTypeId;
-    @Nullable
-    private String oneof;
+    String description();
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getTypeId() {
-        return typeId;
-    }
-
-    public void setTypeId(String typeId) {
-        this.typeId = typeId;
-    }
-
-    public MessageFieldModifier getModifier() {
-        return modifier;
-    }
-
-    public void setModifier(MessageFieldModifier modifier) {
-        this.modifier = modifier;
-    }
-
-    public int getTag() {
-        return tag;
-    }
-
-    public void setTag(int tag) {
-        this.tag = tag;
+    @Value.Default
+    default boolean isMap() {
+        return false;
     }
 
     @Nullable
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(@Nullable String description) {
-        this.description = description;
-    }
-
-    public boolean isMap() {
-        return map;
-    }
-
-    public void setMap(boolean map) {
-        this.map = map;
-    }
+    String mapKeyTypeId();
 
     @Nullable
-    public String getMapKeyTypeId() {
-        return mapKeyTypeId;
-    }
-
-    public void setMapKeyTypeId(@Nullable String mapKeyTypeId) {
-        this.mapKeyTypeId = mapKeyTypeId;
-    }
+    String mapValueTypeId();
 
     @Nullable
-    public String getMapValueTypeId() {
-        return mapValueTypeId;
-    }
-
-    public void setMapValueTypeId(@Nullable String mapValueTypeId) {
-        this.mapValueTypeId = mapValueTypeId;
-    }
-
-    @Nullable
-    public String getOneof() {
-        return oneof;
-    }
-
-    public void setOneof(@Nullable String oneof) {
-        this.oneof = oneof;
-    }
+    String oneof();
 }

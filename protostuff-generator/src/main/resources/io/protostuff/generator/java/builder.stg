@@ -92,7 +92,7 @@ builder_field_accessors(field) ::= <<
 <if(field.type.enum)>
 public <field.javaType> <field.javaGetterName>() {
     if (<field.oneof.javaCaseFieldName> == <field.oneof.javaName>.<field.javaOneofConstantName>) {
-        return <field.javaType>.valueOf((Integer) <field.oneof.javaFieldName>);
+        return <field.javaType>.valueOf((int) <field.oneof.javaFieldName>);
     }
     return <field.javaDefaultValue>;
 }
@@ -108,7 +108,7 @@ public Builder <field.javaSetterName>(<field.javaType> value) {
 
 public int <field.javaEnumValueGetterName>() {
     if (<field.oneof.javaCaseFieldName> == <field.oneof.javaName>.<field.javaOneofConstantName>) {
-        return (Integer) <field.oneof.javaFieldName>;
+        return (int) <field.oneof.javaFieldName>;
     }
     return 0;
 }
@@ -121,7 +121,7 @@ public Builder <field.javaEnumValueSetterName>(int value) {
 <else>
 public <field.javaType> <field.javaGetterName>() {
     if (<field.oneof.javaCaseFieldName> == <field.oneof.javaName>.<field.javaOneofConstantName>) {
-        return (<field.javaWrapperType>) <field.oneof.javaFieldName>;
+        return (<field.javaType>) <field.oneof.javaFieldName>;
     }
     return <field.javaDefaultValue>;
 }
@@ -183,8 +183,7 @@ public <field.javaType> <field.javaRepeatedGetByIndexMethodName>(int index) {
 }
 
 public <field.javaRepeatedType> <field.javaRepeatedGetterName>() {
-    <field:list_adapter_converter()>
-    return new io.protostuff.ListAdapter(<field.javaName>, converter);
+    return new io.protostuff.ListAdapter\<>(<field.javaName>, <field.javaType>::valueOf);
 }
 
 public int <field.javaRepeatedGetCountMethodName>() {
@@ -368,9 +367,9 @@ public boolean <field.javaHasMethodName>() {
 ensure_mutable(field) ::= <<
 if(!((<field.javaBitFieldName> & <field.javaBitFieldMask>) == <field.javaBitFieldMask>)) {
 <if(field.map)>
-    this.<field.javaName> = new java.util.HashMap();
+    this.<field.javaName> = new java.util.HashMap\<>();
 <elseif(field.repeated)>
-    this.<field.javaName> = new java.util.ArrayList();
+    this.<field.javaName> = new java.util.ArrayList\<>();
 <endif>
     <field.javaBitFieldName> |= <field.javaBitFieldMask>;
 }

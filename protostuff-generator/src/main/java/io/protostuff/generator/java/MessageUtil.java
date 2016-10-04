@@ -22,7 +22,7 @@ public class MessageUtil {
         if (fieldCount == 0) {
             return Collections.emptyList();
         }
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
         int n = (fieldCount-1) / 32 + 1;
         for (int i = 0; i < n; i++) {
             result.add("__bitField" + i);

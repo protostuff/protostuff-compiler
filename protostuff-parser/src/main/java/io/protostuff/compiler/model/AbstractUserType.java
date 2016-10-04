@@ -43,18 +43,4 @@ public abstract class AbstractUserType extends AbstractDescriptor implements Use
         return parent;
     }
 
-    @Override
-    public String getCanonicalName() {
-        String fqn = getFullyQualifiedName();
-        if (fqn.startsWith(".")) {
-            return fqn.substring(1);
-        }
-        return fqn;
-    }
-
-    @Override
-    public boolean isNested() {
-        return getParent().getDescriptorType() != DescriptorType.PROTO;
-    }
-
 }

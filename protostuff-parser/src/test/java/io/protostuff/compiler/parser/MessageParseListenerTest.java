@@ -1,20 +1,25 @@
 package io.protostuff.compiler.parser;
 
 import com.google.common.base.Joiner;
-import io.protostuff.compiler.model.Field;
-import io.protostuff.compiler.model.Message;
-import io.protostuff.compiler.model.Proto;
+
 import io.protostuff.compiler.model.Range;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.assertj.core.api.Assertions;
 import org.junit.Test;
+
+import io.protostuff.compiler.model.Field;
+import io.protostuff.compiler.model.Message;
+import io.protostuff.compiler.model.Proto;
 
 import java.util.List;
 
-import static io.protostuff.compiler.model.FieldModifier.*;
+import static io.protostuff.compiler.model.FieldModifier.OPTIONAL;
+import static io.protostuff.compiler.model.FieldModifier.REPEATED;
+import static io.protostuff.compiler.model.FieldModifier.REQUIRED;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -92,12 +97,12 @@ public class MessageParseListenerTest {
         );
         Message message = parseMessage(input);
         List<Range> fieldRanges = message.getReservedFieldRanges();
-        assertTrue(fieldRanges.contains(new Range(message, 2, 2)));
-        assertTrue(fieldRanges.contains(new Range(message, 15, 15)));
-        assertTrue(fieldRanges.contains(new Range(message, 9, 11)));
+        assertThat(fieldRanges).contains(
+                new Range(message, 2, 2),
+                new Range(message, 15, 15),
+                new Range(message, 9, 11));
         List<String> fieldNames = message.getReservedFieldNames();
-        assertTrue(fieldNames.contains("foo"));
-        assertTrue(fieldNames.contains("bar"));
+        assertThat(fieldNames).contains("foo", "bar");
     }
 
     private Message parseMessage(String input) {

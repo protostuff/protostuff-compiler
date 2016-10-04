@@ -1,6 +1,6 @@
 package io.protostuff.compiler.model;
 
-import com.google.common.base.Objects;
+import java.util.Objects;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -31,12 +31,12 @@ public final class Syntax extends AbstractElement {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Syntax other = (Syntax) o;
-        return Objects.equal(value, other.value);
+        return Objects.equals(value, other.value);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(value);
+        return Objects.hash(value);
     }
 
     @Override
