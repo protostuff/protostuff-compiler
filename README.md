@@ -51,7 +51,7 @@ Requirements
 
 | Component                                 | Version   |
 |-------------------------------------------|-----------|
-| JDK                                       | 1.6+      |  
+| JDK                                       | 1.8+      |  
 | [Apache Maven](https://maven.apache.org/) | 3.x       |
 
 Build
