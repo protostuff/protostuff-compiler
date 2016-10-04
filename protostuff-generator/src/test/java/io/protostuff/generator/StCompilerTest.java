@@ -6,8 +6,8 @@ import io.protostuff.compiler.model.Proto;
 import io.protostuff.compiler.parser.ClasspathFileReader;
 import io.protostuff.compiler.parser.Importer;
 import io.protostuff.compiler.parser.ProtoContext;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -15,7 +15,7 @@ import org.junit.Test;
 public class StCompilerTest extends AbstractCompilerTest {
 
     @Test
-    @Ignore
+    @Disabled
     public void test() throws Exception {
         Importer importer = injector.getInstance(Importer.class);
         ProtoContext context = importer.importFile(new ClasspathFileReader(), "protostuff_unittest/messages_sample.proto");
