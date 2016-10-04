@@ -64,10 +64,6 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-        </dependency>
-        <dependency>
             <groupId>io.protostuff</groupId>
             <artifactId>protostuff-api</artifactId>
             <version>${protostuff.version}</version>

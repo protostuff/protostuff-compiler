@@ -10,6 +10,10 @@
     <artifactId>protostuff-cli</artifactId>
     <name>Protostuff Compiler - Command Line Interface</name>
 
+    <properties>
+        <log4j.version>2.3</log4j.version>
+    </properties>
+
     <build>
         <plugins>
             <plugin>
@@ -65,8 +69,5 @@
             <version>${log4j.version}</version>
         </dependency>
     </dependencies>
-    <properties>
-        <log4j.version>2.3</log4j.version>
-    </properties>
 
 </project>
