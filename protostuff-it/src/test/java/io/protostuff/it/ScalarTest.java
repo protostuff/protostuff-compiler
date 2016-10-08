@@ -3,16 +3,15 @@ package io.protostuff.it;
 import io.protostuff.ByteString;
 import io.protostuff.it.scalar_test.RepeatedScalarFieldTestMsg;
 import io.protostuff.it.scalar_test.ScalarFieldTestMsg;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.expectThrows;
 
 
 /**
@@ -20,14 +19,11 @@ import static org.junit.Assert.assertEquals;
  */
 public class ScalarTest {
 
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
-
     @Test
     public void scalarDefaultValues() throws Exception {
         ScalarFieldTestMsg msg = ScalarFieldTestMsg.newBuilder().build();
-        assertEquals(0d, msg.getDouble(), 0d);
-        assertEquals(0f, msg.getFloat(), 0f);
+        assertEquals(0d, msg.getDouble(), 0.0001d);
+        assertEquals(0f, msg.getFloat(), 0.0001f);
         assertEquals(0, msg.getInt32());
         assertEquals(0L, msg.getInt64());
         assertEquals(0, msg.getUnsignedInt32());
@@ -62,8 +58,8 @@ public class ScalarTest {
                 .setString("string")
                 .setBytes(ByteString.copyFrom(new byte[]{1, 2, 3}))
                 .build();
-        assertEquals(0.1d, msg.getDouble(), 0d);
-        assertEquals(0.2f, msg.getFloat(), 0f);
+        assertEquals(0.1d, msg.getDouble(), 0.000001d);
+        assertEquals(0.2f, msg.getFloat(), 0.000001f);
         assertEquals(3, msg.getInt32());
         assertEquals(4L, msg.getInt64());
         assertEquals(5, msg.getUnsignedInt32());
@@ -85,8 +81,8 @@ public class ScalarTest {
                 .setDouble(0.1d)
                 .setFloat(0.2f)
                 .build();
-        assertEquals(0.1d, msg.getDouble(), 0d);
-        assertEquals(0.2f, msg.getFloat(), 0f);
+        assertEquals(0.1d, msg.getDouble(), 0.00001d);
+        assertEquals(0.2f, msg.getFloat(), 0.00001f);
     }
 
     @Test
@@ -155,8 +151,9 @@ public class ScalarTest {
                 .addInt32(2)
                 .addInt32(3)
                 .build();
-        thrown.expect(UnsupportedOperationException.class);
-        msg.getInt32List().add(4);
+        expectThrows(UnsupportedOperationException.class, () -> {
+            msg.getInt32List().add(4);
+        });
     }
 
     @Test
@@ -165,10 +162,11 @@ public class ScalarTest {
         numbers.add(1);
         numbers.add(null);
         numbers.add(3);
-        thrown.expect(NullPointerException.class);
-        thrown.expectMessage("Cannot set RepeatedScalarFieldTestMsg#int32 to null");
-        RepeatedScalarFieldTestMsg.newBuilder()
-                .addAllInt32(numbers)
-                .build();
+        NullPointerException exception = expectThrows(NullPointerException.class, () -> {
+            RepeatedScalarFieldTestMsg.newBuilder()
+                    .addAllInt32(numbers)
+                    .build();
+        });
+        assertEquals("Cannot set RepeatedScalarFieldTestMsg#int32 to null", exception.getMessage());
     }
 }

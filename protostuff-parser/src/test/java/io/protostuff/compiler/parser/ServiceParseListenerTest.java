@@ -7,11 +7,10 @@ import io.protostuff.compiler.model.ServiceMethod;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CommonTokenStream;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
+
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -25,7 +24,7 @@ public class ServiceParseListenerTest {
                 "}"
         );
         Service service = parseService(input);
-        assertThat(service.getName()).isEqualTo("A");
+        assertEquals("A", service.getName());
     }
 
     @Test
@@ -38,9 +37,9 @@ public class ServiceParseListenerTest {
         Service service = parseService(input);
         ServiceMethod method = service.getMethod("test");
         assertNotNull(method);
-        Assert.assertEquals("test", method.getName());
-        Assert.assertEquals("req", method.getArgTypeName());
-        Assert.assertEquals("resp", method.getReturnTypeName());
+        assertEquals("test", method.getName());
+        assertEquals("req", method.getArgTypeName());
+        assertEquals("resp", method.getReturnTypeName());
     }
 
     @Test
@@ -52,8 +51,8 @@ public class ServiceParseListenerTest {
         );
         Service service = parseService(input);
         ServiceMethod method = service.getMethod("test");
-        Assert.assertTrue(method.isArgStream());
-        Assert.assertFalse(method.isReturnStream());
+        assertTrue(method.isArgStream());
+        assertFalse(method.isReturnStream());
     }
 
     @Test
@@ -65,8 +64,8 @@ public class ServiceParseListenerTest {
         );
         Service service = parseService(input);
         ServiceMethod method = service.getMethod("test");
-        Assert.assertFalse(method.isArgStream());
-        Assert.assertTrue(method.isReturnStream());
+        assertFalse(method.isArgStream());
+        assertTrue(method.isReturnStream());
     }
 
     private Service parseService(String input) {

@@ -2,17 +2,13 @@ package io.protostuff.compiler.parser;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-
-import org.junit.Before;
-import org.junit.Test;
-
 import io.protostuff.compiler.ParserModule;
 import io.protostuff.compiler.model.Message;
 import io.protostuff.compiler.model.Proto;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Test for nested messages and enums.
@@ -20,11 +16,12 @@ import static org.junit.Assert.assertTrue;
  *
  * @author Kostiantyn Shchepanovskyi
  */
+@SuppressWarnings("ConstantConditions")
 public class NestedMessagesTest {
 
     private Injector injector;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         injector = Guice.createInjector(new ParserModule());
     }

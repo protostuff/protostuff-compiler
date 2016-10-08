@@ -2,25 +2,18 @@ package io.protostuff.compiler.parser;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.rules.ExpectedException;
-
 import io.protostuff.compiler.ParserModule;
+import org.junit.jupiter.api.BeforeEach;
 
 /**
  * @author Kostiantyn Shchepanovskyi
  */
 public abstract class AbstractParserTest {
 
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
-
     public Injector injector;
     public Importer importer;
 
-    @Before
+    @BeforeEach
     public void init() throws Exception {
         initLogger();
         injector = Guice.createInjector(new ParserModule());

@@ -1,16 +1,15 @@
 package io.protostuff.compiler.parser;
 
 import com.google.common.base.Joiner;
-
+import io.protostuff.compiler.model.Proto;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CommonTokenStream;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import io.protostuff.compiler.model.Proto;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
-import static org.junit.Assert.assertEquals;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -32,8 +31,8 @@ public class ProtoParseListenerTest {
     @Test
     public void parseEmptyFile() throws Exception {
         Proto proto = parseProto("");
-        Assert.assertFalse(proto.isSyntaxSet());
-        Assert.assertFalse(proto.isPackageSet());
+        assertFalse(proto.isSyntaxSet());
+        assertFalse(proto.isPackageSet());
         assertEquals(0, proto.getImports().size());
     }
 

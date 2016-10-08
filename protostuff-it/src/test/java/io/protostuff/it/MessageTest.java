@@ -1,26 +1,20 @@
 package io.protostuff.it;
 
 import io.protostuff.it.message_test.*;
-import org.junit.Assert;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Test;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 import static io.protostuff.it.message_test.TestOneof.OneofNameCase.FOO_INT;
 import static io.protostuff.it.message_test.TestOneof.OneofNameCase.ONEOF_NAME_NOT_SET;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Kostiantyn Shchepanovskyi
  */
+@SuppressWarnings("ThrowableResultOfMethodCallIgnored")
 public class MessageTest {
-
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
 
     public static final SimpleMessage A = SimpleMessage.newBuilder()
             .setInt32(42)
@@ -78,31 +72,31 @@ public class MessageTest {
     public void clearScalar() throws Exception {
         SimpleMessage.Builder buider = SimpleMessage.newBuilder()
                 .setInt32(10);
-        Assert.assertTrue(buider.hasInt32());
-        Assert.assertEquals(10, buider.getInt32());
+        assertTrue(buider.hasInt32());
+        assertEquals(10, buider.getInt32());
         buider.clearInt32();
-        Assert.assertFalse(buider.hasInt32());
-        Assert.assertEquals(0, buider.getInt32());
+        assertFalse(buider.hasInt32());
+        assertEquals(0, buider.getInt32());
     }
 
     @Test
     public void clearRepeatedScalar() throws Exception {
         SimpleMessage.Builder buider = SimpleMessage.newBuilder()
                 .addRepeatedInt32(10);
-        Assert.assertEquals(1, buider.getRepeatedInt32Count());
-        Assert.assertEquals(10, buider.getRepeatedInt32(0));
+        assertEquals(1, buider.getRepeatedInt32Count());
+        assertEquals(10, buider.getRepeatedInt32(0));
         buider.clearRepeatedInt32();
-        Assert.assertEquals(0, buider.getRepeatedInt32Count());
+        assertEquals(0, buider.getRepeatedInt32Count());
     }
 
     @Test
     public void clearMap() throws Exception {
         TestMap.Builder buider = TestMap.newBuilder()
                 .putMapInt32Int32(10, 10);
-        Assert.assertEquals(1, buider.getMapInt32Int32Count());
-        Assert.assertEquals(10, buider.getMapInt32Int32(10).intValue());
+        assertEquals(1, buider.getMapInt32Int32Count());
+        assertEquals(10, buider.getMapInt32Int32(10).intValue());
         buider.clearMapInt32Int32();
-        Assert.assertEquals(0, buider.getMapInt32Int32Count());
+        assertEquals(0, buider.getMapInt32Int32Count());
     }
 
     @Test
@@ -111,20 +105,20 @@ public class MessageTest {
         assertNotEquals(A, B);
     }
 
-	@Test
-	public void testEquals_Builder() throws Exception {
-		SimpleMessage.Builder a = SimpleMessage.newBuilder()
-				.setInt32(42)
-				.setString("abra");
-		SimpleMessage.Builder copy = SimpleMessage.newBuilder()
-				.setInt32(42)
-				.setString("abra");
-		SimpleMessage.Builder b = SimpleMessage.newBuilder()
-				.setInt32(43)
-				.setString("cadabra");
-		assertEquals(a, copy);
-		assertNotEquals(a, b);
-	}
+    @Test
+    public void testEquals_Builder() throws Exception {
+        SimpleMessage.Builder a = SimpleMessage.newBuilder()
+                .setInt32(42)
+                .setString("abra");
+        SimpleMessage.Builder copy = SimpleMessage.newBuilder()
+                .setInt32(42)
+                .setString("abra");
+        SimpleMessage.Builder b = SimpleMessage.newBuilder()
+                .setInt32(43)
+                .setString("cadabra");
+        assertEquals(a, copy);
+        assertNotEquals(a, b);
+    }
 
 
     @Test
@@ -193,24 +187,24 @@ public class MessageTest {
         Map<String, String> expected = new HashMap<>();
         expected.put("key", "value");
         expected.put("test", "test");
-        Assert.assertEquals(expected, TEST_MAP.getMapStringStringMap());
+        assertEquals(expected, TEST_MAP.getMapStringStringMap());
     }
 
     @Test
     public void testMap_getter_single() throws Exception {
-        Assert.assertEquals("value", TEST_MAP.getMapStringString("key"));
+        assertEquals("value", TEST_MAP.getMapStringString("key"));
     }
 
     @Test
     public void testMap_builder_mergeFrom() throws Exception {
-        Assert.assertEquals("value", TestMap.newBuilder()
+        assertEquals("value", TestMap.newBuilder()
                 .mergeFrom(TEST_MAP)
                 .getMapStringString("key"));
     }
 
     @Test
     public void testMap_getter_count() throws Exception {
-        Assert.assertEquals(2, TEST_MAP.getMapStringStringCount());
+        assertEquals(2, TEST_MAP.getMapStringStringCount());
     }
 
     @Test
@@ -221,7 +215,7 @@ public class MessageTest {
         TestMap instance = TestMap.newBuilder()
                 .putAllMapStringString(map)
                 .build();
-        Assert.assertEquals(map, instance.getMapStringStringMap());
+        assertEquals(map, instance.getMapStringStringMap());
     }
 
     @Test
@@ -327,92 +321,112 @@ public class MessageTest {
         TestFieldNamedClass message = TestFieldNamedClass.newBuilder()
                 .setClass(42)
                 .build();
-        Assert.assertEquals(42, message.getClass_());
+        assertEquals(42, message.getClass_());
     }
 
     @Test
     public void setStringFieldToNull() throws Exception {
-        thrown.expect(NullPointerException.class);
-        thrown.expectMessage("Cannot set SimpleMessage#string to null");
-        SimpleMessage.newBuilder()
-                .setString(null);
+        String s = "Cannot set SimpleMessage#string to null";
+        NullPointerException exception = expectThrows(NullPointerException.class, () -> {
+            SimpleMessage.newBuilder()
+                    .setString(null);
+        });
+        assertEquals(s, exception.getMessage());
+
     }
 
     @Test
     public void setMessageFieldToNull() throws Exception {
-        thrown.expect(NullPointerException.class);
-        thrown.expectMessage("Cannot set SimpleMessage#message to null");
-        SimpleMessage.newBuilder()
-                .setMessage(null);
+        String s = "Cannot set SimpleMessage#message to null";
+        NullPointerException exception = expectThrows(NullPointerException.class, () -> {
+            SimpleMessage.newBuilder()
+                    .setMessage(null);
+        });
+        assertEquals(s, exception.getMessage());
     }
 
     @Test
     public void setEnumFieldToNull() throws Exception {
-        thrown.expect(NullPointerException.class);
-        thrown.expectMessage("Cannot set SimpleMessage#enum_ to null");
-        SimpleMessage.newBuilder()
-                .setEnum(null);
+        String s = "Cannot set SimpleMessage#enum_ to null";
+        NullPointerException exception = expectThrows(NullPointerException.class, () -> {
+            SimpleMessage.newBuilder()
+                    .setEnum(null);
+        });
+        assertEquals(s, exception.getMessage());
     }
 
     @Test
     @SuppressWarnings("ConstantConditions")
     public void addRepeatedStringFieldNull() throws Exception {
-        thrown.expect(NullPointerException.class);
-        thrown.expectMessage("Cannot set SimpleMessage#repeatedString to null");
-        String nullString = null;
-        SimpleMessage.newBuilder()
-                .addRepeatedString(nullString);
+        String s = "Cannot set SimpleMessage#repeatedString to null";
+        NullPointerException exception = expectThrows(NullPointerException.class, () -> {
+            String nullString = null;
+            SimpleMessage.newBuilder()
+                    .addRepeatedString(nullString);
+        });
+        assertEquals(s, exception.getMessage());
     }
 
     @Test
     public void setRepeatedStringFieldNull() throws Exception {
-        thrown.expect(NullPointerException.class);
-        thrown.expectMessage("Cannot set SimpleMessage#repeatedString to null");
-        SimpleMessage.newBuilder()
-                .addAllRepeatedString(null);
+        String s = "Cannot set SimpleMessage#repeatedString to null";
+        NullPointerException exception = expectThrows(NullPointerException.class, () -> {
+            SimpleMessage.newBuilder()
+                    .addAllRepeatedString(null);
+        });
+        assertEquals(s, exception.getMessage());
     }
 
     @Test
     public void setOneofStringToNull() throws Exception {
-        thrown.expect(NullPointerException.class);
-        thrown.expectMessage("Cannot set TestOneof#fooString");
-        TestOneof.newBuilder()
-                .setFooString(null);
+        String s = "Cannot set TestOneof#fooString to null";
+        NullPointerException exception = expectThrows(NullPointerException.class, () -> {
+            TestOneof.newBuilder()
+                    .setFooString(null);
+        });
+        assertEquals(s, exception.getMessage());
     }
 
     @Test
     public void setMapValueNull() throws Exception {
-        thrown.expect(NullPointerException.class);
-        thrown.expectMessage("Cannot set TestMap#mapBoolBool - map value is null");
-        TestMap.newBuilder()
-                .putMapBoolBool(true, null);
+        String s = "Cannot set TestMap#mapBoolBool - map value is null";
+        NullPointerException exception = expectThrows(NullPointerException.class, () -> {
+            TestMap.newBuilder()
+                    .putMapBoolBool(true, null);
+        });
+        assertEquals(s, exception.getMessage());
     }
 
     @Test
     public void mapListGetter_returnImmutableMap() throws Exception {
-        thrown.expect(UnsupportedOperationException.class);
-        TEST_MAP.getMapStringStringMap().put("1", "2");
+        expectThrows(UnsupportedOperationException.class, () -> {
+            TEST_MAP.getMapStringStringMap().put("1", "2");
+        });
     }
 
     @Test
     public void setMapKeyNull() throws Exception {
-        thrown.expect(NullPointerException.class);
-        thrown.expectMessage("Cannot set TestMap#mapBoolBool - map key is null");
-        TestMap.newBuilder()
-                .putMapBoolBool(null, true);
+        String s = "Cannot set TestMap#mapBoolBool - map key is null";
+        NullPointerException exception = expectThrows(NullPointerException.class, () -> {
+            TestMap.newBuilder()
+                    .putMapBoolBool(null, true);
+        });
+        assertEquals(s, exception.getMessage());
     }
 
     @Test
     public void setMapFieldNull() throws Exception {
-        thrown.expect(NullPointerException.class);
-        thrown.expectMessage("Cannot set TestMap#mapBoolBool to null");
-        TestMap.newBuilder()
-                .putAllMapBoolBool(null);
+        String s = "Cannot set TestMap#mapBoolBool to null";
+        NullPointerException exception = expectThrows(NullPointerException.class, () -> {
+            TestMap.newBuilder()
+                    .putAllMapBoolBool(null);
+        });
+        assertEquals(s, exception.getMessage());
     }
 
     @Test
     public void defaultMessageFieldValue() throws Exception {
         SimpleMessage message = SimpleMessage.newBuilder().build();
-        Assert.assertSame(TestMessage.getDefaultInstance(), message.getMessage());
+        assertSame(TestMessage.getDefaultInstance(), message.getMessage());
     }
 }

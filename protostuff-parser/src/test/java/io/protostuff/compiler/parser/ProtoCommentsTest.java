@@ -1,10 +1,9 @@
 package io.protostuff.compiler.parser;
 
-import org.junit.Test;
-
 import io.protostuff.compiler.model.Proto;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author Kostiantyn Shchepanovskyi

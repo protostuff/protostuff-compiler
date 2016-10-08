@@ -2,16 +2,14 @@ package io.protostuff.compiler.parser;
 
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.misc.Interval;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -23,7 +21,7 @@ public class LocalFileReaderTest {
     private Path file1;
     private Path file2;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         tempDirectory1 = Files.createTempDirectory("protostuff-test-");
         file1 = Files.write(tempDirectory1.resolve("1.proto"), "1".getBytes());
@@ -31,7 +29,7 @@ public class LocalFileReaderTest {
         file2 = Files.write(tempDirectory1.resolve("2.proto"), "2".getBytes());
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         Files.delete(file1);
         Files.delete(file2);
@@ -48,8 +46,8 @@ public class LocalFileReaderTest {
         assertNotNull(a);
         assertNotNull(b);
         assertNull(c);
-        Assert.assertEquals("1", a.getText(Interval.of(0, 1)));
-        Assert.assertEquals("2", b.getText(Interval.of(0, 1)));
+        assertEquals("1", a.getText(Interval.of(0, 1)));
+        assertEquals("2", b.getText(Interval.of(0, 1)));
     }
 
 }

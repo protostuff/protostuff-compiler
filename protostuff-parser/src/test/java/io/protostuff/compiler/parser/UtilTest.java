@@ -1,9 +1,9 @@
 package io.protostuff.compiler.parser;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static io.protostuff.compiler.parser.Util.removeFirstAndLastChar;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author Kostiantyn Shchepanovskyi

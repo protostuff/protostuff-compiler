@@ -2,11 +2,9 @@ package io.protostuff.compiler.parser;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-
-import org.junit.Before;
-import org.junit.Test;
-
 import io.protostuff.compiler.ParserModule;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -15,7 +13,7 @@ public class GoogleUnittestProtoParserTest {
 
     private Injector injector;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         injector = Guice.createInjector(new ParserModule());
     }

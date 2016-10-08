@@ -5,10 +5,11 @@ import io.protostuff.it.enum_test.NestedEnum;
 import io.protostuff.it.enum_test.ParentEnumMsg;
 import io.protostuff.it.message_test.*;
 import io.protostuff.it.scalar_test.ScalarFieldTestMsg;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -41,14 +42,14 @@ public class MessageSerializationTest {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         JsonIOUtil.writeTo(stream, SCALARS_MESSAGE, SCHEMA, false);
         String json = new String(stream.toByteArray());
-        Assert.assertEquals(SCALARS_JSON, json);
+        assertEquals(SCALARS_JSON, json);
     }
 
     @Test
     public void scalars_deserialize() throws Exception {
         SimpleMessage result = SCHEMA.newMessage();
         JsonIOUtil.mergeFrom(SCALARS_JSON.getBytes(), result, SCHEMA, false);
-        Assert.assertEquals(SCALARS_MESSAGE, result);
+        assertEquals(SCALARS_MESSAGE, result);
     }
 
     @Test
@@ -56,14 +57,14 @@ public class MessageSerializationTest {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         JsonIOUtil.writeTo(stream, REPEATED_MESSAGE, SCHEMA, false);
         String json = new String(stream.toByteArray());
-        Assert.assertEquals(REPEATED_JSON, json);
+        assertEquals(REPEATED_JSON, json);
     }
 
     @Test
     public void repeated_deserialize() throws Exception {
         SimpleMessage result = SCHEMA.newMessage();
         JsonIOUtil.mergeFrom(REPEATED_JSON.getBytes(), result, SCHEMA, false);
-        Assert.assertEquals(REPEATED_MESSAGE, result);
+        assertEquals(REPEATED_MESSAGE, result);
     }
 
     @Test
@@ -71,14 +72,14 @@ public class MessageSerializationTest {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         JsonIOUtil.writeTo(stream, NESTED_MESSAGE, SCHEMA, false);
         String json = new String(stream.toByteArray());
-        Assert.assertEquals(NESTED_JSON, json);
+        assertEquals(NESTED_JSON, json);
     }
 
     @Test
     public void nested_deserialize() throws Exception {
         SimpleMessage result = SCHEMA.newMessage();
         JsonIOUtil.mergeFrom(NESTED_JSON.getBytes(), result, SCHEMA, false);
-        Assert.assertEquals(NESTED_MESSAGE, result);
+        assertEquals(NESTED_MESSAGE, result);
     }
 
     @Test
@@ -98,12 +99,12 @@ public class MessageSerializationTest {
         byte[] bytes = stream.toByteArray();
         TestMap newInstance = TestMap.getSchema().newMessage();
         ProtobufIOUtil.mergeFrom(bytes, newInstance, TestMap.getSchema());
-        Assert.assertEquals(true, newInstance.getMapBoolBool(true));
-        Assert.assertEquals(false, newInstance.getMapBoolBool(false));
-        Assert.assertEquals(42, newInstance.getMapInt32Int32(43).intValue());
-        Assert.assertEquals(0, newInstance.getMapInt32Int32(1).intValue());
-        Assert.assertEquals(simpleMessage, newInstance.getMapStringSimpleMessage("key"));
-        Assert.assertEquals(container, newInstance);
+        assertEquals(true, newInstance.getMapBoolBool(true));
+        assertEquals(false, newInstance.getMapBoolBool(false));
+        assertEquals(42, newInstance.getMapInt32Int32(43).intValue());
+        assertEquals(0, newInstance.getMapInt32Int32(1).intValue());
+        assertEquals(simpleMessage, newInstance.getMapStringSimpleMessage("key"));
+        assertEquals(container, newInstance);
     }
 
     @Test
@@ -117,7 +118,7 @@ public class MessageSerializationTest {
         byte[] bytes = stream.toByteArray();
         TestOneof newInstance = TestOneof.getSchema().newMessage();
         ProtobufIOUtil.mergeFrom(bytes, newInstance, TestOneof.getSchema());
-        Assert.assertEquals(a, newInstance);
+        assertEquals(a, newInstance);
     }
 
     @Test
@@ -133,11 +134,11 @@ public class MessageSerializationTest {
         byte[] bytes = stream.toByteArray();
         ParentEnumMsg newInstance = ParentEnumMsg.getSchema().newMessage();
         ProtobufIOUtil.mergeFrom(bytes, newInstance, ParentEnumMsg.getSchema());
-        Assert.assertEquals(a, newInstance);
-        Assert.assertEquals(NestedEnum.HUNDRED, newInstance.getFirst());
-        Assert.assertEquals(NestedEnum.FIRST, newInstance.getNestedRepeatedEnum(0));
-        Assert.assertEquals(NestedEnum.FIRST, newInstance.getNestedRepeatedEnum(1));
-        Assert.assertEquals(NestedEnum.SECOND, newInstance.getNestedRepeatedEnum(2));
+        assertEquals(a, newInstance);
+        assertEquals(NestedEnum.HUNDRED, newInstance.getFirst());
+        assertEquals(NestedEnum.FIRST, newInstance.getNestedRepeatedEnum(0));
+        assertEquals(NestedEnum.FIRST, newInstance.getNestedRepeatedEnum(1));
+        assertEquals(NestedEnum.SECOND, newInstance.getNestedRepeatedEnum(2));
     }
 
     @Test
@@ -147,9 +148,9 @@ public class MessageSerializationTest {
                 .build();
         Schema<ScalarFieldTestMsg> schema =  msg.cachedSchema();
         String json = serialize(msg);
-        Assert.assertEquals("{\"double\":0.1}", json);
+        assertEquals("{\"double\":0.1}", json);
         ScalarFieldTestMsg deserialized = deserialize(json, schema);
-        Assert.assertEquals(msg, deserialized);
+        assertEquals(msg, deserialized);
     }
 
     @Test
@@ -158,9 +159,9 @@ public class MessageSerializationTest {
                 .setFooString("foo")
                 .build();
         String json = serialize(msg);
-        Assert.assertEquals("{\"fooString\":\"foo\"}", json);
+        assertEquals("{\"fooString\":\"foo\"}", json);
         TestOneof deserialzied = deserialize(json, TestOneof.getSchema());
-        Assert.assertEquals(msg, deserialzied);
+        assertEquals(msg, deserialzied);
     }
 
     @Test

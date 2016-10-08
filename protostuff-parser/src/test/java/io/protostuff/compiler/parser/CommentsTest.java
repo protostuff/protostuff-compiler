@@ -1,15 +1,11 @@
 package io.protostuff.compiler.parser;
 
-import org.junit.Before;
-import org.junit.Test;
-
 import io.protostuff.compiler.model.Enum;
-import io.protostuff.compiler.model.Message;
-import io.protostuff.compiler.model.Oneof;
-import io.protostuff.compiler.model.Proto;
-import io.protostuff.compiler.model.Service;
+import io.protostuff.compiler.model.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -18,7 +14,7 @@ public class CommentsTest extends AbstractParserTest {
 
     private ProtoContext context;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         context = importer.importFile(new ClasspathFileReader(), "protostuff_unittest/comments_sample.proto");
     }

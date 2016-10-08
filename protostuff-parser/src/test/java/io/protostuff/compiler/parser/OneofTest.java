@@ -1,12 +1,13 @@
 package io.protostuff.compiler.parser;
 
-import org.junit.Assert;
-import org.junit.Test;
-
 import io.protostuff.compiler.model.Field;
 import io.protostuff.compiler.model.Message;
 import io.protostuff.compiler.model.Oneof;
 import io.protostuff.compiler.model.ScalarFieldType;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -20,17 +21,17 @@ public class OneofTest extends AbstractParserTest {
         Message m = context.resolve(".protostuff_unittest.SampleMessage", Message.class);
 
         Oneof oneof = m.getOneof("test_oneof");
-        Assert.assertEquals("test_oneof", oneof.getName());
-        Assert.assertEquals(".protostuff_unittest.SampleMessage.", oneof.getNamespace());
+        assertEquals("test_oneof", oneof.getName());
+        assertEquals(".protostuff_unittest.SampleMessage.", oneof.getNamespace());
         Field name = oneof.getField("name");
-        Assert.assertEquals(ScalarFieldType.STRING, name.getType());
-        Assert.assertEquals(4, name.getTag());
-        Assert.assertFalse(name.hasModifier());
+        assertEquals(ScalarFieldType.STRING, name.getType());
+        assertEquals(4, name.getTag());
+        assertFalse(name.hasModifier());
 
         Field subMessage = oneof.getField("sub_message");
-        Assert.assertEquals("SubMessage", subMessage.getType().getName());
-        Assert.assertEquals(9, subMessage.getTag());
-        Assert.assertFalse(subMessage.hasModifier());
+        assertEquals("SubMessage", subMessage.getType().getName());
+        assertEquals(9, subMessage.getTag());
+        assertFalse(subMessage.hasModifier());
 
     }
 }

@@ -2,18 +2,12 @@ package io.protostuff.compiler.parser;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-
 import io.protostuff.compiler.ParserModule;
 import io.protostuff.compiler.model.Import;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -21,19 +15,17 @@ import static org.junit.Assert.assertNull;
 public class ImportsTest {
 
 
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
-
     private Injector injector;
+    private Importer importer;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         injector = Guice.createInjector(new ParserModule());
+        importer = injector.getInstance(Importer.class);
     }
 
     @Test
     public void test() throws Exception {
-        Importer importer = injector.getInstance(Importer.class);
         ProtoContext context = importer.importFile(new ClasspathFileReader(), "protostuff_unittest/imports_a.proto");
         Import anImport = context.getProto().getImports().get(0);
         assertEquals("protostuff_unittest/imports_a.proto", anImport.getSourceCodeLocation().getFile());
@@ -46,10 +38,10 @@ public class ImportsTest {
 
     @Test
     public void duplicate() throws Exception {
-        Importer importer = injector.getInstance(Importer.class);
-        thrown.expect(ParserException.class);
-        thrown.expectMessage("Cannot register duplicate type: .protostuff_unittest.A " +
-                "[protostuff_unittest/imports_duplicate.proto:7]");
-        importer.importFile(new ClasspathFileReader(), "protostuff_unittest/imports_duplicate.proto");
+        Throwable exception = expectThrows(ParserException.class, () -> {
+            importer.importFile(new ClasspathFileReader(), "protostuff_unittest/imports_duplicate.proto");
+        });
+        assertEquals("Cannot register duplicate type: .protostuff_unittest.A " +
+                "[protostuff_unittest/imports_duplicate.proto:7]", exception.getMessage());
     }
 }

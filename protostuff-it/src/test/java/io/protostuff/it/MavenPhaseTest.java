@@ -1,7 +1,7 @@
 package io.protostuff.it;
 
 import io.protostuff.it.test.TestGenerateTestSourcesPhase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Kostiantyn Shchepanovskyi

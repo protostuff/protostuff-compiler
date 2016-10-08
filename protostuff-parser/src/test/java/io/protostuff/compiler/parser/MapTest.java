@@ -1,26 +1,14 @@
 package io.protostuff.compiler.parser;
 
-import org.junit.Assert;
-import org.junit.Test;
-
 import io.protostuff.compiler.model.Field;
 import io.protostuff.compiler.model.Message;
 import io.protostuff.compiler.model.ScalarFieldType;
+import org.junit.jupiter.api.Test;
 
-import static io.protostuff.compiler.model.ScalarFieldType.BOOL;
-import static io.protostuff.compiler.model.ScalarFieldType.FIXED32;
-import static io.protostuff.compiler.model.ScalarFieldType.FIXED64;
-import static io.protostuff.compiler.model.ScalarFieldType.INT32;
-import static io.protostuff.compiler.model.ScalarFieldType.INT64;
-import static io.protostuff.compiler.model.ScalarFieldType.SFIXED32;
-import static io.protostuff.compiler.model.ScalarFieldType.SFIXED64;
-import static io.protostuff.compiler.model.ScalarFieldType.SINT32;
-import static io.protostuff.compiler.model.ScalarFieldType.SINT64;
-import static io.protostuff.compiler.model.ScalarFieldType.STRING;
-import static io.protostuff.compiler.model.ScalarFieldType.UINT32;
-import static io.protostuff.compiler.model.ScalarFieldType.UINT64;
+import static io.protostuff.compiler.model.ScalarFieldType.*;
 import static io.protostuff.compiler.parser.MessageParseListener.MAP_ENTRY_KEY;
 import static io.protostuff.compiler.parser.MessageParseListener.MAP_ENTRY_VALUE;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -53,8 +41,8 @@ public class MapTest extends AbstractParserTest {
     private void checkMap(Message m, String mapFieldName, ScalarFieldType keyType, String valueType, int tag) {
         Field field = m.getField(mapFieldName);
         Message type = (Message) field.getType();
-        Assert.assertEquals(keyType, type.getField(MAP_ENTRY_KEY).getType());
-        Assert.assertEquals(valueType, type.getField(MAP_ENTRY_VALUE).getType().getFullyQualifiedName());
-        Assert.assertEquals(tag, field.getTag());
+        assertEquals(keyType, type.getField(MAP_ENTRY_KEY).getType());
+        assertEquals(valueType, type.getField(MAP_ENTRY_VALUE).getType().getFullyQualifiedName());
+        assertEquals(tag, field.getTag());
     }
 }

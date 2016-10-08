@@ -2,45 +2,42 @@ package io.protostuff.compiler.parser;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-
-import io.protostuff.compiler.model.*;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import io.protostuff.compiler.ParserModule;
+import io.protostuff.compiler.model.Field;
+import io.protostuff.compiler.model.Message;
+import io.protostuff.compiler.model.Range;
+import io.protostuff.compiler.model.ScalarFieldType;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 
-import io.protostuff.compiler.ParserModule;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.expectThrows;
 
-import static org.junit.Assert.assertEquals;
 
 /**
  * @author Kostiantyn Shchepanovskyi
  */
-@SuppressWarnings("ConstantConditions")
+@SuppressWarnings({"ConstantConditions", "ThrowableResultOfMethodCallIgnored"})
 public class ExtensionsTest {
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
-    private Injector injector;
+
     private Importer importer;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
-        injector = Guice.createInjector(new ParserModule());
+        Injector injector = Guice.createInjector(new ParserModule());
         importer = injector.getInstance(Importer.class);
     }
 
     @Test
     public void testBasicExtensions() throws Exception {
         ProtoContext context = importer.importFile(new ClasspathFileReader(), "protostuff_unittest/extensions_sample.proto");
-        Proto proto = context.getProto();
         ExtensionRegistry er = context.getExtensionRegistry();
 
         Message a = context.resolve(Message.class, ".protostuff_unittest.A");
         Map<String, Field> aFields = er.getExtensionFields(a);
-        Assert.assertEquals(2, aFields.size());
+        assertEquals(2, aFields.size());
         Field ay = aFields.get(".protostuff_unittest.ay");
         assertEquals(ScalarFieldType.INT32, ay.getType());
         assertEquals(42, ay.getTag());
@@ -54,7 +51,7 @@ public class ExtensionsTest {
 
         Message b = context.resolve(Message.class, ".protostuff_unittest.A.B");
         Map<String, Field> bFields = er.getExtensionFields(b);
-        Assert.assertEquals(2, bFields.size());
+        assertEquals(2, bFields.size());
         Field by = bFields.get(".protostuff_unittest.A.by");
         assertEquals(ScalarFieldType.INT32, by.getType());
         assertEquals(52, by.getTag());
@@ -69,17 +66,19 @@ public class ExtensionsTest {
 
     @Test
     public void tagOutOfRange() throws Exception {
-        thrown.expect(ParserException.class);
-        thrown.expectMessage("Extension field 'e' tag=9 is out of allowed range " +
-                "[protostuff_unittest/extensions_tag_out_of_range.proto:10]");
-        importer.importFile(new ClasspathFileReader(), "protostuff_unittest/extensions_tag_out_of_range.proto");
+        ParserException exception = expectThrows(ParserException.class, () -> {
+            importer.importFile(new ClasspathFileReader(), "protostuff_unittest/extensions_tag_out_of_range.proto");
+        });
+        assertEquals("Extension field 'e' tag=9 is out of allowed range " +
+                "[protostuff_unittest/extensions_tag_out_of_range.proto:10]", exception.getMessage());
     }
 
     @Test
     public void badExtendeeType() throws Exception {
-        thrown.expect(ParserException.class);
-        thrown.expectMessage("Cannot extend 'A': not a message " +
-                "[protostuff_unittest/extensions_bad_extendee.proto:9]");
-        importer.importFile(new ClasspathFileReader(), "protostuff_unittest/extensions_bad_extendee.proto");
+        ParserException exception = expectThrows(ParserException.class, () -> {
+            importer.importFile(new ClasspathFileReader(), "protostuff_unittest/extensions_bad_extendee.proto");
+        });
+        assertEquals("Cannot extend 'A': not a message " +
+                "[protostuff_unittest/extensions_bad_extendee.proto:9]", exception.getMessage());
     }
 }

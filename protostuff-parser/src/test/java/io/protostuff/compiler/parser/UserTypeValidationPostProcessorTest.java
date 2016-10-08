@@ -1,11 +1,11 @@
 package io.protostuff.compiler.parser;
 
 import io.protostuff.compiler.model.Field;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -14,7 +14,7 @@ public class UserTypeValidationPostProcessorTest {
 
     private UserTypeValidationPostProcessor processor;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         processor = new UserTypeValidationPostProcessor();
     }
