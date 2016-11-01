@@ -2,6 +2,8 @@ package io.protostuff.compiler.maven;
 
 import io.protostuff.compiler.model.ImmutableModuleConfiguration;
 import io.protostuff.generator.CompilerModule;
+import io.protostuff.generator.html.HtmlGenerator;
+import io.protostuff.generator.html.StaticPage;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
@@ -18,10 +20,10 @@ import java.nio.file.Path;
 import java.nio.file.PathMatcher;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.List;
 
 import io.protostuff.compiler.model.ModuleConfiguration;
 import io.protostuff.generator.ProtostuffCompiler;
-import io.protostuff.generator.html.HtmlGenerator;
 
 import static java.util.Collections.singletonList;
 import static org.apache.maven.plugins.annotations.ResolutionScope.COMPILE_PLUS_RUNTIME;
@@ -39,6 +41,9 @@ public class HtmlGeneratorMojo extends AbstractGeneratorMojo {
     @Parameter(defaultValue = "${project.build.directory}/generated-html")
     private File target;
 
+    @Parameter
+    private List<StaticPage> pages;
+
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
         super.execute();
@@ -50,6 +55,9 @@ public class HtmlGeneratorMojo extends AbstractGeneratorMojo {
                 .includePaths(singletonList(sourcePath))
                 .generator(CompilerModule.HTML_COMPILER)
                 .output(target.getAbsolutePath());
+        if (pages != null) {
+            builder.putOptions(HtmlGenerator.PAGES, pages);
+        }
         PathMatcher protoMatcher = FileSystems.getDefault().getPathMatcher("glob:**/*.proto");
         try {
             Files.walkFileTree(sourcePath, new SimpleFileVisitor<Path>() {
