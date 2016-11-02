@@ -1,11 +1,11 @@
-<div class="page-header" title="{{proto.filename}}">
+<div class="page-header" title="{{ ctrl.proto.filename }}">
     <h1>
-        <span class="code">{{proto.filename}}</span>
+        <span class="code">{{ ctrl.proto.filename }}</span>
     </h1>
 </div>
 
-<div ng-if="proto.description">
+<div ng-if="ctrl.proto.description">
     <h2>Description</h2>
-    <p ng-bind-html="proto.description"></p>
+    <p ng-bind-html="ctrl.proto.description"></p>
 </div>
 

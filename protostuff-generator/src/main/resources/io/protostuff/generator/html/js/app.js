@@ -11,16 +11,11 @@ var app = angular.module('app', [
 ]);
 
 app.config(['$httpProvider', function ($httpProvider) {
-    // enable http caching
+    // Enable http caching
     $httpProvider.defaults.cache = true;
 }]);
 
 app.config(['$routeProvider', function ($routeProvider) {
-    $routeProvider.when('/types', {
-        templateUrl: 'partials/type-list.html',
-        controller: 'TypeListCtrl'
-    });
-
     var scalars = [
         'double',
         'float',
@@ -45,17 +40,21 @@ app.config(['$routeProvider', function ($routeProvider) {
         });
     });
 
+    $routeProvider.when('/types', {
+        templateUrl: 'partials/type-list.html',
+        controller: 'TypeListCtrl as ctrl'
+    });
     $routeProvider.when('/types/:typeId', {
         templateUrl: 'partials/type-detail.html',
-        controller: 'TypeDetailCtrl'
+        controller: 'TypeDetailCtrl as ctrl'
     });
     $routeProvider.when('/protos/:protoId', {
         templateUrl: 'partials/proto-detail.html',
-        controller: 'ProtoDetailCtrl'
+        controller: 'ProtoDetailCtrl as ctrl'
     });
     $routeProvider.when('/pages/:pageId', {
         templateUrl: 'partials/page.html',
-        controller: 'PageCtrl'
+        controller: 'PageCtrl as ctrl'
     });
     $routeProvider.otherwise({redirectTo: '/'});
 }]);
