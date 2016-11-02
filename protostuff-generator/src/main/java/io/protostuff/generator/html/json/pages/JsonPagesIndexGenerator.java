@@ -6,15 +6,16 @@ import io.protostuff.compiler.model.Module;
 import io.protostuff.generator.OutputStreamFactory;
 import io.protostuff.generator.html.StaticPage;
 import io.protostuff.generator.html.json.AbstractJsonGenerator;
+import org.apache.commons.io.FilenameUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 
-public class JsonPagesGenerator extends AbstractJsonGenerator {
+public class JsonPagesIndexGenerator extends AbstractJsonGenerator {
 
     @Inject
-    public JsonPagesGenerator(OutputStreamFactory outputStreamFactory) {
+    public JsonPagesIndexGenerator(OutputStreamFactory outputStreamFactory) {
         super(outputStreamFactory);
     }
 
@@ -24,10 +25,10 @@ public class JsonPagesGenerator extends AbstractJsonGenerator {
         @SuppressWarnings("unchecked")
         List<StaticPage> pages = (List<StaticPage>) module.getOptions().get(PAGES);
         if (pages != null) {
-            List<Page> root = pages.stream()
-                    .map(page -> ImmutablePage.builder()
+            List<PageIndexItem> root = pages.stream()
+                    .map(page -> ImmutablePageIndexItem.builder()
                             .name(page.getName())
-                            .ref(page.getFile().getName())
+                            .ref(FilenameUtils.getBaseName(page.getFile().getName()))
                             .build())
                     .collect(Collectors.toList());
             write(output, root);

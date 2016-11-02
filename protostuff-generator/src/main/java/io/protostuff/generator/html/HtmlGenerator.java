@@ -7,14 +7,19 @@ import io.protostuff.generator.ProtoCompiler;
 import io.protostuff.generator.html.json.enumeration.JsonEnumGenerator;
 import io.protostuff.generator.html.json.index.JsonIndexGenerator;
 import io.protostuff.generator.html.json.message.JsonMessageGenerator;
-import io.protostuff.generator.html.json.pages.JsonPagesGenerator;
+import io.protostuff.generator.html.json.pages.JsonPageGenerator;
+import io.protostuff.generator.html.json.pages.JsonPagesIndexGenerator;
 import io.protostuff.generator.html.json.proto.JsonProtoGenerator;
 import io.protostuff.generator.html.json.service.JsonServiceGenerator;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
+import org.pegdown.PegDownProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.List;
 import javax.inject.Inject;
 
@@ -26,6 +31,7 @@ public class HtmlGenerator implements ProtoCompiler {
     public static final String HTML_RESOURCE_BASE = "io/protostuff/generator/html/";
     public static final String[] STATIC_RESOURCES = new String[]{
             "index.html",
+            "partials/page.html",
             "partials/type-list.html",
             "partials/type-detail.html",
             "partials/proto-detail.html",
@@ -69,28 +75,33 @@ public class HtmlGenerator implements ProtoCompiler {
     private static final Logger LOGGER = LoggerFactory.getLogger(HtmlGenerator.class);
     public static final String PAGES = "pages";
     private final CompilerUtils compilerUtils;
+    private final PegDownProcessor pegDownProcessor;
     private final JsonIndexGenerator indexGenerator;
     private final JsonEnumGenerator enumGenerator;
     private final JsonMessageGenerator messageGenerator;
     private final JsonServiceGenerator serviceGenerator;
     private final JsonProtoGenerator protoGenerator;
-    private final JsonPagesGenerator pagesGenerator;
+    private final JsonPagesIndexGenerator pagesIndexGenerator;
+    private final JsonPageGenerator pageGenerator;
 
     @Inject
     public HtmlGenerator(CompilerUtils compilerUtils,
+            PegDownProcessor pegDownProcessor,
             JsonIndexGenerator indexGenerator,
             JsonEnumGenerator enumGenerator,
             JsonMessageGenerator messageGenerator,
             JsonServiceGenerator serviceGenerator,
             JsonProtoGenerator protoGenerator,
-            JsonPagesGenerator pagesGenerator) {
+            JsonPagesIndexGenerator pagesIndexGenerator, JsonPageGenerator pageGenerator) {
         this.compilerUtils = compilerUtils;
+        this.pegDownProcessor = pegDownProcessor;
         this.indexGenerator = indexGenerator;
         this.enumGenerator = enumGenerator;
         this.messageGenerator = messageGenerator;
         this.serviceGenerator = serviceGenerator;
         this.protoGenerator = protoGenerator;
-        this.pagesGenerator = pagesGenerator;
+        this.pagesIndexGenerator = pagesIndexGenerator;
+        this.pageGenerator = pageGenerator;
     }
 
     @Override
@@ -100,26 +111,10 @@ public class HtmlGenerator implements ProtoCompiler {
         messageGenerator.compile(module);
         serviceGenerator.compile(module);
         protoGenerator.compile(module);
-        pagesGenerator.compile(module);
+        pagesIndexGenerator.compile(module);
+        pageGenerator.compile(module);
         copy(HTML_RESOURCE_BASE, module.getOutput() + "/", STATIC_RESOURCES);
         copy(WEBJARS_RESOURCE_PREFIX, module.getOutput() + "/libs/", STATIC_LIBS);
-        copyStaticPages(module);
-    }
-
-    private void copyStaticPages(Module module) {
-        try {
-            @SuppressWarnings("unchecked")
-            List<StaticPage> pages = (List<StaticPage>) module.getOptions().get(PAGES);
-            if (pages != null) {
-                File pagesDir = new File(module.getOutput() + "/pages/");
-                FileUtils.forceMkdir(pagesDir);
-                for (StaticPage page : pages) {
-                    FileUtils.copyFileToDirectory(page.getFile(), pagesDir);
-                }
-            }
-        } catch (Exception e) {
-            throw Throwables.propagate(e);
-        }
     }
 
     private void copy(String source, String target, String[] files) {

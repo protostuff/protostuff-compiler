@@ -52,5 +52,9 @@ app.config(['$routeProvider', function ($routeProvider) {
         templateUrl: 'partials/proto-detail.html',
         controller: 'ProtoDetailCtrl'
     });
+    $routeProvider.when('/pages/:pageId', {
+        templateUrl: 'partials/page.html',
+        controller: 'PageCtrl'
+    });
     $routeProvider.otherwise({redirectTo: '/'});
 }]);

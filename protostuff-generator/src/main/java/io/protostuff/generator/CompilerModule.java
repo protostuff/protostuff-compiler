@@ -7,6 +7,7 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.multibindings.MapBinder;
 import io.protostuff.generator.html.HtmlGenerator;
 import io.protostuff.generator.java.JavaExtensionProvider;
+import org.pegdown.PegDownProcessor;
 
 import javax.inject.Inject;
 import java.io.FileOutputStream;
@@ -60,6 +61,11 @@ public class CompilerModule extends AbstractModule {
         compilers.addBinding(HTML_COMPILER).to(HtmlGenerator.class);
         compilers.addBinding(JAVA_COMPILER).toProvider(JavaCompilerProvider.class);
         compilers.addBinding(ST4_COMPILER).toProvider(St4CompilerProvider.class);
+    }
+
+    @Provides
+    PegDownProcessor pegDownProcessor() {
+        return new PegDownProcessor();
     }
 
     @Provides
