@@ -7,10 +7,10 @@ import io.protostuff.compiler.model.Module;
 import io.protostuff.generator.OutputStreamFactory;
 import io.protostuff.generator.html.StaticPage;
 import io.protostuff.generator.html.json.AbstractJsonGenerator;
+import io.protostuff.generator.html.markdown.MarkdownProcessor;
 import io.protostuff.generator.html.uml.PlantUmlVerbatimSerializer;
 import org.apache.commons.io.FilenameUtils;
 import org.pegdown.LinkRenderer;
-import org.pegdown.PegDownProcessor;
 import org.pegdown.VerbatimSerializer;
 
 import java.nio.charset.StandardCharsets;
@@ -22,12 +22,12 @@ import javax.inject.Inject;
 
 public class JsonPageGenerator extends AbstractJsonGenerator {
 
-    private final PegDownProcessor pegDownProcessor;
+    private final MarkdownProcessor markdownProcessor;
 
     @Inject
-    public JsonPageGenerator(OutputStreamFactory outputStreamFactory, PegDownProcessor pegDownProcessor) {
+    public JsonPageGenerator(OutputStreamFactory outputStreamFactory, MarkdownProcessor markdownProcessor) {
         super(outputStreamFactory);
-        this.pegDownProcessor = pegDownProcessor;
+        this.markdownProcessor = markdownProcessor;
     }
 
     @Override
@@ -39,9 +39,7 @@ public class JsonPageGenerator extends AbstractJsonGenerator {
                 pages.forEach(page -> {
                     try {
                         String content = new String(Files.readAllBytes(page.getFile().toPath()), StandardCharsets.UTF_8);
-                        Map<String, VerbatimSerializer> serializers = new HashMap<>();
-                        PlantUmlVerbatimSerializer.addToMap(serializers);
-                        String html = pegDownProcessor.markdownToHtml(content, new LinkRenderer(), serializers);
+                        String html = markdownProcessor.toHtml(content);
                         String baseName = FilenameUtils.getBaseName(page.getFile().getName());
                         Page p = ImmutablePage.builder()
                                 .name(page.getName())

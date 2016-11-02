@@ -1,9 +1,5 @@
 package io.protostuff.generator.html.json.message;
 
-import java.util.stream.Collectors;
-
-import javax.inject.Inject;
-
 import io.protostuff.compiler.model.Field;
 import io.protostuff.compiler.model.FieldModifier;
 import io.protostuff.compiler.model.Message;
@@ -12,25 +8,32 @@ import io.protostuff.compiler.model.UserTypeContainer;
 import io.protostuff.generator.OutputStreamFactory;
 import io.protostuff.generator.html.json.AbstractJsonGenerator;
 import io.protostuff.generator.html.json.index.NodeType;
+import io.protostuff.generator.html.markdown.MarkdownProcessor;
+
+import java.util.stream.Collectors;
+import javax.inject.Inject;
 
 /**
  * @author Kostiantyn Shchepanovskyi
  */
 public class JsonMessageGenerator extends AbstractJsonGenerator {
 
+    private final MarkdownProcessor markdownProcessor;
+
     @Inject
-    public JsonMessageGenerator(OutputStreamFactory outputStreamFactory) {
+    public JsonMessageGenerator(OutputStreamFactory outputStreamFactory, MarkdownProcessor markdownProcessor) {
         super(outputStreamFactory);
+        this.markdownProcessor = markdownProcessor;
     }
 
     @Override
     public void compile(Module module) {
-        module.getProtos().stream()
+        module.getProtos()
                 .forEach(proto -> rec(module, proto));
     }
 
     private void rec(Module module, UserTypeContainer container) {
-        container.getMessages().stream()
+        container.getMessages()
                 .forEach(message -> {
                     process(module, message);
                     rec(module, message);
@@ -42,7 +45,7 @@ public class JsonMessageGenerator extends AbstractJsonGenerator {
                 .type(NodeType.MESSAGE)
                 .name(message.getName())
                 .canonicalName(message.getCanonicalName())
-                .description(message.getComments())
+                .description(markdownProcessor.toHtml(message.getComments()))
                 .addAllFields(message.getFields().stream()
                         .map(field -> {
                             ImmutableMessageField.Builder builder = ImmutableMessageField.builder()
@@ -50,7 +53,7 @@ public class JsonMessageGenerator extends AbstractJsonGenerator {
                                     .typeId(field.getType().getCanonicalName())
                                     .modifier(getModifier(field))
                                     .tag(field.getTag())
-                                    .description(field.getComments())
+                                    .description(markdownProcessor.toHtml(field.getComments()))
                                     .oneof(field.isOneofPart() ? field.getOneof().getName() : null);
                             boolean isMap = field.isMap();
                             if (isMap) {

@@ -7,20 +7,24 @@ import io.protostuff.compiler.model.Proto;
 import io.protostuff.generator.OutputStreamFactory;
 import io.protostuff.generator.html.json.AbstractJsonGenerator;
 import io.protostuff.generator.html.json.index.NodeType;
+import io.protostuff.generator.html.markdown.MarkdownProcessor;
 
 /**
  * @author Kostiantyn Shchepanovskyi
  */
 public class JsonProtoGenerator extends AbstractJsonGenerator {
 
+    private final MarkdownProcessor markdownProcessor;
+
     @Inject
-    public JsonProtoGenerator(OutputStreamFactory outputStreamFactory) {
+    public JsonProtoGenerator(OutputStreamFactory outputStreamFactory, MarkdownProcessor markdownProcessor) {
         super(outputStreamFactory);
+        this.markdownProcessor = markdownProcessor;
     }
 
     @Override
     public void compile(Module module) {
-        module.getProtos().stream()
+        module.getProtos()
                 .forEach(proto -> process(module, proto));
     }
 
@@ -31,7 +35,7 @@ public class JsonProtoGenerator extends AbstractJsonGenerator {
                 .type(NodeType.PROTO)
                 .canonicalName(proto.getCanonicalName())
                 .filename(proto.getFilename())
-                .description(proto.getComments())
+                .description(markdownProcessor.toHtml(proto.getComments()))
                 .build();
         write(module.getOutput() + "/data/proto/" + name + ".json", descriptor);
     }

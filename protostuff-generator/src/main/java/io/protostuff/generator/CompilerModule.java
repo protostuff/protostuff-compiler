@@ -19,9 +19,12 @@ import static org.pegdown.Extensions.TASKLISTITEMS;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provider;
 import com.google.inject.Provides;
+import com.google.inject.Scopes;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.multibindings.MapBinder;
 import io.protostuff.generator.html.HtmlGenerator;
+import io.protostuff.generator.html.markdown.MarkdownProcessor;
+import io.protostuff.generator.html.markdown.PegDownMarkdownProcessor;
 import io.protostuff.generator.java.JavaExtensionProvider;
 import org.pegdown.PegDownProcessor;
 
@@ -63,6 +66,7 @@ public class CompilerModule extends AbstractModule {
     protected void configure() {
         bind(CompilerRegistry.class);
         bind(CompilerUtils.class);
+        bind(MarkdownProcessor.class).to(PegDownMarkdownProcessor.class).in(Scopes.SINGLETON);
         install(new FactoryModuleBuilder()
                 .implement(ProtoCompiler.class, StCompiler.class)
                 .build(StCompilerFactory.class));
@@ -73,24 +77,6 @@ public class CompilerModule extends AbstractModule {
         compilers.addBinding(HTML_COMPILER).to(HtmlGenerator.class);
         compilers.addBinding(JAVA_COMPILER).toProvider(JavaCompilerProvider.class);
         compilers.addBinding(ST4_COMPILER).toProvider(St4CompilerProvider.class);
-    }
-
-    @Provides
-    PegDownProcessor pegDownProcessor() {
-        PegDownProcessor processor = new PegDownProcessor(SMARTYPANTS
-                | ABBREVIATIONS
-                | AUTOLINKS
-                | TABLES
-                | FENCED_CODE_BLOCKS
-                | DEFINITIONS
-                | SUPPRESS_ALL_HTML
-                | STRIKETHROUGH
-                | ATXHEADERSPACE
-                | FORCELISTITEMPARA
-                | RELAXEDHRULES
-                | TASKLISTITEMS
-        );
-        return processor;
     }
 
     @Provides
