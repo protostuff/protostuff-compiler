@@ -77,7 +77,7 @@ public class CompilerModule extends AbstractModule {
 
     @Provides
     PegDownProcessor pegDownProcessor() {
-        return new PegDownProcessor(SMARTYPANTS
+        PegDownProcessor processor = new PegDownProcessor(SMARTYPANTS
                 | ABBREVIATIONS
                 | AUTOLINKS
                 | TABLES
@@ -90,6 +90,7 @@ public class CompilerModule extends AbstractModule {
                 | RELAXEDHRULES
                 | TASKLISTITEMS
         );
+        return processor;
     }
 
     @Provides
