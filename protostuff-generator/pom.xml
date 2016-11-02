@@ -39,7 +39,7 @@
         <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>angularjs</artifactId>
-            <version>1.4.7</version>
+            <version>1.5.8</version>
         </dependency>
         <dependency>
             <groupId>org.webjars</groupId>
@@ -50,6 +50,11 @@
             <groupId>org.webjars</groupId>
             <artifactId>jquery</artifactId>
             <version>1.11.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>angular-material</artifactId>
+            <version>1.1.1</version>
         </dependency>
         <dependency>
             <groupId>org.webjars.bower</groupId>
