@@ -24,7 +24,7 @@ public final class JsonIndexGenerator extends AbstractJsonGenerator {
     @Override
     public void compile(Module module) {
         List<JsonTreeNode> root = new ArrayList<>();
-        module.getProtos().stream()
+        module.getProtos()
                 .forEach(proto -> root.add(JsonTreeNode.newBuilder()
                         .label(proto.getFilename())
                         .data(NodeData.newBuilder()
@@ -39,7 +39,7 @@ public final class JsonIndexGenerator extends AbstractJsonGenerator {
 
     private List<JsonTreeNode> processProto(Proto proto) {
         List<JsonTreeNode> result = new ArrayList<>();
-        proto.getServices().stream()
+        proto.getServices()
                 .forEach(service -> result.add(JsonTreeNode.newBuilder()
                         .label(service.getName())
                         .data(NodeData.newBuilder()
@@ -53,7 +53,7 @@ public final class JsonIndexGenerator extends AbstractJsonGenerator {
 
     private List<JsonTreeNode> processContainer(UserTypeContainer proto) {
         List<JsonTreeNode> result = new ArrayList<>();
-        proto.getEnums().stream()
+        proto.getEnums()
                 .forEach(anEnum -> result.add(JsonTreeNode.newBuilder()
                         .label(anEnum.getName())
                         .data(NodeData.newBuilder()

@@ -2,8 +2,14 @@ var factories = angular.module('factories', []);
 
 function ProtoDataFactory($http) {
     var protoDataService = {
-        get: function () {
+        getTypeIndex: function () {
             return $http.get('data/index.json').then(function (response) {
+                return response.data;
+            });
+        },
+
+        getPageIndex: function () {
+            return $http.get('data/pages.json').then(function (response) {
                 return response.data;
             });
         }
