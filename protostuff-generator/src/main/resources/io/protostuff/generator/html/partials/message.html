@@ -29,7 +29,7 @@
                     oneof {{field.oneof}}
                 </div>
             <td>{{field.tag}}</td>
-            <td>{{field.description}}</td>
+            <td ng-bind-html="field.description"></td>
         </tr>
         </tbody>
     </table>

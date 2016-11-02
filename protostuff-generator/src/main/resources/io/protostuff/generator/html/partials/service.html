@@ -6,7 +6,7 @@
             returns(<type-ref value="method.returnTypeId"></type-ref>)
         </div>
         <div ng-if="method.description" class="panel-body">
-            {{method.description}}
+            <p ng-bind-html="method.description"></p>
         </div>
     </div>
 </div>

@@ -6,7 +6,8 @@ var app = angular.module('app', [
     'ngAnimate',
     'ngRoute',
     'angularBootstrapNavTree',
-    'ngMaterial'
+    'ngMaterial',
+    'ngSanitize'
 ]);
 
 app.config(['$httpProvider', function ($httpProvider) {
