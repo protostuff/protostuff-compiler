@@ -1,5 +1,21 @@
 package io.protostuff.generator;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.inject.multibindings.MapBinder.newMapBinder;
+import static org.pegdown.Extensions.ABBREVIATIONS;
+import static org.pegdown.Extensions.ATXHEADERSPACE;
+import static org.pegdown.Extensions.AUTOLINKS;
+import static org.pegdown.Extensions.DEFINITIONS;
+import static org.pegdown.Extensions.FENCED_CODE_BLOCKS;
+import static org.pegdown.Extensions.FORCELISTITEMPARA;
+import static org.pegdown.Extensions.HARDWRAPS;
+import static org.pegdown.Extensions.RELAXEDHRULES;
+import static org.pegdown.Extensions.SMARTYPANTS;
+import static org.pegdown.Extensions.STRIKETHROUGH;
+import static org.pegdown.Extensions.SUPPRESS_ALL_HTML;
+import static org.pegdown.Extensions.TABLES;
+import static org.pegdown.Extensions.TASKLISTITEMS;
+
 import com.google.inject.AbstractModule;
 import com.google.inject.Provider;
 import com.google.inject.Provides;
@@ -9,7 +25,6 @@ import io.protostuff.generator.html.HtmlGenerator;
 import io.protostuff.generator.java.JavaExtensionProvider;
 import org.pegdown.PegDownProcessor;
 
-import javax.inject.Inject;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -17,11 +32,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
-
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.inject.multibindings.MapBinder.newMapBinder;
+import javax.inject.Inject;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -65,7 +77,19 @@ public class CompilerModule extends AbstractModule {
 
     @Provides
     PegDownProcessor pegDownProcessor() {
-        return new PegDownProcessor();
+        return new PegDownProcessor(SMARTYPANTS
+                | ABBREVIATIONS
+                | AUTOLINKS
+                | TABLES
+                | FENCED_CODE_BLOCKS
+                | DEFINITIONS
+                | SUPPRESS_ALL_HTML
+                | STRIKETHROUGH
+                | ATXHEADERSPACE
+                | FORCELISTITEMPARA
+                | RELAXEDHRULES
+                | TASKLISTITEMS
+        );
     }
 
     @Provides
@@ -114,9 +138,9 @@ public class CompilerModule extends AbstractModule {
             return module -> {
                 try {
                     Map<String, Object> options = module.getOptions();
-                    Collection<String> templates = checkNotNull((Collection<String>)options.get(TEMPLATES_OPTION),
+                    Collection<String> templates = checkNotNull((Collection<String>) options.get(TEMPLATES_OPTION),
                             TEMPLATES_OPTION + " is not set");
-                    String extProviderClass = checkNotNull((String)options.get(EXTENSIONS_OPTION),
+                    String extProviderClass = checkNotNull((String) options.get(EXTENSIONS_OPTION),
                             EXTENSIONS_OPTION + " is not set");
                     ExtensionProvider extensionProvider = instantiate(extProviderClass, ExtensionProvider.class);
                     ProtoCompiler compiler = factory.create(templates, extensionProvider);
