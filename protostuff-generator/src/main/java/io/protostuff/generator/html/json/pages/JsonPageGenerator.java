@@ -7,14 +7,17 @@ import io.protostuff.compiler.model.Module;
 import io.protostuff.generator.OutputStreamFactory;
 import io.protostuff.generator.html.StaticPage;
 import io.protostuff.generator.html.json.AbstractJsonGenerator;
-import org.apache.commons.io.FileUtils;
+import io.protostuff.generator.html.uml.PlantUmlVerbatimSerializer;
 import org.apache.commons.io.FilenameUtils;
+import org.pegdown.LinkRenderer;
 import org.pegdown.PegDownProcessor;
+import org.pegdown.VerbatimSerializer;
 
-import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.inject.Inject;
 
 public class JsonPageGenerator extends AbstractJsonGenerator {
@@ -36,7 +39,9 @@ public class JsonPageGenerator extends AbstractJsonGenerator {
                 pages.forEach(page -> {
                     try {
                         String content = new String(Files.readAllBytes(page.getFile().toPath()), StandardCharsets.UTF_8);
-                        String html = pegDownProcessor.markdownToHtml(content);
+                        Map<String, VerbatimSerializer> serializers = new HashMap<>();
+                        PlantUmlVerbatimSerializer.addToMap(serializers);
+                        String html = pegDownProcessor.markdownToHtml(content, new LinkRenderer(), serializers);
                         String baseName = FilenameUtils.getBaseName(page.getFile().getName());
                         Page p = ImmutablePage.builder()
                                 .name(page.getName())

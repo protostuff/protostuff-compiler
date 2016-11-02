@@ -37,6 +37,11 @@
             <version>1.6.0</version>
         </dependency>
         <dependency>
+            <groupId>net.sourceforge.plantuml</groupId>
+            <artifactId>plantuml</artifactId>
+            <version>8048</version>
+        </dependency>
+        <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>angularjs</artifactId>
             <version>1.5.8</version>
