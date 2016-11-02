@@ -1,10 +1,12 @@
 var app = angular.module('app', [
     'controllers',
     'filters',
+    'factories',
     'typeRefDirective',
     'ngAnimate',
     'ngRoute',
-    'angularBootstrapNavTree'
+    'angularBootstrapNavTree',
+    'ngMaterial'
 ]);
 
 app.config(['$httpProvider', function ($httpProvider) {

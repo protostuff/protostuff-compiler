@@ -34,6 +34,8 @@ public class HtmlGenerator implements ProtoCompiler {
             "js/controllers.js",
             "js/filters.js",
             "js/directives.js",
+            "js/factories.js",
+            "js/fuzzy.js",
             "css/theme.css",
     };
 
@@ -44,6 +46,7 @@ public class HtmlGenerator implements ProtoCompiler {
             "bootstrap/3.3.5/js/bootstrap.min.js",
             "bootstrap/3.3.5/css/bootstrap.min.css",
             "bootstrap/3.3.5/css/bootstrap-theme.min.css",
+            "angular-material/1.1.1/angular-material.min.css",
             "bootstrap/3.3.5/fonts/glyphicons-halflings-regular.woff2",
             "bootstrap/3.3.5/fonts/glyphicons-halflings-regular.svg",
             "bootstrap/3.3.5/fonts/glyphicons-halflings-regular.woff",
@@ -51,9 +54,12 @@ public class HtmlGenerator implements ProtoCompiler {
             "bootstrap/3.3.5/fonts/glyphicons-halflings-regular.ttf",
             "angular-bootstrap-nav-tree-gildo/0.1.0/dist/abn_tree_directive.js",
             "angular-bootstrap-nav-tree-gildo/0.1.0/dist/abn_tree.css",
-            "angularjs/1.4.7/angular.min.js",
-            "angularjs/1.4.7/angular-animate.min.js",
-            "angularjs/1.4.7/angular-route.min.js",
+            "angularjs/1.5.8/angular.min.js",
+            "angularjs/1.5.8/angular-animate.min.js",
+            "angularjs/1.5.8/angular-route.min.js",
+            "angularjs/1.5.8/angular-aria.min.js",
+            "angularjs/1.5.8/angular-messages.min.js",
+            "angular-material/1.1.1/angular-material.min.js",
     };
 
     private static final Logger LOGGER = LoggerFactory.getLogger(HtmlGenerator.class);
