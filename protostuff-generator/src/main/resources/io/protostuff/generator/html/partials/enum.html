@@ -12,7 +12,7 @@
         <tr ng-repeat="constant in type.constants">
             <td><code>{{constant.name}}</code></td>
             <td>{{constant.value}}</td>
-            <td>{{constant.description}}</td>
+            <td ng-bind-html="constant.description"></td>
         </tr>
         </tbody>
     </table>
