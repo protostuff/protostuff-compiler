@@ -1,31 +1,20 @@
 var controllers = angular.module('controllers', []);
 
-function TreeCtrl($location, ProtoDataFactory, $q, TreeService) {
+function TreeCtrl($location, ProtoDataFactory, TreeService) {
     var self = this;
     self.treeService = TreeService;
     self.treeData = [];
-
+    self.pages = {};
     self.show = show;
 
-    loadData().then(function (data) {
-        self.treeData = data.typeIndex;
-        self.pages = data.pageIndex;
-        TreeService.setTreeData(data.typeIndex);
+    ProtoDataFactory.getTypeIndex().then(function (data) {
+        self.treeData = data;
+        TreeService.setTreeData(data);
     });
 
-    function loadData() {
-        var deferred = $q.defer();
-        var typeIndex = ProtoDataFactory.getTypeIndex();
-        var pageIndex = ProtoDataFactory.getPageIndex();
-        $q.all([typeIndex, pageIndex]).then(function (data) {
-            var result = {
-                "typeIndex": data[0],
-                "pageIndex": data[1]
-            };
-            deferred.resolve(result);
-        });
-        return deferred.promise;
-    }
+    ProtoDataFactory.getPageIndex().then(function (data) {
+        self.pages = data;
+    });
 
     function show(row) {
         if (row.data.type === "proto") {
@@ -36,35 +25,50 @@ function TreeCtrl($location, ProtoDataFactory, $q, TreeService) {
     }
 }
 controllers.controller('TreeCtrl',
-                       ['$location', 'ProtoDataFactory', '$q', 'TreeService', TreeCtrl]);
+    ['$location', 'ProtoDataFactory', 'TreeService', TreeCtrl]);
 
-function TypeListCtrl($scope, $http) {
+function TypeListCtrl(ProtoDataFactory) {
 
 }
-controllers.controller('TypeListCtrl', ['$scope', '$http', TypeListCtrl]);
+controllers.controller('TypeListCtrl', ['ProtoDataFactory', TypeListCtrl]);
 
-function TypeDetailCtrl($scope, $http, $routeParams) {
-    var typeId;
-    $scope.typeId = typeId = $routeParams.typeId;
-    $http.get('data/type/' + typeId + '.json')
-        .success(function (data) {
-            $scope.type = data;
-        });
-}
-controllers.controller('TypeDetailCtrl', ['$scope', '$http', '$routeParams', TypeDetailCtrl]);
-
-function ProtoDetailCtrl($scope, $http, $routeParams) {
-    var protoId;
-    $scope.protoId = protoId = $routeParams.protoId;
-    $http.get('data/proto/' + protoId + '.json')
-        .success(function (data) {
-            $scope.proto = data;
-        });
-}
-controllers.controller('ProtoDetailCtrl', ['$scope', '$http', '$routeParams', ProtoDetailCtrl]);
-
-function SearchCtrl($log, $location, TreeService, $scope) {
+function TypeDetailCtrl($routeParams, ProtoDataFactory) {
     var self = this;
+    self.typeId = $routeParams.typeId;
+    self.type = {};
+
+    ProtoDataFactory.getType(self.typeId).then(function (data) {
+        self.type = data;
+    });
+}
+controllers.controller('TypeDetailCtrl', ['$routeParams', 'ProtoDataFactory', TypeDetailCtrl]);
+
+function ProtoDetailCtrl($routeParams, ProtoDataFactory) {
+    var self = this;
+    self.protoId = $routeParams.protoId;
+    self.proto = {};
+
+    ProtoDataFactory.getProtoDetail(self.protoId).then(function (data) {
+        self.proto = data;
+    });
+}
+controllers.controller('ProtoDetailCtrl', ['$routeParams', 'ProtoDataFactory', ProtoDetailCtrl]);
+
+function PageCtrl($routeParams, ProtoDataFactory) {
+    var self = this;
+    self.pageId = $routeParams.pageId;
+    self.page = {};
+
+    ProtoDataFactory.getPage(self.pageId).then(function (data) {
+        self.page.name = data.name;
+        self.page.content = data.content;
+    });
+}
+controllers.controller('PageCtrl', ['$routeParams', 'ProtoDataFactory', PageCtrl]);
+
+function SearchCtrl($location, TreeService, $scope) {
+    var self = this;
+    var fuse = {};
 
     self.states = {};
     self.tree = TreeService.getTree();
@@ -82,7 +86,7 @@ function SearchCtrl($log, $location, TreeService, $scope) {
             "ancronym"
         ]
     };
-    var fuse = {};
+
     $scope.$on('treeData:updated', function (event, data) {
         self.states = searchFunction(TreeService.getTreeData(), []);
         fuse = new Fuse(self.states, options);
@@ -101,7 +105,6 @@ function SearchCtrl($log, $location, TreeService, $scope) {
             } else {
                 $location.path('/types/' + item.data.ref);
             }
-            $log.info('Item changed to ' + JSON.stringify(item));
         }
     }
 
@@ -122,16 +125,4 @@ function SearchCtrl($log, $location, TreeService, $scope) {
         return result;
     }
 }
-controllers.controller('SearchCtrl', ['$log', '$location', 'TreeService', '$scope', SearchCtrl]);
-
-function PageCtrl($scope, $http, $routeParams, $sce) {
-    var pageId;
-    $scope.pageId = pageId = $routeParams.pageId;
-    $http.get('data/pages/' + pageId + '.json')
-        .success(function (data) {
-            $scope.page = {};
-            $scope.page.name = data.name;
-            $scope.page.content = $sce.trustAsHtml(data.content);
-        });
-}
-controllers.controller('PageCtrl', ['$scope', '$http', '$routeParams', '$sce', PageCtrl]);
+controllers.controller('SearchCtrl', ['$location', 'TreeService', '$scope', SearchCtrl]);

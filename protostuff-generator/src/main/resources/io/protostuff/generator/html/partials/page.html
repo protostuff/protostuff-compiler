@@ -1,9 +1,9 @@
-<div class="page-header" title="{{page.name}}">
+<div class="page-header" title="{{ ctrl.page.name }}">
     <h1>
-        <span class="code">{{page.name}}</span>
+        <span class="code">{{ ctrl.page.name }}</span>
     </h1>
 </div>
 
-<div ng-if="page.content">
-    <span ng-bind-html="page.content"></span>
+<div ng-if="ctrl.page.content">
+    <span ng-bind-html="ctrl.page.content"></span>
 </div>
