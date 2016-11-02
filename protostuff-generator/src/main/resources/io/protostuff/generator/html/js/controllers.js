@@ -8,14 +8,21 @@ function TreeCtrl($location, ProtoDataFactory, $q, TreeService) {
     self.show = show;
 
     loadData().then(function (data) {
-        self.treeData = data;
-        TreeService.setTreeData(data);
+        self.treeData = data.typeIndex;
+        self.pages = data.pageIndex;
+        TreeService.setTreeData(data.typeIndex);
     });
 
     function loadData() {
         var deferred = $q.defer();
-        ProtoDataFactory.get().then(function (data) {
-            deferred.resolve(data);
+        var typeIndex = ProtoDataFactory.getTypeIndex();
+        var pageIndex = ProtoDataFactory.getPageIndex();
+        $q.all([typeIndex, pageIndex]).then(function (data) {
+            var result = {
+                "typeIndex": data[0],
+                "pageIndex": data[1]
+            };
+            deferred.resolve(result);
         });
         return deferred.promise;
     }
@@ -28,7 +35,8 @@ function TreeCtrl($location, ProtoDataFactory, $q, TreeService) {
         }
     }
 }
-controllers.controller('TreeCtrl', ['$location', 'ProtoDataFactory', '$q', 'TreeService', TreeCtrl]);
+controllers.controller('TreeCtrl',
+                       ['$location', 'ProtoDataFactory', '$q', 'TreeService', TreeCtrl]);
 
 function TypeListCtrl($scope, $http) {
 
@@ -55,7 +63,6 @@ function ProtoDetailCtrl($scope, $http, $routeParams) {
 }
 controllers.controller('ProtoDetailCtrl', ['$scope', '$http', '$routeParams', ProtoDetailCtrl]);
 
-
 function SearchCtrl($log, $location, TreeService, $scope) {
     var self = this;
 
@@ -80,7 +87,6 @@ function SearchCtrl($log, $location, TreeService, $scope) {
         self.states = searchFunction(TreeService.getTreeData(), []);
         fuse = new Fuse(self.states, options);
     });
-
 
     function filterItems(query) {
         return query ? fuse.search(query) : self.states;

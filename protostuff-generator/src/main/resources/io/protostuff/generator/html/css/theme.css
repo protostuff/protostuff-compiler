@@ -32,7 +32,13 @@ body {
 }
 
 .sidebar a {
-    color: #428bca;
+    color: #3572b0;
+}
+
+.sidebar .pages ul {
+    padding-left: 16px;
+    list-style-type: none;
+    white-space: nowrap;
 }
 
 .sidebar .list-group-item {
