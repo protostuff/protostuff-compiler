@@ -6,7 +6,7 @@
 
 <div ng-if="type.description">
     <h2>Description</h2>
-    <p>{{type.description}}</p>
+    <p ng-bind-html="type.description"></p>
 </div>
 
 <div ng-switch on="type.type">

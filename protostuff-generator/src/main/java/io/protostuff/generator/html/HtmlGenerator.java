@@ -69,6 +69,7 @@ public class HtmlGenerator implements ProtoCompiler {
             "angularjs/1.5.8/angular-route.min.js",
             "angularjs/1.5.8/angular-aria.min.js",
             "angularjs/1.5.8/angular-messages.min.js",
+            "angularjs/1.5.8/angular-sanitize.min.js",
             "angular-material/1.1.1/angular-material.min.js",
     };
 

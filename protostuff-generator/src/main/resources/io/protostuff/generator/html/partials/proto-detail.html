@@ -6,6 +6,6 @@
 
 <div ng-if="proto.description">
     <h2>Description</h2>
-    <p>{{proto.description}}</p>
+    <p ng-bind-html="proto.description"></p>
 </div>
 
