@@ -72,5 +72,10 @@ public class ServiceTest {
         public ListenableFuture<ResponseMessage> deprecated(RequestMessage request) {
             return null;
         }
+
+        @Override
+        public ListenableFuture<ResponseMessage> custom(RequestMessage request) {
+            return null;
+        }
     }
 }

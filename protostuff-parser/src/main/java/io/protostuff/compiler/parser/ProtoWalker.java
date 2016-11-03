@@ -16,8 +16,11 @@ public class ProtoWalker {
 
     private final List<Processor<Proto>> protoProcessors = new ArrayList<>();
     private final List<Processor<Message>> messageProcessors = new ArrayList<>();
+    private final List<Processor<Field>> fieldProcessors = new ArrayList<>();
     private final List<Processor<Enum>> enumProcessors = new ArrayList<>();
+    private final List<Processor<EnumConstant>> enumConstantProcessors = new ArrayList<>();
     private final List<Processor<Service>> serviceProcessors = new ArrayList<>();
+    private final List<Processor<ServiceMethod>> serviceMethodProcessors = new ArrayList<>();
 
     public ProtoWalker(ProtoContext protoContext) {
         this.context = protoContext;
@@ -38,13 +41,28 @@ public class ProtoWalker {
         return this;
     }
 
+    public ProtoWalker onField(Processor<Field> processor) {
+        fieldProcessors.add(processor);
+        return this;
+    }
+
     public ProtoWalker onEnum(Processor<Enum> processor) {
         enumProcessors.add(processor);
         return this;
     }
 
+    public ProtoWalker onEnumConstant(Processor<EnumConstant> processor) {
+        enumConstantProcessors.add(processor);
+        return this;
+    }
+
     public ProtoWalker onService(Processor<Service> processor) {
         serviceProcessors.add(processor);
+        return this;
+    }
+
+    public ProtoWalker onServiceMethod(Processor<ServiceMethod> processor) {
+        serviceMethodProcessors.add(processor);
         return this;
     }
 
@@ -60,6 +78,11 @@ public class ProtoWalker {
         for (Processor<Service> serviceProcessor : serviceProcessors) {
             for (Service service : services) {
                 serviceProcessor.run(context, service);
+                for (Processor<ServiceMethod> serviceMethodProcessor : serviceMethodProcessors) {
+                    for (ServiceMethod serviceMethod : service.getMethods()) {
+                        serviceMethodProcessor.run(context, serviceMethod);
+                    }
+                }
             }
         }
         walk((UserTypeContainer) container);
@@ -70,12 +93,22 @@ public class ProtoWalker {
         for (Processor<Message> messageProcessor : messageProcessors) {
             for (Message message : messages) {
                 messageProcessor.run(context, message);
+                for (Processor<Field> fieldProcessor : fieldProcessors) {
+                    for (Field field : message.getFields()) {
+                        fieldProcessor.run(context, field);
+                    }
+                }
             }
         }
         List<Enum> enums = container.getEnums();
         for (Processor<Enum> enumProcessor : enumProcessors) {
             for (Enum anEnum : enums) {
                 enumProcessor.run(context, anEnum);
+                for (Processor<EnumConstant> enumConstantProcessor : enumConstantProcessors) {
+                    for (EnumConstant enumConstant : anEnum.getConstants()) {
+                        enumConstantProcessor.run(context, enumConstant);
+                    }
+                }
             }
         }
     }

@@ -34,7 +34,6 @@
 //
 // A proto file used to test the "custom options" feature of proto2.
 
-
 // Some generic_services option(s) added automatically.
 // See:  http://go/proto2-generic-services-default
 option cc_generic_services = true; // auto-added
@@ -49,7 +48,6 @@ import "google/protobuf/descriptor.proto";
 // We don't put this in a package within proto2 because we need to make sure
 // that the generated code doesn't depend on being in the proto2 namespace.
 package protobuf_unittest;
-
 
 // Some simple test custom options of various types.
 
@@ -106,7 +104,6 @@ message TestMessageWithCustomOptions {
     }
 }
 
-
 // A test RPC service with custom options at all possible locations (and also
 // some regular options, to make sure they interact nicely).
 message CustomOptionFooRequest {
@@ -128,8 +125,6 @@ service TestServiceWithCustomOptions {
         option (method_opt1) = METHODOPT1_VAL2;
     }
 }
-
-
 
 // Options of every possible field type, so we can test them all exhaustively.
 
@@ -284,18 +279,13 @@ message VariousComplexOptions {
     option (complex_opt2).(protobuf_unittest.garply).(corge).qux = 2121;
     option (ComplexOptionType2.ComplexOptionType4.complex_opt4).waldo = 1971;
     option (complex_opt2).fred.waldo = 321;
-    option (complex_opt2).barney =
-    {
+    option (complex_opt2).barney = {
     waldo
     :
     101
-}
+};
 
-;
-
-option (complex_opt2).barney =
-
-{
+    option (complex_opt2).barney = {
 
 waldo
 
@@ -303,15 +293,13 @@ waldo
 
 212
 
-}
+};
 
-;
+    option (protobuf_unittest.complex_opt3).qux = 9;
 
-option (protobuf_unittest.complex_opt3).qux = 9;
+    option (complex_opt3).complexoptiontype5.plugh = 22;
 
-option (complex_opt3).complexoptiontype5.plugh = 22;
-
-option (complexopt6).xyzzy = 24;
+    option (complexopt6).xyzzy = 24;
 
 }
 
@@ -380,9 +368,7 @@ extend google.protobuf.MethodOptions {
 }
 
 // Try using AggregateOption at different points in the proto grammar
-option (fileopt) =
-
-{
+option (fileopt) = {
 
 s
 
@@ -467,44 +453,23 @@ s
 
 }
 
-}
-
-;
+};
 
 message AggregateMessage {
-    option (msgopt) =
-    {
+    option (msgopt) = {
     i
     :
     101
     s
     :
     'MessageAnnotation'
-}
+};
 
-;
-
-optional
-
-int32
-
-fieldname
-
-=
-
-1
-
-[
-
-(
+    optional int32 fieldname = 1 [(
 
 fieldopt
 
-)
-
-=
-
-{
+) = {
 
 s
 
@@ -512,47 +477,20 @@ s
 
 'FieldAnnotation'
 
-}
-
-]
-
-;
+}];
 
 }
 
 service AggregateService {
-    option (serviceopt) =
-    {
+    option (serviceopt) = {
     s
     :
     'ServiceAnnotation'
-}
+};
 
-;
+    rpc Method (AggregateMessage) returns (AggregateMessage) {
 
-rpc
-
-Method
-
-(
-
-AggregateMessage
-
-)
-
-returns
-
-(
-
-AggregateMessage
-
-)
-
-{
-
-option (methodopt) =
-
-{
+        option (methodopt) = {
 
 s
 
@@ -560,54 +498,20 @@ s
 
 'MethodAnnotation'
 
-}
+};
 
-;
-
-}
+    }
 
 }
 
 enum AggregateEnum {
-    option (enumopt) =
-    {
-    s
-    :
-    'EnumAnnotation'
-}
+    option (enumopt) = {
+        s:'EnumAnnotation'
+    };
 
-;
-
-VALUE
-
-=
-
-1
-
-[
-
-(
-
-enumvalopt
-
-)
-
-=
-
-{
-
-s
-
-:
-
-'EnumValueAnnotation'
-
-}
-
-]
-
-;
-
+    VALUE = 1 [(enumvalopt) = {
+        s:'EnumValueAnnotation'
+    }];
 }
 
 // Test custom options for nested type.

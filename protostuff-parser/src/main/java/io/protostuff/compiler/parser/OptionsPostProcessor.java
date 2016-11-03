@@ -33,6 +33,7 @@ import static io.protostuff.compiler.parser.TypeResolverPostProcessor.createScop
 public class OptionsPostProcessor implements ProtoContextPostProcessor {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OptionsPostProcessor.class);
+    public static final String DEFAULT = "default";
 
 
     private final Provider<ProtoContext> descriptorProtoProvider;
@@ -47,6 +48,11 @@ public class OptionsPostProcessor implements ProtoContextPostProcessor {
         ProtoWalker.newInstance(context)
                 .onProto(this::processOptions)
                 .onMessage(this::processOptions)
+                .onField(this::processOptions)
+                .onEnum(this::processOptions)
+                .onEnumConstant(this::processOptions)
+                .onService(this::processOptions)
+                .onServiceMethod(this::processOptions)
                 .walk();
     }
 
@@ -100,10 +106,14 @@ public class OptionsPostProcessor implements ProtoContextPostProcessor {
                 // check standard option
                 String fieldName = key.getName();
                 Field field = sourceMessage.getField(fieldName);
-                if (field == null) {
-                    throw new ParserException(value, "Unknown option: '%s'", fieldName);
+                if (DEFAULT.equals(fieldName)) {
+                    // TODO: check value of default option
+                } else {
+                    if (field == null) {
+                        throw new ParserException(value, "Unknown option: '%s'", fieldName);
+                    }
+                    checkFieldValue(context, owningDescriptor, field, value);
                 }
-                checkFieldValue(context, owningDescriptor, field, value);
             }
         }
         for (Map.Entry<DynamicMessage.Key, String> entry : fullyQualifiedNames.entrySet()) {

@@ -246,7 +246,9 @@ public class DynamicMessage implements Map<String, DynamicMessage.Value> {
             if (!key.isExtension()) {
                 result.put(key.getName(), transformValueToObject(value));
             } else {
-                result.put("(" + key.getName() + ")", transformValueToObject(value));
+                // TODO: we should not use format with leading dot internally
+                String fullName = key.getName().substring(1);
+                result.put("(" + fullName + ")", transformValueToObject(value));
             }
         }
         return result;

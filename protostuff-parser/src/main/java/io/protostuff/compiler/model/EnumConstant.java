@@ -36,7 +36,7 @@ public class EnumConstant extends AbstractDescriptor {
 
     @Override
     public DescriptorType getDescriptorType() {
-        return DescriptorType.MESSAGE;
+        return DescriptorType.ENUM_CONSTANT;
     }
 
     /**

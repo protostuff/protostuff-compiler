@@ -1,5 +1,7 @@
 syntax = "proto3";
 
+import "io/protostuff/it/options.proto";
+
 package io.protostuff.it;
 
 option java_package = "io.protostuff.it.service_test";
@@ -10,6 +12,10 @@ service TestService {
 
     rpc deprecated(RequestMessage) returns(ResponseMessage) {
         option deprecated = true;
+    };
+
+    rpc custom(RequestMessage) returns(ResponseMessage) {
+        option (customOption) = "test";
     };
 
 }
