@@ -61,5 +61,9 @@ app.config(['$routeProvider', function ($routeProvider) {
         templateUrl: 'partials/page.html',
         controller: 'PageCtrl as ctrl'
     });
+    $routeProvider.when('/search/:searchText', {
+        templateUrl: 'partials/search-result.html',
+        controller: 'SearchResultCtrl as ctrl'
+    });
     $routeProvider.otherwise({redirectTo: '/'});
 }]);
