@@ -1,4 +1,4 @@
-package io.protostuff.it;
+package io.protostuff.it.java;
 
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;

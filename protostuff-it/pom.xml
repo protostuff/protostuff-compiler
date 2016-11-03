@@ -20,6 +20,9 @@
             <testResource>
                 <directory>${project.basedir}/src/test/proto</directory>
             </testResource>
+            <testResource>
+                <directory>${project.build.directory}/generated-test-resources/</directory>
+            </testResource>
         </testResources>
         <plugins>
             <plugin>
@@ -52,6 +55,17 @@
                             <extensions>io.protostuff.it.CustomExtensionProvider</extensions>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>generate-documentation</id>
+                        <phase>generate-test-resources</phase>
+                        <goals>
+                            <goal>html</goal>
+                        </goals>
+                        <configuration>
+                            <source>${project.basedir}/src/test/proto</source>
+                            <target>${project.build.directory}/generated-test-resources/html</target>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
         </plugins>
@@ -77,6 +91,11 @@
             <groupId>io.protostuff</groupId>
             <artifactId>protostuff-json</artifactId>
             <version>${protostuff.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-guava</artifactId>
+            <version>${jackson.version}</version>
         </dependency>
     </dependencies>
 </project>

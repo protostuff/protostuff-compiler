@@ -1,4 +1,4 @@
-package io.protostuff.it;
+package io.protostuff.it.java;
 
 import io.protostuff.*;
 import io.protostuff.it.enum_test.NestedEnum;

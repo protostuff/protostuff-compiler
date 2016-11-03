@@ -20,13 +20,7 @@ public class ClasspathFileReader implements FileReader {
     @Override
     public CharStream read(String name) {
         try {
-            String classpath = System.getProperty("java.class.path");
-            LOGGER.trace("Reading {} from classpath={}", name, classpath);
-            ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-            if (classLoader == null) {
-                throw new IllegalStateException("Can not obtain classloader instance from current thread");
-            }
-            InputStream resource = classLoader.getResourceAsStream(name);
+            InputStream resource = readResource(name);
             if (resource != null) {
                 return new ANTLRInputStream(resource);
             }
@@ -34,6 +28,16 @@ public class ClasspathFileReader implements FileReader {
             LOGGER.error("Could not read {}", name, e);
         }
         return null;
+    }
+
+    public static InputStream readResource(String name) {
+        String classpath = System.getProperty("java.class.path");
+        LOGGER.trace("Reading {} from classpath={}", name, classpath);
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        if (classLoader == null) {
+            throw new IllegalStateException("Can not obtain classloader instance from current thread");
+        }
+        return classLoader.getResourceAsStream(name);
     }
 
 }

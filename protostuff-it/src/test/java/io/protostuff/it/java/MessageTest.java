@@ -1,4 +1,4 @@
-package io.protostuff.it;
+package io.protostuff.it.java;
 
 import io.protostuff.it.message_test.*;
 import org.junit.jupiter.api.Test;

@@ -1,4 +1,4 @@
-package io.protostuff.it;
+package io.protostuff.it.java;
 
 import io.protostuff.it.test.TestGenerateTestSourcesPhase;
 import org.junit.jupiter.api.Test;

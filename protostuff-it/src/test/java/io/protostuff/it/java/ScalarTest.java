@@ -1,4 +1,4 @@
-package io.protostuff.it;
+package io.protostuff.it.java;
 
 import io.protostuff.ByteString;
 import io.protostuff.it.scalar_test.RepeatedScalarFieldTestMsg;
