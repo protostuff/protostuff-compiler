@@ -48,6 +48,7 @@ public class JsonMessageGenerator extends AbstractJsonGenerator {
                 .name(message.getName())
                 .canonicalName(message.getCanonicalName())
                 .description(markdownProcessor.toHtml(message.getComments()))
+                .options(message.getOptions().toMap())
                 .addAllFields(message.getFields().stream()
                         .map(field -> {
                             ImmutableMessageField.Builder builder = ImmutableMessageField.builder()
@@ -56,7 +57,8 @@ public class JsonMessageGenerator extends AbstractJsonGenerator {
                                     .modifier(getModifier(field))
                                     .tag(field.getTag())
                                     .description(createFieldDescription(field))
-                                    .oneof(field.isOneofPart() ? field.getOneof().getName() : null);
+                                    .oneof(field.isOneofPart() ? field.getOneof().getName() : null)
+                                    .options(field.getOptions().toMap());
                             boolean isMap = field.isMap();
                             if (isMap) {
                                 builder.isMap(true);

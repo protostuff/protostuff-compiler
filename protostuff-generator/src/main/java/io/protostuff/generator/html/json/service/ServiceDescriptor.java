@@ -3,9 +3,11 @@ package io.protostuff.generator.html.json.service;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import io.protostuff.compiler.model.DynamicMessage;
 import org.immutables.value.Value;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Nullable;
 
@@ -28,4 +30,6 @@ public interface ServiceDescriptor {
     String description();
 
     List<ServiceMethod> methods();
+
+    Map<String, Object> options();
 }

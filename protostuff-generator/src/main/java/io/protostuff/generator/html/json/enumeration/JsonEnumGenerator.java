@@ -44,11 +44,13 @@ public class JsonEnumGenerator extends AbstractJsonGenerator {
                 .name(anEnum.getName())
                 .canonicalName(anEnum.getCanonicalName())
                 .description(markdownProcessor.toHtml(anEnum.getComments()))
+                .options(anEnum.getOptions().toMap())
                 .addAllConstants(anEnum.getConstants().stream()
                         .map(enumConstant -> ImmutableEnumConstant.builder()
                                 .name(enumConstant.getName())
                                 .value(enumConstant.getValue())
                                 .description(markdownProcessor.toHtml(enumConstant.getComments()))
+                                .options(enumConstant.getOptions().toMap())
                                 .build())
                         .collect(Collectors.toList()))
                 .build();

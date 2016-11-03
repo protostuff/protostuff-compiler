@@ -235,6 +235,42 @@ public class DynamicMessage implements Map<String, DynamicMessage.Value> {
         fields.put(Key.extension(fullyQualifiedName), value);
     }
 
+    /**
+     * Returns a map of option names as keys and option values as values..
+     */
+    public Map<String, Object> toMap() {
+        Map<String, Object> result = new HashMap<>();
+        for (Entry<Key, Value> keyValueEntry : fields.entrySet()) {
+            Key key = keyValueEntry.getKey();
+            Value value = keyValueEntry.getValue();
+            if (!key.isExtension()) {
+                result.put(key.getName(), transformValueToObject(value));
+            } else {
+                result.put("(" + key.getName() + ")", transformValueToObject(value));
+            }
+        }
+        return result;
+    }
+
+    private Object transformValueToObject(Value value) {
+        switch (value.getType()) {
+            case BOOLEAN:
+                return value.getBoolean();
+            case INTEGER:
+                return value.getInt64();
+            case FLOAT:
+                return value.getDouble();
+            case STRING:
+                return value.getString();
+            case ENUM:
+                return value.getEnumName();
+            case MESSAGE:
+                // TODO
+                return null;
+        }
+        return value;
+    }
+
     public static class Key {
         private final String name;
         private final boolean extension;

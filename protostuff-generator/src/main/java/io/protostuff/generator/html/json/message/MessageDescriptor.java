@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.immutables.value.Value;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Nullable;
 
@@ -30,4 +31,5 @@ public interface MessageDescriptor {
 
     List<MessageField> fields();
 
+    Map<String, Object> options();
 }

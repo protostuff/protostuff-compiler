@@ -9,6 +9,8 @@ import javax.annotation.Nullable;
 
 import io.protostuff.generator.html.json.index.NodeType;
 
+import java.util.Map;
+
 /**
  * @author Kostiantyn Shchepanovskyi
  */
@@ -27,5 +29,7 @@ public interface ProtoDescriptor {
 
     @Nullable
     String description();
+
+    Map<String, Object> options();
 
 }

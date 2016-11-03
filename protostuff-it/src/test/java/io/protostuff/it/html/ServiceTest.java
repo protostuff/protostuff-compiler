@@ -1,5 +1,6 @@
 package io.protostuff.it.html;
 
+import com.google.common.collect.ImmutableMap;
 import io.protostuff.generator.html.json.index.NodeType;
 import io.protostuff.generator.html.json.service.ImmutableServiceDescriptor;
 import io.protostuff.generator.html.json.service.ImmutableServiceMethod;
@@ -25,6 +26,13 @@ public class ServiceTest {
                         .argTypeId("io.protostuff.it.RequestMessage")
                         .returnTypeId("io.protostuff.it.ResponseMessage")
                         .description("")
+                        .build())
+                .addMethods(ImmutableServiceMethod.builder()
+                        .name("deprecated")
+                        .argTypeId("io.protostuff.it.RequestMessage")
+                        .returnTypeId("io.protostuff.it.ResponseMessage")
+                        .description("")
+                        .options(ImmutableMap.of("deprecated", true))
                         .build())
                 .build();
         Assertions.assertEquals(expected, service);

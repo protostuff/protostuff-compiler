@@ -67,5 +67,10 @@ public class ServiceTest {
             ResponseMessage responseMessage = ResponseMessage.newBuilder().build();
             return Futures.immediateFuture(responseMessage);
         }
+
+        @Override
+        public ListenableFuture<ResponseMessage> deprecated(RequestMessage request) {
+            return null;
+        }
     }
 }
