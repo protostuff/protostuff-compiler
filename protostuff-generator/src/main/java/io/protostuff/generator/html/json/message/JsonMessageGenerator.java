@@ -1,7 +1,9 @@
 package io.protostuff.generator.html.json.message;
 
+import io.protostuff.compiler.model.Enum;
 import io.protostuff.compiler.model.Field;
 import io.protostuff.compiler.model.FieldModifier;
+import io.protostuff.compiler.model.FieldType;
 import io.protostuff.compiler.model.Message;
 import io.protostuff.compiler.model.Module;
 import io.protostuff.compiler.model.UserTypeContainer;
@@ -53,7 +55,7 @@ public class JsonMessageGenerator extends AbstractJsonGenerator {
                                     .typeId(field.getType().getCanonicalName())
                                     .modifier(getModifier(field))
                                     .tag(field.getTag())
-                                    .description(markdownProcessor.toHtml(field.getComments()))
+                                    .description(createFieldDescription(field))
                                     .oneof(field.isOneofPart() ? field.getOneof().getName() : null);
                             boolean isMap = field.isMap();
                             if (isMap) {
@@ -67,6 +69,28 @@ public class JsonMessageGenerator extends AbstractJsonGenerator {
                 .build();
         String output = module.getOutput() + "/data/type/" + message.getCanonicalName() + ".json";
         write(output, descriptor);
+    }
+
+    private String createFieldDescription(Field field) {
+        String comments;
+        if (!field.getComments().isEmpty()) {
+            comments = field.getComments();
+        } else {
+            comments = copyDescriptionFromFieldType(field);
+        }
+        return markdownProcessor.toHtml(comments);
+    }
+
+    private String copyDescriptionFromFieldType(Field field) {
+        String comments;FieldType type = field.getType();
+        if (type instanceof Message) {
+            comments = ((Message) type).getComments();
+        } else if (type instanceof Enum) {
+            comments = ((Enum) type).getComments();
+        } else {
+            comments = "";
+        }
+        return comments;
     }
 
     private String getMapKeyType(Field field) {
