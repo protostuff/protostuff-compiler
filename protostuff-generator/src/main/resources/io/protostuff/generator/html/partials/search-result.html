@@ -1,0 +1,8 @@
+<h1>Search results for: <b>{{ ctrl.searchText }}</b></h1>
+
+<div class="list-group">
+    <a href="#/types/{{ item.data.ref }}" class="list-group-item" ng-repeat="item in ctrl.filteredData">
+        <b>{{ item.label }}</b>&nbsp;(
+        {{ item.data.ref }})
+    </a>
+</div>

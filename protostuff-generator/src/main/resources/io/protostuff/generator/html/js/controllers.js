@@ -68,7 +68,6 @@ controllers.controller('PageCtrl', ['$routeParams', 'ProtoDataFactory', PageCtrl
 
 function SearchCtrl($location, TreeService, $scope) {
     var self = this;
-    var fuse = {};
 
     self.states = {};
     self.tree = TreeService.getTree();
@@ -76,24 +75,16 @@ function SearchCtrl($location, TreeService, $scope) {
     self.filterItems = filterItems;
     self.selectedItemChange = selectedItemChange;
     self.mapToLowerCase = mapToLowerCase;
-    var options = {
-        shouldSort: true,
-        tokenize: true,
-        matchAllTokens: true,
-        maxPatternLength: 32,
-        keys: [
-            "label",
-            "ancronym"
-        ]
-    };
+    self.manualSearch = manualSearch;
 
     $scope.$on('treeData:updated', function (event, data) {
-        self.states = searchFunction(TreeService.getTreeData(), []);
-        fuse = new Fuse(self.states, options);
+        self.states = TreeService.getTreeData();
     });
 
-    function filterItems(query) {
-        return query ? fuse.search(query) : self.states;
+    function filterItems(searchText) {
+        return searchText ? self.states.filter(function (item) {
+            return TreeService.getFuzzySearchResult(searchText, item.label);
+        }) : self.states;
     }
 
     function selectedItemChange(item) {
@@ -112,17 +103,18 @@ function SearchCtrl($location, TreeService, $scope) {
         return angular.lowercase(word);
     }
 
-    function searchFunction(node, result) {
-        for (var key in node) {
-            if (node[key] != null && node.hasOwnProperty(key) && typeof node[key] == "object") {
-                searchFunction(node[key], result);
-                if (node[key].label && !node[key].label.includes(".proto")) {
-                    node[key].ancronym = node[key].label.match(/(?=[A-Z])(\w)/g).join('');
-                    result.push(node[key]);
-                }
-            }
-        }
-        return result;
+    function manualSearch() {
+        $location.path('/search/' + self.searchText);
     }
 }
 controllers.controller('SearchCtrl', ['$location', 'TreeService', '$scope', SearchCtrl]);
+
+function SearchResultCtrl($routeParams, TreeService) {
+    var self = this;
+    self.searchText = $routeParams.searchText;
+
+    self.filteredData = TreeService.getTreeData().filter(function (item) {
+        return TreeService.getFuzzySearchResult(self.searchText, item.label)
+    });
+}
+controllers.controller('SearchResultCtrl', ['$routeParams', 'TreeService', SearchResultCtrl]);

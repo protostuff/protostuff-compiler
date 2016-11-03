@@ -37,7 +37,7 @@ function TreeService($rootScope) {
     var treeData = [];
 
     var setTreeData = function (newTreeData) {
-        treeData = newTreeData;
+        treeData = searchFunction(newTreeData, []);
         $rootScope.$broadcast('treeData:updated', treeData);
     };
 
@@ -49,10 +49,44 @@ function TreeService($rootScope) {
         return treeData;
     };
 
+    var getFuzzySearchResult = function (needle, haystack) {
+        var hlen = haystack.length;
+        var nlen = needle.length;
+        if (nlen > hlen) {
+            return false;
+        }
+        if (nlen === hlen) {
+            return needle === haystack;
+        }
+        outer: for (var i = 0, j = 0; i < nlen; i++) {
+            var nch = needle.charCodeAt(i);
+            while (j < hlen) {
+                if (haystack.charCodeAt(j++) === nch) {
+                    continue outer;
+                }
+            }
+            return false;
+        }
+        return true;
+    };
+
+    function searchFunction(node, result) {
+        for (var key in node) {
+            if (node[key] != null && node.hasOwnProperty(key) && typeof node[key] == "object") {
+                searchFunction(node[key], result);
+                if (node[key].label && !node[key].label.includes(".proto")) {
+                    result.push(node[key]);
+                }
+            }
+        }
+        return result;
+    }
+
     return {
         getTree: getTree,
         getTreeData: getTreeData,
-        setTreeData: setTreeData
+        setTreeData: setTreeData,
+        getFuzzySearchResult: getFuzzySearchResult
     };
 }
 

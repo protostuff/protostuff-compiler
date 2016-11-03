@@ -13,7 +13,6 @@
 
     <script src="libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="libs/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-    <script src="js/fuzzy.js"></script>
 
     <!-- BEGIN Angular -->
     <script src="libs/angularjs/1.5.8/angular.min.js"></script>
@@ -42,18 +41,23 @@
             <a class="navbar-brand" href="#">Protocol Documentation</a>
         </div>
 
-        <div class="navbar-form navbar-right" role="search" ng-controller="SearchCtrl as searchCtrl" ng-cloak>
+        <div class="navbar-form navbar-right" role="search" ng-controller="SearchCtrl as ctrl" ng-cloak>
             <div class="input-group">
-                <md-autocomplete md-selected-item="searchCtrl.selectedItem"
-                                 md-search-text="searchCtrl.searchText"
-                                 md-items="item in searchCtrl.filterItems(searchCtrl.searchText)"
-                                 md-selected-item-change="searchCtrl.selectedItemChange(item)"
-                                 md-item-text="item.label"
-                                 md-autofocus
-                                 md-select-on-match
-                                 placeholder="Search...">
-                    <span md-highlight-text="searchCtrl.searchText">{{item.label}}</span>
-                </md-autocomplete>
+                <form ng-sumbit="ctrl.manualSearch()">
+                    <!-- Needed to override md-autocomplete. Let's us register form submit event -->
+                    <button ng-click="ctrl.manualSearch()" style="display: none;"></button>
+
+                    <md-autocomplete md-selected-item="ctrl.selectedItem"
+                                     md-search-text="ctrl.searchText"
+                                     md-items="item in ctrl.filterItems(ctrl.searchText)"
+                                     md-selected-item-change="ctrl.selectedItemChange(item)"
+                                     md-item-text="item.label"
+                                     md-autofocus
+                                     md-select-on-match
+                                     placeholder="Search...">
+                        <span md-highlight-text="ctrl.searchText">{{item.label}}</span>
+                    </md-autocomplete>
+                </form>
             </div>
 
         </div>
