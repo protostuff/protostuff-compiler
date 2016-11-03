@@ -122,7 +122,7 @@ public class HtmlGenerator implements ProtoCompiler {
         for (String file : files) {
             String src = source + file;
             String dst = target + file;
-            LOGGER.info("Copy {} -> {}", src, dst);
+            LOGGER.info("Copy {}", file);
             compilerUtils.copyResource(src, dst);
         }
     }

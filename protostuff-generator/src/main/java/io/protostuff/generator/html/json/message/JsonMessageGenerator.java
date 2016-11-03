@@ -67,8 +67,8 @@ public class JsonMessageGenerator extends AbstractJsonGenerator {
                         })
                         .collect(Collectors.toList()))
                 .build();
-        String output = module.getOutput() + "/data/type/" + message.getCanonicalName() + ".json";
-        write(output, descriptor);
+        String output = "data/type/" + message.getCanonicalName() + ".json";
+        write(module, output, descriptor);
     }
 
     private String createFieldDescription(Field field) {

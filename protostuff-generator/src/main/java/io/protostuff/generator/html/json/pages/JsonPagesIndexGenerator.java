@@ -21,7 +21,6 @@ public class JsonPagesIndexGenerator extends AbstractJsonGenerator {
 
     @Override
     public void compile(Module module) {
-        String output = module.getOutput() + "/data/pages.json";
         @SuppressWarnings("unchecked")
         List<StaticPage> pages = (List<StaticPage>) module.getOptions().get(PAGES);
         if (pages != null) {
@@ -31,7 +30,7 @@ public class JsonPagesIndexGenerator extends AbstractJsonGenerator {
                             .ref(FilenameUtils.getBaseName(page.getFile().getName()))
                             .build())
                     .collect(Collectors.toList());
-            write(output, root);
+            write(module, "data/pages.json", root);
         }
     }
 }

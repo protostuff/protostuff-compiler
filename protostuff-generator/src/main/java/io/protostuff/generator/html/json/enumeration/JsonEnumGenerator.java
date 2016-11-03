@@ -52,7 +52,7 @@ public class JsonEnumGenerator extends AbstractJsonGenerator {
                                 .build())
                         .collect(Collectors.toList()))
                 .build();
-        String output = module.getOutput() + "/data/type/" + anEnum.getCanonicalName() + ".json";
-        write(output, descriptor);
+        String output = "data/type/" + anEnum.getCanonicalName() + ".json";
+        write(module, output, descriptor);
     }
 }

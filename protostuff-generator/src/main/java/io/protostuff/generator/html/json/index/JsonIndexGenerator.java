@@ -33,8 +33,8 @@ public final class JsonIndexGenerator extends AbstractJsonGenerator {
                                 .build())
                         .children(processProto(proto))
                         .build()));
-        String output = module.getOutput() + "/data/index.json";
-        write(output, root);
+        String output = "data/index.json";
+        write(module, output, root);
     }
 
     private List<JsonTreeNode> processProto(Proto proto) {

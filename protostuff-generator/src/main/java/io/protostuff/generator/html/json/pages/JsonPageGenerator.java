@@ -8,16 +8,11 @@ import io.protostuff.generator.OutputStreamFactory;
 import io.protostuff.generator.html.StaticPage;
 import io.protostuff.generator.html.json.AbstractJsonGenerator;
 import io.protostuff.generator.html.markdown.MarkdownProcessor;
-import io.protostuff.generator.html.uml.PlantUmlVerbatimSerializer;
 import org.apache.commons.io.FilenameUtils;
-import org.pegdown.LinkRenderer;
-import org.pegdown.VerbatimSerializer;
 
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import javax.inject.Inject;
 
 public class JsonPageGenerator extends AbstractJsonGenerator {
@@ -45,7 +40,7 @@ public class JsonPageGenerator extends AbstractJsonGenerator {
                                 .name(page.getName())
                                 .content(html)
                                 .build();
-                        write(module.getOutput() + "/data/pages/" + baseName + ".json", p);
+                        write(module, "data/pages/" + baseName + ".json", p);
                     } catch (Exception e) {
                         throw Throwables.propagate(e);
                     }

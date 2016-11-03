@@ -37,6 +37,6 @@ public class JsonProtoGenerator extends AbstractJsonGenerator {
                 .filename(proto.getFilename())
                 .description(markdownProcessor.toHtml(proto.getComments()))
                 .build();
-        write(module.getOutput() + "/data/proto/" + name + ".json", descriptor);
+        write(module, "data/proto/" + name + ".json", descriptor);
     }
 }

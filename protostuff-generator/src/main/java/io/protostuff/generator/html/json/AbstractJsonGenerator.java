@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
+import io.protostuff.compiler.model.Module;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,14 +33,15 @@ public abstract class AbstractJsonGenerator implements ProtoCompiler {
         objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
     }
 
-    protected void write(String file, Object data) {
+    protected void write(Module module, String file, Object data) {
         Preconditions.checkNotNull(file);
         Preconditions.checkNotNull(data);
-        LOGGER.info("Write {}", file);
-        try (OutputStream os = outputStreamFactory.createStream(file)) {
+        LOGGER.info("Generate {}", file);
+        String targetFile = module.getOutput() + "/" + file;
+        try (OutputStream os = outputStreamFactory.createStream(targetFile)) {
             objectMapper.writeValue(os, data);
         } catch (Exception e) {
-            throw new GeneratorException("Could not write " + file, e);
+            throw new GeneratorException("Could not write " + targetFile, e);
         }
     }
 
