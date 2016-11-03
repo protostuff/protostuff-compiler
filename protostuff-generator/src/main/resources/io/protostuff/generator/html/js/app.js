@@ -15,6 +15,11 @@ app.config(['$httpProvider', function ($httpProvider) {
     $httpProvider.defaults.cache = true;
 }]);
 
+app.config(['$sceProvider', function($sceProvider) {
+    // Completely disable SCE in order to fix problem with embedded image rendering.
+    $sceProvider.enabled(false);
+}]);
+
 app.config(['$routeProvider', function ($routeProvider) {
     var scalars = [
         'double',
