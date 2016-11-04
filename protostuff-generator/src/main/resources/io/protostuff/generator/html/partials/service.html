@@ -2,10 +2,10 @@
     <div ng-repeat="method in ctrl.type.methods">
         <h3>{{method.name}} <label-deprecated descriptor="method"></label-deprecated></h3>
         <table class="table table-striped table-bordered table-condensed">
-            <tr>
-                <th></th>
-                <th>Request</th>
-                <th>Response</th>
+            <tr class="active">
+                <th class="col-xs-2"></th>
+                <th class="col-xs-5">Request</th>
+                <th class="col-xs-5">Response</th>
             </tr>
             <tr>
                 <th>Type</th>
