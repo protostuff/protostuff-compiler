@@ -90,3 +90,7 @@ message TestReservedNames {
     // https://github.com/protostuff/protostuff-compiler/issues/24
     string result = 1;
 }
+
+message DeprecatedMessage {
+    option deprecated = true;
+}

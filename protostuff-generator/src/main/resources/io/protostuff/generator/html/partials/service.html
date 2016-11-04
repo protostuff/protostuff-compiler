@@ -4,6 +4,7 @@
         <div class="panel-heading code">
             {{method.name}}(<type-ref value="method.argTypeId"></type-ref>)
             returns(<type-ref value="method.returnTypeId"></type-ref>)
+            <label-deprecated descriptor="method"></label-deprecated>
         </div>
         <div ng-if="method.description" class="panel-body">
             <p ng-bind-html="method.description"></p>

@@ -7,4 +7,13 @@ angular.module('typeRefDirective', [])
             },
             templateUrl: 'partials/type-ref.html'
         };
+    })
+    .directive('labelDeprecated', function () {
+        return {
+            restrict: 'E',
+            scope: {
+                descriptor: '='
+            },
+            templateUrl: 'partials/label-deprecated.html'
+        };
     });

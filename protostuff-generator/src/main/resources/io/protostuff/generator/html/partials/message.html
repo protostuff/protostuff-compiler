@@ -12,7 +12,10 @@
         </thead>
         <tbody>
         <tr ng-repeat="field in ctrl.type.fields">
-            <td><code>{{ field.name }}</code></td>
+            <td>
+                <code>{{ field.name }}</code>
+                <label-deprecated descriptor="field"></label-deprecated>
+            </td>
             <td>
                 <div ng-hide="field.map">
                     <type-ref value="field.typeId"></type-ref>

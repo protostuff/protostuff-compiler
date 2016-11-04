@@ -39,6 +39,7 @@ public class HtmlGenerator implements ProtoCompiler {
             "partials/message.html",
             "partials/service.html",
             "partials/type-ref.html",
+            "partials/label-deprecated.html",
 			"partials/search-result.html",
             "partials/scalar-value-types.html",
             "js/app.js",

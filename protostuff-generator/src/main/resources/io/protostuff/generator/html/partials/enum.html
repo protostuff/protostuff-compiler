@@ -10,7 +10,10 @@
         </thead>
         <tbody>
         <tr ng-repeat="constant in ctrl.type.constants">
-            <td><code>{{ constant.name }}</code></td>
+            <td>
+                <code>{{ constant.name }}</code>
+                <label-deprecated descriptor="constant"></label-deprecated>
+            </td>
             <td>{{ constant.value }}</td>
             <td ng-bind-html="constant.description"></td>
         </tr>
