@@ -1,13 +1,18 @@
 <div>
-    <h2>Service Methods</h2>
-    <div ng-repeat="method in ctrl.type.methods" class="panel panel-default">
-        <div class="panel-heading code">
-            {{method.name}}(<type-ref value="method.argTypeId"></type-ref>)
-            returns(<type-ref value="method.returnTypeId"></type-ref>)
-            <label-deprecated descriptor="method"></label-deprecated>
-        </div>
-        <div ng-if="method.description" class="panel-body">
-            <p ng-bind-html="method.description"></p>
-        </div>
+    <div ng-repeat="method in ctrl.type.methods">
+        <h3>{{method.name}} <label-deprecated descriptor="method"></label-deprecated></h3>
+        <table class="table table-striped table-bordered table-condensed">
+            <tr>
+                <th></th>
+                <th>Request</th>
+                <th>Response</th>
+            </tr>
+            <tr>
+                <th>Type</th>
+                <td><type-ref value="method.argTypeId"></type-ref></td>
+                <td><type-ref value="method.returnTypeId"></type-ref></td>
+            </tr>
+        </table>
+        <p ng-bind-html="method.description"></p>
     </div>
 </div>
