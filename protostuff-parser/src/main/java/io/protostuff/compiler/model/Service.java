@@ -73,6 +73,7 @@ public class Service extends AbstractDescriptor implements Type {
         methods.add(method);
     }
 
+    @Override
     public String getCanonicalName() {
         return fullyQualifiedName.substring(1);
     }

@@ -10,4 +10,6 @@ public interface Type {
     String getName();
 
     String getFullyQualifiedName();
+
+    String getCanonicalName();
 }

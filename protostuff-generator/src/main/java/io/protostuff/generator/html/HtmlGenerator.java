@@ -1,7 +1,8 @@
 package io.protostuff.generator.html;
 
-import com.google.common.base.Throwables;
+import io.protostuff.compiler.model.Field;
 import io.protostuff.compiler.model.Module;
+import io.protostuff.compiler.parser.ProtoWalker;
 import io.protostuff.generator.CompilerUtils;
 import io.protostuff.generator.ProtoCompiler;
 import io.protostuff.generator.html.json.enumeration.JsonEnumGenerator;
@@ -11,15 +12,11 @@ import io.protostuff.generator.html.json.pages.JsonPageGenerator;
 import io.protostuff.generator.html.json.pages.JsonPagesIndexGenerator;
 import io.protostuff.generator.html.json.proto.JsonProtoGenerator;
 import io.protostuff.generator.html.json.service.JsonServiceGenerator;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
+import io.protostuff.generator.html.json.service.ServiceMethod;
 import org.pegdown.PegDownProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.util.List;
 import javax.inject.Inject;
 
@@ -40,7 +37,7 @@ public class HtmlGenerator implements ProtoCompiler {
             "partials/service.html",
             "partials/type-ref.html",
             "partials/label-deprecated.html",
-			"partials/search-result.html",
+            "partials/search-result.html",
             "partials/scalar-value-types.html",
             "js/app.js",
             "js/controllers.js",
@@ -73,9 +70,8 @@ public class HtmlGenerator implements ProtoCompiler {
             "angularjs/1.5.8/angular-sanitize.min.js",
             "angular-material/1.1.1/angular-material.min.js",
     };
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(HtmlGenerator.class);
     public static final String PAGES = "pages";
+    private static final Logger LOGGER = LoggerFactory.getLogger(HtmlGenerator.class);
     private final CompilerUtils compilerUtils;
     private final PegDownProcessor pegDownProcessor;
     private final JsonIndexGenerator indexGenerator;

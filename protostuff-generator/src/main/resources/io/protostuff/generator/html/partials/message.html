@@ -36,4 +36,12 @@
         </tr>
         </tbody>
     </table>
+
+    <div ng-if="ctrl.type.usages.length > 0">
+        <h2>Usages</h2>
+        <ul>
+            <li ng-repeat="usage in ctrl.type.usages"><type-ref value="usage.ref"></type-ref></li>
+        </ul>
+    </div>
+
 </div>

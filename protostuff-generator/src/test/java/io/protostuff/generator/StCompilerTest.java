@@ -3,11 +3,14 @@ package io.protostuff.generator;
 import io.protostuff.compiler.model.ImmutableModule;
 import io.protostuff.compiler.model.Module;
 import io.protostuff.compiler.model.Proto;
+import io.protostuff.compiler.model.UsageIndex;
 import io.protostuff.compiler.parser.ClasspathFileReader;
 import io.protostuff.compiler.parser.Importer;
 import io.protostuff.compiler.parser.ProtoContext;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+
+import java.util.Collections;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -25,6 +28,7 @@ public class StCompilerTest extends AbstractCompilerTest {
         Module module = ImmutableModule.builder()
                 .addProtos(proto)
                 .output("./")
+                .usageIndex(UsageIndex.build(Collections.emptyList()))
                 .build();
         compiler.compile(module);
     }

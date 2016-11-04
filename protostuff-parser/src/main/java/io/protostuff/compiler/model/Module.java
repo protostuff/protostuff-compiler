@@ -19,4 +19,6 @@ public interface Module {
 
     Map<String, Object> getOptions();
 
+    UsageIndex usageIndex();
+
 }

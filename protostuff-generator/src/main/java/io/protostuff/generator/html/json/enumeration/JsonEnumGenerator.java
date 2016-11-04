@@ -9,6 +9,8 @@ import io.protostuff.compiler.model.Module;
 import io.protostuff.compiler.model.UserTypeContainer;
 import io.protostuff.generator.OutputStreamFactory;
 import io.protostuff.generator.html.json.AbstractJsonGenerator;
+import io.protostuff.generator.html.json.ImmutableUsageItem;
+import io.protostuff.generator.html.json.UsageType;
 import io.protostuff.generator.html.json.index.NodeType;
 import io.protostuff.generator.html.markdown.MarkdownProcessor;
 
@@ -45,6 +47,12 @@ public class JsonEnumGenerator extends AbstractJsonGenerator {
                 .canonicalName(anEnum.getCanonicalName())
                 .description(markdownProcessor.toHtml(anEnum.getComments()))
                 .options(anEnum.getOptions().toMap())
+                .usages(module.usageIndex().getUsages(anEnum).stream()
+                        .map(type -> ImmutableUsageItem.builder()
+                                .ref(type.getCanonicalName())
+                                .type(UsageType.from(type))
+                                .build())
+                        .collect(Collectors.toList()))
                 .addAllConstants(anEnum.getConstants().stream()
                         .map(enumConstant -> ImmutableEnumConstant.builder()
                                 .name(enumConstant.getName())

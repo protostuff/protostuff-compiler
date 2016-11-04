@@ -6,6 +6,7 @@ import io.protostuff.compiler.ParserModule;
 import io.protostuff.compiler.model.ImmutableModule;
 import io.protostuff.compiler.model.ModuleConfiguration;
 import io.protostuff.compiler.model.Proto;
+import io.protostuff.compiler.model.UsageIndex;
 import io.protostuff.compiler.parser.FileReader;
 import io.protostuff.compiler.parser.FileReaderFactory;
 import io.protostuff.compiler.parser.Importer;
@@ -54,6 +55,8 @@ public class ProtostuffCompiler {
         for (Proto proto : importedFiles.values()) {
             builder.addProtos(proto);
         }
+        UsageIndex index = UsageIndex.build(importedFiles.values());
+        builder.usageIndex(index);
         ImmutableModule module = builder.build();
         for (Proto proto : importedFiles.values()) {
             proto.setModule(module);

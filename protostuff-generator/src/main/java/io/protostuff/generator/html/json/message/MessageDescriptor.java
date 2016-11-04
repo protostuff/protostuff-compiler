@@ -3,6 +3,7 @@ package io.protostuff.generator.html.json.message;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import io.protostuff.generator.html.json.UsageItem;
 import org.immutables.value.Value;
 
 import java.util.List;
@@ -32,4 +33,6 @@ public interface MessageDescriptor {
     List<MessageField> fields();
 
     Map<String, Object> options();
+
+    List<UsageItem> usages();
 }
