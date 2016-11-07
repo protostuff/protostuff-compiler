@@ -15,7 +15,7 @@ import static io.protostuff.compiler.model.FieldModifier.*;
  */
 public class MessageParseListener extends AbstractProtoParserListener {
 
-    public static final String OPTION_MAP_ENTRY = ".google.protobuf.map_entry";
+    public static final String OPTION_MAP_ENTRY = "map_entry";
     public static final String MAP_ENTRY_KEY = "key";
     public static final String MAP_ENTRY_VALUE = "value";
 
