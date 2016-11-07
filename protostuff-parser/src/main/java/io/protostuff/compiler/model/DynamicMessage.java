@@ -128,6 +128,9 @@ public class DynamicMessage implements Map<String, DynamicMessage.Value> {
         Key key;
         if (fieldName.startsWith("(")) {
             String name = Util.removeFirstAndLastChar(fieldName);
+            if (name.startsWith(".")) {
+                name = name.substring(1);
+            }
             key = Key.extension(name);
         } else {
             key = Key.field(fieldName);
@@ -232,7 +235,14 @@ public class DynamicMessage implements Map<String, DynamicMessage.Value> {
         if (value == null) {
             throw new IllegalStateException("Could not find option for key=" + key);
         }
-        fields.put(Key.extension(fullyQualifiedName), value);
+        Key newKey;
+        if (fullyQualifiedName.startsWith(".")) {
+            // TODO: we should not use format with leading dot internally
+            newKey = Key.extension(fullyQualifiedName.substring(1));
+        } else {
+            newKey = Key.extension(fullyQualifiedName);
+        }
+        fields.put(newKey, value);
     }
 
     /**
@@ -246,9 +256,7 @@ public class DynamicMessage implements Map<String, DynamicMessage.Value> {
             if (!key.isExtension()) {
                 result.put(key.getName(), transformValueToObject(value));
             } else {
-                // TODO: we should not use format with leading dot internally
-                String fullName = key.getName().substring(1);
-                result.put("(" + fullName + ")", transformValueToObject(value));
+                result.put("(" + key.getName() + ")", transformValueToObject(value));
             }
         }
         return result;
