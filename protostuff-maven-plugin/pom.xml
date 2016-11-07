@@ -11,13 +11,6 @@
     <packaging>maven-plugin</packaging>
     <name>Protostuff Compiler - Maven Plugin</name>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.version>3.3.9</maven.version>
-        <maven-plugin.version>3.5</maven-plugin.version>
-        <plexus.version>1.5.5</plexus.version>
-    </properties>
-
     <build>
         <plugins>
             <plugin>
