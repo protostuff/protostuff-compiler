@@ -64,6 +64,12 @@
                         <configuration>
                             <source>${project.basedir}/src/test/proto</source>
                             <target>${project.build.directory}/generated-test-resources/html</target>
+                            <pages>
+                                <page>
+                                    <name>Index</name>
+                                    <file>${project.basedir}/src/test/docs/index.md</file>
+                                </page>
+                            </pages>
                         </configuration>
                     </execution>
                 </executions>
