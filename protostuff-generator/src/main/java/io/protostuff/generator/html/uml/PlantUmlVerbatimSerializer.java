@@ -10,6 +10,7 @@ import org.pegdown.ast.VerbatimNode;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 /**
@@ -76,7 +77,7 @@ public class PlantUmlVerbatimSerializer implements VerbatimSerializer {
             }
 
             public String render(byte[] bytes, final String desc) {
-                return new String(bytes);
+                return new String(bytes, StandardCharsets.UTF_8);
             }
         }, png {
             @Override
