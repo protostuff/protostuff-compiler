@@ -27,7 +27,7 @@ public interface MessageField {
     String description();
 
     @Value.Default
-    default boolean isMap() {
+    default boolean map() {
         return false;
     }
 

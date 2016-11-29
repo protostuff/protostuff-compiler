@@ -69,7 +69,7 @@ public class JsonMessageGenerator extends AbstractJsonGenerator {
                                     .options(field.getOptions().toMap());
                             boolean isMap = field.isMap();
                             if (isMap) {
-                                builder.isMap(true);
+                                builder.map(true);
                                 builder.mapKeyTypeId(getMapKeyType(field));
                                 builder.mapValueTypeId(getMapValueType(field));
                             }
