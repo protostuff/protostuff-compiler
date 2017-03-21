@@ -106,7 +106,7 @@ public class StCompiler extends AbstractProtoCompiler {
         try {
             writer.append(result);
         } catch (IOException e) {
-            throw new GeneratorException("Can not write file: %s", e.getMessage());
+            throw new GeneratorException("Could not write file: %s", e.getMessage(), e);
         }
     }
 

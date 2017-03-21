@@ -18,7 +18,7 @@ public class ProtoParseListener extends AbstractProtoParserListener {
 
     private final BufferedTokenStream tokens;
 
-    protected ProtoParseListener(BufferedTokenStream tokens, ProtoContext context) {
+    ProtoParseListener(BufferedTokenStream tokens, ProtoContext context) {
         super(tokens, context);
         this.tokens = tokens;
     }
@@ -32,7 +32,6 @@ public class ProtoParseListener extends AbstractProtoParserListener {
     public void exitProto(ProtoParser.ProtoContext ctx) {
         int i = 0;
         List<String> comments = new ArrayList<>();
-        boolean foundEmptyLine = false;
         while (i < tokens.size()
                 && tokens.get(i).getChannel() == ProtoLexer.HIDDEN
                 && tokens.get(i).getType() != ProtoLexer.LINE_COMMENT) {

@@ -1,8 +1,6 @@
 package io.protostuff.generator.html;
 
-import io.protostuff.compiler.model.Field;
 import io.protostuff.compiler.model.Module;
-import io.protostuff.compiler.parser.ProtoWalker;
 import io.protostuff.generator.CompilerUtils;
 import io.protostuff.generator.ProtoCompiler;
 import io.protostuff.generator.html.json.enumeration.JsonEnumGenerator;
@@ -12,12 +10,9 @@ import io.protostuff.generator.html.json.pages.JsonPageGenerator;
 import io.protostuff.generator.html.json.pages.JsonPagesIndexGenerator;
 import io.protostuff.generator.html.json.proto.JsonProtoGenerator;
 import io.protostuff.generator.html.json.service.JsonServiceGenerator;
-import io.protostuff.generator.html.json.service.ServiceMethod;
-import org.pegdown.PegDownProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
 import javax.inject.Inject;
 
 /**
@@ -25,8 +20,10 @@ import javax.inject.Inject;
  */
 public class HtmlGenerator implements ProtoCompiler {
 
-    public static final String HTML_RESOURCE_BASE = "io/protostuff/generator/html/";
-    public static final String[] STATIC_RESOURCES = new String[]{
+    public static final String PAGES = "pages";
+
+    private static final String HTML_RESOURCE_BASE = "io/protostuff/generator/html/";
+    private static final String[] STATIC_RESOURCES = new String[]{
             "index.html",
             "partials/page.html",
             "partials/type-list.html",
@@ -46,10 +43,8 @@ public class HtmlGenerator implements ProtoCompiler {
             "js/factories.js",
             "css/theme.css",
     };
-
-    public static final String WEBJARS_RESOURCE_PREFIX = "META-INF/resources/webjars/";
-
-    public static final String[] STATIC_LIBS = new String[]{
+    private static final String WEBJARS_RESOURCE_PREFIX = "META-INF/resources/webjars/";
+    private static final String[] STATIC_LIBS = new String[]{
             "jquery/1.11.1/jquery.min.js",
             "bootstrap/3.3.5/js/bootstrap.min.js",
             "bootstrap/3.3.5/css/bootstrap.min.css",
@@ -70,10 +65,9 @@ public class HtmlGenerator implements ProtoCompiler {
             "angularjs/1.5.8/angular-sanitize.min.js",
             "angular-material/1.1.1/angular-material.min.js",
     };
-    public static final String PAGES = "pages";
     private static final Logger LOGGER = LoggerFactory.getLogger(HtmlGenerator.class);
+
     private final CompilerUtils compilerUtils;
-    private final PegDownProcessor pegDownProcessor;
     private final JsonIndexGenerator indexGenerator;
     private final JsonEnumGenerator enumGenerator;
     private final JsonMessageGenerator messageGenerator;
@@ -84,15 +78,13 @@ public class HtmlGenerator implements ProtoCompiler {
 
     @Inject
     public HtmlGenerator(CompilerUtils compilerUtils,
-            PegDownProcessor pegDownProcessor,
-            JsonIndexGenerator indexGenerator,
-            JsonEnumGenerator enumGenerator,
-            JsonMessageGenerator messageGenerator,
-            JsonServiceGenerator serviceGenerator,
-            JsonProtoGenerator protoGenerator,
-            JsonPagesIndexGenerator pagesIndexGenerator, JsonPageGenerator pageGenerator) {
+                         JsonIndexGenerator indexGenerator,
+                         JsonEnumGenerator enumGenerator,
+                         JsonMessageGenerator messageGenerator,
+                         JsonServiceGenerator serviceGenerator,
+                         JsonProtoGenerator protoGenerator,
+                         JsonPagesIndexGenerator pagesIndexGenerator, JsonPageGenerator pageGenerator) {
         this.compilerUtils = compilerUtils;
-        this.pegDownProcessor = pegDownProcessor;
         this.indexGenerator = indexGenerator;
         this.enumGenerator = enumGenerator;
         this.messageGenerator = messageGenerator;

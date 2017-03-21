@@ -52,7 +52,7 @@ public abstract class AbstractProtoParserListener extends ProtoParserBaseListene
         }
         if (addTrailingComment) {
             List<Token> tokensAfter = tokens.getHiddenTokensToRight(stop.getTokenIndex(), ProtoLexer.HIDDEN);
-            if (tokensAfter != null && tokensAfter.size() > 0) {
+            if (tokensAfter != null) {
                 for (Token token : tokensAfter) {
                     if (token.getType() == ProtoLexer.LINE_COMMENT) {
                         String text = getTextFromLineCommentToken(token);

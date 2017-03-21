@@ -180,7 +180,6 @@ public class OptionsPostProcessor implements ProtoContextPostProcessor {
             case BOOL:
                 return valueType == DynamicMessage.Value.Type.BOOLEAN;
             case STRING:
-                return valueType == DynamicMessage.Value.Type.STRING;
             case BYTES:
                 return valueType == DynamicMessage.Value.Type.STRING;
             default:
@@ -206,9 +205,6 @@ public class OptionsPostProcessor implements ProtoContextPostProcessor {
             case ENUM_CONSTANT:
                 return context.resolve(Message.class, ProtobufConstants.MSG_ENUM_VALUE_OPTIONS);
             case MESSAGE:
-                return context.resolve(Message.class, ProtobufConstants.MSG_MESSAGE_OPTIONS);
-            case MESSAGE_FIELD:
-                return context.resolve(Message.class, ProtobufConstants.MSG_FIELD_OPTIONS);
             case GROUP:
                 // Groups are not fully supported. For simplicity, in this place we assume
                 // that only that options that are applicable for messages are also
@@ -216,6 +212,8 @@ public class OptionsPostProcessor implements ProtoContextPostProcessor {
                 // But, actually it is invalid assumption, because both field and message
                 // options are applicable to groups.
                 return context.resolve(Message.class, ProtobufConstants.MSG_MESSAGE_OPTIONS);
+            case MESSAGE_FIELD:
+                return context.resolve(Message.class, ProtobufConstants.MSG_FIELD_OPTIONS);
             case SERVICE:
                 return context.resolve(Message.class, ProtobufConstants.MSG_SERVICE_OPTIONS);
             case SERVICE_METHOD:

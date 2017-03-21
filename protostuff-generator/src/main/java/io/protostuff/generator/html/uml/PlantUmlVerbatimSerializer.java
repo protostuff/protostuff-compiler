@@ -1,5 +1,6 @@
 package io.protostuff.generator.html.uml;
 
+import io.protostuff.generator.GeneratorException;
 import net.sourceforge.plantuml.FileFormat;
 import net.sourceforge.plantuml.FileFormatOption;
 import net.sourceforge.plantuml.SourceStringReader;
@@ -39,7 +40,7 @@ public class PlantUmlVerbatimSerializer implements VerbatimSerializer {
         try {
             desc = reader.generateImage(baos, type.getFormatOption());
         } catch (IOException e) {
-            throw new RuntimeException("Could not generate uml for node " + node, e);
+            throw new GeneratorException("Could not generate uml for node " + node, e);
         }
         final String rendered = type.render(baos.toByteArray(), desc);
         printer.print(rendered);

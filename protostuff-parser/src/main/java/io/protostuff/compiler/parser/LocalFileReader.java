@@ -63,7 +63,7 @@ public class LocalFileReader implements FileReader {
                     String result = new String(bytes, StandardCharsets.UTF_8);
                     return new ANTLRInputStream(result);
                 } catch (IOException e) {
-                    LOGGER.debug("Could not read {}", path);
+                    LOGGER.trace("Could not read {}", path, e);
                 }
             }
         }

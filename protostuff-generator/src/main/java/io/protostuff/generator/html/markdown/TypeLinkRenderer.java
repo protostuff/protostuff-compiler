@@ -11,7 +11,7 @@ class TypeLinkRenderer extends LinkRenderer {
         String url = source;
         String text = source;
         int pos;
-        if ((pos = source.indexOf("|")) >= 0) {
+        if ((pos = source.indexOf('|')) >= 0) {
             url = source.substring(0, pos);
             text = source.substring(pos + 1);
         }

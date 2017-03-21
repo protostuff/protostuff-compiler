@@ -1,9 +1,13 @@
 package io.protostuff.compiler.model;
 
+import java.io.Serializable;
+
 /**
  * @author Kostiantyn Shchepanovskyi
  */
-public class SourceCodeLocation {
+public class SourceCodeLocation implements Serializable {
+
+    private static final long serialVersionUID = 0L;
 
     public static final SourceCodeLocation UNKNOWN = new SourceCodeLocation() {
         @Override
