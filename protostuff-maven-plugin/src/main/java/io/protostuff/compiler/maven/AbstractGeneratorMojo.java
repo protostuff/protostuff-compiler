@@ -7,12 +7,16 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.slf4j.impl.StaticLoggerBinder;
 
+import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.apache.maven.plugins.annotations.LifecyclePhase.GENERATE_TEST_SOURCES;
@@ -22,25 +26,24 @@ import static org.apache.maven.plugins.annotations.LifecyclePhase.GENERATE_TEST_
  */
 public abstract class AbstractGeneratorMojo extends AbstractMojo {
 
-    @Parameter(defaultValue = "${project}", readonly = true)
-    protected MavenProject project;
-
-    @Parameter(defaultValue = "${mojoExecution}", readonly = true)
-    protected MojoExecution execution;
-
-    @Parameter
-    protected File source;
-
+    private static final String GENERATED_SOURCES = "/generated-sources/proto";
+    private static final String GENERATED_TEST_SOURCES = "/generated-test-sources/proto";
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractGeneratorMojo.class);
     /**
      * A list of patterns to include, e.g. {@code *.proto}.
      */
     @Parameter
     protected List<String> includes;
-
     @Parameter
     protected List<String> excludes;
+    @Parameter(defaultValue = "${project}", readonly = true)
+    private MavenProject project;
+    @Parameter(defaultValue = "${mojoExecution}", readonly = true)
+    private MojoExecution execution;
+    @Parameter
+    private File source;
 
-    protected Path getSourcePath() {
+    Path getSourcePath() {
         if (source != null) {
             return source.toPath();
         }
@@ -65,7 +68,28 @@ public abstract class AbstractGeneratorMojo extends AbstractMojo {
         StaticLoggerBinder.getSingleton().setMavenLog(this.getLog());
     }
 
-    protected String normalizeProtoPath(String protoFilePath) {
+    List<String> findProtoFiles(final Path sourcePath) {
+        List<String> protoFiles = new ArrayList<>();
+        PathMatcher protoMatcher = FileSystems.getDefault().getPathMatcher("glob:**/*.proto");
+        try {
+            Files.walkFileTree(sourcePath, new SimpleFileVisitor<Path>() {
+                @Override
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                    if (protoMatcher.matches(file)) {
+                        String protoFile = sourcePath.relativize(file).toString();
+                        String normalizedPath = normalizeProtoPath(protoFile);
+                        protoFiles.add(normalizedPath);
+                    }
+                    return super.visitFile(file, attrs);
+                }
+            });
+        } catch (IOException e) {
+            LOGGER.error("Can not build source files list", e);
+        }
+        return protoFiles;
+    }
+
+    private String normalizeProtoPath(String protoFilePath) {
         String normalizedPath;
         if (File.separatorChar == '\\') {
             normalizedPath = protoFilePath.replace('\\', '/');
@@ -73,6 +97,32 @@ public abstract class AbstractGeneratorMojo extends AbstractMojo {
             normalizedPath = protoFilePath;
         }
         return normalizedPath;
+    }
+
+    String computeSourceOutputDir(@Nullable File target) {
+        String output;
+        if (target != null) {
+            output = target.getAbsolutePath();
+        } else {
+            String phase = execution.getLifecyclePhase();
+            String buildDirectory = project.getBuild().getDirectory();
+            if (GENERATE_TEST_SOURCES.id().equals(phase)) {
+                output = buildDirectory + GENERATED_TEST_SOURCES;
+            } else {
+                output = buildDirectory + GENERATED_SOURCES;
+            }
+        }
+        LOGGER.debug("output = {}", output);
+        return output;
+    }
+
+    void addGeneratedSourcesToProject(String output) {
+        // Include generated directory to the list of compilation sources
+        if (GENERATE_TEST_SOURCES.id().equals(execution.getLifecyclePhase())) {
+            project.addTestCompileSourceRoot(output);
+        } else {
+            project.addCompileSourceRoot(output);
+        }
     }
 
 }

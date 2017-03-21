@@ -33,6 +33,7 @@ public class ProtostuffCompiler {
     }
 
     public void compile(ModuleConfiguration configuration) {
+        LOGGER.debug("Compiling module {}", configuration);
         FileReaderFactory fileReaderFactory = injector.getInstance(FileReaderFactory.class);
         Importer importer = injector.getInstance(Importer.class);
         CompilerRegistry registry = injector.getInstance(CompilerRegistry.class);
