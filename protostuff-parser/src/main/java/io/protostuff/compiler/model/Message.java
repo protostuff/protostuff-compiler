@@ -36,6 +36,7 @@ public class Message extends AbstractUserTypeContainer
     /**
      * Returns all fields in this message, including group fields and oneof fields.
      */
+    @Override
     public List<Field> getFields() {
         if (fields == null) {
             return Collections.emptyList();
@@ -43,10 +44,12 @@ public class Message extends AbstractUserTypeContainer
         return fields;
     }
 
+    @Override
     public void setFields(List<Field> fields) {
         this.fields = fields;
     }
 
+    @Override
     public void addField(Field field) {
         if (fields == null) {
             fields = new ArrayList<>();
@@ -54,6 +57,7 @@ public class Message extends AbstractUserTypeContainer
         fields.add(field);
     }
 
+    @Override
     public Field getField(String name) {
         for (Field field : getFields()) {
             if (name.equals(field.getName())) {

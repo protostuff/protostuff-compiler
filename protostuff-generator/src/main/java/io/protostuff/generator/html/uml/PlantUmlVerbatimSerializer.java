@@ -73,14 +73,17 @@ public class PlantUmlVerbatimSerializer implements VerbatimSerializer {
 
     enum OutputType {
         svg {
+            @Override
             public FileFormatOption getFormatOption() {
                 return new FileFormatOption(FileFormat.SVG);
             }
 
+            @Override
             public String render(byte[] bytes, final String desc) {
                 return new String(bytes, StandardCharsets.UTF_8);
             }
-        }, png {
+        },
+        png {
             @Override
             public FileFormatOption getFormatOption() {
                 return new FileFormatOption(FileFormat.PNG);

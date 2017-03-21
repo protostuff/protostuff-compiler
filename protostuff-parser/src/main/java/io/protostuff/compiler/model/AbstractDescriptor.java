@@ -20,6 +20,7 @@ public abstract class AbstractDescriptor extends AbstractElement implements Desc
         this.options = new DynamicMessage();
     }
 
+    @Override
     public String getName() {
         return name;
     }

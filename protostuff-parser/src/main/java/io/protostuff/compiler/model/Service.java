@@ -38,6 +38,7 @@ public class Service extends AbstractDescriptor implements Type {
         this.proto = proto;
     }
 
+    @Override
     public String getFullyQualifiedName() {
         return fullyQualifiedName;
     }

@@ -8,6 +8,7 @@ public interface UserType extends Descriptor, FieldType {
     /**
      * Short name. For example, {@code Baz}
      */
+    @Override
     String getName();
 
     void setName(String name);
@@ -19,10 +20,12 @@ public interface UserType extends Descriptor, FieldType {
     /**
      * Returns fully qualified name for this user type. It always starts with dot.
      */
+    @Override
     String getFullyQualifiedName();
 
     void setFullyQualifiedName(String fullyQualifiedName);
 
+    @Override
     UserTypeContainer getParent();
 
     /**

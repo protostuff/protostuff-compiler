@@ -18,6 +18,7 @@ public abstract class AbstractUserTypeContainer extends AbstractDescriptor imple
         this.parent = parent;
     }
 
+    @Override
     public UserTypeContainer getParent() {
         return parent;
     }

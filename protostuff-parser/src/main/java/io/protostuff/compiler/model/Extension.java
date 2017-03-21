@@ -67,10 +67,12 @@ public class Extension extends AbstractElement implements FieldContainer, GroupC
         return fields.size();
     }
 
+    @Override
     public void setFields(List<Field> fields) {
         this.fields = fields;
     }
 
+    @Override
     public void addField(Field field) {
         if (fields == null) {
             fields = new ArrayList<>();
@@ -78,6 +80,7 @@ public class Extension extends AbstractElement implements FieldContainer, GroupC
         fields.add(field);
     }
 
+    @Override
     @Nullable
     public Field getField(String name) {
         for (Field field : getFields()) {

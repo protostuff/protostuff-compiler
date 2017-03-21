@@ -29,8 +29,6 @@ import static org.apache.maven.plugins.annotations.ResolutionScope.COMPILE_PLUS_
         requiresDependencyResolution = COMPILE_PLUS_RUNTIME)
 public class HtmlGeneratorMojo extends AbstractGeneratorMojo {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(HtmlGeneratorMojo.class);
-
     @Parameter(defaultValue = "${project.build.directory}/generated-html")
     private File target;
 

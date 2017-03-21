@@ -31,6 +31,7 @@ public class Oneof extends AbstractElement implements FieldContainer, GroupConta
         this.name = name;
     }
 
+    @Override
     public Message getParent() {
         return parent;
     }
@@ -43,6 +44,7 @@ public class Oneof extends AbstractElement implements FieldContainer, GroupConta
         this.namespace = namespace;
     }
 
+    @Override
     public List<Field> getFields() {
         if (fields == null) {
             return Collections.emptyList();
@@ -58,10 +60,12 @@ public class Oneof extends AbstractElement implements FieldContainer, GroupConta
         return fields.size();
     }
 
+    @Override
     public void setFields(List<Field> fields) {
         this.fields = fields;
     }
 
+    @Override
     public void addField(Field field) {
         if (fields == null) {
             fields = new ArrayList<>();
@@ -69,6 +73,7 @@ public class Oneof extends AbstractElement implements FieldContainer, GroupConta
         fields.add(field);
     }
 
+    @Override
     public Field getField(String name) {
         for (Field field : getFields()) {
             if (name.equals(field.getName())) {

@@ -30,6 +30,7 @@ public class EnumConstant extends AbstractDescriptor {
     /**
      * Returns name of this enum constant (human-readable string).
      */
+    @Override
     public String getName() {
         return super.getName();
     }

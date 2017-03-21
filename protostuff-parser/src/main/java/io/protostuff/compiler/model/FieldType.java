@@ -40,6 +40,7 @@ public interface FieldType extends Type {
     /**
      * Returns {@link #getFullyQualifiedName()} without leading dot.
      */
+    @Override
     default String getCanonicalName() {
         String fqn = getFullyQualifiedName();
         if (fqn.startsWith(".")) {
