@@ -8,6 +8,11 @@ import io.protostuff.generator.Formatter;
  * @author Kostiantyn Shchepanovskyi
  */
 public class ServiceUtil {
+
+    private ServiceUtil() {
+        throw new IllegalAccessError("Utility class");
+    }
+
     public static String getClassName(Service service) {
         return service.getName();
     }

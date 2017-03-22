@@ -10,6 +10,10 @@ import io.protostuff.generator.Formatter;
  */
 public class UserTypeUtil {
 
+    private UserTypeUtil() {
+        throw new IllegalAccessError("Utility class");
+    }
+
     public static String getClassName(UserType userType) {
         String name = userType.getName();
         return Formatter.toPascalCase(name);

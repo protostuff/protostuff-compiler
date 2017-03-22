@@ -67,4 +67,8 @@ public class JavaConstants {
             .add("super")
             .add("while")
             .build();
+
+    private JavaConstants() {
+        throw new IllegalAccessError("Utility class");
+    }
 }

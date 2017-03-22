@@ -15,16 +15,19 @@ import static io.protostuff.compiler.parser.MessageParseListener.MAP_ENTRY_VALUE
  */
 public class MessageFieldUtil {
 
-    public static final String HAS_PREFIX = "has";
-    public static final String GETTER_PREFIX = "get";
-    public static final String SETTER_PREFIX = "set";
-    public static final String LIST = "java.util.List";
-    public static final String ITERABLE = "java.lang.Iterable";
-    public static final String GETTER_REPEATED_SUFFIX = "List";
-    public static final String NULL = "null";
-    public static final String MAP_SUFFIX = "Map";
-    public static final String PUT_PREFIX = "put";
-    public static final String VALUE = "Value";
+    private static final String HAS_PREFIX = "has";
+    private static final String GETTER_PREFIX = "get";
+    private static final String SETTER_PREFIX = "set";
+    private static final String LIST = "java.util.List";
+    private static final String ITERABLE = "java.lang.Iterable";
+    private static final String GETTER_REPEATED_SUFFIX = "List";
+    private static final String MAP_SUFFIX = "Map";
+    private static final String PUT_PREFIX = "put";
+    private static final String VALUE = "Value";
+
+    private MessageFieldUtil() {
+        throw new IllegalAccessError("Utility class");
+    }
 
     public static String getFieldType(Field field) {
         FieldType type = field.getType();

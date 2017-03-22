@@ -28,8 +28,12 @@ public final class Syntax extends AbstractElement {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Syntax other = (Syntax) o;
         return Objects.equals(value, other.value);
     }

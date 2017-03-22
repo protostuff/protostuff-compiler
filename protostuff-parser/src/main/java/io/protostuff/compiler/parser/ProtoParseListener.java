@@ -24,11 +24,6 @@ public class ProtoParseListener extends AbstractProtoParserListener {
     }
 
     @Override
-    public void enterProto(ProtoParser.ProtoContext ctx) {
-        super.enterProto(ctx);
-    }
-
-    @Override
     public void exitProto(ProtoParser.ProtoContext ctx) {
         int i = 0;
         List<String> comments = new ArrayList<>();

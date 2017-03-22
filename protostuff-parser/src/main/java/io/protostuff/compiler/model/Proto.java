@@ -51,19 +51,6 @@ public class Proto extends AbstractUserTypeContainer implements UserTypeContaine
         this.filename = filename;
     }
 
-    /**
-     * Filename without extension
-     */
-    @Override
-    public String getName() {
-        return super.getName();
-    }
-
-    @Override
-    public void setName(String name) {
-        super.setName(name);
-    }
-
     public Syntax getSyntax() {
         if (syntax == null) {
             return Syntax.DEFAULT;

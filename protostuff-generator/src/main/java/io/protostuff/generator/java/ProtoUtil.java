@@ -10,6 +10,10 @@ public class ProtoUtil {
 
     public static final String OPTION_JAVA_PACKAGE = "java_package";
 
+    private ProtoUtil() {
+        throw new IllegalAccessError("Utility class");
+    }
+
     public static String getPackage(Proto proto) {
         DynamicMessage.Value javaPackage = proto.getOptions().get(OPTION_JAVA_PACKAGE);
         if (javaPackage != null) {

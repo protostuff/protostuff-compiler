@@ -8,6 +8,10 @@ import io.protostuff.generator.Formatter;
  */
 public class EnumUtil {
 
+    private EnumUtil() {
+        throw new IllegalAccessError("Utility class");
+    }
+
     public static String getName(EnumConstant constant) {
         String name = constant.getName();
         String underscored = Formatter.toUnderscoreCase(name);

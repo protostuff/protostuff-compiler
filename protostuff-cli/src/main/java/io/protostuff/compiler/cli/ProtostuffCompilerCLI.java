@@ -19,25 +19,32 @@ import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Kostiantyn Shchepanovskyi
  */
 public class ProtostuffCompilerCLI extends ProtostuffCompiler {
 
-    public static final String __VERSION = ProtostuffCompilerCLI.class.getPackage().getImplementationVersion();
-    public static final String GENERATOR = "generator";
-    public static final String TEMPLATE = "template";
-    public static final String EXTENSIONS = "extensions";
-    public static final String OUTPUT = "output";
-    public static final String DEBUG = "debug";
-    public static final String VERSION = "version";
-    public static final String HELP = "help";
-    public static final String PROTO_PATH = "proto_path";
+    private static final String COMPILER_VERSION = ProtostuffCompilerCLI.class.getPackage().getImplementationVersion();
+
+    private static final String GENERATOR = "generator";
+    private static final String TEMPLATE = "template";
+    private static final String EXTENSIONS = "extensions";
+    private static final String OUTPUT = "output";
+    private static final String DEBUG = "debug";
+    private static final String VERSION = "version";
+    private static final String HELP = "help";
+    private static final String PROTO_PATH = "proto_path";
+    private static final Map<String, Integer> HELP_ITEMS_ORDER = ImmutableMap.<String, Integer>builder()
+            .put(HELP, 1)
+            .put(PROTO_PATH, 2)
+            .put(GENERATOR, 3)
+            .put(OUTPUT, 4)
+            .put(TEMPLATE, 5)
+            .put(EXTENSIONS, 6)
+            .put(DEBUG, 100)
+            .build();
     private static final Logger LOGGER = LoggerFactory.getLogger(ProtostuffCompilerCLI.class);
 
     public static void main(String[] args) {
@@ -52,7 +59,7 @@ public class ProtostuffCompilerCLI extends ProtostuffCompiler {
         ctx.updateLoggers();
     }
 
-    void run(String[] args) {
+    private void run(String[] args) {
         CompilerRegistry registry = injector.getInstance(CompilerRegistry.class);
         Options options = new Options();
         options.addOption(Option.builder("h")
@@ -161,7 +168,7 @@ public class ProtostuffCompilerCLI extends ProtostuffCompiler {
             return;
         }
 
-        LOGGER.info("Version={}", __VERSION);
+        LOGGER.info("Version={}", COMPILER_VERSION);
 
         ModuleConfiguration configuration = builder.build();
 
@@ -188,19 +195,12 @@ public class ProtostuffCompilerCLI extends ProtostuffCompiler {
         // automatically generate the help statement
         HelpFormatter formatter = new HelpFormatter();
         formatter.setWidth(79);
-        Map<String, Integer> order = ImmutableMap.<String, Integer>builder()
-                .put(HELP, 1)
-                .put(PROTO_PATH, 2)
-                .put(GENERATOR, 3)
-                .put(OUTPUT, 4)
-                .put(TEMPLATE, 5)
-                .put(EXTENSIONS, 6)
-                .put(DEBUG, 100)
-                .build();
-        formatter.setOptionComparator((o1, o2) -> Integer.compare(
-                order.getOrDefault(o1.getLongOpt(), 99),
-                order.getOrDefault(o2.getLongOpt(), 99)));
+        formatter.setOptionComparator(Comparator.comparingInt(this::getOptionOrder));
         formatter.printHelp("protostuff-compiler [options] proto_files", options);
+    }
+
+    private Integer getOptionOrder(Option o) {
+        return HELP_ITEMS_ORDER.getOrDefault(o.getLongOpt(), 99);
     }
 
 }

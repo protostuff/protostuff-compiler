@@ -1,13 +1,7 @@
 package io.protostuff.compiler.parser;
 
 import io.protostuff.compiler.model.Enum;
-import io.protostuff.compiler.model.EnumConstant;
-import io.protostuff.compiler.model.Field;
-import io.protostuff.compiler.model.Message;
-import io.protostuff.compiler.model.Proto;
-import io.protostuff.compiler.model.Service;
-import io.protostuff.compiler.model.ServiceMethod;
-import io.protostuff.compiler.model.UserTypeContainer;
+import io.protostuff.compiler.model.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,8 +31,17 @@ public class ProtoWalker {
         return new ProtoWalker(proto);
     }
 
+    static <T> Processor<T> wrap(ContextlessProcessor<T> contextlessProcessor) {
+        return (context1, t) -> contextlessProcessor.run(t);
+    }
+
     public ProtoWalker onProto(Processor<Proto> processor) {
         protoProcessors.add(processor);
+        return this;
+    }
+
+    public ProtoWalker onProto(ContextlessProcessor<Proto> processor) {
+        protoProcessors.add(wrap(processor));
         return this;
     }
 
@@ -47,8 +50,19 @@ public class ProtoWalker {
         return this;
     }
 
+    public ProtoWalker onMessage(ContextlessProcessor<Message> processor) {
+        messageProcessors.add(wrap(processor));
+        return this;
+    }
+
     public ProtoWalker onField(Processor<Field> processor) {
         fieldProcessors.add(processor);
+        return this;
+    }
+
+
+    public ProtoWalker onField(ContextlessProcessor<Field> processor) {
+        fieldProcessors.add(wrap(processor));
         return this;
     }
 
@@ -57,8 +71,20 @@ public class ProtoWalker {
         return this;
     }
 
+
+    public ProtoWalker onEnum(ContextlessProcessor<Enum> processor) {
+        enumProcessors.add(wrap(processor));
+        return this;
+    }
+
     public ProtoWalker onEnumConstant(Processor<EnumConstant> processor) {
         enumConstantProcessors.add(processor);
+        return this;
+    }
+
+
+    public ProtoWalker onEnumConstant(ContextlessProcessor<EnumConstant> processor) {
+        enumConstantProcessors.add(wrap(processor));
         return this;
     }
 
@@ -67,8 +93,18 @@ public class ProtoWalker {
         return this;
     }
 
+    public ProtoWalker onService(ContextlessProcessor<Service> processor) {
+        serviceProcessors.add(wrap(processor));
+        return this;
+    }
+
     public ProtoWalker onServiceMethod(Processor<ServiceMethod> processor) {
         serviceMethodProcessors.add(processor);
+        return this;
+    }
+
+    public ProtoWalker onServiceMethod(ContextlessProcessor<ServiceMethod> processor) {
+        serviceMethodProcessors.add(wrap(processor));
         return this;
     }
 
@@ -120,8 +156,16 @@ public class ProtoWalker {
         }
     }
 
+    @FunctionalInterface
     public interface Processor<T> {
 
         void run(ProtoContext context, T t);
+
+    }
+
+    @FunctionalInterface
+    public interface ContextlessProcessor<T> {
+
+        void run(T t);
     }
 }

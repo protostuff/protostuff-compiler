@@ -25,13 +25,14 @@ public class PlantUmlVerbatimSerializer implements VerbatimSerializer {
     public static void addToMap(final Map<String, VerbatimSerializer> serializerMap) {
         PlantUmlVerbatimSerializer serializer = new PlantUmlVerbatimSerializer();
         for (Type type : Type.values()) {
-            serializerMap.put(type.name(), serializer);
+            String name = type.getName();
+            serializerMap.put(name, serializer);
         }
     }
 
     @Override
     public void serialize(VerbatimNode node, Printer printer) {
-        Type type = Type.valueOf(node.getType());
+        Type type = Type.getByName(node.getType());
 
         String formatted = type.wrap(node.getText());
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -47,10 +48,10 @@ public class PlantUmlVerbatimSerializer implements VerbatimSerializer {
     }
 
     enum Type {
-        uml(OutputType.svg),
-        dot(OutputType.svg),
-        jcckit(OutputType.png),
-        ditaa(OutputType.png);
+        UML(OutputType.SVG),
+        DOT(OutputType.SVG),
+        JCCKIT(OutputType.PNG),
+        DITAA(OutputType.PNG);
 
         private final OutputType outputType;
 
@@ -58,8 +59,16 @@ public class PlantUmlVerbatimSerializer implements VerbatimSerializer {
             this.outputType = outputType;
         }
 
+        public static Type getByName(String name) {
+            return valueOf(name.toUpperCase());
+        }
+
         public String wrap(final String originalText) {
-            return "@start" + this.toString() + "\n" + originalText + "@end" + this.toString() + "\n";
+            return "@start" + getName() + "\n" + originalText + "@end" + getName() + "\n";
+        }
+
+        public String getName() {
+            return name().toLowerCase();
         }
 
         public FileFormatOption getFormatOption() {
@@ -72,7 +81,8 @@ public class PlantUmlVerbatimSerializer implements VerbatimSerializer {
     }
 
     enum OutputType {
-        svg {
+
+        SVG {
             @Override
             public FileFormatOption getFormatOption() {
                 return new FileFormatOption(FileFormat.SVG);
@@ -83,7 +93,8 @@ public class PlantUmlVerbatimSerializer implements VerbatimSerializer {
                 return new String(bytes, StandardCharsets.UTF_8);
             }
         },
-        png {
+
+        PNG {
             @Override
             public FileFormatOption getFormatOption() {
                 return new FileFormatOption(FileFormat.PNG);

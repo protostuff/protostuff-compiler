@@ -16,6 +16,10 @@ import javax.annotation.ParametersAreNonnullByDefault;
  */
 public class CompositeParseTreeListener {
 
+    private CompositeParseTreeListener() {
+        throw new IllegalAccessError("Utility class");
+    }
+
     @SafeVarargs
     public static <T extends ParseTreeListener> T create(Class<T> type, T... delegates) {
         ImmutableList<T> listeners = ImmutableList.copyOf(delegates);

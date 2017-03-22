@@ -27,14 +27,6 @@ public class EnumConstant extends AbstractDescriptor {
         this.parent = parent;
     }
 
-    /**
-     * Returns name of this enum constant (human-readable string).
-     */
-    @Override
-    public String getName() {
-        return super.getName();
-    }
-
     @Override
     public DescriptorType getDescriptorType() {
         return DescriptorType.ENUM_CONSTANT;

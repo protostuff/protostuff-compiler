@@ -11,11 +11,11 @@ import java.util.*;
  */
 public class UserTypeValidationPostProcessor implements ProtoContextPostProcessor {
 
-    public static final String ALLOW_ALIAS = "allow_alias";
-    private final int MIN_TAG = 1;
-    private final int MAX_TAG = Field.MAX_TAG_VALUE;
-    private final int SYS_RESERVED_START = 19000;
-    private final int SYS_RESERVED_END = 19999;
+    private static final String ALLOW_ALIAS = "allow_alias";
+    private static final int MIN_TAG = 1;
+    private static final int MAX_TAG = Field.MAX_TAG_VALUE;
+    private static final int SYS_RESERVED_START = 19000;
+    private static final int SYS_RESERVED_END = 19999;
 
     @Override
     public void process(ProtoContext context) {
@@ -26,7 +26,7 @@ public class UserTypeValidationPostProcessor implements ProtoContextPostProcesso
                 .walk();
     }
 
-    private void processService(ProtoContext context, Service service) {
+    private void processService(Service service) {
         List<ServiceMethod> methods = service.getMethods();
         checkDuplicateServiceMethodNames(methods);
     }
@@ -42,7 +42,7 @@ public class UserTypeValidationPostProcessor implements ProtoContextPostProcesso
         }
     }
 
-    private void processEnum(ProtoContext context, Enum anEnum) {
+    private void processEnum(Enum anEnum) {
         List<EnumConstant> constants = anEnum.getConstants();
         checkDuplicateEnumConstantNames(constants);
         checkDuplicateEnumConstantValues(anEnum, constants);
@@ -77,7 +77,7 @@ public class UserTypeValidationPostProcessor implements ProtoContextPostProcesso
         }
     }
 
-    private void processMessage(ProtoContext context, Message message) {
+    private void processMessage(Message message) {
         List<Field> fields = message.getFields();
         checkInvalidFieldTags(fields);
         checkDuplicateFieldTags(fields);

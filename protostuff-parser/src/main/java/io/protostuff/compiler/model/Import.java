@@ -41,8 +41,12 @@ public final class Import extends AbstractElement {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Import anImport = (Import) o;
         return Objects.equals(aPublic, anImport.aPublic) &&
                 Objects.equals(value, anImport.value);

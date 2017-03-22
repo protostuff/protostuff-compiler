@@ -13,6 +13,10 @@ import java.util.List;
  */
 public class MessageUtil {
 
+    private MessageUtil() {
+        throw new IllegalAccessError("Utility class");
+    }
+
     public static boolean hasFields(Message message) {
         return !message.getFields().isEmpty();
     }

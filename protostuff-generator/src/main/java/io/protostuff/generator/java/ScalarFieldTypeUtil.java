@@ -7,6 +7,10 @@ import io.protostuff.compiler.model.ScalarFieldType;
  */
 public class ScalarFieldTypeUtil {
 
+    private ScalarFieldTypeUtil() {
+        throw new IllegalAccessError("Utility class");
+    }
+
     public static String getWrapperType(ScalarFieldType type) {
         String wrapperType;
         switch (type) {

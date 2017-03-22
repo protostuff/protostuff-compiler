@@ -11,9 +11,13 @@ import javax.annotation.ParametersAreNonnullByDefault;
 public class Util {
 
     // path delimiters
-    public static final char WINDOWS_DELIMITER = '\\';
-    public static final char LINUX_DELIMITER = '/';
+    private static final char WINDOWS_DELIMITER = '\\';
+    private static final char LINUX_DELIMITER = '/';
     public static final char QUOTE = '"';
+
+    private Util() {
+        throw new IllegalAccessError("Utility class");
+    }
 
     /**
      * Remove first and last character from given string and return result.

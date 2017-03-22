@@ -2,6 +2,8 @@ package io.protostuff.compiler.model;
 
 import com.google.common.base.MoreObjects;
 
+import java.util.Objects;
+
 /**
  * Reserved tag range
  *
@@ -38,23 +40,21 @@ public class Range extends AbstractElement {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Range)) return false;
-
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Range range = (Range) o;
-
-        if (from != range.from) return false;
-        if (to != range.to) return false;
-        return parent != null ? parent.equals(range.parent) : range.parent == null;
-
+        return from == range.from &&
+                to == range.to &&
+                Objects.equals(parent, range.parent);
     }
 
     @Override
     public int hashCode() {
-        int result = parent != null ? parent.hashCode() : 0;
-        result = 31 * result + from;
-        result = 31 * result + to;
-        return result;
+        return Objects.hash(parent, from, to);
     }
 
     @Override
