@@ -52,8 +52,8 @@ public final class ProtoExtensionRegistry extends AbstractExtensionRegistry {
     }
 
     private Collection<Extension> getExtensions(Proto proto, String name) {
-        ProtoContext context = proto.getContext();
-        ExtensionRegistry extensionRegistry = context.getExtensionRegistry();
+        ProtoContext protoContext = proto.getContext();
+        ExtensionRegistry extensionRegistry = protoContext.getExtensionRegistry();
         return extensionRegistry.getExtensions(name);
     }
 

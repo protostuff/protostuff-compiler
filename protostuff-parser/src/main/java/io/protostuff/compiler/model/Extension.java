@@ -24,6 +24,7 @@ public class Extension extends AbstractElement implements FieldContainer, GroupC
         this.parent = parent;
     }
 
+    @Override
     public UserTypeContainer getParent() {
         return parent;
     }
@@ -52,6 +53,7 @@ public class Extension extends AbstractElement implements FieldContainer, GroupC
         this.extendee = extendee;
     }
 
+    @Override
     public List<Field> getFields() {
         if (fields == null) {
             return Collections.emptyList();

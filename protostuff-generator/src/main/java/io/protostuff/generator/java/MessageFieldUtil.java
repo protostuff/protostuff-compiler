@@ -72,11 +72,11 @@ public class MessageFieldUtil {
         return SETTER_PREFIX + Formatter.toPascalCase(field.getName());
     }
 
-    public static <T> String getEnumFieldValueGetterName(Field field) {
+    public static String getEnumFieldValueGetterName(Field field) {
         return GETTER_PREFIX + Formatter.toPascalCase(field.getName()) + VALUE;
     }
 
-    public static <T> String getEnumFieldValueSetterName(Field field) {
+    public static String getEnumFieldValueSetterName(Field field) {
         return SETTER_PREFIX + Formatter.toPascalCase(field.getName()) + VALUE;
     }
 

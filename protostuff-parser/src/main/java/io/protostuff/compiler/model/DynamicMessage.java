@@ -3,10 +3,7 @@ package io.protostuff.compiler.model;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Preconditions;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
@@ -307,23 +304,21 @@ public class DynamicMessage implements Map<String, DynamicMessage.Value> {
         }
 
         @Override
-        @SuppressWarnings("SimplifiableIfStatement")
         public boolean equals(Object o) {
-            if (this == o) return true;
-            if (!(o instanceof Key)) return false;
-
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
             Key key = (Key) o;
-
-            if (extension != key.extension) return false;
-            return !(name != null ? !name.equals(key.name) : key.name != null);
-
+            return extension == key.extension &&
+                    Objects.equals(name, key.name);
         }
 
         @Override
         public int hashCode() {
-            int result = name != null ? name.hashCode() : 0;
-            result = 31 * result + (extension ? 1 : 0);
-            return result;
+            return Objects.hash(name, extension);
         }
 
         @Override

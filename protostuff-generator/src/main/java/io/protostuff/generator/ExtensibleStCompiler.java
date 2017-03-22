@@ -8,7 +8,6 @@ import org.stringtemplate.v4.Interpreter;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
 import org.stringtemplate.v4.misc.ObjectModelAdaptor;
-import org.stringtemplate.v4.misc.STNoSuchPropertyException;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -17,7 +16,6 @@ import java.util.Map;
 
 public class ExtensibleStCompiler implements ProtoCompiler {
 
-    private final StCompilerFactory compilerFactory;
     private final List<StCompiler> compilers;
 
 
@@ -25,10 +23,9 @@ public class ExtensibleStCompiler implements ProtoCompiler {
     protected ExtensibleStCompiler(StCompilerFactory compilerFactory,
                                    @Assisted Collection<String> templates,
                                    @Assisted ExtensionProvider extensionProvider) {
-        this.compilerFactory = compilerFactory;
         this.compilers = new ArrayList<>();
         for (String template : templates) {
-            StCompiler compiler = (StCompiler) this.compilerFactory.create(template);
+            StCompiler compiler = (StCompiler) compilerFactory.create(template);
             STGroup group = compiler.getStGroup();
             addRenderExtensions(group, extensionProvider);
             addPropertyExtensions(group, extensionProvider);
@@ -36,6 +33,7 @@ public class ExtensibleStCompiler implements ProtoCompiler {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private void addPropertyExtensions(STGroup group, ExtensionProvider extensionProvider) {
         Map<Class<?>, PropertyProvider<?>> extenderMap = extensionProvider.propertyProviders();
         for (Map.Entry<Class<?>, PropertyProvider<?>> entry : extenderMap.entrySet()) {
@@ -43,7 +41,7 @@ public class ExtensibleStCompiler implements ProtoCompiler {
             PropertyProvider<Object> extender = (PropertyProvider<Object>) entry.getValue();
             group.registerModelAdaptor(objectClass, new ObjectModelAdaptor() {
                 @Override
-                public synchronized Object getProperty(Interpreter interp, ST self, Object o, Object property, String propertyName) throws STNoSuchPropertyException {
+                public synchronized Object getProperty(Interpreter interp, ST self, Object o, Object property, String propertyName) {
                     if (extender.hasProperty(propertyName)) {
                         return extender.getProperty(o, propertyName);
                     }
