@@ -1,9 +1,8 @@
 package io.protostuff.generator.java;
 
-import io.protostuff.compiler.model.*;
+import io.protostuff.compiler.model.Service;
+import io.protostuff.compiler.model.ServiceMethod;
 import io.protostuff.generator.Formatter;
-
-import java.util.Map;
 
 /**
  * @author Kostiantyn Shchepanovskyi

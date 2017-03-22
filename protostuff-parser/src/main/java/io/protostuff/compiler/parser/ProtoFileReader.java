@@ -1,5 +1,6 @@
 package io.protostuff.compiler.parser;
 
+import com.google.common.base.MoreObjects;
 import com.google.inject.assistedinject.Assisted;
 
 import org.antlr.v4.runtime.CharStream;
@@ -30,5 +31,13 @@ public class ProtoFileReader implements FileReader {
     @Override
     public CharStream read(String name) {
         return delegate.read(name);
+    }
+
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+                .add("includePathList", includePathList)
+                .add("delegate", delegate)
+                .toString();
     }
 }

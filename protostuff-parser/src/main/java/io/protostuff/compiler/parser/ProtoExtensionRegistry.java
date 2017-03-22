@@ -1,15 +1,15 @@
 package io.protostuff.compiler.parser;
 
+import io.protostuff.compiler.model.Extension;
+import io.protostuff.compiler.model.Import;
+import io.protostuff.compiler.model.Proto;
+
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Deque;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-
-import io.protostuff.compiler.model.Extension;
-import io.protostuff.compiler.model.Import;
-import io.protostuff.compiler.model.Proto;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -19,11 +19,9 @@ public final class ProtoExtensionRegistry extends AbstractExtensionRegistry {
     private final ExtensionRegistry localExtensionRegistry;
     private final ProtoContext context;
     private final ConcurrentMap<String, Collection<Extension>> extensionCache = new ConcurrentHashMap<>();
-    private Proto proto;
 
     public ProtoExtensionRegistry(ProtoContext context) {
         this.context = context;
-        this.proto = context.getProto();
         this.localExtensionRegistry = new LocalExtensionRegistry();
     }
 
@@ -41,7 +39,7 @@ public final class ProtoExtensionRegistry extends AbstractExtensionRegistry {
             Collection<Extension> result = new ArrayList<>();
             result.addAll(localExtensionRegistry.getExtensions(name));
             Deque<Import> queue = new ArrayDeque<>();
-            queue.addAll(proto.getImports());
+            queue.addAll(context.getProto().getImports());
             while (!queue.isEmpty()) {
                 Import anImport = queue.poll();
                 Proto proto = anImport.getProto();

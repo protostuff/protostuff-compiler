@@ -7,9 +7,9 @@ import java.util.function.Function;
 /**
  * @author Kostiantyn Shchepanovskyi
  */
-public class SimplePropertyProvider<ObjectT> implements PropertyProvider<ObjectT> {
+public class SimplePropertyProvider<T> implements PropertyProvider<T> {
 
-    private final Map<String, Function<ObjectT, ?>> propertyProviders = new HashMap<>();
+    private final Map<String, Function<T, ?>> propertyProviders = new HashMap<>();
 
     @Override
     public boolean hasProperty(String propertyName) {
@@ -17,8 +17,8 @@ public class SimplePropertyProvider<ObjectT> implements PropertyProvider<ObjectT
     }
 
     @Override
-    public Object getProperty(ObjectT object, String propertyName) {
-        Function<ObjectT, ?> provider = propertyProviders.get(propertyName);
+    public Object getProperty(T object, String propertyName) {
+        Function<T, ?> provider = propertyProviders.get(propertyName);
         if (provider == null) {
             throw new IllegalArgumentException(propertyName);
         }
@@ -26,7 +26,7 @@ public class SimplePropertyProvider<ObjectT> implements PropertyProvider<ObjectT
     }
 
     @Override
-    public void register(String property, Function<ObjectT, ?> function) {
+    public void register(String property, Function<T, ?> function) {
         propertyProviders.put(property, function);
     }
 

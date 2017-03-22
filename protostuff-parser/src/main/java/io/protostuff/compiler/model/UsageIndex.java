@@ -1,9 +1,7 @@
 package io.protostuff.compiler.model;
 
-import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import com.google.common.collect.SetMultimap;
 import io.protostuff.compiler.parser.ProtoWalker;
 
 import java.util.Collection;

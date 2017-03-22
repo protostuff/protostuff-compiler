@@ -83,7 +83,8 @@ public class HtmlGenerator implements ProtoCompiler {
                          JsonMessageGenerator messageGenerator,
                          JsonServiceGenerator serviceGenerator,
                          JsonProtoGenerator protoGenerator,
-                         JsonPagesIndexGenerator pagesIndexGenerator, JsonPageGenerator pageGenerator) {
+                         JsonPagesIndexGenerator pagesIndexGenerator,
+                         JsonPageGenerator pageGenerator) {
         this.compilerUtils = compilerUtils;
         this.indexGenerator = indexGenerator;
         this.enumGenerator = enumGenerator;

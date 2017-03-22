@@ -1,21 +1,5 @@
 package io.protostuff.generator;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.inject.multibindings.MapBinder.newMapBinder;
-import static org.pegdown.Extensions.ABBREVIATIONS;
-import static org.pegdown.Extensions.ATXHEADERSPACE;
-import static org.pegdown.Extensions.AUTOLINKS;
-import static org.pegdown.Extensions.DEFINITIONS;
-import static org.pegdown.Extensions.FENCED_CODE_BLOCKS;
-import static org.pegdown.Extensions.FORCELISTITEMPARA;
-import static org.pegdown.Extensions.HARDWRAPS;
-import static org.pegdown.Extensions.RELAXEDHRULES;
-import static org.pegdown.Extensions.SMARTYPANTS;
-import static org.pegdown.Extensions.STRIKETHROUGH;
-import static org.pegdown.Extensions.SUPPRESS_ALL_HTML;
-import static org.pegdown.Extensions.TABLES;
-import static org.pegdown.Extensions.TASKLISTITEMS;
-
 import com.google.inject.AbstractModule;
 import com.google.inject.Provider;
 import com.google.inject.Provides;
@@ -26,8 +10,8 @@ import io.protostuff.generator.html.HtmlGenerator;
 import io.protostuff.generator.html.markdown.MarkdownProcessor;
 import io.protostuff.generator.html.markdown.PegDownMarkdownProcessor;
 import io.protostuff.generator.java.JavaExtensionProvider;
-import org.pegdown.PegDownProcessor;
 
+import javax.inject.Inject;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -36,7 +20,9 @@ import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
-import javax.inject.Inject;
+
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.inject.multibindings.MapBinder.newMapBinder;
 
 /**
  * @author Kostiantyn Shchepanovskyi

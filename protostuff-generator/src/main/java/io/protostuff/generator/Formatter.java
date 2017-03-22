@@ -43,12 +43,10 @@ public class Formatter {
     private static StringBuilder toCamelCaseImpl(String name) {
         StringBuilder buffer = new StringBuilder();
         int toUpper = 0;
-        char c;
-        for (int i = 0, len = name.length(); i < len; ) {
-            c = name.charAt(i++);
+        int len = name.length();
+        for (int i = 0; i < len; i++) {
+            char c = name.charAt(i);
             if (c == '_') {
-                if (i == len)
-                    break;
                 if (buffer.length() != 0)
                     toUpper++;
             } else if (toUpper != 0) {
@@ -86,12 +84,12 @@ public class Formatter {
 
     private static StringBuilder toUnderscoreCaseImpl(String name) {
         StringBuilder buffer = new StringBuilder();
-        boolean toLower = false, appendUnderscore = false;
-        for (int i = 0, len = name.length(); i < len; ) {
-            char c = name.charAt(i++);
+        boolean toLower = false;
+        boolean appendUnderscore = false;
+        int len = name.length();
+        for (int i = 0; i < len; i++) {
+            char c = name.charAt(i);
             if (c == '_') {
-                if (i == len)
-                    break;
                 if (buffer.length() != 0)
                     appendUnderscore = true;
 

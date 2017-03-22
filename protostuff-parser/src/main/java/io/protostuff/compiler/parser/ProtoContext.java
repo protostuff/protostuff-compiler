@@ -1,27 +1,16 @@
 package io.protostuff.compiler.parser;
 
 import io.protostuff.compiler.model.Element;
-import io.protostuff.compiler.model.UserType;
-import org.apache.commons.io.FilenameUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import io.protostuff.compiler.model.Proto;
 import io.protostuff.compiler.model.Type;
+import org.apache.commons.io.FilenameUtils;
+
+import java.util.*;
 
 /**
  * @author Kostiantyn Shchepanovskyi
  */
 public class ProtoContext {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(ProtoContext.class);
 
     private final String filename;
     private final Map<String, Type> symbolTable;

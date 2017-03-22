@@ -2,28 +2,18 @@ package io.protostuff.generator;
 
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
-
-import org.stringtemplate.v4.AttributeRenderer;
-import org.stringtemplate.v4.Interpreter;
+import io.protostuff.compiler.model.Enum;
+import io.protostuff.compiler.model.*;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
 import org.stringtemplate.v4.STGroupFile;
-import org.stringtemplate.v4.misc.ObjectModelAdaptor;
-import org.stringtemplate.v4.misc.STNoSuchPropertyException;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.util.Map;
-
-import io.protostuff.compiler.model.Enum;
-import io.protostuff.compiler.model.Message;
-import io.protostuff.compiler.model.Module;
-import io.protostuff.compiler.model.Proto;
-import io.protostuff.compiler.model.Service;
 
 /**
  * Proto compiler based on StringTemplate 4.
- *
+ * <p>
  * Given {@code templateFileName} should contain set of templates that define
  * generated code.
  *
@@ -156,7 +146,7 @@ public class StCompiler extends AbstractProtoCompiler {
     }
 
     @Override
-    protected String getServiceOutputFileName( Service service) {
+    protected String getServiceOutputFileName(Service service) {
         return getString(SERVICE_COMPILER_OUTPUT, SERVICE, service);
     }
 

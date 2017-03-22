@@ -24,6 +24,7 @@ public class MessageFieldUtil {
     public static final String NULL = "null";
     public static final String MAP_SUFFIX = "Map";
     public static final String PUT_PREFIX = "put";
+    public static final String VALUE = "Value";
 
     public static String getFieldType(Field field) {
         FieldType type = field.getType();
@@ -69,11 +70,11 @@ public class MessageFieldUtil {
     }
 
     public static <T> String getEnumFieldValueGetterName(Field field) {
-        return GETTER_PREFIX + Formatter.toPascalCase(field.getName()) + "Value";
+        return GETTER_PREFIX + Formatter.toPascalCase(field.getName()) + VALUE;
     }
 
     public static <T> String getEnumFieldValueSetterName(Field field) {
-        return SETTER_PREFIX + Formatter.toPascalCase(field.getName()) + "Value";
+        return SETTER_PREFIX + Formatter.toPascalCase(field.getName()) + VALUE;
     }
 
     public static String getFieldCleanerName(Field field) {
@@ -178,7 +179,7 @@ public class MessageFieldUtil {
 
     public static String javaRepeatedEnumValueGetterByIndexName(Field field) {
         if (field.isRepeated()) {
-            return GETTER_PREFIX + Formatter.toPascalCase(field.getName()) + "Value";
+            return GETTER_PREFIX + Formatter.toPascalCase(field.getName()) + VALUE;
         }
         throw new IllegalArgumentException(field.toString());
     }
@@ -199,7 +200,7 @@ public class MessageFieldUtil {
 
     public static String getRepeatedEnumValueSetterName(Field field) {
         if (field.isRepeated()) {
-            return SETTER_PREFIX + Formatter.toPascalCase(field.getName()) + "Value";
+            return SETTER_PREFIX + Formatter.toPascalCase(field.getName()) + VALUE;
         }
         throw new IllegalArgumentException(field.toString());
     }
@@ -235,11 +236,11 @@ public class MessageFieldUtil {
     }
 
     public static String getRepeatedEnumValueAdderName(Field field) {
-        return "add" + Formatter.toPascalCase(field.getName()) + "Value";
+        return "add" + Formatter.toPascalCase(field.getName()) + VALUE;
     }
 
     public static String getRepeatedEnumValueAddAllName(Field field) {
-        return "addAll" + Formatter.toPascalCase(field.getName()) + "Value";
+        return "addAll" + Formatter.toPascalCase(field.getName()) + VALUE;
     }
 
     public static String toStringPart(Field field) {

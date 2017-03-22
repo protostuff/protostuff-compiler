@@ -9,6 +9,8 @@ import io.protostuff.generator.AbstractExtensionProvider;
  */
 public class JavaExtensionProvider extends AbstractExtensionProvider {
 
+    public static final String JAVA_NAME = "javaName";
+
     public JavaExtensionProvider() {
         registerProperty(Proto.class, "javaPackage", ProtoUtil::getPackage);
         registerProperty(Proto.class, "javaPackagePath", ProtoUtil::getPackagePath);
@@ -16,7 +18,7 @@ public class JavaExtensionProvider extends AbstractExtensionProvider {
         registerProperty(ScalarFieldType.class, "javaWrapperType", ScalarFieldTypeUtil::getWrapperType);
         registerProperty(ScalarFieldType.class, "javaPrimitiveType", ScalarFieldTypeUtil::getPrimitiveType);
 
-        registerProperty(Message.class, "javaName", UserTypeUtil::getClassName);
+        registerProperty(Message.class, JAVA_NAME, UserTypeUtil::getClassName);
         registerProperty(Message.class, "javaFullName", UserTypeUtil::getCanonicalName);
         registerProperty(Message.class, "hasFields", MessageUtil::hasFields);
         registerProperty(Message.class, "javaBitFieldNames", MessageUtil::bitFieldNames);
@@ -25,7 +27,7 @@ public class JavaExtensionProvider extends AbstractExtensionProvider {
         registerProperty(Field.class, "javaRepeatedType", MessageFieldUtil::getRepeatedFieldType);
         registerProperty(Field.class, "javaIterableType", MessageFieldUtil::getIterableFieldType);
         registerProperty(Field.class, "javaWrapperType", MessageFieldUtil::getWrapperFieldType);
-        registerProperty(Field.class, "javaName", MessageFieldUtil::getFieldName);
+        registerProperty(Field.class, JAVA_NAME, MessageFieldUtil::getFieldName);
         registerProperty(Field.class, "jsonName", MessageFieldUtil::getJsonFieldName);
         registerProperty(Field.class, "javaGetterName", MessageFieldUtil::getFieldGetterName);
         registerProperty(Field.class, "javaSetterName", MessageFieldUtil::getFieldSetterName);
@@ -72,20 +74,20 @@ public class JavaExtensionProvider extends AbstractExtensionProvider {
         registerProperty(Field.class, "javaBitFieldMask", MessageFieldUtil::bitFieldMask);
         registerProperty(Field.class, "javaOneofConstantName", MessageFieldUtil::javaOneofConstantName);
 
-        registerProperty(Oneof.class, "javaName", MessageUtil::getOneofEnumClassName);
+        registerProperty(Oneof.class, JAVA_NAME, MessageUtil::getOneofEnumClassName);
         registerProperty(Oneof.class, "javaNotSetConstantName", MessageUtil::getOneofNotSetConstantName);
         registerProperty(Oneof.class, "javaCaseGetterName", MessageUtil::getOneofCaseGetterName);
         registerProperty(Oneof.class, "javaCaseCleanerName", MessageUtil::getOneofCaseCleanerName);
         registerProperty(Oneof.class, "javaFieldName", MessageUtil::getOneofFieldName);
         registerProperty(Oneof.class, "javaCaseFieldName", MessageUtil::getOneofCaseFieldName);
 
-        registerProperty(Enum.class, "javaName", UserTypeUtil::getClassName);
+        registerProperty(Enum.class, JAVA_NAME, UserTypeUtil::getClassName);
         registerProperty(Enum.class, "javaFullName", UserTypeUtil::getCanonicalName);
 
-        registerProperty(EnumConstant.class, "javaName", EnumUtil::getName);
+        registerProperty(EnumConstant.class, JAVA_NAME, EnumUtil::getName);
 
-        registerProperty(Service.class, "javaName", ServiceUtil::getClassName);
+        registerProperty(Service.class, JAVA_NAME, ServiceUtil::getClassName);
 
-        registerProperty(ServiceMethod.class, "javaName", ServiceUtil::getMethodName);
+        registerProperty(ServiceMethod.class, JAVA_NAME, ServiceUtil::getMethodName);
     }
 }
