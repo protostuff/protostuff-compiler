@@ -1,10 +1,12 @@
 package io.protostuff.generator.java;
 
+import com.google.common.collect.ImmutableMap;
 import io.protostuff.compiler.model.Enum;
 import io.protostuff.compiler.model.*;
 import io.protostuff.generator.Formatter;
 
 import java.util.List;
+import java.util.Map;
 
 import static io.protostuff.compiler.model.ScalarFieldType.*;
 import static io.protostuff.compiler.parser.MessageParseListener.MAP_ENTRY_KEY;
@@ -24,6 +26,25 @@ public class MessageFieldUtil {
     private static final String MAP_SUFFIX = "Map";
     private static final String PUT_PREFIX = "put";
     private static final String VALUE = "Value";
+
+    private static final Map<ScalarFieldType, String> PROTOSTUFF_IO_NAME =
+            ImmutableMap.<ScalarFieldType, String>builder()
+                    .put(ScalarFieldType.INT32, "Int32")
+                    .put(ScalarFieldType.INT64, "Int64")
+                    .put(ScalarFieldType.UINT32, "UInt32")
+                    .put(ScalarFieldType.UINT64, "UInt64")
+                    .put(ScalarFieldType.SINT32, "SInt32")
+                    .put(ScalarFieldType.SINT64, "SInt64")
+                    .put(ScalarFieldType.FIXED32, "Fixed32")
+                    .put(ScalarFieldType.FIXED64, "Fixed64")
+                    .put(ScalarFieldType.SFIXED32, "SFixed32")
+                    .put(ScalarFieldType.SFIXED64, "SFixed64")
+                    .put(ScalarFieldType.FLOAT, "Float")
+                    .put(ScalarFieldType.DOUBLE, "Double")
+                    .put(ScalarFieldType.BOOL, "Bool")
+                    .put(ScalarFieldType.STRING, "String")
+                    .put(ScalarFieldType.BYTES, "Bytes")
+                    .build();
 
     private MessageFieldUtil() {
         throw new IllegalAccessError("Utility class");
@@ -259,121 +280,24 @@ public class MessageFieldUtil {
     }
 
     public static String protostuffReadMethod(Field field) {
-        FieldType type = field.getType();
-        if (!(type instanceof ScalarFieldType)) {
-            throw new IllegalArgumentException(String.valueOf(type));
-        }
-        ScalarFieldType fieldType = (ScalarFieldType) type;
-        String name;
-        switch (fieldType) {
-            case INT32:
-                name = "readInt32";
-                break;
-            case INT64:
-                name = "readInt64";
-                break;
-            case UINT32:
-                name = "readUInt32";
-                break;
-            case UINT64:
-                name = "readUInt64";
-                break;
-            case SINT32:
-                name = "readSInt32";
-                break;
-            case SINT64:
-                name = "readSInt64";
-                break;
-            case FIXED32:
-                name = "readFixed32";
-                break;
-            case FIXED64:
-                name = "readFixed64";
-                break;
-            case SFIXED32:
-                name = "readSFixed32";
-                break;
-            case SFIXED64:
-                name = "readSFixed64";
-                break;
-            case FLOAT:
-                name = "readFloat";
-                break;
-            case DOUBLE:
-                name = "readDouble";
-                break;
-            case BOOL:
-                name = "readBool";
-                break;
-            case STRING:
-                name = "readString";
-                break;
-            case BYTES:
-                name = "readBytes";
-                break;
-            default:
-                throw new IllegalArgumentException(String.valueOf(type));
-        }
-        return name;
+        return protostuffIoMethodName(field, "read");
     }
 
     public static String protostuffWriteMethod(Field field) {
+        return protostuffIoMethodName(field, "write");
+    }
+
+    private static String protostuffIoMethodName(Field field, String operation) {
         FieldType type = field.getType();
         if (!(type instanceof ScalarFieldType)) {
             throw new IllegalArgumentException(String.valueOf(type));
         }
         ScalarFieldType fieldType = (ScalarFieldType) type;
-        String name;
-        switch (fieldType) {
-            case INT32:
-                name = "writeInt32";
-                break;
-            case INT64:
-                name = "writeInt64";
-                break;
-            case UINT32:
-                name = "writeUInt32";
-                break;
-            case UINT64:
-                name = "writeUInt64";
-                break;
-            case SINT32:
-                name = "writeSInt32";
-                break;
-            case SINT64:
-                name = "writeSInt64";
-                break;
-            case FIXED32:
-                name = "writeFixed32";
-                break;
-            case FIXED64:
-                name = "writeFixed64";
-                break;
-            case SFIXED32:
-                name = "writeSFixed32";
-                break;
-            case SFIXED64:
-                name = "writeSFixed64";
-                break;
-            case FLOAT:
-                name = "writeFloat";
-                break;
-            case DOUBLE:
-                name = "writeDouble";
-                break;
-            case BOOL:
-                name = "writeBool";
-                break;
-            case STRING:
-                name = "writeString";
-                break;
-            case BYTES:
-                name = "writeBytes";
-                break;
-            default:
-                throw new IllegalArgumentException(String.valueOf(type));
+        String name = PROTOSTUFF_IO_NAME.get(fieldType);
+        if (name == null) {
+            throw new IllegalArgumentException(String.valueOf(type));
         }
-        return name;
+        return operation + name;
     }
 
     public static String bitFieldName(Field field) {

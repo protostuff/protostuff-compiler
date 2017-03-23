@@ -1,15 +1,14 @@
 package io.protostuff.compiler.parser;
 
+import io.protostuff.compiler.model.Import;
+import io.protostuff.compiler.model.Package;
+import io.protostuff.compiler.model.Proto;
+import io.protostuff.compiler.model.Syntax;
 import org.antlr.v4.runtime.BufferedTokenStream;
 import org.antlr.v4.runtime.Token;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import io.protostuff.compiler.model.Import;
-import io.protostuff.compiler.model.Package;
-import io.protostuff.compiler.model.Proto;
-import io.protostuff.compiler.model.Syntax;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -27,16 +26,11 @@ public class ProtoParseListener extends AbstractProtoParserListener {
     public void exitProto(ProtoParser.ProtoContext ctx) {
         int i = 0;
         List<String> comments = new ArrayList<>();
-        while (i < tokens.size()
-                && tokens.get(i).getChannel() == ProtoLexer.HIDDEN
-                && tokens.get(i).getType() != ProtoLexer.LINE_COMMENT) {
+        while (i < tokens.size() && isWhitespace(tokens.get(i))) {
             // skip whitespaces until we reach line comments
             i++;
         }
-
-        while (i < tokens.size()
-                && tokens.get(i).getChannel() == ProtoLexer.HIDDEN
-                && tokens.get(i).getType() == ProtoLexer.LINE_COMMENT) {
+        while (i < tokens.size() && isComment(tokens.get(i))) {
             // consume all consecutive line comments
             Token token = tokens.get(i);
             // skip processed LINE_COMMENT and following NL
@@ -44,21 +38,34 @@ public class ProtoParseListener extends AbstractProtoParserListener {
             String text = getTextFromLineCommentToken(token);
             comments.add(text);
         }
-
         if (i < tokens.size()) {
             // check if next token is not element that is owner of our comment block
-            int type = tokens.get(i).getType();
-            if (type == ProtoLexer.MESSAGE
-                    || type == ProtoLexer.ENUM
-                    || type == ProtoLexer.SERVICE) {
+            Token token = tokens.get(i);
+            if (isCommentBlockOwner(token)) {
                 return;
             }
         }
-
         List<String> trimComments = trim(comments);
         for (String comment : trimComments) {
             context.getProto().addComment(comment);
         }
+    }
+
+    private boolean isComment(Token token) {
+        return token.getChannel() == ProtoLexer.HIDDEN
+                && token.getType() == ProtoLexer.LINE_COMMENT;
+    }
+
+    private boolean isWhitespace(Token token) {
+        return token.getChannel() == ProtoLexer.HIDDEN
+                && token.getType() != ProtoLexer.LINE_COMMENT;
+    }
+
+    private boolean isCommentBlockOwner(Token token) {
+        int type = token.getType();
+        return type == ProtoLexer.MESSAGE
+                || type == ProtoLexer.ENUM
+                || type == ProtoLexer.SERVICE;
     }
 
     @Override

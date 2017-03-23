@@ -35,14 +35,17 @@ public class ProtoTreeWalker {
         }
     }
 
+    @FunctionalInterface
     public interface ProtoOperation {
         void process(Proto proto);
     }
 
+    @FunctionalInterface
     public interface MessageOperation {
         void process(Message message);
     }
 
+    @FunctionalInterface
     public interface EnumOperation {
         void process(Enum e);
     }
