@@ -7,7 +7,6 @@ import org.pegdown.VerbatimSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,10 +31,6 @@ public class PegDownMarkdownProcessor implements MarkdownProcessor {
             | WIKILINKS;
 
     private final PegDownProcessor processor = new PegDownProcessor(OPTIONS);
-
-    @Inject
-    public PegDownMarkdownProcessor() {
-    }
 
     @Override
     public String toHtml(String source) {

@@ -1,15 +1,20 @@
 package io.protostuff.compiler.parser;
 
+import io.protostuff.compiler.model.AbstractElement;
+import io.protostuff.compiler.model.SourceCodeLocation;
 import org.antlr.v4.runtime.BufferedTokenStream;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.List;
+import java.util.Optional;
 
-import io.protostuff.compiler.model.AbstractElement;
-import io.protostuff.compiler.model.SourceCodeLocation;
+import static io.protostuff.compiler.parser.ProtoLexer.LINE_COMMENT;
+import static io.protostuff.compiler.parser.ProtoLexer.NL;
+import static org.antlr.v4.runtime.Lexer.HIDDEN;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -37,40 +42,50 @@ public abstract class AbstractProtoParserListener extends ProtoParserBaseListene
         List<String> comments = new ArrayList<>();
         Token stop = ctx.getStop();
         Token start = ctx.getStart();
-        List<Token> tokensBefore = tokens.getHiddenTokensToLeft(start.getTokenIndex(), ProtoLexer.HIDDEN);
+        List<Token> tokensBefore = tokens.getHiddenTokensToLeft(start.getTokenIndex(), HIDDEN);
         if (tokensBefore != null) {
             for (Token token : tokensBefore) {
                 if (usedComments.get(token.getLine())) {
                     continue;
                 }
-                if (token.getType() == ProtoLexer.LINE_COMMENT) {
-                    String text = getTextFromLineCommentToken(token);
-                    comments.add(text);
-                    usedComments.set(token.getLine());
+                if (token.getType() == LINE_COMMENT) {
+                    addCommentToList(token, comments);
                 }
             }
         }
         if (addTrailingComment) {
-            List<Token> tokensAfter = tokens.getHiddenTokensToRight(stop.getTokenIndex(), ProtoLexer.HIDDEN);
-            if (tokensAfter != null) {
-                for (Token token : tokensAfter) {
-                    if (token.getType() == ProtoLexer.LINE_COMMENT) {
-                        String text = getTextFromLineCommentToken(token);
-                        comments.add(text);
-                        usedComments.set(token.getLine());
-                        break;
-                    } else {
-                        if (token.getText().contains("\n")) {
-                            break;
-                        }
-                    }
-                }
-            }
+            List<Token> tokensAfter = tokens.getHiddenTokensToRight(stop.getTokenIndex(), HIDDEN);
+            findTrailingComment(tokensAfter)
+                    .ifPresent(token -> addCommentToList(token, comments));
         }
         List<String> trimComments = trim(comments);
         for (String comment : trimComments) {
             element.addComment(comment);
         }
+    }
+
+    private void addCommentToList(Token token, List<String> comments) {
+        String text = getTextFromLineCommentToken(token);
+        comments.add(text);
+        usedComments.set(token.getLine());
+    }
+
+    private Optional<Token> findTrailingComment(@Nullable List<Token> tokensAfter) {
+        if (tokensAfter == null) {
+            return Optional.empty();
+        }
+        Optional<Token> trailingComment = Optional.empty();
+        for (Token token : tokensAfter) {
+            if (token.getType() == LINE_COMMENT) {
+                trailingComment = Optional.of(token);
+            }
+            // Try to find single trailing comment (on the same line).
+            // If we hit newline, then we can stop right away.
+            if (trailingComment.isPresent() || token.getType() == NL) {
+                break;
+            }
+        }
+        return trailingComment;
     }
 
     /**

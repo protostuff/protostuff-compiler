@@ -12,21 +12,21 @@ public class UsageIndex {
 
     public static UsageIndex build(Collection<Proto> protos) {
         UsageIndex usageIndex = new UsageIndex();
-        protos.forEach(proto -> {
+        for (Proto proto : protos) {
             ProtoWalker.newInstance(proto.getContext())
-                    .onMessage((context, message) -> {
+                    .onMessage(message -> {
                         for (Field field : message.getFields()) {
                             usageIndex.register(field.getType(), message);
                         }
                     })
-                    .onService((context, service) -> {
-                        for (io.protostuff.compiler.model.ServiceMethod serviceMethod : service.getMethods()) {
+                    .onService(service -> {
+                        for (ServiceMethod serviceMethod : service.getMethods()) {
                             usageIndex.register(serviceMethod.getArgType(), service);
                             usageIndex.register(serviceMethod.getReturnType(), service);
                         }
                     })
                     .walk();
-        });
+        }
         return usageIndex;
     }
 

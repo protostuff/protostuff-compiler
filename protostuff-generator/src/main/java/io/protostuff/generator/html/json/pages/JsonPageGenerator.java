@@ -1,19 +1,23 @@
 package io.protostuff.generator.html.json.pages;
 
-import static io.protostuff.generator.html.HtmlGenerator.PAGES;
-
-import com.google.common.base.Throwables;
 import io.protostuff.compiler.model.Module;
+import io.protostuff.generator.GeneratorException;
 import io.protostuff.generator.OutputStreamFactory;
 import io.protostuff.generator.html.StaticPage;
 import io.protostuff.generator.html.json.AbstractJsonGenerator;
 import io.protostuff.generator.html.markdown.MarkdownProcessor;
 import org.apache.commons.io.FilenameUtils;
 
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.util.List;
 import javax.inject.Inject;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.Map;
+
+import static io.protostuff.generator.html.HtmlGenerator.PAGES;
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.util.Collections.emptyList;
 
 public class JsonPageGenerator extends AbstractJsonGenerator {
 
@@ -26,28 +30,29 @@ public class JsonPageGenerator extends AbstractJsonGenerator {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void compile(Module module) {
+        Map<String, Object> options = module.getOptions();
+        Object pages = options.getOrDefault(PAGES, emptyList());
+        for (StaticPage page : (List<StaticPage>) pages) {
+            Path path = page.getFile().toPath();
+            String content = readFile(path);
+            String html = markdownProcessor.toHtml(content);
+            String filename = page.getFile().getName();
+            String baseName = FilenameUtils.getBaseName(filename);
+            Page p = ImmutablePage.builder()
+                    .name(page.getName())
+                    .content(html)
+                    .build();
+            write(module, "data/pages/" + baseName + ".json", p);
+        }
+    }
+
+    private String readFile(Path path) {
         try {
-            @SuppressWarnings("unchecked")
-            List<StaticPage> pages = (List<StaticPage>) module.getOptions().get(PAGES);
-            if (pages != null) {
-                pages.forEach(page -> {
-                    try {
-                        String content = new String(Files.readAllBytes(page.getFile().toPath()), StandardCharsets.UTF_8);
-                        String html = markdownProcessor.toHtml(content);
-                        String baseName = FilenameUtils.getBaseName(page.getFile().getName());
-                        Page p = ImmutablePage.builder()
-                                .name(page.getName())
-                                .content(html)
-                                .build();
-                        write(module, "data/pages/" + baseName + ".json", p);
-                    } catch (Exception e) {
-                        throw Throwables.propagate(e);
-                    }
-                });
-            }
-        } catch (Exception e) {
-            throw Throwables.propagate(e);
+            return new String(Files.readAllBytes(path), UTF_8);
+        } catch (IOException e) {
+            throw new GeneratorException("Could not read %s", e, path);
         }
     }
 }

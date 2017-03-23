@@ -3,17 +3,11 @@ package io.protostuff.generator.html;
 import io.protostuff.compiler.model.Module;
 import io.protostuff.generator.CompilerUtils;
 import io.protostuff.generator.ProtoCompiler;
-import io.protostuff.generator.html.json.enumeration.JsonEnumGenerator;
-import io.protostuff.generator.html.json.index.JsonIndexGenerator;
-import io.protostuff.generator.html.json.message.JsonMessageGenerator;
-import io.protostuff.generator.html.json.pages.JsonPageGenerator;
-import io.protostuff.generator.html.json.pages.JsonPagesIndexGenerator;
-import io.protostuff.generator.html.json.proto.JsonProtoGenerator;
-import io.protostuff.generator.html.json.service.JsonServiceGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
+import java.util.Set;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -68,42 +62,20 @@ public class HtmlGenerator implements ProtoCompiler {
     private static final Logger LOGGER = LoggerFactory.getLogger(HtmlGenerator.class);
 
     private final CompilerUtils compilerUtils;
-    private final JsonIndexGenerator indexGenerator;
-    private final JsonEnumGenerator enumGenerator;
-    private final JsonMessageGenerator messageGenerator;
-    private final JsonServiceGenerator serviceGenerator;
-    private final JsonProtoGenerator protoGenerator;
-    private final JsonPagesIndexGenerator pagesIndexGenerator;
-    private final JsonPageGenerator pageGenerator;
+    private final Set<HtmlCompiler> htmlCompilers;
 
     @Inject
     public HtmlGenerator(CompilerUtils compilerUtils,
-                         JsonIndexGenerator indexGenerator,
-                         JsonEnumGenerator enumGenerator,
-                         JsonMessageGenerator messageGenerator,
-                         JsonServiceGenerator serviceGenerator,
-                         JsonProtoGenerator protoGenerator,
-                         JsonPagesIndexGenerator pagesIndexGenerator,
-                         JsonPageGenerator pageGenerator) {
+                         Set<HtmlCompiler> htmlCompilers) {
         this.compilerUtils = compilerUtils;
-        this.indexGenerator = indexGenerator;
-        this.enumGenerator = enumGenerator;
-        this.messageGenerator = messageGenerator;
-        this.serviceGenerator = serviceGenerator;
-        this.protoGenerator = protoGenerator;
-        this.pagesIndexGenerator = pagesIndexGenerator;
-        this.pageGenerator = pageGenerator;
+        this.htmlCompilers = htmlCompilers;
     }
 
     @Override
     public void compile(Module module) {
-        indexGenerator.compile(module);
-        enumGenerator.compile(module);
-        messageGenerator.compile(module);
-        serviceGenerator.compile(module);
-        protoGenerator.compile(module);
-        pagesIndexGenerator.compile(module);
-        pageGenerator.compile(module);
+        for (HtmlCompiler compiler : htmlCompilers) {
+            compiler.compile(module);
+        }
         copy(HTML_RESOURCE_BASE, module.getOutput() + "/", STATIC_RESOURCES);
         copy(WEBJARS_RESOURCE_PREFIX, module.getOutput() + "/libs/", STATIC_LIBS);
     }

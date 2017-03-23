@@ -119,7 +119,7 @@ public class ProtostuffCompilerCLI extends ProtostuffCompiler {
             if (cmd.hasOption(VERSION)) {
                 Package aPackage = ProtostuffCompilerCLI.class.getPackage();
                 String version = aPackage.getImplementationVersion();
-                System.out.println(version);
+                LOGGER.info("Version = {}", version);
                 return;
             }
             if (cmd.hasOption(DEBUG)) {

@@ -8,5 +8,5 @@ public interface ExtensionProvider {
 
     Map<Class<?>, AttributeRenderer> attributeRenderers();
 
-    Map<Class<?>, PropertyProvider<?>> propertyProviders();
+    Map<Class<?>, PropertyProvider> propertyProviders();
 }

@@ -1,25 +1,22 @@
 package io.protostuff.generator.html.json;
 
-import com.google.common.base.Preconditions;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-
+import com.google.common.base.Preconditions;
 import io.protostuff.compiler.model.Module;
+import io.protostuff.generator.GeneratorException;
+import io.protostuff.generator.OutputStreamFactory;
+import io.protostuff.generator.html.HtmlCompiler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.OutputStream;
 
-import io.protostuff.generator.GeneratorException;
-import io.protostuff.generator.OutputStreamFactory;
-import io.protostuff.generator.ProtoCompiler;
-
 /**
  * @author Kostiantyn Shchepanovskyi
  */
-public abstract class AbstractJsonGenerator implements ProtoCompiler {
+public abstract class AbstractJsonGenerator implements HtmlCompiler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractJsonGenerator.class);
 

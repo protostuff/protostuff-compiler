@@ -5,11 +5,11 @@ import java.util.function.Function;
 /**
  * @author Kostiantyn Shchepanovskyi
  */
-public interface PropertyProvider<T> {
+public interface PropertyProvider {
 
     boolean hasProperty(String propertyName);
 
-    Object getProperty(T object, String propertyName);
+    Object getProperty(Object object, String propertyName);
 
-    void register(String property, Function<T, ?> function);
+    void register(String property, Function<?, Object> computable);
 }

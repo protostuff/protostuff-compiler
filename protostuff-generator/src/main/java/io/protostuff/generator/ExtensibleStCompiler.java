@@ -33,12 +33,11 @@ public class ExtensibleStCompiler implements ProtoCompiler {
         }
     }
 
-    @SuppressWarnings("unchecked")
     private void addPropertyExtensions(STGroup group, ExtensionProvider extensionProvider) {
-        Map<Class<?>, PropertyProvider<?>> extenderMap = extensionProvider.propertyProviders();
-        for (Map.Entry<Class<?>, PropertyProvider<?>> entry : extenderMap.entrySet()) {
+        Map<Class<?>, PropertyProvider> extenderMap = extensionProvider.propertyProviders();
+        for (Map.Entry<Class<?>, PropertyProvider> entry : extenderMap.entrySet()) {
             Class<?> objectClass = entry.getKey();
-            PropertyProvider<Object> extender = (PropertyProvider<Object>) entry.getValue();
+            PropertyProvider extender = entry.getValue();
             group.registerModelAdaptor(objectClass, new ObjectModelAdaptor() {
                 @Override
                 public synchronized Object getProperty(Interpreter interp, ST self, Object o, Object property, String propertyName) {
