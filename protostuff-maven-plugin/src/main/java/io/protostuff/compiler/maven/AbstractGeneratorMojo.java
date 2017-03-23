@@ -1,6 +1,6 @@
 package io.protostuff.compiler.maven;
 
-import com.google.common.base.Throwables;
+import io.protostuff.generator.GeneratorException;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecution;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -49,11 +49,7 @@ public abstract class AbstractGeneratorMojo extends AbstractMojo {
         }
         String phase = execution.getLifecyclePhase();
         String basedir;
-        try {
-            basedir = project.getBasedir().getCanonicalPath();
-        } catch (IOException e) {
-            throw Throwables.propagate(e);
-        }
+        basedir = getCanonicalPath(project.getBasedir());
         String sourcePath;
         if (GENERATE_TEST_SOURCES.id().equals(phase)) {
             sourcePath = basedir + "/src/test/proto/";
@@ -61,6 +57,14 @@ public abstract class AbstractGeneratorMojo extends AbstractMojo {
             sourcePath = basedir + "/src/main/proto/";
         }
         return Paths.get(sourcePath);
+    }
+
+    private String getCanonicalPath(File file) {
+        try {
+            return file.getCanonicalPath();
+        } catch (IOException e) {
+            throw new GeneratorException("Could not determine full path for %s", e, file);
+        }
     }
 
     @Override

@@ -109,7 +109,7 @@ public class MessageParseListener extends AbstractProtoParserListener {
             Group group = new Group(((Extension) parent).getParent());
             context.push(group);
         } else if (parent instanceof UserTypeContainer) {
-            Group group = new Group(((UserTypeContainer) parent));
+            Group group = new Group((UserTypeContainer) parent);
             context.push(group);
         } else {
             throw new IllegalStateException();

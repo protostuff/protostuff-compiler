@@ -1,6 +1,5 @@
 package io.protostuff.generator;
 
-import com.google.common.base.Throwables;
 import io.protostuff.compiler.model.Enum;
 import io.protostuff.compiler.model.*;
 import org.slf4j.Logger;
@@ -24,37 +23,40 @@ public abstract class AbstractProtoCompiler implements ProtoCompiler {
 
     @Override
     public void compile(Module module) {
-        try {
-            String moduleOutput = module.getOutput();
-            if (canProcessModule(module)) {
-                String outputFileName = getModuleOutputFileName(module);
+
+        String moduleOutput = module.getOutput();
+        if (canProcessModule(module)) {
+            String outputFileName = getModuleOutputFileName(module);
+            try (Writer writer = getWriter(moduleOutput, outputFileName)) {
+                compileModule(module, writer);
+            } catch (IOException e) {
+                throw writerException(outputFileName, e);
+            }
+        }
+        for (Proto proto : module.getProtos()) {
+            if (canProcessProto(proto)) {
+                String outputFileName = getProtoOutputFileName(proto);
                 try (Writer writer = getWriter(moduleOutput, outputFileName)) {
-                    compileModule(module, writer);
+                    compileProto(proto, writer);
+                } catch (IOException e) {
+                    throw writerException(outputFileName, e);
                 }
             }
-            for (Proto proto : module.getProtos()) {
-                if (canProcessProto(proto)) {
-                    String outputFileName = getProtoOutputFileName(proto);
+            for (Service service : proto.getServices()) {
+                if (canProcessService(service)) {
+                    String outputFileName = getServiceOutputFileName(service);
                     try (Writer writer = getWriter(moduleOutput, outputFileName)) {
-                        compileProto(proto, writer);
+                        compileService(service, writer);
+                    } catch (IOException e) {
+                        throw writerException(outputFileName, e);
                     }
                 }
-                for (Service service : proto.getServices()) {
-                    if (canProcessService(service)) {
-                        String outputFileName = getServiceOutputFileName(service);
-                        try (Writer writer = getWriter(moduleOutput, outputFileName)) {
-                            compileService(service, writer);
-                        }
-                    }
-                }
-                processUserTypes(module, proto);
             }
-        } catch (IOException e) {
-            throw Throwables.propagate(e);
+            processUserTypes(module, proto);
         }
     }
 
-    private void processUserTypes(Module module, UserTypeContainer container) throws IOException {
+    private void processUserTypes(Module module, UserTypeContainer container) {
         List<Message> messages = container.getMessages();
         List<io.protostuff.compiler.model.Enum> enums = container.getEnums();
         String basedir = module.getOutput();
@@ -63,6 +65,8 @@ public abstract class AbstractProtoCompiler implements ProtoCompiler {
                 String outputFileName = getMessageOutputFileName(message);
                 try (Writer writer = getWriter(basedir, outputFileName)) {
                     compileMessage(message, writer);
+                } catch (IOException e) {
+                    throw writerException(outputFileName, e);
                 }
             }
             // process nested messages and enums
@@ -73,9 +77,15 @@ public abstract class AbstractProtoCompiler implements ProtoCompiler {
                 String outputFileName = getEnumOutputFileName(anEnum);
                 try (Writer writer = getWriter(basedir, outputFileName)) {
                     compileEnum(anEnum, writer);
+                } catch (IOException e) {
+                    throw writerException(outputFileName, e);
                 }
             }
         }
+    }
+
+    private GeneratorException writerException(String outputFileName, IOException e) {
+        return new GeneratorException("Could not write %s", outputFileName, e);
     }
 
     protected String appendBasedir(String basedir, String relativeFilename) {

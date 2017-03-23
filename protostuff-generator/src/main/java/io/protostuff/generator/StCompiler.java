@@ -21,30 +21,30 @@ import java.io.Writer;
  */
 public class StCompiler extends AbstractProtoCompiler {
 
-    public static final String MODULE = "module";
-    public static final String MODULE_COMPILER_ENABLED = "module_compiler_enabled";
-    public static final String MODULE_COMPILER_TEMPLATE = "module_compiler_template";
+    private static final String MODULE = "module";
+    private static final String MODULE_COMPILER_ENABLED = "module_compiler_enabled";
+    private static final String MODULE_COMPILER_TEMPLATE = "module_compiler_template";
 
-    public static final String MODULE_COMPILER_OUTPUT = "module_compiler_output";
-    public static final String PROTO = "proto";
-    public static final String PROTO_COMPILER_ENABLED = "proto_compiler_enabled";
-    public static final String PROTO_COMPILER_TEMPLATE = "proto_compiler_template";
+    private static final String MODULE_COMPILER_OUTPUT = "module_compiler_output";
+    private static final String PROTO = "proto";
+    private static final String PROTO_COMPILER_ENABLED = "proto_compiler_enabled";
+    private static final String PROTO_COMPILER_TEMPLATE = "proto_compiler_template";
 
-    public static final String PROTO_COMPILER_OUTPUT = "proto_compiler_output";
-    public static final String MESSAGE = "message";
-    public static final String MESSAGE_COMPILER_ENABLED = "message_compiler_enabled";
-    public static final String MESSAGE_COMPILER_TEMPLATE = "message_compiler_template";
+    private static final String PROTO_COMPILER_OUTPUT = "proto_compiler_output";
+    private static final String MESSAGE = "message";
+    private static final String MESSAGE_COMPILER_ENABLED = "message_compiler_enabled";
+    private static final String MESSAGE_COMPILER_TEMPLATE = "message_compiler_template";
 
-    public static final String MESSAGE_COMPILER_OUTPUT = "message_compiler_output";
-    public static final String ENUM = "enum";
-    public static final String ENUM_COMPILER_ENABLED = "enum_compiler_enabled";
-    public static final String ENUM_COMPILER_TEMPLATE = "enum_compiler_template";
+    private static final String MESSAGE_COMPILER_OUTPUT = "message_compiler_output";
+    private static final String ENUM = "enum";
+    private static final String ENUM_COMPILER_ENABLED = "enum_compiler_enabled";
+    private static final String ENUM_COMPILER_TEMPLATE = "enum_compiler_template";
 
-    public static final String ENUM_COMPILER_OUTPUT = "enum_compiler_output";
-    public static final String SERVICE = "service";
-    public static final String SERVICE_COMPILER_ENABLED = "service_compiler_enabled";
-    public static final String SERVICE_COMPILER_TEMPLATE = "service_compiler_template";
-    public static final String SERVICE_COMPILER_OUTPUT = "service_compiler_output";
+    private static final String ENUM_COMPILER_OUTPUT = "enum_compiler_output";
+    private static final String SERVICE = "service";
+    private static final String SERVICE_COMPILER_ENABLED = "service_compiler_enabled";
+    private static final String SERVICE_COMPILER_TEMPLATE = "service_compiler_template";
+    private static final String SERVICE_COMPILER_OUTPUT = "service_compiler_output";
 
     private final STGroup stGroup;
 

@@ -47,16 +47,6 @@ public class CompilerModule extends AbstractModule {
     public static final String ST4_COMPILER = "st4";
     public static final String HTML_COMPILER = "html";
 
-    private static <T> T instantiate(final String className, final Class<T> type) {
-        try {
-            Class<?> clazz = Class.forName(className);
-            Object instance = clazz.newInstance();
-            return type.cast(instance);
-        } catch (final InstantiationException | IllegalAccessException | ClassNotFoundException e) {
-            throw new GeneratorException("Could not instantiate " + className, e);
-        }
-    }
-
     @Override
     protected void configure() {
         bind(CompilerRegistry.class);
@@ -128,6 +118,7 @@ public class CompilerModule extends AbstractModule {
             return module -> {
                 try {
                     Map<String, Object> options = module.getOptions();
+                    @SuppressWarnings("unchecked")
                     Collection<String> templates = checkNotNull((Collection<String>) options.get(TEMPLATES_OPTION),
                             TEMPLATES_OPTION + " is not set");
                     String extProviderClass = checkNotNull((String) options.get(EXTENSIONS_OPTION),
@@ -139,6 +130,16 @@ public class CompilerModule extends AbstractModule {
                     throw new GeneratorException("Could not compile module: %s, module=%s", e, e.getMessage(), module);
                 }
             };
+        }
+
+        private <T> T instantiate(final String className, final Class<T> type) {
+            try {
+                Class<?> clazz = Class.forName(className);
+                Object instance = clazz.newInstance();
+                return type.cast(instance);
+            } catch (final InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+                throw new GeneratorException("Could not instantiate " + className, e);
+            }
         }
 
 
