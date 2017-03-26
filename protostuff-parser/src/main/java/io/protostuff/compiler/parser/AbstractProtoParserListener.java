@@ -99,12 +99,13 @@ public abstract class AbstractProtoParserListener extends ProtoParserBaseListene
         while (tryRemoveWhitespace) {
             boolean allLinesAreShorter = true;
             for (String comment : comments) {
-                if (comment.length() > n) {
-                    if (comment.charAt(n) != ' ') {
-                        tryRemoveWhitespace = false;
-                    }
-                    allLinesAreShorter = false;
+                if (comment.length() <= n) {
+                    continue;
                 }
+                if (comment.charAt(n) != ' ') {
+                    tryRemoveWhitespace = false;
+                }
+                allLinesAreShorter = false;
             }
             if (allLinesAreShorter) {
                 break;

@@ -117,19 +117,21 @@ public class OptionsPostProcessor implements ProtoContextPostProcessor {
         for (Map.Entry<DynamicMessage.Key, DynamicMessage.Value> entry : options.getFields()) {
             DynamicMessage.Key key = entry.getKey();
             DynamicMessage.Value value = entry.getValue();
-            if (!key.isExtension()) {
-                // check standard option
-                String fieldName = key.getName();
-                Field field = sourceMessage.getField(fieldName);
-                if (DEFAULT.equals(fieldName)) {
-                    // TODO: check value of default option
-                } else {
-                    if (field == null) {
-                        throw new ParserException(value, "Unknown option: '%s'", fieldName);
-                    }
-                    checkFieldValue(context, owningDescriptor, field, value);
-                }
+            if (key.isExtension()) {
+                continue;
             }
+            // check standard option
+            String fieldName = key.getName();
+            Field field = sourceMessage.getField(fieldName);
+            if (DEFAULT.equals(fieldName)) {
+                // TODO: check value of default option
+            } else {
+                if (field == null) {
+                    throw new ParserException(value, "Unknown option: '%s'", fieldName);
+                }
+                checkFieldValue(context, owningDescriptor, field, value);
+            }
+
         }
     }
 
@@ -140,12 +142,13 @@ public class OptionsPostProcessor implements ProtoContextPostProcessor {
         for (Map.Entry<DynamicMessage.Key, DynamicMessage.Value> entry : options.getFields()) {
             DynamicMessage.Key key = entry.getKey();
             DynamicMessage.Value value = entry.getValue();
-            if (key.isExtension()) {
-                String fullyQualifiedName = getFullyQualifiedName(owningDescriptor, extensionFields, key, value);
-                Field extensionField = extensionFields.get(fullyQualifiedName);
-                fullyQualifiedNames.put(key, fullyQualifiedName);
-                checkFieldValue(context, owningDescriptor, extensionField, value);
+            if (!key.isExtension()) {
+                continue;
             }
+            String fullyQualifiedName = getFullyQualifiedName(owningDescriptor, extensionFields, key, value);
+            Field extensionField = extensionFields.get(fullyQualifiedName);
+            fullyQualifiedNames.put(key, fullyQualifiedName);
+            checkFieldValue(context, owningDescriptor, extensionField, value);
         }
         for (Map.Entry<DynamicMessage.Key, String> entry : fullyQualifiedNames.entrySet()) {
             options.normalizeName(entry.getKey(), entry.getValue());

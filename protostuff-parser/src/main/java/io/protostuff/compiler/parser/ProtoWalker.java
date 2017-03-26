@@ -120,14 +120,18 @@ public class ProtoWalker {
         for (Processor<Service> serviceProcessor : serviceProcessors) {
             for (Service service : services) {
                 serviceProcessor.run(context, service);
-                for (Processor<ServiceMethod> serviceMethodProcessor : serviceMethodProcessors) {
-                    for (ServiceMethod serviceMethod : service.getMethods()) {
-                        serviceMethodProcessor.run(context, serviceMethod);
-                    }
-                }
+                walk(service);
             }
         }
         walk((UserTypeContainer) container);
+    }
+
+    private void walk(Service service) {
+        for (Processor<ServiceMethod> serviceMethodProcessor : serviceMethodProcessors) {
+            for (ServiceMethod serviceMethod : service.getMethods()) {
+                serviceMethodProcessor.run(context, serviceMethod);
+            }
+        }
     }
 
     private void walk(UserTypeContainer container) {
@@ -135,23 +139,31 @@ public class ProtoWalker {
         for (Message message : messages) {
             for (Processor<Message> messageProcessor : messageProcessors) {
                 messageProcessor.run(context, message);
-                for (Processor<Field> fieldProcessor : fieldProcessors) {
-                    for (Field field : message.getFields()) {
-                        fieldProcessor.run(context, field);
-                    }
-                }
+                walk(message);
             }
-            walk(message);
+            walk((UserTypeContainer) message);
         }
         List<Enum> enums = container.getEnums();
         for (Processor<Enum> enumProcessor : enumProcessors) {
             for (Enum anEnum : enums) {
                 enumProcessor.run(context, anEnum);
-                for (Processor<EnumConstant> enumConstantProcessor : enumConstantProcessors) {
-                    for (EnumConstant enumConstant : anEnum.getConstants()) {
-                        enumConstantProcessor.run(context, enumConstant);
-                    }
-                }
+                walk(anEnum);
+            }
+        }
+    }
+
+    private void walk(Enum anEnum) {
+        for (Processor<EnumConstant> enumConstantProcessor : enumConstantProcessors) {
+            for (EnumConstant enumConstant : anEnum.getConstants()) {
+                enumConstantProcessor.run(context, enumConstant);
+            }
+        }
+    }
+
+    private void walk(Message message) {
+        for (Processor<Field> fieldProcessor : fieldProcessors) {
+            for (Field field : message.getFields()) {
+                fieldProcessor.run(context, field);
             }
         }
     }

@@ -1,8 +1,8 @@
 package io.protostuff.compiler.parser;
 
-import java.util.List;
-
 import io.protostuff.compiler.model.*;
+
+import java.util.List;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -22,19 +22,7 @@ public class ExtensionRegistratorPostProcessor implements ProtoContextPostProces
             List<Range> ranges = extendee.getExtensionRanges();
             List<Field> fields = extension.getFields();
             for (Field field : fields) {
-                int tag = field.getTag();
-                boolean inRange = false;
-                for (Range range : ranges) {
-                    int from = range.getFrom();
-                    int to = range.getTo();
-                    if (tag >= from && tag <= to) {
-                        inRange = true;
-                    }
-                }
-                if (!inRange) {
-                    String format = "Extension field '%s' tag=%d is out of allowed range";
-                    throw new ParserException(field, format, field.getName(), tag);
-                }
+                checkRanges(field, ranges);
             }
             String parentNamespace = container.getNamespace();
             extension.setNamespace(parentNamespace);
@@ -42,6 +30,22 @@ public class ExtensionRegistratorPostProcessor implements ProtoContextPostProces
         }
         for (Message message : container.getMessages()) {
             registerExtensions(context, message);
+        }
+    }
+
+    private void checkRanges(Field field, List<Range> ranges) {
+        int tag = field.getTag();
+        boolean inRange = false;
+        for (Range range : ranges) {
+            int from = range.getFrom();
+            int to = range.getTo();
+            if (tag >= from && tag <= to) {
+                inRange = true;
+            }
+        }
+        if (!inRange) {
+            String format = "Extension field '%s' tag=%d is out of allowed range";
+            throw new ParserException(field, format, field.getName(), tag);
         }
     }
 

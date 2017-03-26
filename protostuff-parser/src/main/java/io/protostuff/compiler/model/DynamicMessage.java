@@ -2,14 +2,12 @@ package io.protostuff.compiler.model;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Preconditions;
-
-import java.util.*;
-import java.util.stream.Collectors;
-
-import javax.annotation.Nonnull;
-
 import io.protostuff.compiler.parser.ParserException;
 import io.protostuff.compiler.parser.Util;
+
+import javax.annotation.Nonnull;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -77,11 +75,7 @@ public class DynamicMessage implements Map<String, DynamicMessage.Value> {
                 Key key = createKey(fieldName);
                 DynamicMessage msg;
                 if (fields.containsKey(key)) {
-                    Value val = fields.get(key);
-                    if (!val.isMessageType()) {
-                        throw new ParserException(value, "Can not assign option value: type error");
-                    }
-                    msg = val.getMessage();
+                    msg = getChildMessage(value, key);
                 } else {
                     msg = new DynamicMessage();
                     fields.put(key, Value.createMessage(sourceCodeLocation, msg));
@@ -95,6 +89,16 @@ public class DynamicMessage implements Map<String, DynamicMessage.Value> {
             Key key = Key.field(name);
             set(key, value);
         }
+    }
+
+    private DynamicMessage getChildMessage(Value value, Key key) {
+        DynamicMessage msg;
+        Value val = fields.get(key);
+        if (!val.isMessageType()) {
+            throw new ParserException(value, "Can not assign option value: type error");
+        }
+        msg = val.getMessage();
+        return msg;
     }
 
     private void set(Key key, Value value) {

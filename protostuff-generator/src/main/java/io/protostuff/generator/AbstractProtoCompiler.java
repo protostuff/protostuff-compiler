@@ -23,36 +23,50 @@ public abstract class AbstractProtoCompiler implements ProtoCompiler {
 
     @Override
     public void compile(Module module) {
-
         String moduleOutput = module.getOutput();
-        if (canProcessModule(module)) {
-            String outputFileName = getModuleOutputFileName(module);
-            try (Writer writer = getWriter(moduleOutput, outputFileName)) {
-                compileModule(module, writer);
-            } catch (IOException e) {
-                throw writerException(outputFileName, e);
-            }
-        }
+        processModule(module, moduleOutput);
         for (Proto proto : module.getProtos()) {
-            if (canProcessProto(proto)) {
-                String outputFileName = getProtoOutputFileName(proto);
-                try (Writer writer = getWriter(moduleOutput, outputFileName)) {
-                    compileProto(proto, writer);
-                } catch (IOException e) {
-                    throw writerException(outputFileName, e);
-                }
-            }
+            processProto(moduleOutput, proto);
             for (Service service : proto.getServices()) {
-                if (canProcessService(service)) {
-                    String outputFileName = getServiceOutputFileName(service);
-                    try (Writer writer = getWriter(moduleOutput, outputFileName)) {
-                        compileService(service, writer);
-                    } catch (IOException e) {
-                        throw writerException(outputFileName, e);
-                    }
-                }
+                processService(moduleOutput, service);
             }
             processUserTypes(module, proto);
+        }
+    }
+
+    private void processService(String moduleOutput, Service service) {
+        if (!canProcessService(service)) {
+            return;
+        }
+        String outputFileName = getServiceOutputFileName(service);
+        try (Writer writer = getWriter(moduleOutput, outputFileName)) {
+            compileService(service, writer);
+        } catch (IOException e) {
+            throw writerException(outputFileName, e);
+        }
+    }
+
+    private void processProto(String moduleOutput, Proto proto) {
+        if (!canProcessProto(proto)) {
+            return;
+        }
+        String outputFileName = getProtoOutputFileName(proto);
+        try (Writer writer = getWriter(moduleOutput, outputFileName)) {
+            compileProto(proto, writer);
+        } catch (IOException e) {
+            throw writerException(outputFileName, e);
+        }
+    }
+
+    private void processModule(Module module, String moduleOutput) {
+        if (!canProcessModule(module)) {
+            return;
+        }
+        String outputFileName = getModuleOutputFileName(module);
+        try (Writer writer = getWriter(moduleOutput, outputFileName)) {
+            compileModule(module, writer);
+        } catch (IOException e) {
+            throw writerException(outputFileName, e);
         }
     }
 
@@ -61,26 +75,36 @@ public abstract class AbstractProtoCompiler implements ProtoCompiler {
         List<io.protostuff.compiler.model.Enum> enums = container.getEnums();
         String basedir = module.getOutput();
         for (Message message : messages) {
-            if (canProcessMessage(message)) {
-                String outputFileName = getMessageOutputFileName(message);
-                try (Writer writer = getWriter(basedir, outputFileName)) {
-                    compileMessage(message, writer);
-                } catch (IOException e) {
-                    throw writerException(outputFileName, e);
-                }
-            }
+            processMessage(basedir, message);
             // process nested messages and enums
             processUserTypes(module, message);
         }
         for (Enum anEnum : enums) {
-            if (canProcessEnum(anEnum)) {
-                String outputFileName = getEnumOutputFileName(anEnum);
-                try (Writer writer = getWriter(basedir, outputFileName)) {
-                    compileEnum(anEnum, writer);
-                } catch (IOException e) {
-                    throw writerException(outputFileName, e);
-                }
-            }
+            processEnum(basedir, anEnum);
+        }
+    }
+
+    private void processEnum(String basedir, Enum anEnum) {
+        if (!canProcessEnum(anEnum)) {
+            return;
+        }
+        String outputFileName = getEnumOutputFileName(anEnum);
+        try (Writer writer = getWriter(basedir, outputFileName)) {
+            compileEnum(anEnum, writer);
+        } catch (IOException e) {
+            throw writerException(outputFileName, e);
+        }
+    }
+
+    private void processMessage(String basedir, Message message) {
+        if (!canProcessMessage(message)) {
+            return;
+        }
+        String outputFileName = getMessageOutputFileName(message);
+        try (Writer writer = getWriter(basedir, outputFileName)) {
+            compileMessage(message, writer);
+        } catch (IOException e) {
+            throw writerException(outputFileName, e);
         }
     }
 
