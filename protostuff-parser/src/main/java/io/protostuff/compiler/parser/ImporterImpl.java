@@ -1,10 +1,9 @@
 package io.protostuff.compiler.parser;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Kostiantyn Shchepanovskyi

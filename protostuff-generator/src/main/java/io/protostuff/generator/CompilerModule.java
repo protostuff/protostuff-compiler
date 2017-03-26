@@ -7,6 +7,7 @@ import com.google.inject.Scopes;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.multibindings.MapBinder;
 import com.google.inject.multibindings.Multibinder;
+import io.protostuff.generator.dummy.DummyGenerator;
 import io.protostuff.generator.html.HtmlCompiler;
 import io.protostuff.generator.html.HtmlGenerator;
 import io.protostuff.generator.html.json.enumeration.JsonEnumGenerator;
@@ -46,6 +47,7 @@ public class CompilerModule extends AbstractModule {
     public static final String JAVA_COMPILER = "java";
     public static final String ST4_COMPILER = "st4";
     public static final String HTML_COMPILER = "html";
+    public static final String DUMMY_COMPILER = "dummy";
 
     @Override
     protected void configure() {
@@ -70,6 +72,7 @@ public class CompilerModule extends AbstractModule {
         compilers.addBinding(HTML_COMPILER).to(HtmlGenerator.class);
         compilers.addBinding(JAVA_COMPILER).toProvider(JavaCompilerProvider.class);
         compilers.addBinding(ST4_COMPILER).toProvider(St4CompilerProvider.class);
+        compilers.addBinding(DUMMY_COMPILER).to(DummyGenerator.class).in(Scopes.SINGLETON);
     }
 
     @Provides

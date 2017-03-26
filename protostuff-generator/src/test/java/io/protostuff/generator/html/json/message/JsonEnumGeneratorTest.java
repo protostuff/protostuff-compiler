@@ -50,7 +50,7 @@ class JsonEnumGeneratorTest {
     }
 
     @Test
-    void compile() {
+    void testSample() {
         ProtoContext context = importer.importFile(new ClasspathFileReader(), "protostuff_unittest/messages_sample.proto");
         Module module = ImmutableModule.builder()
                 .name("name")

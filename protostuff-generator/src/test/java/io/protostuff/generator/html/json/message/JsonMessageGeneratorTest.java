@@ -115,4 +115,48 @@ class JsonMessageGeneratorTest {
                 .build(), json.get(3));
     }
 
+
+    @Test
+    void fieldModifiers() {
+        ProtoContext context = importer.importFile(new ClasspathFileReader(), "protostuff_unittest/field_modifiers.proto");
+        Module module = ImmutableModule.builder()
+                .name("name")
+                .output("output")
+                .addProtos(context.getProto())
+                .usageIndex(usageIndex)
+                .build();
+        generator.compile(module);
+        Assertions.assertEquals(1, json.size());
+        Assertions.assertEquals(ImmutableMessageDescriptor.builder()
+                .name("A")
+                .type(NodeType.MESSAGE)
+                .canonicalName("protostuff_unittest.A")
+                .description("")
+                .addFields(ImmutableMessageField.builder()
+                        .name("optional")
+                        .typeId("int32")
+                        .modifier(MessageFieldModifier.OPTIONAL)
+                        .tag(1)
+                        .map(false)
+                        .description("")
+                        .build())
+                .addFields(ImmutableMessageField.builder()
+                        .name("required")
+                        .typeId("int32")
+                        .modifier(MessageFieldModifier.REQUIRED)
+                        .tag(2)
+                        .map(false)
+                        .description("")
+                        .build())
+                .addFields(ImmutableMessageField.builder()
+                        .name("repeated")
+                        .typeId("int32")
+                        .modifier(MessageFieldModifier.REPEATED)
+                        .tag(3)
+                        .map(false)
+                        .description("")
+                        .build())
+                .build(), json.get(0));
+    }
+
 }

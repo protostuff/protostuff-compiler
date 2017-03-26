@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package protostuff_unittest;
+
+message A {
+    optional int32 optional = 1;
+    required int32 required = 2;
+    repeated int32 repeated = 3;
+}
