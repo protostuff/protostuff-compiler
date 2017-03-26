@@ -5,6 +5,7 @@ import io.protostuff.compiler.model.Enum;
 import io.protostuff.compiler.model.*;
 import io.protostuff.generator.Formatter;
 
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
@@ -28,7 +29,7 @@ public class MessageFieldUtil {
     private static final String VALUE = "Value";
 
     private static final Map<ScalarFieldType, String> PROTOSTUFF_IO_NAME =
-            ImmutableMap.<ScalarFieldType, String>builder()
+            new EnumMap<>(ImmutableMap.<ScalarFieldType, String>builder()
                     .put(ScalarFieldType.INT32, "Int32")
                     .put(ScalarFieldType.INT64, "Int64")
                     .put(ScalarFieldType.UINT32, "UInt32")
@@ -44,7 +45,7 @@ public class MessageFieldUtil {
                     .put(ScalarFieldType.BOOL, "Bool")
                     .put(ScalarFieldType.STRING, "String")
                     .put(ScalarFieldType.BYTES, "Bytes")
-                    .build();
+                    .build());
 
     private MessageFieldUtil() {
         throw new IllegalAccessError("Utility class");

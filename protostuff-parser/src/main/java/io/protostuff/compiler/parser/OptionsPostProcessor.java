@@ -1,28 +1,16 @@
 package io.protostuff.compiler.parser;
 
+import com.google.common.collect.ImmutableMap;
+import io.protostuff.compiler.model.*;
+import io.protostuff.compiler.model.Enum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Deque;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Provider;
-
-import io.protostuff.compiler.model.Descriptor;
-import io.protostuff.compiler.model.DescriptorType;
-import io.protostuff.compiler.model.DynamicMessage;
-import io.protostuff.compiler.model.Element;
-import io.protostuff.compiler.model.Enum;
-import io.protostuff.compiler.model.Field;
-import io.protostuff.compiler.model.FieldType;
-import io.protostuff.compiler.model.Message;
-import io.protostuff.compiler.model.ProtobufConstants;
-import io.protostuff.compiler.model.ScalarFieldType;
-import io.protostuff.compiler.model.UserTypeContainer;
+import java.util.*;
+import java.util.function.Function;
 
 import static io.protostuff.compiler.parser.DefaultDescriptorProtoProvider.DESCRIPTOR_PROTO;
 import static io.protostuff.compiler.parser.TypeResolverPostProcessor.createScopeLookupList;
@@ -33,14 +21,65 @@ import static io.protostuff.compiler.parser.TypeResolverPostProcessor.createScop
 public class OptionsPostProcessor implements ProtoContextPostProcessor {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OptionsPostProcessor.class);
-    public static final String DEFAULT = "default";
 
+    private static final String DEFAULT = "default";
+    private static final Map<ScalarFieldType, ValueChecker> SCALAR_ASSIGNMENT_CHECKS = new EnumMap<>(ImmutableMap.<ScalarFieldType, ValueChecker>builder()
+            .put(ScalarFieldType.INT32, OptionsPostProcessor::canAssignInt32)
+            .put(ScalarFieldType.INT64, OptionsPostProcessor::canAssignInt64)
+            .put(ScalarFieldType.UINT32, OptionsPostProcessor::canAssignUInt32)
+            .put(ScalarFieldType.UINT64, OptionsPostProcessor::canAssignUInt64)
+            .put(ScalarFieldType.SINT32, OptionsPostProcessor::canAssignInt32)
+            .put(ScalarFieldType.SINT64, OptionsPostProcessor::canAssignInt64)
+            .put(ScalarFieldType.FIXED32, OptionsPostProcessor::canAssignInt32)
+            .put(ScalarFieldType.FIXED64, OptionsPostProcessor::canAssignInt64)
+            .put(ScalarFieldType.SFIXED32, OptionsPostProcessor::canAssignInt32)
+            .put(ScalarFieldType.SFIXED64, OptionsPostProcessor::canAssignInt64)
+            .put(ScalarFieldType.FLOAT, OptionsPostProcessor::canAssignFloat)
+            .put(ScalarFieldType.DOUBLE, OptionsPostProcessor::canAssignFloat)
+            .put(ScalarFieldType.BOOL, OptionsPostProcessor::canAssignBool)
+            .put(ScalarFieldType.STRING, OptionsPostProcessor::canAssignString)
+            .put(ScalarFieldType.BYTES, OptionsPostProcessor::canAssignBytes)
+            .build());
 
     private final Provider<ProtoContext> descriptorProtoProvider;
 
     @Inject
     public OptionsPostProcessor(@Named(DESCRIPTOR_PROTO) Provider<ProtoContext> descriptorProtoProvider) {
         this.descriptorProtoProvider = descriptorProtoProvider;
+    }
+
+    private static boolean canAssignInt32(DynamicMessage.Value value) {
+        // TODO check if value fits into target type, for other methods as well
+        return value.getType() == DynamicMessage.Value.Type.INTEGER;
+    }
+
+    private static boolean canAssignInt64(DynamicMessage.Value value) {
+        return value.getType() == DynamicMessage.Value.Type.INTEGER;
+    }
+
+    private static boolean canAssignUInt32(DynamicMessage.Value value) {
+        return value.getType() == DynamicMessage.Value.Type.INTEGER;
+    }
+
+    private static boolean canAssignUInt64(DynamicMessage.Value value) {
+        return value.getType() == DynamicMessage.Value.Type.INTEGER;
+    }
+
+    private static boolean canAssignFloat(DynamicMessage.Value value) {
+        return value.getType() == DynamicMessage.Value.Type.INTEGER
+                || value.getType() == DynamicMessage.Value.Type.FLOAT;
+    }
+
+    private static boolean canAssignBool(DynamicMessage.Value value) {
+        return value.getType() == DynamicMessage.Value.Type.BOOLEAN;
+    }
+
+    private static boolean canAssignString(DynamicMessage.Value value) {
+        return value.getType() == DynamicMessage.Value.Type.STRING;
+    }
+
+    private static boolean canAssignBytes(DynamicMessage.Value value) {
+        return value.getType() == DynamicMessage.Value.Type.STRING;
     }
 
     @Override
@@ -70,39 +109,15 @@ public class OptionsPostProcessor implements ProtoContextPostProcessor {
     }
 
     private void processOptions(ProtoContext context, Message sourceMessage, Descriptor owningDescriptor, DynamicMessage options) {
-        ExtensionRegistry extensionRegistry = context.getExtensionRegistry();
-        Map<String, Field> extensionFields = extensionRegistry.getExtensionFields(sourceMessage);
-        Map<DynamicMessage.Key, String> fullyQualifiedNames = new HashMap<>();
+        processCustomOptions(context, sourceMessage, owningDescriptor, options);
+        processStandardOptions(context, sourceMessage, owningDescriptor, options);
+    }
+
+    private void processStandardOptions(ProtoContext context, Message sourceMessage, Descriptor owningDescriptor, DynamicMessage options) {
         for (Map.Entry<DynamicMessage.Key, DynamicMessage.Value> entry : options.getFields()) {
             DynamicMessage.Key key = entry.getKey();
             DynamicMessage.Value value = entry.getValue();
-            if (key.isExtension()) {
-                String fullyQualifiedName = null;
-                Field extensionField = null;
-                if (key.getName().startsWith(".")) {
-                    String name = key.getName();
-                    if (extensionFields.containsKey(name)) {
-                        fullyQualifiedName = name;
-                        extensionField = extensionFields.get(fullyQualifiedName);
-                    }
-                } else {
-                    UserTypeContainer owningContainer = getOwningContainer(owningDescriptor);
-                    Deque<String> scopeLookupList = createScopeLookupList(owningContainer);
-                    for (String scope : scopeLookupList) {
-                        String name = scope + key.getName();
-                        if (extensionFields.containsKey(name)) {
-                            fullyQualifiedName = name;
-                            extensionField = extensionFields.get(fullyQualifiedName);
-                            break;
-                        }
-                    }
-                }
-                if (fullyQualifiedName == null) {
-                    throw new ParserException(value, "Unknown option: '%s'", key.getName());
-                }
-                fullyQualifiedNames.put(key, fullyQualifiedName);
-                checkFieldValue(context, owningDescriptor, extensionField, value);
-            } else {
+            if (!key.isExtension()) {
                 // check standard option
                 String fieldName = key.getName();
                 Field field = sourceMessage.getField(fieldName);
@@ -116,10 +131,44 @@ public class OptionsPostProcessor implements ProtoContextPostProcessor {
                 }
             }
         }
+    }
+
+    private void processCustomOptions(ProtoContext context, Message sourceMessage, Descriptor owningDescriptor, DynamicMessage options) {
+        ExtensionRegistry extensionRegistry = context.getExtensionRegistry();
+        Map<String, Field> extensionFields = extensionRegistry.getExtensionFields(sourceMessage);
+        Map<DynamicMessage.Key, String> fullyQualifiedNames = new HashMap<>();
+        for (Map.Entry<DynamicMessage.Key, DynamicMessage.Value> entry : options.getFields()) {
+            DynamicMessage.Key key = entry.getKey();
+            DynamicMessage.Value value = entry.getValue();
+            if (key.isExtension()) {
+                String fullyQualifiedName = getFullyQualifiedName(owningDescriptor, extensionFields, key, value);
+                Field extensionField = extensionFields.get(fullyQualifiedName);
+                fullyQualifiedNames.put(key, fullyQualifiedName);
+                checkFieldValue(context, owningDescriptor, extensionField, value);
+            }
+        }
         for (Map.Entry<DynamicMessage.Key, String> entry : fullyQualifiedNames.entrySet()) {
             options.normalizeName(entry.getKey(), entry.getValue());
         }
+    }
 
+    private String getFullyQualifiedName(Descriptor owningDescriptor, Map<String, Field> extensionFields, DynamicMessage.Key key, DynamicMessage.Value value) {
+        if (key.getName().startsWith(".")) {
+            String name = key.getName();
+            if (extensionFields.containsKey(name)) {
+                return name;
+            }
+        } else {
+            UserTypeContainer owningContainer = getOwningContainer(owningDescriptor);
+            Deque<String> scopeLookupList = createScopeLookupList(owningContainer);
+            for (String scope : scopeLookupList) {
+                String name = scope + key.getName();
+                if (extensionFields.containsKey(name)) {
+                    return name;
+                }
+            }
+        }
+        throw new ParserException(value, "Unknown option: '%s'", key.getName());
     }
 
     private UserTypeContainer getOwningContainer(Descriptor descriptor) {
@@ -136,7 +185,7 @@ public class OptionsPostProcessor implements ProtoContextPostProcessor {
         DynamicMessage.Value.Type valueType = value.getType();
         if (fieldType instanceof ScalarFieldType) {
             ScalarFieldType scalarFieldType = (ScalarFieldType) fieldType;
-            if (!isAssignableFrom(scalarFieldType, valueType)) {
+            if (!isAssignableFrom(scalarFieldType, value)) {
                 throw new ParserException(value, "Cannot set option '%s': expected %s value", fieldName, fieldType);
             }
         } else if (fieldType instanceof Enum) {
@@ -157,34 +206,12 @@ public class OptionsPostProcessor implements ProtoContextPostProcessor {
         }
     }
 
-    private boolean isAssignableFrom(ScalarFieldType target, DynamicMessage.Value.Type valueType) {
-
-        switch (target) {
-            case INT32:
-            case INT64:
-            case UINT32:
-            case UINT64:
-            case SINT32:
-            case SINT64:
-            case FIXED32:
-            case FIXED64:
-            case SFIXED32:
-            case SFIXED64:
-                // TODO check if value fits into target type
-                return valueType == DynamicMessage.Value.Type.INTEGER;
-            case FLOAT:
-            case DOUBLE:
-                // TODO check if value fits into target type
-                return valueType == DynamicMessage.Value.Type.INTEGER
-                        || valueType == DynamicMessage.Value.Type.FLOAT;
-            case BOOL:
-                return valueType == DynamicMessage.Value.Type.BOOLEAN;
-            case STRING:
-            case BYTES:
-                return valueType == DynamicMessage.Value.Type.STRING;
-            default:
-                throw new IllegalStateException("Unknown field type: " + target);
+    private boolean isAssignableFrom(ScalarFieldType target, DynamicMessage.Value value) {
+        ValueChecker checker = SCALAR_ASSIGNMENT_CHECKS.get(target);
+        if (checker == null) {
+            throw new IllegalStateException("Unknown field type: " + target);
         }
+        return checker.apply(value);
     }
 
     private Message findSourceMessage(ProtoContext context, DescriptorType type) {
@@ -221,5 +248,9 @@ public class OptionsPostProcessor implements ProtoContextPostProcessor {
             default:
                 throw new IllegalStateException("Unknown descriptor type: " + type);
         }
+    }
+
+    @FunctionalInterface
+    interface ValueChecker extends Function<DynamicMessage.Value, Boolean> {
     }
 }
