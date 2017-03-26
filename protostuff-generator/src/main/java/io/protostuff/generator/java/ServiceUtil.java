@@ -14,7 +14,8 @@ public class ServiceUtil {
     }
 
     public static String getClassName(Service service) {
-        return service.getName();
+        String name = service.getName();
+        return Formatter.toPascalCase(name);
     }
 
     public static String getMethodName(ServiceMethod serviceMethod) {
