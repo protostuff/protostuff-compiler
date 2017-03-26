@@ -43,17 +43,17 @@ public class Formatter {
     private static StringBuilder toCamelCaseImpl(String name) {
         StringBuilder buffer = new StringBuilder();
         int toUpper = 0;
-        int len = name.length();
-        for (int i = 0; i < len; i++) {
+        for (int i = 0; i < name.length(); i++) {
             char c = name.charAt(i);
             if (c == '_') {
-                if (buffer.length() != 0)
+                if (buffer.length() != 0) {
                     toUpper++;
+                }
             } else if (toUpper != 0) {
-                if (c > 96 && c < 123) {
-                    buffer.append((char) (c - 32));
+                if (isLowerCase(c)) {
+                    buffer.append(toUpperCase(c));
                     toUpper = 0;
-                } else if (c > 64 && c < 91) {
+                } else if (isUpperCase(c)) {
                     buffer.append(c);
                     toUpper = 0;
                 } else {
@@ -64,52 +64,67 @@ public class Formatter {
                     buffer.append(c);
                 }
             } else {
-                if (buffer.length() == 0 && c > 64 && c < 91)
-                    buffer.append((char) (c + 32));
-                else
+                if (buffer.length() == 0 && isUpperCase(c)) {
+                    buffer.append(toLowerCase(c));
+                } else {
                     buffer.append(c);
+                }
             }
         }
         return buffer;
     }
 
+    private static boolean isUpperCase(char c) {
+        return c >= 'A' && c <= 'Z';
+    }
+
+    private static boolean isLowerCase(char c) {
+        return c >= 'a' && c <= 'z';
+    }
+
     private static StringBuilder toPascalCaseImpl(String name) {
         StringBuilder buffer = toCamelCaseImpl(name);
         char c = buffer.charAt(0);
-        if (c > 96 && c < 123)
-            buffer.setCharAt(0, (char) (c - 32));
+        if (isLowerCase(c)) {
+            buffer.setCharAt(0, toUpperCase(c));
+        }
 
         return buffer;
+    }
+
+    private static char toUpperCase(char c) {
+        return (char) (c - 32);
     }
 
     private static StringBuilder toUnderscoreCaseImpl(String name) {
         StringBuilder buffer = new StringBuilder();
         boolean toLower = false;
         boolean appendUnderscore = false;
-        int len = name.length();
-        for (int i = 0; i < len; i++) {
+        for (int i = 0; i < name.length(); i++) {
             char c = name.charAt(i);
             if (c == '_') {
-                if (buffer.length() != 0)
+                if (buffer.length() != 0) {
                     appendUnderscore = true;
-
+                }
                 continue;
             }
 
-            if (appendUnderscore)
+            if (appendUnderscore) {
                 buffer.append('_');
+            }
 
-            if (c > 96 && c < 123) {
+            if (isLowerCase(c)) {
                 buffer.append(c);
                 toLower = true;
-            } else if (c > 64 && c < 91) {
+            } else if (isUpperCase(c)) {
                 if (toLower) {
                     // avoid duplicate underscore
-                    if (!appendUnderscore)
+                    if (!appendUnderscore) {
                         buffer.append('_');
+                    }
                     toLower = false;
                 }
-                buffer.append((char) (c + 32));
+                buffer.append(toLowerCase(c));
             } else {
                 buffer.append(c);
                 toLower = false;
@@ -117,6 +132,10 @@ public class Formatter {
             appendUnderscore = false;
         }
         return buffer;
+    }
+
+    private static char toLowerCase(char c) {
+        return (char) (c + 32);
     }
 
 }
