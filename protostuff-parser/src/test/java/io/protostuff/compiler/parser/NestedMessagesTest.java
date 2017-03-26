@@ -52,6 +52,9 @@ public class NestedMessagesTest {
         assertTrue(proto == e1.getProto());
         assertTrue(e1.getParent() == proto);
 
+        io.protostuff.compiler.model.Enum nonExistingEnum = proto.getEnum("NonExisting");
+        assertNull(nonExistingEnum);
+
         Message b = a.getMessage("B");
         assertNotNull(b);
         assertEquals("B", b.getName());
