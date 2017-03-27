@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package protostuff_unittest;
+
+message A {
+    oneof oneof {
+        int32 a = 1;
+        int32 b = 2;
+    }
+}

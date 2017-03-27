@@ -1,61 +1,20 @@
 package io.protostuff.generator.html.json.message;
 
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import io.protostuff.compiler.ParserModule;
-import io.protostuff.compiler.model.ImmutableModule;
-import io.protostuff.compiler.model.Module;
-import io.protostuff.compiler.model.UsageIndex;
-import io.protostuff.compiler.parser.ClasspathFileReader;
-import io.protostuff.compiler.parser.Importer;
-import io.protostuff.compiler.parser.ProtoContext;
+import io.protostuff.generator.html.json.ImmutableUsageItem;
+import io.protostuff.generator.html.json.UsageType;
 import io.protostuff.generator.html.json.index.NodeType;
-import io.protostuff.generator.html.markdown.MarkdownProcessor;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Kostiantyn Shchepanovskyi
  */
-class JsonMessageGeneratorTest {
+class JsonMessageGeneratorTest extends AbstractJsonGeneratorTest {
 
-    private Injector injector;
-    private Importer importer;
-    private JsonMessageGenerator generator;
-    private MarkdownProcessor markdownProcessor;
-    private UsageIndex usageIndex;
-
-    private List<Object> json;
-
-    @BeforeEach
-    public void setUp() throws Exception {
-        injector = Guice.createInjector(new ParserModule());
-        importer = injector.getInstance(Importer.class);
-        markdownProcessor = source -> source;
-        usageIndex = new UsageIndex();
-        json = new ArrayList<>();
-        generator = new JsonMessageGenerator(null, markdownProcessor) {
-            @Override
-            protected void write(Module module, String file, Object data) {
-                json.add(data);
-            }
-        };
-    }
 
     @Test
-    void compile() {
-        ProtoContext context = importer.importFile(new ClasspathFileReader(), "protostuff_unittest/messages_sample.proto");
-        Module module = ImmutableModule.builder()
-                .name("name")
-                .output("output")
-                .addProtos(context.getProto())
-                .usageIndex(usageIndex)
-                .build();
-        generator.compile(module);
+    void testSample() {
+        compile(messageGenerator, "protostuff_unittest/messages_sample.proto");
         Assertions.assertEquals(4, json.size());
         Assertions.assertEquals(ImmutableMessageDescriptor.builder()
                 .name("A")
@@ -118,14 +77,7 @@ class JsonMessageGeneratorTest {
 
     @Test
     void fieldModifiers() {
-        ProtoContext context = importer.importFile(new ClasspathFileReader(), "protostuff_unittest/field_modifiers.proto");
-        Module module = ImmutableModule.builder()
-                .name("name")
-                .output("output")
-                .addProtos(context.getProto())
-                .usageIndex(usageIndex)
-                .build();
-        generator.compile(module);
+        compile(messageGenerator, "protostuff_unittest/field_modifiers.proto");
         Assertions.assertEquals(1, json.size());
         Assertions.assertEquals(ImmutableMessageDescriptor.builder()
                 .name("A")
@@ -159,4 +111,102 @@ class JsonMessageGeneratorTest {
                 .build(), json.get(0));
     }
 
+    @Test
+    void map() {
+        compile(messageGenerator, "protostuff_unittest/map.proto");
+        Assertions.assertEquals(2, json.size());
+        Assertions.assertEquals(ImmutableMessageDescriptor.builder()
+                .name("A")
+                .type(NodeType.MESSAGE)
+                .canonicalName("protostuff_unittest.A")
+                .description("")
+                .addFields(ImmutableMessageField.builder()
+                        .name("map")
+                        .typeId("protostuff_unittest.A.map_entry")
+                        .modifier(MessageFieldModifier.REPEATED)
+                        .tag(1)
+                        .map(true)
+                        .mapKeyTypeId("int32")
+                        .mapValueTypeId("int32")
+                        .description("")
+                        .build())
+                .build(), json.get(0));
+        Assertions.assertEquals(ImmutableMessageDescriptor.builder()
+                .name("map_entry")
+                .type(NodeType.MESSAGE)
+                .canonicalName("protostuff_unittest.A.map_entry")
+                .description("")
+                .addFields(ImmutableMessageField.builder()
+                        .name("key")
+                        .typeId("int32")
+                        .modifier(MessageFieldModifier.OPTIONAL)
+                        .tag(1)
+                        .map(false)
+                        .description("")
+                        .build())
+                .addFields(ImmutableMessageField.builder()
+                        .name("value")
+                        .typeId("int32")
+                        .modifier(MessageFieldModifier.OPTIONAL)
+                        .tag(2)
+                        .map(false)
+                        .description("")
+                        .build())
+                .putOptions("map_entry", true)
+                .addUsages(ImmutableUsageItem.builder()
+                        .ref("protostuff_unittest.A")
+                        .type(UsageType.MESSAGE)
+                        .build())
+                .build(), json.get(1));
+    }
+
+    @Test
+    void oneof() {
+        compile(messageGenerator, "protostuff_unittest/oneof.proto");
+        Assertions.assertEquals(1, json.size());
+        Assertions.assertEquals(ImmutableMessageDescriptor.builder()
+                .name("A")
+                .type(NodeType.MESSAGE)
+                .canonicalName("protostuff_unittest.A")
+                .description("")
+                .addFields(ImmutableMessageField.builder()
+                        .name("a")
+                        .typeId("int32")
+                        .modifier(MessageFieldModifier.OPTIONAL)
+                        .tag(1)
+                        .map(false)
+                        .description("")
+                        .oneof("oneof")
+                        .build())
+                .addFields(ImmutableMessageField.builder()
+                        .name("b")
+                        .typeId("int32")
+                        .modifier(MessageFieldModifier.OPTIONAL)
+                        .tag(2)
+                        .map(false)
+                        .description("")
+                        .oneof("oneof")
+                        .build())
+                .build(), json.get(0));
+    }
+
+    @Test
+    void messageComments() {
+        compile(messageGenerator, "protostuff_unittest/comments.proto");
+        Assertions.assertEquals(1, json.size());
+        Assertions.assertEquals(ImmutableMessageDescriptor.builder()
+                .name("A")
+                .type(NodeType.MESSAGE)
+                .canonicalName("protostuff_unittest.A")
+                .description("message comment")
+                .addFields(ImmutableMessageField.builder()
+                        .name("field")
+                        .typeId("int32")
+                        .modifier(MessageFieldModifier.OPTIONAL)
+                        .tag(1)
+                        .map(false)
+                        .description("field comment")
+                        .build())
+                .build(), json.get(0));
+    }
 }

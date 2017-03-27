@@ -5,10 +5,15 @@ import com.google.common.collect.Multimap;
 import io.protostuff.compiler.parser.ProtoWalker;
 
 import java.util.Collection;
+import java.util.Collections;
 
 public class UsageIndex {
 
     private Multimap<Type, Type> index = HashMultimap.create();
+
+    public static UsageIndex build(Proto proto) {
+        return build(Collections.singletonList(proto));
+    }
 
     public static UsageIndex build(Collection<Proto> protos) {
         UsageIndex usageIndex = new UsageIndex();

@@ -2,6 +2,8 @@ package io.protostuff.generator;
 
 import com.google.inject.Injector;
 import io.protostuff.compiler.model.ImmutableModuleConfiguration;
+import io.protostuff.compiler.model.Module;
+import io.protostuff.compiler.model.Proto;
 import io.protostuff.generator.dummy.DummyGenerator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -23,7 +25,11 @@ class ProtostuffCompilerTest {
         Injector injector = compiler.injector;
         CompilerRegistry registry = injector.getInstance(CompilerRegistry.class);
         DummyGenerator generator = (DummyGenerator) registry.findCompiler(CompilerModule.DUMMY_COMPILER);
-        Assertions.assertNotNull(generator.getLastCompiledModule());
+        Assertions.assertNotNull(generator);
+        Module compiledModule = generator.getLastCompiledModule();
+        Assertions.assertNotNull(compiledModule);
+        Proto proto = compiledModule.getProtos().get(0);
+        Assertions.assertEquals("A", proto.getMessage("A").getName());
     }
 
 }

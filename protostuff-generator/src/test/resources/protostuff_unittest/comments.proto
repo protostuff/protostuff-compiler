@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package protostuff_unittest;
+
+// message comment
+message A {
+
+    // field comment
+    int32 field = 1;
+}

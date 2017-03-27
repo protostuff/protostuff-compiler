@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+package protostuff_unittest;
+
+message A {
+    map<int32, int32> map = 1;
+}
