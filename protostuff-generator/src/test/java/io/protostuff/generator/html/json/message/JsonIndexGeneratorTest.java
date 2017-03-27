@@ -71,6 +71,13 @@ public class JsonIndexGeneratorTest extends AbstractJsonGeneratorTest {
                                 .type(NodeType.MESSAGE)
                                 .ref("protostuff_unittest.C")
                                 .build())
+                        .addChildren(ImmutableJsonTreeNode.builder()
+                                .label("D")
+                                .data(ImmutableNodeData.builder()
+                                        .type(NodeType.MESSAGE)
+                                        .ref("protostuff_unittest.C.D")
+                                        .build())
+                                .build())
                         .build())
                 .build();
         Assertions.assertEquals(expected, ((List) json.get(0)).get(0));

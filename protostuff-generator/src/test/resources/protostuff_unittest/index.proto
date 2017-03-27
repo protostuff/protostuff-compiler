@@ -15,6 +15,13 @@ message B {
 message C {
     A a = 1;
     B b = 2;
+
+    // map entry message should not be present in index
+    map<int32, int32> map = 3;
+
+    message D {
+
+    }
 }
 
 enum E {

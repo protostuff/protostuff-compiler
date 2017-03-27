@@ -6,7 +6,6 @@ import com.google.common.collect.ImmutableMap;
 import javax.annotation.Nonnull;
 import java.util.Map;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -34,7 +33,7 @@ public enum MessageFieldModifier {
     public static MessageFieldModifier fromString(String s) {
         checkNotNull(s);
         MessageFieldModifier modifier = MODIFIER_BY_PROTO_NAME.get(s);
-        checkArgument(modifier != null, s);
+        checkNotNull(modifier, "Could not find modifier for '%s'", s);
         return modifier;
     }
 }

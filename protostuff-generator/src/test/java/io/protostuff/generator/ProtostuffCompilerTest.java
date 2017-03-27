@@ -2,6 +2,7 @@ package io.protostuff.generator;
 
 import com.google.inject.Injector;
 import io.protostuff.compiler.model.ImmutableModuleConfiguration;
+import io.protostuff.compiler.model.Message;
 import io.protostuff.compiler.model.Module;
 import io.protostuff.compiler.model.Proto;
 import io.protostuff.generator.dummy.DummyGenerator;
@@ -29,7 +30,9 @@ class ProtostuffCompilerTest {
         Module compiledModule = generator.getLastCompiledModule();
         Assertions.assertNotNull(compiledModule);
         Proto proto = compiledModule.getProtos().get(0);
-        Assertions.assertEquals("A", proto.getMessage("A").getName());
+        Message a = proto.getMessage("A");
+        Assertions.assertEquals("A", a.getName());
+        Assertions.assertFalse(a.isNested());
     }
 
 }

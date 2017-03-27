@@ -138,6 +138,11 @@ public class Message extends AbstractUserTypeContainer
     }
 
     @Override
+    public boolean isNested() {
+        return getParent().getDescriptorType() != DescriptorType.PROTO;
+    }
+
+    @Override
     public boolean isScalar() {
         return false;
     }

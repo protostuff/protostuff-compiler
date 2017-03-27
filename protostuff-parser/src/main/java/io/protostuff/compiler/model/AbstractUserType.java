@@ -43,4 +43,9 @@ public abstract class AbstractUserType extends AbstractDescriptor implements Use
         return parent;
     }
 
+    @Override
+    public boolean isNested() {
+        return getParent().getDescriptorType() != DescriptorType.PROTO;
+    }
+
 }

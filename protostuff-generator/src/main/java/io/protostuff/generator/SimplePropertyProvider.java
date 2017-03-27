@@ -22,7 +22,7 @@ public class SimplePropertyProvider implements PropertyProvider {
     @Override
     public Object getProperty(Object object, String propertyName) {
         Function<Object, Object> provider = (Function<Object, Object>) propertyProviders.get(propertyName);
-        Preconditions.checkArgument(provider != null,
+        Preconditions.checkNotNull(provider,
                 "Cannot find property '%s' for %s",
                 propertyName, object);
         return provider.apply(object);
