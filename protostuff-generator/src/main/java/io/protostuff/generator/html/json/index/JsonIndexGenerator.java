@@ -1,20 +1,19 @@
 package io.protostuff.generator.html.json.index;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.inject.Inject;
-
 import io.protostuff.compiler.model.Module;
 import io.protostuff.compiler.model.Proto;
 import io.protostuff.compiler.model.UserTypeContainer;
 import io.protostuff.generator.OutputStreamFactory;
 import io.protostuff.generator.html.json.AbstractJsonGenerator;
 
+import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author Kostiantyn Shchepanovskyi
  */
-public final class JsonIndexGenerator extends AbstractJsonGenerator {
+public class JsonIndexGenerator extends AbstractJsonGenerator {
 
     @Inject
     public JsonIndexGenerator(OutputStreamFactory outputStreamFactory) {
@@ -25,9 +24,9 @@ public final class JsonIndexGenerator extends AbstractJsonGenerator {
     public void compile(Module module) {
         List<JsonTreeNode> root = new ArrayList<>();
         module.getProtos()
-                .forEach(proto -> root.add(JsonTreeNode.newBuilder()
+                .forEach(proto -> root.add(ImmutableJsonTreeNode.builder()
                         .label(proto.getFilename())
-                        .data(NodeData.newBuilder()
+                        .data(ImmutableNodeData.builder()
                                 .ref(proto.getCanonicalName())
                                 .type(NodeType.PROTO)
                                 .build())
@@ -40,9 +39,9 @@ public final class JsonIndexGenerator extends AbstractJsonGenerator {
     private List<JsonTreeNode> processProto(Proto proto) {
         List<JsonTreeNode> result = new ArrayList<>();
         proto.getServices()
-                .forEach(service -> result.add(JsonTreeNode.newBuilder()
+                .forEach(service -> result.add(ImmutableJsonTreeNode.builder()
                         .label(service.getName())
-                        .data(NodeData.newBuilder()
+                        .data(ImmutableNodeData.builder()
                                 .type(NodeType.SERVICE)
                                 .ref(service.getCanonicalName())
                                 .build())
@@ -54,9 +53,9 @@ public final class JsonIndexGenerator extends AbstractJsonGenerator {
     private List<JsonTreeNode> processContainer(UserTypeContainer proto) {
         List<JsonTreeNode> result = new ArrayList<>();
         proto.getEnums()
-                .forEach(anEnum -> result.add(JsonTreeNode.newBuilder()
+                .forEach(anEnum -> result.add(ImmutableJsonTreeNode.builder()
                         .label(anEnum.getName())
-                        .data(NodeData.newBuilder()
+                        .data(ImmutableNodeData.builder()
                                 .type(NodeType.ENUM)
                                 .ref(anEnum.getCanonicalName())
                                 .build())
@@ -64,9 +63,9 @@ public final class JsonIndexGenerator extends AbstractJsonGenerator {
         proto.getMessages().stream()
                 .filter(message -> !message.isMapEntry())
                 .forEach(message -> {
-                    JsonTreeNode.Builder builder = JsonTreeNode.newBuilder();
+                    ImmutableJsonTreeNode.Builder builder = ImmutableJsonTreeNode.builder();
                     builder.label(message.getName());
-                    builder.data(NodeData.newBuilder()
+                    builder.data(ImmutableNodeData.builder()
                             .type(NodeType.MESSAGE)
                             .ref(message.getCanonicalName())
                             .build());

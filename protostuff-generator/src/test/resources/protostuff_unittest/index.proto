@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package protostuff_unittest;
+
+service Service {
+    rpc call (A) returns (B);
+}
+
+message A {
+}
+
+message B {
+}
+
+message C {
+    A a = 1;
+    B b = 2;
+}
+
+enum E {
+    X = 0;
+}

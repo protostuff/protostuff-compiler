@@ -10,7 +10,6 @@ import io.protostuff.compiler.parser.ClasspathFileReader;
 import io.protostuff.compiler.parser.Importer;
 import io.protostuff.compiler.parser.ProtoContext;
 import io.protostuff.generator.ProtoCompiler;
-import io.protostuff.generator.html.json.enumeration.JsonEnumGenerator;
 import io.protostuff.generator.html.markdown.MarkdownProcessor;
 import org.junit.jupiter.api.BeforeEach;
 
@@ -25,8 +24,6 @@ public abstract class AbstractJsonGeneratorTest {
     Importer importer;
     MarkdownProcessor markdownProcessor;
     UsageIndex usageIndex;
-    JsonEnumGenerator enumGenerator;
-    JsonMessageGenerator messageGenerator;
 
     List<Object> json;
 
@@ -37,18 +34,6 @@ public abstract class AbstractJsonGeneratorTest {
         markdownProcessor = source -> source;
         usageIndex = new UsageIndex();
         json = new ArrayList<>();
-        enumGenerator = new JsonEnumGenerator(null, markdownProcessor) {
-            @Override
-            protected void write(Module module, String file, Object data) {
-                json.add(data);
-            }
-        };
-        messageGenerator = new JsonMessageGenerator(null, markdownProcessor) {
-            @Override
-            protected void write(Module module, String file, Object data) {
-                json.add(data);
-            }
-        };
     }
 
     void compile(ProtoCompiler generator, String fileName) {

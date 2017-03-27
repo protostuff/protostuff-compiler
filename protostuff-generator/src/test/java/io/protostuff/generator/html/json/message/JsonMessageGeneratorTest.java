@@ -1,9 +1,11 @@
 package io.protostuff.generator.html.json.message;
 
+import io.protostuff.compiler.model.Module;
 import io.protostuff.generator.html.json.ImmutableUsageItem;
 import io.protostuff.generator.html.json.UsageType;
 import io.protostuff.generator.html.json.index.NodeType;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -11,6 +13,19 @@ import org.junit.jupiter.api.Test;
  */
 class JsonMessageGeneratorTest extends AbstractJsonGeneratorTest {
 
+    JsonMessageGenerator messageGenerator;
+
+    @Override
+    @BeforeEach
+    public void setUp() throws Exception {
+        super.setUp();
+        messageGenerator = new JsonMessageGenerator(null, markdownProcessor) {
+            @Override
+            protected void write(Module module, String file, Object data) {
+                json.add(data);
+            }
+        };
+    }
 
     @Test
     void testSample() {

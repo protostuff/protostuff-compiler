@@ -1,71 +1,23 @@
 package io.protostuff.generator.html.json.index;
 
-import java.util.ArrayList;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import org.immutables.value.Value;
+
 import java.util.List;
 
 /**
  * @author Kostiantyn Shchepanovskyi
  */
-public class JsonTreeNode {
-    private final String label;
-    private NodeData data;
-    private final List<JsonTreeNode> children;
+@Value.Immutable
+@JsonSerialize(as = ImmutableJsonTreeNode.class)
+@JsonDeserialize(as = ImmutableJsonTreeNode.class)
+public interface JsonTreeNode {
 
-    private JsonTreeNode(Builder builder) {
-        label = builder.label;
-        data = builder.data;
-        children = builder.children;
-    }
+    String label();
 
-    public static Builder newBuilder() {
-        return new Builder();
-    }
+    NodeData data();
 
-    public String getLabel() {
-        return label;
-    }
+    List<JsonTreeNode> children();
 
-    public List<JsonTreeNode> getChildren() {
-        return children;
-    }
-
-    public NodeData getData() {
-        return data;
-    }
-
-    public static final class Builder {
-        private String label;
-        private NodeData data;
-        private List<JsonTreeNode> children;
-
-        private Builder() {
-        }
-
-        public Builder label(String val) {
-            label = val;
-            return this;
-        }
-
-        public Builder data(NodeData val) {
-            data = val;
-            return this;
-        }
-
-        public Builder children(List<JsonTreeNode> val) {
-            children = val;
-            return this;
-        }
-
-        public Builder addChild(JsonTreeNode val) {
-            if (children == null) {
-                children = new ArrayList<>();
-            }
-            children.add(val);
-            return this;
-        }
-
-        public JsonTreeNode build() {
-            return new JsonTreeNode(this);
-        }
-    }
 }

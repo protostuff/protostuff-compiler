@@ -1,5 +1,7 @@
 package io.protostuff.generator;
 
+import com.google.common.base.Preconditions;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
@@ -20,9 +22,9 @@ public class SimplePropertyProvider implements PropertyProvider {
     @Override
     public Object getProperty(Object object, String propertyName) {
         Function<Object, Object> provider = (Function<Object, Object>) propertyProviders.get(propertyName);
-        if (provider == null) {
-            throw new IllegalArgumentException(propertyName);
-        }
+        Preconditions.checkArgument(provider != null,
+                "Cannot find property '%s' for %s",
+                propertyName, object);
         return provider.apply(object);
     }
 
