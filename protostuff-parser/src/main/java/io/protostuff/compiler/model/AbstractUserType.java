@@ -29,6 +29,15 @@ public abstract class AbstractUserType extends AbstractDescriptor implements Use
     }
 
     @Override
+    public String getCanonicalName() {
+        String fqn = getFullyQualifiedName();
+        if (fqn.startsWith(".")) {
+            return fqn.substring(1);
+        }
+        return fqn;
+    }
+
+    @Override
     public boolean isMap() {
         return false;
     }

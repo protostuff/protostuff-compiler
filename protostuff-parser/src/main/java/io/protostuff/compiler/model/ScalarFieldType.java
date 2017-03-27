@@ -67,7 +67,12 @@ public enum ScalarFieldType implements FieldType {
 
     @Override
     public String getFullyQualifiedName() {
-        return name().toLowerCase();
+        return getName();
+    }
+
+    @Override
+    public String getCanonicalName() {
+        return getName();
     }
 
     @Override

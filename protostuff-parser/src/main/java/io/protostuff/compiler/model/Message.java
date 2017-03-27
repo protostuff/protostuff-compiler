@@ -133,6 +133,15 @@ public class Message extends AbstractUserTypeContainer
     }
 
     @Override
+    public String getCanonicalName() {
+        String fqn = getFullyQualifiedName();
+        if (fqn.startsWith(".")) {
+            return fqn.substring(1);
+        }
+        return fqn;
+    }
+
+    @Override
     public void setFullyQualifiedName(String fullyQualifiedName) {
         this.fullyQualifiedName = fullyQualifiedName;
     }
