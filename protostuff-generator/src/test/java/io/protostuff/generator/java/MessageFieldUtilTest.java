@@ -97,17 +97,17 @@ public class MessageFieldUtilTest {
     }
 
     @Test
-    void getFieldGetterName_conflict_with_getClass() {
-        Field field = new Field(null);
-        field.setName("class");
-        assertEquals("getClass_", MessageFieldUtil.getFieldGetterName(field));
-    }
-
-    @Test
     void getFieldSetterName() {
         Field field = new Field(null);
         field.setName("interface");
         assertEquals("setInterface", MessageFieldUtil.getFieldSetterName(field));
+    }
+
+    @Test
+    void getFieldGetterName_conflict_with_getClass() {
+        Field field = new Field(null);
+        field.setName("class");
+        assertEquals("getClass_", MessageFieldUtil.getFieldGetterName(field));
     }
 
     @Test
@@ -175,5 +175,175 @@ public class MessageFieldUtilTest {
         field.setName("interface");
         field.setModifier(FieldModifier.REPEATED);
         assertEquals("setInterfaceList", MessageFieldUtil.getRepeatedBuilderSetterName(field));
+    }
+
+    @Test
+    void getEnumFieldValueGetterName() {
+        Field field = new Field(null);
+        field.setName("interface");
+        assertEquals("getInterfaceValue", MessageFieldUtil.getEnumFieldValueGetterName(field));
+    }
+
+    @Test
+    void getEnumFieldValueSetterName() {
+        Field field = new Field(null);
+        field.setName("interface");
+        assertEquals("setInterfaceValue", MessageFieldUtil.getEnumFieldValueSetterName(field));
+    }
+
+    @Test
+    void getDefaultValue_scalar() {
+        Field field = new Field(null);
+        field.setType(ScalarFieldType.INT32);
+        assertEquals("0",
+                MessageFieldUtil.getDefaultValue(field));
+    }
+
+    @Test
+    void getDefaultValue_message() {
+        Proto proto = new Proto();
+        proto.setPackage(new Package(proto, "package"));
+        Message message = new Message(proto);
+        message.setName("Message");
+        message.setProto(proto);
+        Field field = new Field(null);
+        field.setType(message);
+        assertEquals("package.Message.getDefaultInstance()",
+                MessageFieldUtil.getDefaultValue(field));
+    }
+
+    @Test
+    void getDefaultValue_enum_empty() {
+        Proto proto = new Proto();
+        proto.setPackage(new Package(proto, "package"));
+        Enum anEnum = new Enum(proto);
+        anEnum.setName("Enum");
+        anEnum.setProto(proto);
+        Field field = new Field(null);
+        field.setType(anEnum);
+        assertEquals("package.Enum.UNRECOGNIZED",
+                MessageFieldUtil.getDefaultValue(field));
+    }
+
+    @Test
+    void getDefaultValue_enum() {
+        Proto proto = new Proto();
+        proto.setPackage(new Package(proto, "package"));
+        Enum anEnum = new Enum(proto);
+        anEnum.setName("Enum");
+        anEnum.setProto(proto);
+        anEnum.addConstant(createEnumConstant(anEnum, "A", 0));
+        anEnum.addConstant(createEnumConstant(anEnum, "B", 1));
+        Field field = new Field(null);
+        field.setType(anEnum);
+        assertEquals("package.Enum.A",
+                MessageFieldUtil.getDefaultValue(field));
+    }
+
+    private EnumConstant createEnumConstant(Enum anEnum, String name, int value) {
+        EnumConstant a = new EnumConstant(anEnum);
+        a.setName(name);
+        a.setValue(value);
+        return a;
+    }
+
+    @Test
+    void isScalarNullableType_string() {
+        Field field = new Field(null);
+        field.setType(ScalarFieldType.STRING);
+        assertTrue(MessageFieldUtil.isScalarNullableType(field));
+    }
+
+    @Test
+    void isScalarNullableType_bytes() {
+        Field field = new Field(null);
+        field.setType(ScalarFieldType.BYTES);
+        assertTrue(MessageFieldUtil.isScalarNullableType(field));
+    }
+
+    @Test
+    void isScalarNullableType_enum() {
+        Proto proto = new Proto();
+        proto.setPackage(new Package(proto, "package"));
+        Enum anEnum = new Enum(proto);
+        anEnum.setName("Enum");
+        anEnum.setProto(proto);
+        anEnum.addConstant(createEnumConstant(anEnum, "A", 0));
+        Field field = new Field(null);
+        field.setType(anEnum);
+        assertTrue(MessageFieldUtil.isScalarNullableType(field));
+    }
+
+    @Test
+    void isScalarNullableType_int() {
+        Field field = new Field(null);
+        field.setType(ScalarFieldType.INT32);
+        assertFalse(MessageFieldUtil.isScalarNullableType(field));
+    }
+
+    @Test
+    void getRepeatedFieldType_enum() {
+        Proto proto = new Proto();
+        proto.setPackage(new Package(proto, "package"));
+        Enum anEnum = new Enum(proto);
+        anEnum.setName("Enum");
+        anEnum.setProto(proto);
+        anEnum.addConstant(createEnumConstant(anEnum, "A", 0));
+        Field field = new Field(null);
+        field.setModifier(FieldModifier.REPEATED);
+        field.setType(anEnum);
+        assertEquals("java.util.List<package.Enum>", MessageFieldUtil.getRepeatedFieldType(field));
+    }
+
+    @Test
+    void getRepeatedFieldType_scalar() {
+        Field field = new Field(null);
+        field.setModifier(FieldModifier.REPEATED);
+        field.setType(ScalarFieldType.INT32);
+        assertEquals("java.util.List<Integer>", MessageFieldUtil.getRepeatedFieldType(field));
+    }
+
+    @Test
+    void getIterableFieldType_enum() {
+        Proto proto = new Proto();
+        proto.setPackage(new Package(proto, "package"));
+        Enum anEnum = new Enum(proto);
+        anEnum.setName("Enum");
+        anEnum.setProto(proto);
+        anEnum.addConstant(createEnumConstant(anEnum, "A", 0));
+        Field field = new Field(null);
+        field.setModifier(FieldModifier.REPEATED);
+        field.setType(anEnum);
+        assertEquals("java.lang.Iterable<package.Enum>", MessageFieldUtil.getIterableFieldType(field));
+    }
+
+    @Test
+    void getIterableFieldType_scalar() {
+        Field field = new Field(null);
+        field.setModifier(FieldModifier.REPEATED);
+        field.setType(ScalarFieldType.INT32);
+        assertEquals("java.lang.Iterable<Integer>", MessageFieldUtil.getIterableFieldType(field));
+    }
+
+    @Test
+    void getWrapperFieldType_enum() {
+        Proto proto = new Proto();
+        proto.setPackage(new Package(proto, "package"));
+        Enum anEnum = new Enum(proto);
+        anEnum.setName("Enum");
+        anEnum.setProto(proto);
+        anEnum.addConstant(createEnumConstant(anEnum, "A", 0));
+        Field field = new Field(null);
+        field.setModifier(FieldModifier.REPEATED);
+        field.setType(anEnum);
+        assertEquals("package.Enum", MessageFieldUtil.getWrapperFieldType(field));
+    }
+
+    @Test
+    void getWrapperFieldType_scalar() {
+        Field field = new Field(null);
+        field.setModifier(FieldModifier.REPEATED);
+        field.setType(ScalarFieldType.INT32);
+        assertEquals("Integer", MessageFieldUtil.getWrapperFieldType(field));
     }
 }
