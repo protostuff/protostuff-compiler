@@ -1,7 +1,7 @@
 package io.protostuff.compiler.parser;
 
-import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.misc.Interval;
 import org.junit.jupiter.api.Test;
 
@@ -43,7 +43,7 @@ public class CompositeFileReaderTest {
         @Override
         public CharStream read(String name) {
             if (this.name.equals(name)) {
-                return new ANTLRInputStream(text);
+                return CharStreams.fromString(text);
             }
             return null;
         }

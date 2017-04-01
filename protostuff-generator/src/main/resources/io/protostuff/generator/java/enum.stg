@@ -15,7 +15,7 @@ public enum <enum.javaName> implements io.protostuff.EnumLite\<<enum.javaName>\>
     <enum.constants:enum_constant(); separator=",\n"><if(first(enum.constants))>,<endif>
     UNRECOGNIZED(-1);
 
-    private int value;
+    private final int value;
 
     private <enum.javaName>(int n) {
         this.value = n;

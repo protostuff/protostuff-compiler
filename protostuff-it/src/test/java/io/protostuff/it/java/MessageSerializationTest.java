@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
@@ -41,14 +42,14 @@ public class MessageSerializationTest {
     public void scalars_serialize() throws Exception {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         JsonIOUtil.writeTo(stream, SCALARS_MESSAGE, SCHEMA, false);
-        String json = new String(stream.toByteArray());
+        String json = new String(stream.toByteArray(), UTF_8);
         assertEquals(SCALARS_JSON, json);
     }
 
     @Test
     public void scalars_deserialize() throws Exception {
         SimpleMessage result = SCHEMA.newMessage();
-        JsonIOUtil.mergeFrom(SCALARS_JSON.getBytes(), result, SCHEMA, false);
+        JsonIOUtil.mergeFrom(SCALARS_JSON.getBytes(UTF_8), result, SCHEMA, false);
         assertEquals(SCALARS_MESSAGE, result);
     }
 
@@ -56,14 +57,14 @@ public class MessageSerializationTest {
     public void repeated_serialize() throws Exception {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         JsonIOUtil.writeTo(stream, REPEATED_MESSAGE, SCHEMA, false);
-        String json = new String(stream.toByteArray());
+        String json = new String(stream.toByteArray(), UTF_8);
         assertEquals(REPEATED_JSON, json);
     }
 
     @Test
     public void repeated_deserialize() throws Exception {
         SimpleMessage result = SCHEMA.newMessage();
-        JsonIOUtil.mergeFrom(REPEATED_JSON.getBytes(), result, SCHEMA, false);
+        JsonIOUtil.mergeFrom(REPEATED_JSON.getBytes(UTF_8), result, SCHEMA, false);
         assertEquals(REPEATED_MESSAGE, result);
     }
 
@@ -71,14 +72,14 @@ public class MessageSerializationTest {
     public void nested_serialize() throws Exception {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         JsonIOUtil.writeTo(stream, NESTED_MESSAGE, SCHEMA, false);
-        String json = new String(stream.toByteArray());
+        String json = new String(stream.toByteArray(), UTF_8);
         assertEquals(NESTED_JSON, json);
     }
 
     @Test
     public void nested_deserialize() throws Exception {
         SimpleMessage result = SCHEMA.newMessage();
-        JsonIOUtil.mergeFrom(NESTED_JSON.getBytes(), result, SCHEMA, false);
+        JsonIOUtil.mergeFrom(NESTED_JSON.getBytes(UTF_8), result, SCHEMA, false);
         assertEquals(NESTED_MESSAGE, result);
     }
 
@@ -180,7 +181,7 @@ public class MessageSerializationTest {
 
     private <T> T deserialize(String json, Schema<T> schema) throws java.io.IOException {
         T result = schema.newMessage();
-        JsonIOUtil.mergeFrom(json.getBytes(), result, schema, false);
+        JsonIOUtil.mergeFrom(json.getBytes(UTF_8), result, schema, false);
         return result;
     }
 
@@ -188,6 +189,6 @@ public class MessageSerializationTest {
     private String serialize(Message msg) throws java.io.IOException {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         JsonIOUtil.writeTo(stream, msg, msg.cachedSchema(), false);
-        return new String(stream.toByteArray());
+        return new String(stream.toByteArray(), UTF_8);
     }
 }

@@ -2,8 +2,6 @@ package io.protostuff.generator.java;
 
 import com.google.common.collect.ImmutableSet;
 
-import java.util.Set;
-
 /**
  * @author Kostiantyn Shchepanovskyi
  */
@@ -15,7 +13,7 @@ public class JavaConstants {
      * @see <a href="http://docs.oracle.com/javase/tutorial/java/nutsandbolts/_keywords.html"> Java
      * Language Keywords</a>
      */
-    public static final Set<String> RESERVED_KEYWORDS = ImmutableSet.<String>builder()
+    public static final ImmutableSet<String> RESERVED_KEYWORDS = ImmutableSet.<String>builder()
             .add("abstract")
             .add("continue")
             .add("for")

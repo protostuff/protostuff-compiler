@@ -6,6 +6,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -24,9 +25,9 @@ public class LocalFileReaderTest {
     @BeforeEach
     public void setUp() throws Exception {
         tempDirectory1 = Files.createTempDirectory("protostuff-test-");
-        file1 = Files.write(tempDirectory1.resolve("1.proto"), "1".getBytes());
+        file1 = Files.write(tempDirectory1.resolve("1.proto"), "1".getBytes(StandardCharsets.UTF_8));
         tempDirectory2 = Files.createTempDirectory("protostuff-test-");
-        file2 = Files.write(tempDirectory1.resolve("2.proto"), "2".getBytes());
+        file2 = Files.write(tempDirectory1.resolve("2.proto"), "2".getBytes(StandardCharsets.UTF_8));
     }
 
     @AfterEach

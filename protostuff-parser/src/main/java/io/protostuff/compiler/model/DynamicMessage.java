@@ -479,8 +479,8 @@ public class DynamicMessage implements Map<String, DynamicMessage.Value> {
 
         public int getInt32() {
             Preconditions.checkState(isIntegerType(), "%s is not a number", this);
-            Preconditions.checkState(number <= Integer.MAX_VALUE, "%d does not fit into int32", number);
-            Preconditions.checkState(number >= Integer.MIN_VALUE, "%d does not fit into int32", number);
+            Preconditions.checkState(number <= Integer.MAX_VALUE, "%s does not fit into int32", number);
+            Preconditions.checkState(number >= Integer.MIN_VALUE, "%s does not fit into int32", number);
             return (int) number;
         }
 

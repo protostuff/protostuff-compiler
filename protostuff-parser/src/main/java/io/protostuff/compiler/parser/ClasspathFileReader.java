@@ -1,13 +1,12 @@
 package io.protostuff.compiler.parser;
 
-import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.CharStreams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.InputStream;
-
 import javax.annotation.Nullable;
+import java.io.InputStream;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -22,7 +21,7 @@ public class ClasspathFileReader implements FileReader {
         try {
             InputStream resource = readResource(name);
             if (resource != null) {
-                return new ANTLRInputStream(resource);
+                return CharStreams.fromStream(resource);
             }
         } catch (Exception e) {
             LOGGER.error("Could not read {}", name, e);

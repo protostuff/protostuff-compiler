@@ -7,7 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.expectThrows;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -26,7 +26,7 @@ public class DuplicateTest {
     @Test
     public void duplicate_type() throws Exception {
         Importer importer = injector.getInstance(Importer.class);
-        ParserException exception = expectThrows(ParserException.class, () -> {
+        ParserException exception = assertThrows(ParserException.class, () -> {
             importer.importFile(new ClasspathFileReader(), "protostuff_unittest/duplicate.proto");
         });
         assertEquals("Cannot register duplicate type: .protostuff_unittest.A " +

@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 /**
@@ -128,7 +129,7 @@ public abstract class AbstractProtoCompiler implements ProtoCompiler {
         LOGGER.info("Generate {}", outputFileName);
         String fullFileLocation = appendBasedir(basedir, outputFileName);
         OutputStream outputStream = outputStreamFactory.createStream(fullFileLocation);
-        OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream);
+        OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream, StandardCharsets.UTF_8);
         return new BufferedWriter(outputStreamWriter);
     }
 

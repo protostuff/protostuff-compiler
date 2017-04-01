@@ -16,11 +16,11 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <antlr4.version>4.6</antlr4.version>
+        <antlr4.version>4.7</antlr4.version>
         <guice.version>4.1.0</guice.version>
         <guava.version>21.0</guava.version>
         <protostuff.version>1.5.3</protostuff.version>
-        <slf4j.version>1.7.22</slf4j.version>
+        <slf4j.version>1.7.25</slf4j.version>
         <junit.jupiter.version>5.0.0-M3</junit.jupiter.version>
         <junit.vintage.version>4.12.0-M3</junit.vintage.version>
         <junit.platform.version>1.0.0-M3</junit.platform.version>
@@ -29,7 +29,7 @@
         <maven.version>3.3.9</maven.version>
         <maven-plugin.version>3.5</maven-plugin.version>
         <plexus.version>1.6</plexus.version>
-        <error-prone.version>2.0.15</error-prone.version>
+        <error-prone.version>2.0.19</error-prone.version>
     </properties>
 
     <developers>
@@ -100,12 +100,14 @@
                     <!-- immutables: prevents endPosTable exception for maven compile -->
                     <useIncrementalCompilation>false</useIncrementalCompilation>
                     <forceJavacCompilerUse>true</forceJavacCompilerUse>
+                    <showDeprecation>true</showDeprecation>
+                    <showWarnings>true</showWarnings>
                 </configuration>
                 <dependencies>
                     <dependency>
                         <groupId>org.codehaus.plexus</groupId>
                         <artifactId>plexus-compiler-javac-errorprone</artifactId>
-                        <version>2.8</version>
+                        <version>2.8.1</version>
                     </dependency>
                     <!-- override plexus-compiler-javac-errorprone's dependency on
                          Error Prone with the latest version -->

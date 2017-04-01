@@ -1,7 +1,7 @@
 package io.protostuff.compiler.parser;
 
-import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.junit.jupiter.api.Test;
 
@@ -45,7 +45,7 @@ public class KeywordAsObjectNameTest {
     }
 
     private ProtoParser createParser(String input) {
-        CharStream stream = new ANTLRInputStream(input);
+        CharStream stream = CharStreams.fromString(input);
         ProtoLexer lexer = new ProtoLexer(stream);
         lexer.removeErrorListeners();
         lexer.addErrorListener(TestUtils.ERROR_LISTENER);

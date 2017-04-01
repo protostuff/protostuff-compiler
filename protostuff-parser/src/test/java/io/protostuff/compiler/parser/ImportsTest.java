@@ -38,7 +38,7 @@ public class ImportsTest {
 
     @Test
     public void duplicate() throws Exception {
-        Throwable exception = expectThrows(ParserException.class, () -> {
+        Throwable exception = assertThrows(ParserException.class, () -> {
             importer.importFile(new ClasspathFileReader(), "protostuff_unittest/imports_duplicate.proto");
         });
         assertEquals("Cannot register duplicate type: .protostuff_unittest.A " +

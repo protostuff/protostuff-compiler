@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.expectThrows;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
 /**
@@ -66,7 +66,7 @@ public class ExtensionsTest {
 
     @Test
     public void tagOutOfRange() throws Exception {
-        ParserException exception = expectThrows(ParserException.class, () -> {
+        ParserException exception = assertThrows(ParserException.class, () -> {
             importer.importFile(new ClasspathFileReader(), "protostuff_unittest/extensions_tag_out_of_range.proto");
         });
         assertEquals("Extension field 'e' tag=9 is out of allowed range " +
@@ -75,7 +75,7 @@ public class ExtensionsTest {
 
     @Test
     public void badExtendeeType() throws Exception {
-        ParserException exception = expectThrows(ParserException.class, () -> {
+        ParserException exception = assertThrows(ParserException.class, () -> {
             importer.importFile(new ClasspathFileReader(), "protostuff_unittest/extensions_bad_extendee.proto");
         });
         assertEquals("Cannot extend 'A': not a message " +

@@ -5,7 +5,7 @@ public enum <oneOf.javaName> implements io.protostuff.EnumLite\<<oneOf.javaName>
     <oneOf.fields:{field | <field.javaOneofConstantName>(<field.tag>),}; separator="\n">
     <oneOf.javaNotSetConstantName>(0);
 
-    private int value;
+    private final int value;
 
     private <oneOf.javaName>(int n) {
         this.value = n;

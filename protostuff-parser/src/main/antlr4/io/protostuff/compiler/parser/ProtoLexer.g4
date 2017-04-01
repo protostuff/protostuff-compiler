@@ -235,7 +235,7 @@ fragment UNDERSCORE
     : '_'
     ;
 fragment ESC_SEQ
-    :   '\\' ('a'|'v'|'b'|'t'|'n'|'f'|'r'|'?'|'\"'|'\''|'\\')
+    :   '\\' ('a'|'v'|'b'|'t'|'n'|'f'|'r'|'?'|'"'|'\''|'\\')
     |   '\\' ('x'|'X') HEX_DIGIT HEX_DIGIT
     |   UNICODE_ESC
     |   OCTAL_ESC

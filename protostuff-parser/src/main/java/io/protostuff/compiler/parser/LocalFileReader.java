@@ -1,10 +1,11 @@
 package io.protostuff.compiler.parser;
 
-import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.CharStreams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -12,8 +13,6 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import javax.annotation.Nullable;
 
 /**
  * Load file from local filesystem.
@@ -61,7 +60,7 @@ public class LocalFileReader implements FileReader {
                 try {
                     byte[] bytes = Files.readAllBytes(path);
                     String result = new String(bytes, StandardCharsets.UTF_8);
-                    return new ANTLRInputStream(result);
+                    return CharStreams.fromString(result);
                 } catch (IOException e) {
                     LOGGER.trace("Could not read {}", path, e);
                 }

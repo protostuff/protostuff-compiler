@@ -327,7 +327,7 @@ public class MessageTest {
     @Test
     public void setStringFieldToNull() throws Exception {
         String s = "Cannot set SimpleMessage#string to null";
-        NullPointerException exception = expectThrows(NullPointerException.class, () -> {
+        NullPointerException exception = assertThrows(NullPointerException.class, () -> {
             SimpleMessage.newBuilder()
                     .setString(null);
         });
@@ -338,7 +338,7 @@ public class MessageTest {
     @Test
     public void setMessageFieldToNull() throws Exception {
         String s = "Cannot set SimpleMessage#message to null";
-        NullPointerException exception = expectThrows(NullPointerException.class, () -> {
+        NullPointerException exception = assertThrows(NullPointerException.class, () -> {
             SimpleMessage.newBuilder()
                     .setMessage(null);
         });
@@ -348,7 +348,7 @@ public class MessageTest {
     @Test
     public void setEnumFieldToNull() throws Exception {
         String s = "Cannot set SimpleMessage#enum_ to null";
-        NullPointerException exception = expectThrows(NullPointerException.class, () -> {
+        NullPointerException exception = assertThrows(NullPointerException.class, () -> {
             SimpleMessage.newBuilder()
                     .setEnum(null);
         });
@@ -359,7 +359,7 @@ public class MessageTest {
     @SuppressWarnings("ConstantConditions")
     public void addRepeatedStringFieldNull() throws Exception {
         String s = "Cannot set SimpleMessage#repeatedString to null";
-        NullPointerException exception = expectThrows(NullPointerException.class, () -> {
+        NullPointerException exception = assertThrows(NullPointerException.class, () -> {
             String nullString = null;
             SimpleMessage.newBuilder()
                     .addRepeatedString(nullString);
@@ -370,7 +370,7 @@ public class MessageTest {
     @Test
     public void setRepeatedStringFieldNull() throws Exception {
         String s = "Cannot set SimpleMessage#repeatedString to null";
-        NullPointerException exception = expectThrows(NullPointerException.class, () -> {
+        NullPointerException exception = assertThrows(NullPointerException.class, () -> {
             SimpleMessage.newBuilder()
                     .addAllRepeatedString(null);
         });
@@ -380,7 +380,7 @@ public class MessageTest {
     @Test
     public void setOneofStringToNull() throws Exception {
         String s = "Cannot set TestOneof#fooString to null";
-        NullPointerException exception = expectThrows(NullPointerException.class, () -> {
+        NullPointerException exception = assertThrows(NullPointerException.class, () -> {
             TestOneof.newBuilder()
                     .setFooString(null);
         });
@@ -390,7 +390,7 @@ public class MessageTest {
     @Test
     public void setMapValueNull() throws Exception {
         String s = "Cannot set TestMap#mapBoolBool - map value is null";
-        NullPointerException exception = expectThrows(NullPointerException.class, () -> {
+        NullPointerException exception = assertThrows(NullPointerException.class, () -> {
             TestMap.newBuilder()
                     .putMapBoolBool(true, null);
         });
@@ -399,7 +399,7 @@ public class MessageTest {
 
     @Test
     public void mapListGetter_returnImmutableMap() throws Exception {
-        expectThrows(UnsupportedOperationException.class, () -> {
+        assertThrows(UnsupportedOperationException.class, () -> {
             TEST_MAP.getMapStringStringMap().put("1", "2");
         });
     }
@@ -407,7 +407,7 @@ public class MessageTest {
     @Test
     public void setMapKeyNull() throws Exception {
         String s = "Cannot set TestMap#mapBoolBool - map key is null";
-        NullPointerException exception = expectThrows(NullPointerException.class, () -> {
+        NullPointerException exception = assertThrows(NullPointerException.class, () -> {
             TestMap.newBuilder()
                     .putMapBoolBool(null, true);
         });
@@ -417,7 +417,7 @@ public class MessageTest {
     @Test
     public void setMapFieldNull() throws Exception {
         String s = "Cannot set TestMap#mapBoolBool to null";
-        NullPointerException exception = expectThrows(NullPointerException.class, () -> {
+        NullPointerException exception = assertThrows(NullPointerException.class, () -> {
             TestMap.newBuilder()
                     .putAllMapBoolBool(null);
         });

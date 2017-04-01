@@ -19,7 +19,10 @@ import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -36,7 +39,7 @@ public class ProtostuffCompilerCLI extends ProtostuffCompiler {
     private static final String VERSION = "version";
     private static final String HELP = "help";
     private static final String PROTO_PATH = "proto_path";
-    private static final Map<String, Integer> HELP_ITEMS_ORDER = ImmutableMap.<String, Integer>builder()
+    private static final ImmutableMap<String, Integer> HELP_ITEMS_ORDER = ImmutableMap.<String, Integer>builder()
             .put(HELP, 1)
             .put(PROTO_PATH, 2)
             .put(GENERATOR, 3)

@@ -138,9 +138,9 @@ public class CompilerModule extends AbstractModule {
         private <T> T instantiate(final String className, final Class<T> type) {
             try {
                 Class<?> clazz = Class.forName(className);
-                Object instance = clazz.newInstance();
+                Object instance = clazz.getDeclaredConstructor().newInstance();
                 return type.cast(instance);
-            } catch (final InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+            } catch (Exception e) {
                 throw new GeneratorException("Could not instantiate " + className, e);
             }
         }

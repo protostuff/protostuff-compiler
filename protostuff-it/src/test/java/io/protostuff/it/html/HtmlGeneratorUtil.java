@@ -3,7 +3,6 @@ package io.protostuff.it.html;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
-import com.google.common.base.Throwables;
 import com.google.common.io.Resources;
 
 import java.io.IOException;
@@ -30,7 +29,7 @@ public class HtmlGeneratorUtil {
             ObjectReader reader = mapper.reader().forType(type);
             return reader.readValue(bytes);
         } catch (IOException e) {
-            throw Throwables.propagate(e);
+            throw new RuntimeException("Could not read resource: " + location, e);
         }
     }
 }

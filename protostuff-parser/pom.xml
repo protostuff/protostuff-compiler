@@ -33,6 +33,11 @@
                         <goals>
                             <goal>antlr4</goal>
                         </goals>
+                        <configuration>
+                            <outputDirectory>
+                                ${project.build.directory}/generated-sources/antlr4
+                            </outputDirectory>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>

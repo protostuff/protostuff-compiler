@@ -3,7 +3,7 @@ package io.protostuff.compiler.parser;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.expectThrows;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -14,7 +14,7 @@ public class EnumTest extends AbstractParserTest {
     public void duplicateConstantName() throws Exception {
         String message = "Duplicate enum constant name: 'X' " +
                 "[protostuff_unittest/duplicate_enum_constant_name.proto:7]";
-        ParserException exception = expectThrows(ParserException.class, () -> {
+        ParserException exception = assertThrows(ParserException.class, () -> {
             importer.importFile(new ClasspathFileReader(), "protostuff_unittest/duplicate_enum_constant_name.proto");
         });
         assertEquals(message, exception.getMessage());
@@ -25,7 +25,7 @@ public class EnumTest extends AbstractParserTest {
     public void duplicateConstantValue() throws Exception {
         String message = "Duplicate enum constant value: 0 " +
                 "[protostuff_unittest/duplicate_enum_constant_value.proto:7]";
-        ParserException exception = expectThrows(ParserException.class, () -> {
+        ParserException exception = assertThrows(ParserException.class, () -> {
             importer.importFile(new ClasspathFileReader(), "protostuff_unittest/duplicate_enum_constant_value.proto");
         });
         assertEquals(message, exception.getMessage());

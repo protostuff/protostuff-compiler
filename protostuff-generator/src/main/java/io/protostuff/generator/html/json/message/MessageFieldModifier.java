@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.ImmutableMap;
 
 import javax.annotation.Nonnull;
-import java.util.Map;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -22,7 +21,7 @@ public enum MessageFieldModifier {
     @JsonProperty("repeated")
     REPEATED;
 
-    private static final Map<String, MessageFieldModifier> MODIFIER_BY_PROTO_NAME =
+    private static final ImmutableMap<String, MessageFieldModifier> MODIFIER_BY_PROTO_NAME =
             ImmutableMap.<String, MessageFieldModifier>builder()
                     .put("optional", OPTIONAL)
                     .put("required", REQUIRED)

@@ -11,7 +11,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.expectThrows;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
 /**
@@ -151,7 +151,7 @@ public class ScalarTest {
                 .addInt32(2)
                 .addInt32(3)
                 .build();
-        expectThrows(UnsupportedOperationException.class, () -> {
+        assertThrows(UnsupportedOperationException.class, () -> {
             msg.getInt32List().add(4);
         });
     }
@@ -162,7 +162,7 @@ public class ScalarTest {
         numbers.add(1);
         numbers.add(null);
         numbers.add(3);
-        NullPointerException exception = expectThrows(NullPointerException.class, () -> {
+        NullPointerException exception = assertThrows(NullPointerException.class, () -> {
             RepeatedScalarFieldTestMsg.newBuilder()
                     .addAllInt32(numbers)
                     .build();

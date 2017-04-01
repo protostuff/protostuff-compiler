@@ -25,7 +25,7 @@ public class EnumTest {
 
     @Test
     public void failWhenSetEnumValueToUnknownInBuilder_singluar() throws Exception {
-        expectThrows(IllegalArgumentException.class, () -> {
+        assertThrows(IllegalArgumentException.class, () -> {
             ParentEnumMsg.newBuilder()
                     .setNestedEnum(NestedEnum.UNRECOGNIZED)
                     .build();
@@ -34,7 +34,7 @@ public class EnumTest {
 
     @Test
     public void failWhenSetEnumValueToUnknownInBuilder_repeated_add() throws Exception {
-        expectThrows(IllegalArgumentException.class, () -> {
+        assertThrows(IllegalArgumentException.class, () -> {
             ParentEnumMsg.newBuilder()
                     .addNestedRepeatedEnum(NestedEnum.UNRECOGNIZED)
                     .build();
@@ -45,14 +45,14 @@ public class EnumTest {
     public void failWhenSetEnumValueToUnknownInBuilder_repeated_set() throws Exception {
         ParentEnumMsg.Builder builder = ParentEnumMsg.newBuilder()
                 .addNestedRepeatedEnum(NestedEnum.FIRST);
-        expectThrows(IllegalArgumentException.class, () -> {
+        assertThrows(IllegalArgumentException.class, () -> {
             builder.setNestedRepeatedEnum(0, NestedEnum.UNRECOGNIZED);
         });
     }
 
     @Test
     public void failWhenSetEnumValueToUnknownInBuilder_repeated_add_all() throws Exception {
-        expectThrows(IllegalArgumentException.class, () -> {
+        assertThrows(IllegalArgumentException.class, () -> {
             ParentEnumMsg.newBuilder()
                     .addAllNestedRepeatedEnum(Collections.singletonList(NestedEnum.UNRECOGNIZED))
                     .build();
@@ -61,7 +61,7 @@ public class EnumTest {
 
     @Test
     public void failWhenSetEnumValueToUnknownInBuilder_oneof() throws Exception {
-        expectThrows(IllegalArgumentException.class, () -> {
+        assertThrows(IllegalArgumentException.class, () -> {
             ParentEnumMsg.newBuilder()
                     .setFirst(NestedEnum.UNRECOGNIZED)
                     .build();

@@ -4,7 +4,7 @@ import io.protostuff.compiler.model.Proto;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.expectThrows;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -29,7 +29,7 @@ public class CustomOptionsTest extends AbstractParserTest {
 
     @Test
     public void invalidCustomOption() throws Exception {
-        ParserException exception = expectThrows(ParserException.class, () -> {
+        ParserException exception = assertThrows(ParserException.class, () -> {
             importer.importFile(new ClasspathFileReader(), "protostuff_unittest/options_illegal_custom_option.proto");
         });
         String message = "Unknown option: 'unknown_option' " +
@@ -41,7 +41,7 @@ public class CustomOptionsTest extends AbstractParserTest {
     public void invalidCustomOptionType() throws Exception {
         String message = "Cannot set option 'a': expected string value " +
                 "[protostuff_unittest/options_illegal_custom_option_type.proto:7]";
-        ParserException exception = expectThrows(ParserException.class, () -> {
+        ParserException exception = assertThrows(ParserException.class, () -> {
             importer.importFile(new ClasspathFileReader(), "protostuff_unittest/options_illegal_custom_option_type.proto");
         });
         assertEquals(message, exception.getMessage());
@@ -51,7 +51,7 @@ public class CustomOptionsTest extends AbstractParserTest {
     public void invalidStandardOption() throws Exception {
         String message = "Unknown option: 'non_existing_option' " +
                 "[protostuff_unittest/options_illegal_standard_option.proto:7]";
-        ParserException exception = expectThrows(ParserException.class, () -> {
+        ParserException exception = assertThrows(ParserException.class, () -> {
             importer.importFile(new ClasspathFileReader(), "protostuff_unittest/options_illegal_standard_option.proto");
         });
         assertEquals(message, exception.getMessage());
@@ -61,7 +61,7 @@ public class CustomOptionsTest extends AbstractParserTest {
     public void invalidStandardOptionType() throws Exception {
         String message = "Cannot set option 'deprecated': expected bool value " +
                 "[protostuff_unittest/options_illegal_type.proto:7]";
-        ParserException exception = expectThrows(ParserException.class, () -> {
+        ParserException exception = assertThrows(ParserException.class, () -> {
             importer.importFile(new ClasspathFileReader(), "protostuff_unittest/options_illegal_type.proto");
         });
         assertEquals(message, exception.getMessage());
@@ -71,7 +71,7 @@ public class CustomOptionsTest extends AbstractParserTest {
     public void invalidStandardEnumOptionType() throws Exception {
         String message = "Cannot set option 'optimize_for': expected enum = [SPEED, LITE_RUNTIME, CODE_SIZE] " +
                 "[protostuff_unittest/options_illegal_enum_name.proto:7]";
-        ParserException exception = expectThrows(ParserException.class, () -> {
+        ParserException exception = assertThrows(ParserException.class, () -> {
             importer.importFile(new ClasspathFileReader(), "protostuff_unittest/options_illegal_enum_name.proto");
         });
         assertEquals(message, exception.getMessage());
