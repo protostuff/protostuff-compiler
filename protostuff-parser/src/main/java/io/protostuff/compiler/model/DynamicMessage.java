@@ -4,10 +4,13 @@ import com.google.common.base.MoreObjects;
 import com.google.common.base.Preconditions;
 import io.protostuff.compiler.parser.ParserException;
 import io.protostuff.compiler.parser.Util;
-
-import javax.annotation.Nonnull;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
+import javax.annotation.Nonnull;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -316,8 +319,8 @@ public class DynamicMessage implements Map<String, DynamicMessage.Value> {
                 return false;
             }
             Key key = (Key) o;
-            return extension == key.extension &&
-                    Objects.equals(name, key.name);
+            return extension == key.extension
+                    && Objects.equals(name, key.name);
         }
 
         @Override

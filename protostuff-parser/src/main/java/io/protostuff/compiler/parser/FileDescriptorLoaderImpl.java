@@ -1,13 +1,11 @@
 package io.protostuff.compiler.parser;
 
+import java.util.Set;
+import javax.inject.Inject;
 import org.antlr.v4.runtime.ANTLRErrorListener;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
-
-import java.util.Set;
-
-import javax.inject.Inject;
 
 /**
  * @author Kostiantyn Shchepanovskyi

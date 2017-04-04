@@ -3,7 +3,6 @@ package io.protostuff.compiler.parser;
 import io.protostuff.compiler.model.Extension;
 import io.protostuff.compiler.model.Import;
 import io.protostuff.compiler.model.Proto;
-
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;

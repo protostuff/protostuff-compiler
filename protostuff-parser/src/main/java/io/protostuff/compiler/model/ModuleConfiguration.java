@@ -1,10 +1,9 @@
 package io.protostuff.compiler.model;
 
-import org.immutables.value.Value;
-
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
+import org.immutables.value.Value;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -32,11 +31,11 @@ public interface ModuleConfiguration {
      * are supported:
      *
      * <ul>
-     *     <li><code>java</code> - produces Java source code that uses protostuff runtime;</li>
-     *     <li><code>html</code> - produces HTML documentation;</li>
-     *     <li><code>st4</code> - generic generator, you should provide custom template
-     *     (StringTemplate 4) using {@linkplain #getOptions()}.
-     *     </li>
+     * <li><code>java</code> - produces Java source code that uses protostuff runtime;</li>
+     * <li><code>html</code> - produces HTML documentation;</li>
+     * <li><code>st4</code> - generic generator, you should provide custom template
+     * (StringTemplate 4) using {@linkplain #getOptions()}.
+     * </li>
      * </ul>
      */
     String getGenerator();

@@ -3,7 +3,6 @@ package io.protostuff.compiler.model;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Preconditions;
 import io.protostuff.compiler.parser.MessageParseListener;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -133,17 +132,17 @@ public class Message extends AbstractUserTypeContainer
     }
 
     @Override
+    public void setFullyQualifiedName(String fullyQualifiedName) {
+        this.fullyQualifiedName = fullyQualifiedName;
+    }
+
+    @Override
     public String getCanonicalName() {
         String fqn = getFullyQualifiedName();
         if (fqn.startsWith(".")) {
             return fqn.substring(1);
         }
         return fqn;
-    }
-
-    @Override
-    public void setFullyQualifiedName(String fullyQualifiedName) {
-        this.fullyQualifiedName = fullyQualifiedName;
     }
 
     @Override

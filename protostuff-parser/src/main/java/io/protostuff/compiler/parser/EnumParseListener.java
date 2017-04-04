@@ -1,11 +1,10 @@
 package io.protostuff.compiler.parser;
 
-import org.antlr.v4.runtime.BufferedTokenStream;
-
 import io.protostuff.compiler.model.Enum;
 import io.protostuff.compiler.model.EnumConstant;
 import io.protostuff.compiler.model.EnumContainer;
 import io.protostuff.compiler.model.UserTypeContainer;
+import org.antlr.v4.runtime.BufferedTokenStream;
 
 /**
  * @author Kostiantyn Shchepanovskyi

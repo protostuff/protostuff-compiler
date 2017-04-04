@@ -1,14 +1,13 @@
 package io.protostuff.compiler.parser;
 
+import io.protostuff.compiler.model.Extension;
+import io.protostuff.compiler.model.Field;
+import io.protostuff.compiler.model.Message;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-
-import io.protostuff.compiler.model.Extension;
-import io.protostuff.compiler.model.Field;
-import io.protostuff.compiler.model.Message;
 
 /**
  * @author Kostiantyn Shchepanovskyi

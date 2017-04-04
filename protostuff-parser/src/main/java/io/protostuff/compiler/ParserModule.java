@@ -1,18 +1,35 @@
 package io.protostuff.compiler;
 
+import static io.protostuff.compiler.parser.DefaultDescriptorProtoProvider.DESCRIPTOR_PROTO;
+
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.multibindings.Multibinder;
 import com.google.inject.name.Names;
-
-import io.protostuff.compiler.parser.*;
+import io.protostuff.compiler.parser.DefaultDescriptorProtoProvider;
+import io.protostuff.compiler.parser.ExtensionRegistratorPostProcessor;
+import io.protostuff.compiler.parser.FileDescriptorLoader;
+import io.protostuff.compiler.parser.FileDescriptorLoaderImpl;
+import io.protostuff.compiler.parser.FileReader;
+import io.protostuff.compiler.parser.FileReaderFactory;
+import io.protostuff.compiler.parser.Importer;
+import io.protostuff.compiler.parser.ImporterImpl;
+import io.protostuff.compiler.parser.ImportsPostProcessor;
+import io.protostuff.compiler.parser.OptionsPostProcessor;
+import io.protostuff.compiler.parser.ParseErrorLogger;
+import io.protostuff.compiler.parser.ProtoContext;
+import io.protostuff.compiler.parser.ProtoContextPostProcessor;
+import io.protostuff.compiler.parser.ProtoFileReader;
+import io.protostuff.compiler.parser.TypeRegistratorPostProcessor;
+import io.protostuff.compiler.parser.TypeResolverPostProcessor;
+import io.protostuff.compiler.parser.UserTypeValidationPostProcessor;
 import org.antlr.v4.runtime.ANTLRErrorListener;
 import org.antlr.v4.runtime.ANTLRErrorStrategy;
 import org.antlr.v4.runtime.BailErrorStrategy;
 
-import static io.protostuff.compiler.parser.DefaultDescriptorProtoProvider.DESCRIPTOR_PROTO;
-
 /**
+ * Guice module for parser.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public class ParserModule extends AbstractModule {

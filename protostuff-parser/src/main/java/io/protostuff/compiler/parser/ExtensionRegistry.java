@@ -1,11 +1,10 @@
 package io.protostuff.compiler.parser;
 
-import java.util.Collection;
-import java.util.Map;
-
 import io.protostuff.compiler.model.Extension;
 import io.protostuff.compiler.model.Field;
 import io.protostuff.compiler.model.Message;
+import java.util.Collection;
+import java.util.Map;
 
 /**
  * @author Kostiantyn Shchepanovskyi

@@ -9,9 +9,9 @@ public interface FieldContainer extends Element {
 
     List<Field> getFields();
 
-    int getFieldCount();
-
     void setFields(List<Field> fields);
+
+    int getFieldCount();
 
     Field getField(String name);
 

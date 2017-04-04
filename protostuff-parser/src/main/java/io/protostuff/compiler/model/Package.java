@@ -3,6 +3,8 @@ package io.protostuff.compiler.model;
 import java.util.Objects;
 
 /**
+ * Tree element for "package" node of proto file.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public class Package extends AbstractElement {
@@ -34,8 +36,8 @@ public class Package extends AbstractElement {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Package aPackage = (Package) o;
-        return Objects.equals(value, aPackage.value);
+        Package that = (Package) o;
+        return Objects.equals(value, that.value);
     }
 
     @Override

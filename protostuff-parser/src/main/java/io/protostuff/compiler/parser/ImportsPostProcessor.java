@@ -1,8 +1,7 @@
 package io.protostuff.compiler.parser;
 
-import javax.inject.Inject;
-
 import io.protostuff.compiler.model.Import;
+import javax.inject.Inject;
 
 /**
  * @author Kostiantyn Shchepanovskyi

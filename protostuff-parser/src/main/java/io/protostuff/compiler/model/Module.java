@@ -1,9 +1,8 @@
 package io.protostuff.compiler.model;
 
-import org.immutables.value.Value;
-
 import java.util.List;
 import java.util.Map;
+import org.immutables.value.Value;
 
 /**
  * @author Kostiantyn Shchepanovskyi

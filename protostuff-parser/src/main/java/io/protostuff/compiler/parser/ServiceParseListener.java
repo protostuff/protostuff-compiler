@@ -1,10 +1,9 @@
 package io.protostuff.compiler.parser;
 
-import org.antlr.v4.runtime.BufferedTokenStream;
-
 import io.protostuff.compiler.model.Proto;
 import io.protostuff.compiler.model.Service;
 import io.protostuff.compiler.model.ServiceMethod;
+import org.antlr.v4.runtime.BufferedTokenStream;
 
 /**
  * @author Kostiantyn Shchepanovskyi

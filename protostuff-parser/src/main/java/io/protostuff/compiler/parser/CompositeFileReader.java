@@ -1,11 +1,9 @@
 package io.protostuff.compiler.parser;
 
-import org.antlr.v4.runtime.CharStream;
-
 import java.util.Arrays;
 import java.util.List;
-
 import javax.annotation.Nullable;
+import org.antlr.v4.runtime.CharStream;
 
 /**
  * @author Kostiantyn Shchepanovskyi

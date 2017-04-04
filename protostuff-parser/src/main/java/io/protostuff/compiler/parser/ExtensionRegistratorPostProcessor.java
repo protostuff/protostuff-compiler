@@ -1,7 +1,10 @@
 package io.protostuff.compiler.parser;
 
-import io.protostuff.compiler.model.*;
-
+import io.protostuff.compiler.model.Extension;
+import io.protostuff.compiler.model.Field;
+import io.protostuff.compiler.model.Message;
+import io.protostuff.compiler.model.Range;
+import io.protostuff.compiler.model.UserTypeContainer;
 import java.util.List;
 
 /**

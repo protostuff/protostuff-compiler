@@ -7,15 +7,13 @@ import java.io.Serializable;
  */
 public class SourceCodeLocation implements Serializable {
 
-    private static final long serialVersionUID = 0L;
-
     public static final SourceCodeLocation UNKNOWN = new SourceCodeLocation() {
         @Override
         public String toString() {
             return "unknown";
         }
     };
-
+    private static final long serialVersionUID = 0L;
     private final String file;
     private final int line;
 

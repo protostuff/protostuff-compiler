@@ -1,14 +1,28 @@
 package io.protostuff.compiler.parser;
 
-import io.protostuff.compiler.model.*;
-import io.protostuff.compiler.model.DynamicMessage.Value;
-import org.antlr.v4.runtime.BufferedTokenStream;
-import org.antlr.v4.runtime.tree.TerminalNode;
+import static io.protostuff.compiler.model.FieldModifier.OPTIONAL;
+import static io.protostuff.compiler.model.FieldModifier.REPEATED;
+import static io.protostuff.compiler.model.FieldModifier.REQUIRED;
 
+import io.protostuff.compiler.model.AbstractUserTypeContainer;
+import io.protostuff.compiler.model.DynamicMessage.Value;
+import io.protostuff.compiler.model.Element;
+import io.protostuff.compiler.model.Extension;
+import io.protostuff.compiler.model.ExtensionContainer;
+import io.protostuff.compiler.model.Field;
+import io.protostuff.compiler.model.FieldContainer;
+import io.protostuff.compiler.model.Group;
+import io.protostuff.compiler.model.GroupContainer;
+import io.protostuff.compiler.model.Message;
+import io.protostuff.compiler.model.MessageContainer;
+import io.protostuff.compiler.model.Oneof;
+import io.protostuff.compiler.model.Range;
+import io.protostuff.compiler.model.SourceCodeLocation;
+import io.protostuff.compiler.model.UserTypeContainer;
 import java.util.ArrayList;
 import java.util.List;
-
-import static io.protostuff.compiler.model.FieldModifier.*;
+import org.antlr.v4.runtime.BufferedTokenStream;
+import org.antlr.v4.runtime.tree.TerminalNode;
 
 /**
  * @author Kostiantyn Shchepanovskyi

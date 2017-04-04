@@ -3,7 +3,6 @@ package io.protostuff.compiler.model;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import io.protostuff.compiler.parser.ProtoWalker;
-
 import java.util.Collection;
 import java.util.Collections;
 

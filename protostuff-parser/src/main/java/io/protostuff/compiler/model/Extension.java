@@ -1,11 +1,9 @@
 package io.protostuff.compiler.model;
 
 import com.google.common.base.MoreObjects;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 import javax.annotation.Nullable;
 
 /**
@@ -62,16 +60,16 @@ public class Extension extends AbstractElement implements FieldContainer, GroupC
     }
 
     @Override
+    public void setFields(List<Field> fields) {
+        this.fields = fields;
+    }
+
+    @Override
     public int getFieldCount() {
         if (fields == null) {
             return 0;
         }
         return fields.size();
-    }
-
-    @Override
-    public void setFields(List<Field> fields) {
-        this.fields = fields;
     }
 
     @Override

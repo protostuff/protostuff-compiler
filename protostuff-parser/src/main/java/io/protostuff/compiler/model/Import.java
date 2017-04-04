@@ -48,8 +48,8 @@ public final class Import extends AbstractElement {
             return false;
         }
         Import anImport = (Import) o;
-        return Objects.equals(aPublic, anImport.aPublic) &&
-                Objects.equals(value, anImport.value);
+        return Objects.equals(aPublic, anImport.aPublic)
+                && Objects.equals(value, anImport.value);
     }
 
     @Override

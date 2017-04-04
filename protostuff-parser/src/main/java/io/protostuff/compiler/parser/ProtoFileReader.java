@@ -2,14 +2,11 @@ package io.protostuff.compiler.parser;
 
 import com.google.common.base.MoreObjects;
 import com.google.inject.assistedinject.Assisted;
-
-import org.antlr.v4.runtime.CharStream;
-
 import java.nio.file.Path;
 import java.util.List;
-
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import org.antlr.v4.runtime.CharStream;
 
 /**
  * @author Kostiantyn Shchepanovskyi

@@ -1,7 +1,6 @@
 package io.protostuff.compiler.model;
 
 import com.google.common.base.Joiner;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

@@ -1,7 +1,19 @@
 package io.protostuff.compiler.parser;
 
-import io.protostuff.compiler.model.*;
-
+import io.protostuff.compiler.model.Element;
+import io.protostuff.compiler.model.Extension;
+import io.protostuff.compiler.model.Field;
+import io.protostuff.compiler.model.FieldContainer;
+import io.protostuff.compiler.model.FieldType;
+import io.protostuff.compiler.model.GroupContainer;
+import io.protostuff.compiler.model.Message;
+import io.protostuff.compiler.model.Oneof;
+import io.protostuff.compiler.model.Proto;
+import io.protostuff.compiler.model.ScalarFieldType;
+import io.protostuff.compiler.model.Service;
+import io.protostuff.compiler.model.ServiceMethod;
+import io.protostuff.compiler.model.UserType;
+import io.protostuff.compiler.model.UserTypeContainer;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;

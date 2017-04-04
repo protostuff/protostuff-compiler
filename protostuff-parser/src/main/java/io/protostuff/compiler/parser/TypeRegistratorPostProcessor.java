@@ -1,9 +1,5 @@
 package io.protostuff.compiler.parser;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Consumer;
-
 import io.protostuff.compiler.model.Enum;
 import io.protostuff.compiler.model.Extension;
 import io.protostuff.compiler.model.GroupContainer;
@@ -12,6 +8,9 @@ import io.protostuff.compiler.model.Proto;
 import io.protostuff.compiler.model.Service;
 import io.protostuff.compiler.model.UserType;
 import io.protostuff.compiler.model.UserTypeContainer;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -63,7 +62,7 @@ public class TypeRegistratorPostProcessor implements ProtoContextPostProcessor {
         List<Message> nestedMessages = new ArrayList<>();
         nestedMessages.addAll(parent.getMessages());
         if (parent instanceof GroupContainer) {
-            nestedMessages.addAll(((GroupContainer)parent).getGroups());
+            nestedMessages.addAll(((GroupContainer) parent).getGroups());
         }
         for (Extension extension : parent.getDeclaredExtensions()) {
             nestedMessages.addAll(extension.getGroups());

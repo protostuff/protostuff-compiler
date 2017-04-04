@@ -1,11 +1,10 @@
 package io.protostuff.compiler.model;
 
 import com.google.common.base.MoreObjects;
-
 import java.util.Objects;
 
 /**
- * Reserved tag range
+ * Reserved tag range.
  *
  * @author Kostiantyn Shchepanovskyi
  */
@@ -15,6 +14,13 @@ public class Range extends AbstractElement {
     private final int from;
     private final int to;
 
+    /**
+     * Create new range node.
+     *
+     * @param parent message that contains this element
+     * @param from range start, inclusive
+     * @param to range end, inclusive
+     */
     public Range(Message parent, int from, int to) {
         this.parent = parent;
         this.from = from;
@@ -47,9 +53,9 @@ public class Range extends AbstractElement {
             return false;
         }
         Range range = (Range) o;
-        return from == range.from &&
-                to == range.to &&
-                Objects.equals(parent, range.parent);
+        return from == range.from
+                && to == range.to
+                && Objects.equals(parent, range.parent);
     }
 
     @Override

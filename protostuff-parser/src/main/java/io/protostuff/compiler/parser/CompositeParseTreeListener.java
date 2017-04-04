@@ -4,12 +4,9 @@ import com.google.common.base.MoreObjects;
 import com.google.common.collect.ImmutableList;
 import com.google.common.reflect.AbstractInvocationHandler;
 import com.google.common.reflect.Reflection;
-
-import org.antlr.v4.runtime.tree.ParseTreeListener;
-
 import java.lang.reflect.Method;
-
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.antlr.v4.runtime.tree.ParseTreeListener;
 
 /**
  * @author Kostiantyn Shchepanovskyi

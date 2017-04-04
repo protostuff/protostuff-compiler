@@ -35,8 +35,8 @@ public class StaticPage {
             return false;
         }
         StaticPage page = (StaticPage) o;
-        return Objects.equal(name, page.name) &&
-                Objects.equal(file, page.file);
+        return Objects.equal(name, page.name)
+                && Objects.equal(file, page.file);
     }
 
     @Override

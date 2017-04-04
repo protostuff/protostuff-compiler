@@ -1,7 +1,6 @@
 package io.protostuff.compiler.model;
 
 import com.google.common.base.MoreObjects;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -53,16 +52,16 @@ public class Oneof extends AbstractElement implements FieldContainer, GroupConta
     }
 
     @Override
+    public void setFields(List<Field> fields) {
+        this.fields = fields;
+    }
+
+    @Override
     public int getFieldCount() {
         if (fields == null) {
             return 0;
         }
         return fields.size();
-    }
-
-    @Override
-    public void setFields(List<Field> fields) {
-        this.fields = fields;
     }
 
     @Override

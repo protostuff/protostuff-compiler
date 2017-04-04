@@ -1,8 +1,13 @@
 package io.protostuff.compiler.parser;
 
 import io.protostuff.compiler.model.Enum;
-import io.protostuff.compiler.model.*;
-
+import io.protostuff.compiler.model.EnumConstant;
+import io.protostuff.compiler.model.Field;
+import io.protostuff.compiler.model.Message;
+import io.protostuff.compiler.model.Proto;
+import io.protostuff.compiler.model.Service;
+import io.protostuff.compiler.model.ServiceMethod;
+import io.protostuff.compiler.model.UserTypeContainer;
 import java.util.ArrayList;
 import java.util.List;
 

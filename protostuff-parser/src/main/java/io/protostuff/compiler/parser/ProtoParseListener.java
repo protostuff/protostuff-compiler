@@ -4,11 +4,10 @@ import io.protostuff.compiler.model.Import;
 import io.protostuff.compiler.model.Package;
 import io.protostuff.compiler.model.Proto;
 import io.protostuff.compiler.model.Syntax;
-import org.antlr.v4.runtime.BufferedTokenStream;
-import org.antlr.v4.runtime.Token;
-
 import java.util.ArrayList;
 import java.util.List;
+import org.antlr.v4.runtime.BufferedTokenStream;
+import org.antlr.v4.runtime.Token;
 
 /**
  * @author Kostiantyn Shchepanovskyi

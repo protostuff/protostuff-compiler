@@ -1,13 +1,11 @@
 package io.protostuff.compiler.model;
 
 import com.google.common.base.MoreObjects;
-
+import io.protostuff.compiler.parser.ProtoContext;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import io.protostuff.compiler.parser.ProtoContext;
 
 /**
  * @author Kostiantyn Shchepanovskyi
