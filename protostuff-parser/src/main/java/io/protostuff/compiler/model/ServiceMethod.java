@@ -3,6 +3,8 @@ package io.protostuff.compiler.model;
 import com.google.common.base.MoreObjects;
 
 /**
+ * Service method node.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public class ServiceMethod extends AbstractDescriptor {

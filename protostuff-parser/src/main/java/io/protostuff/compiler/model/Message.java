@@ -4,24 +4,25 @@ import com.google.common.base.MoreObjects;
 import com.google.common.base.Preconditions;
 import io.protostuff.compiler.parser.MessageParseListener;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
+ * Message node.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public class Message extends AbstractUserTypeContainer
         implements UserType, UserTypeContainer, FieldContainer, GroupContainer {
 
-    protected List<Field> fields;
-    protected List<Group> groups;
-    protected List<Oneof> oneofs;
+    protected List<Field> fields = new ArrayList<>();
+    protected List<Group> groups = new ArrayList<>();
+    protected List<Oneof> oneofs = new ArrayList<>();
     protected Proto proto;
     protected String fullyQualifiedName;
 
-    protected List<Range> extensionRanges;
-    protected List<Range> reservedFieldRanges;
-    protected List<String> reservedFieldNames;
+    protected List<Range> extensionRanges = new ArrayList<>();
+    protected List<Range> reservedFieldRanges = new ArrayList<>();
+    protected List<String> reservedFieldNames = new ArrayList<>();
 
     public Message(UserTypeContainer parent) {
         super(parent);
@@ -37,9 +38,6 @@ public class Message extends AbstractUserTypeContainer
      */
     @Override
     public List<Field> getFields() {
-        if (fields == null) {
-            return Collections.emptyList();
-        }
         return fields;
     }
 
@@ -50,9 +48,6 @@ public class Message extends AbstractUserTypeContainer
 
     @Override
     public void addField(Field field) {
-        if (fields == null) {
-            fields = new ArrayList<>();
-        }
         fields.add(field);
     }
 
@@ -77,9 +72,6 @@ public class Message extends AbstractUserTypeContainer
     }
 
     public List<Oneof> getOneofs() {
-        if (oneofs == null) {
-            return Collections.emptyList();
-        }
         return oneofs;
     }
 
@@ -88,12 +80,12 @@ public class Message extends AbstractUserTypeContainer
     }
 
     public void addOneof(Oneof oneof) {
-        if (oneofs == null) {
-            oneofs = new ArrayList<>();
-        }
         oneofs.add(oneof);
     }
 
+    /**
+     * Get oneof node by it's name.
+     */
     public Oneof getOneof(String name) {
         for (Oneof oneof : getOneofs()) {
             if (name.equals(oneof.getName())) {
@@ -178,9 +170,6 @@ public class Message extends AbstractUserTypeContainer
 
     @Override
     public List<Group> getGroups() {
-        if (groups == null) {
-            return Collections.emptyList();
-        }
         return groups;
     }
 
@@ -191,16 +180,10 @@ public class Message extends AbstractUserTypeContainer
 
     @Override
     public void addGroup(Group group) {
-        if (groups == null) {
-            groups = new ArrayList<>();
-        }
         groups.add(group);
     }
 
     public List<Range> getExtensionRanges() {
-        if (extensionRanges == null) {
-            return Collections.emptyList();
-        }
         return extensionRanges;
     }
 
@@ -209,16 +192,10 @@ public class Message extends AbstractUserTypeContainer
     }
 
     public void addExtensionRange(Range range) {
-        if (extensionRanges == null) {
-            extensionRanges = new ArrayList<>();
-        }
         extensionRanges.add(range);
     }
 
     public List<Range> getReservedFieldRanges() {
-        if (reservedFieldRanges == null) {
-            return Collections.emptyList();
-        }
         return reservedFieldRanges;
     }
 
@@ -227,16 +204,10 @@ public class Message extends AbstractUserTypeContainer
     }
 
     public void addReservedFieldRange(Range range) {
-        if (reservedFieldRanges == null) {
-            reservedFieldRanges = new ArrayList<>();
-        }
         reservedFieldRanges.add(range);
     }
 
     public List<String> getReservedFieldNames() {
-        if (reservedFieldNames == null) {
-            return Collections.emptyList();
-        }
         return reservedFieldNames;
     }
 
@@ -245,17 +216,11 @@ public class Message extends AbstractUserTypeContainer
     }
 
     public void addReservedFieldName(String name) {
-        if (reservedFieldNames == null) {
-            reservedFieldNames = new ArrayList<>();
-        }
         reservedFieldNames.add(name);
     }
 
     @Override
     public int getFieldCount() {
-        if (fields == null) {
-            return 0;
-        }
         return fields.size();
     }
 

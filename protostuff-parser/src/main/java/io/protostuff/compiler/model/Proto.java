@@ -3,11 +3,12 @@ package io.protostuff.compiler.model;
 import com.google.common.base.MoreObjects;
 import io.protostuff.compiler.parser.ProtoContext;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 /**
+ * Proto node - represents a parse result for a proto file.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public class Proto extends AbstractUserTypeContainer implements UserTypeContainer {
@@ -15,10 +16,10 @@ public class Proto extends AbstractUserTypeContainer implements UserTypeContaine
     protected Module module;
     protected ProtoContext context;
     protected String filename;
-    protected Syntax syntax;
-    protected Package aPackage;
-    protected List<Import> imports;
-    protected List<Service> services;
+    protected Syntax syntax = Syntax.DEFAULT;
+    protected Package pkg = Package.DEFAULT;
+    protected List<Import> imports = new ArrayList<>();
+    protected List<Service> services = new ArrayList<>();
 
     public Proto() {
         // proto does not have parent
@@ -39,7 +40,7 @@ public class Proto extends AbstractUserTypeContainer implements UserTypeContaine
     }
 
     /**
-     * Full filename (including path, relative to root of source tree)
+     * Full filename (including path, relative to root of source tree).
      */
     public String getFilename() {
         return filename;
@@ -50,9 +51,6 @@ public class Proto extends AbstractUserTypeContainer implements UserTypeContaine
     }
 
     public Syntax getSyntax() {
-        if (syntax == null) {
-            return Syntax.DEFAULT;
-        }
         return syntax;
     }
 
@@ -60,29 +58,15 @@ public class Proto extends AbstractUserTypeContainer implements UserTypeContaine
         this.syntax = syntax;
     }
 
-    public boolean isSyntaxSet() {
-        return syntax != null;
-    }
-
     public Package getPackage() {
-        if (aPackage == null) {
-            return Package.DEFAULT;
-        }
-        return aPackage;
+        return pkg;
     }
 
     public void setPackage(Package aPackage) {
-        this.aPackage = aPackage;
-    }
-
-    public boolean isPackageSet() {
-        return aPackage != null;
+        this.pkg = aPackage;
     }
 
     public List<Import> getImports() {
-        if (imports == null) {
-            return Collections.emptyList();
-        }
         return imports;
     }
 
@@ -90,6 +74,9 @@ public class Proto extends AbstractUserTypeContainer implements UserTypeContaine
         this.imports = imports;
     }
 
+    /**
+     * Returns all public imports in this proto file.
+     */
     public List<Import> getPublicImports() {
         return getImports()
                 .stream()
@@ -98,16 +85,10 @@ public class Proto extends AbstractUserTypeContainer implements UserTypeContaine
     }
 
     public void addImport(Import anImport) {
-        if (imports == null) {
-            imports = new ArrayList<>();
-        }
         imports.add(anImport);
     }
 
     public List<Service> getServices() {
-        if (services == null) {
-            return Collections.emptyList();
-        }
         return services;
     }
 
@@ -116,9 +97,6 @@ public class Proto extends AbstractUserTypeContainer implements UserTypeContaine
     }
 
     public void addService(Service service) {
-        if (services == null) {
-            services = new ArrayList<>();
-        }
         services.add(service);
     }
 
@@ -132,17 +110,17 @@ public class Proto extends AbstractUserTypeContainer implements UserTypeContaine
 
     @Override
     public String getNamespace() {
-        if (aPackage == null) {
+        if (pkg == null) {
             return ".";
         }
-        return "." + aPackage.getValue() + ".";
+        return "." + pkg.getValue() + ".";
     }
 
     public String getCanonicalName() {
-        if (aPackage == null) {
+        if (pkg == null) {
             return name;
         }
-        return aPackage + "." + name;
+        return pkg + "." + name;
     }
 
     public Module getModule() {

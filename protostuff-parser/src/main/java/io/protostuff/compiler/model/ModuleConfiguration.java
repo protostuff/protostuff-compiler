@@ -6,6 +6,8 @@ import java.util.Map;
 import org.immutables.value.Value;
 
 /**
+ * Configuration for a compilation unit.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 @Value.Immutable

@@ -2,26 +2,27 @@ package io.protostuff.compiler.model;
 
 import com.google.common.base.MoreObjects;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
+ * Enum node of proto file.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
-public class Enum extends AbstractUserType {
+public class Enum extends AbstractDescriptor implements UserType {
 
-    protected List<EnumConstant> constants;
+    protected final UserTypeContainer parent;
+    protected List<EnumConstant> constants = new ArrayList<>();
+    protected Proto proto;
+    protected String fullyQualifiedName;
 
     public Enum(UserTypeContainer parent) {
-        super(parent);
+        this.parent = parent;
     }
 
     public List<EnumConstant> getConstants() {
-        if (constants == null) {
-            return Collections.emptyList();
-        }
         return constants;
     }
 
@@ -29,15 +30,18 @@ public class Enum extends AbstractUserType {
         this.constants = constants;
     }
 
+    /**
+     * Returns a list of all enum constant names.
+     */
     public Set<String> getConstantNames() {
-        if (constants == null) {
-            return Collections.emptySet();
-        }
         return constants.stream()
                 .map(EnumConstant::getName)
                 .collect(Collectors.toSet());
     }
 
+    /**
+     * Get enum constant by it's name.
+     */
     public EnumConstant getConstant(String name) {
         for (EnumConstant enumConstant : getConstants()) {
             if (enumConstant.getName().equals(name)) {
@@ -48,9 +52,6 @@ public class Enum extends AbstractUserType {
     }
 
     public void addConstant(EnumConstant value) {
-        if (constants == null) {
-            constants = new ArrayList<>();
-        }
         constants.add(value);
     }
 
@@ -84,5 +85,49 @@ public class Enum extends AbstractUserType {
     @Override
     public boolean isMessage() {
         return false;
+    }
+
+    @Override
+    public Proto getProto() {
+        return proto;
+    }
+
+    @Override
+    public void setProto(Proto proto) {
+        this.proto = proto;
+    }
+
+    @Override
+    public String getFullyQualifiedName() {
+        return fullyQualifiedName;
+    }
+
+    @Override
+    public void setFullyQualifiedName(String fullyQualifiedName) {
+        this.fullyQualifiedName = fullyQualifiedName;
+    }
+
+    @Override
+    public String getCanonicalName() {
+        String fqn = getFullyQualifiedName();
+        if (fqn.startsWith(".")) {
+            return fqn.substring(1);
+        }
+        return fqn;
+    }
+
+    @Override
+    public boolean isMap() {
+        return false;
+    }
+
+    @Override
+    public UserTypeContainer getParent() {
+        return parent;
+    }
+
+    @Override
+    public boolean isNested() {
+        return getParent().getDescriptorType() != DescriptorType.PROTO;
     }
 }

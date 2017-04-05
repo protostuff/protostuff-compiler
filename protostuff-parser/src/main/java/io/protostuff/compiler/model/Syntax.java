@@ -3,6 +3,8 @@ package io.protostuff.compiler.model;
 import java.util.Objects;
 
 /**
+ * Syntax node of a proto file.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public final class Syntax extends AbstractElement {

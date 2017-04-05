@@ -4,6 +4,8 @@ import com.google.common.base.MoreObjects;
 import io.protostuff.compiler.model.DynamicMessage.Value;
 
 /**
+ * Field node.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public class Field extends AbstractDescriptor {
@@ -69,7 +71,7 @@ public class Field extends AbstractDescriptor {
     }
 
     /**
-     * Field index in the container (order, starting from 1)
+     * Field index in the container (order, starting from 1).
      */
     public int getIndex() {
         return index;
