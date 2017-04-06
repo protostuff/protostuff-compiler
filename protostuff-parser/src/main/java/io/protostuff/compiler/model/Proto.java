@@ -62,8 +62,8 @@ public class Proto extends AbstractUserTypeContainer implements UserTypeContaine
         return pkg;
     }
 
-    public void setPackage(Package aPackage) {
-        this.pkg = aPackage;
+    public void setPackage(Package pkg) {
+        this.pkg = pkg;
     }
 
     public List<Import> getImports() {
@@ -116,6 +116,11 @@ public class Proto extends AbstractUserTypeContainer implements UserTypeContaine
         return "." + pkg.getValue() + ".";
     }
 
+    /**
+     * Get canonical name of this proto file.
+     * Canonical name is composed as package and file name,
+     * separated by dot.
+     */
     public String getCanonicalName() {
         if (pkg == null) {
             return name;

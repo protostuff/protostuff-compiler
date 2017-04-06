@@ -6,6 +6,8 @@ import java.util.Collections;
 import java.util.List;
 
 /**
+ * "oneof" tree node.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public class Oneof extends AbstractElement implements FieldContainer, GroupContainer {

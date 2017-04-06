@@ -4,6 +4,8 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 /**
+ * Container for enum nodes.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public interface EnumContainer {

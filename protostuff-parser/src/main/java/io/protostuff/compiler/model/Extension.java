@@ -7,6 +7,8 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 /**
+ * Extension node.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public class Extension extends AbstractElement implements FieldContainer, GroupContainer {

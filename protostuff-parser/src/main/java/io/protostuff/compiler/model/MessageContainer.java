@@ -4,6 +4,8 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 /**
+ * Container for messages (proto file or another message).
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public interface MessageContainer {

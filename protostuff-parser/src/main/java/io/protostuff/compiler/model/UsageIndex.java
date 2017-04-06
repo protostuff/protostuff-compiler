@@ -14,6 +14,9 @@ public class UsageIndex {
         return build(Collections.singletonList(proto));
     }
 
+    /**
+     * Build usage index for given collection of proto files.
+     */
     public static UsageIndex build(Collection<Proto> protos) {
         UsageIndex usageIndex = new UsageIndex();
         for (Proto proto : protos) {

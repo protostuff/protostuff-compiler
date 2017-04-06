@@ -1,13 +1,8 @@
 package io.protostuff.compiler.model;
 
 /**
- * Base class for all protocol buffer descriptors:
- * <ol>
- * <li>message</li>
- * <li>enum</li>
- * <li>service</li>
- * <li>method</li>
- * </ol>
+ * Base class for all protocol buffer nodes.
+ *
  *
  * @author Kostiantyn Shchepanovskyi
  */

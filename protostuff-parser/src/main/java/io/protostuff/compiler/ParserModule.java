@@ -19,7 +19,7 @@ import io.protostuff.compiler.parser.OptionsPostProcessor;
 import io.protostuff.compiler.parser.ParseErrorLogger;
 import io.protostuff.compiler.parser.ProtoContext;
 import io.protostuff.compiler.parser.ProtoContextPostProcessor;
-import io.protostuff.compiler.parser.ProtoFileReader;
+import io.protostuff.compiler.parser.MultiPathFileReader;
 import io.protostuff.compiler.parser.TypeRegistratorPostProcessor;
 import io.protostuff.compiler.parser.TypeResolverPostProcessor;
 import io.protostuff.compiler.parser.UserTypeValidationPostProcessor;
@@ -54,7 +54,7 @@ public class ParserModule extends AbstractModule {
         postProcessors.addBinding().to(UserTypeValidationPostProcessor.class);
 
         install(new FactoryModuleBuilder()
-                .implement(FileReader.class, ProtoFileReader.class)
+                .implement(FileReader.class, MultiPathFileReader.class)
                 .build(FileReaderFactory.class));
     }
 

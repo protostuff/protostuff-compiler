@@ -8,6 +8,9 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
 /**
+ * Loader of proto files. Returns fully parsed proto file context
+ * for a given proto file.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public class FileDescriptorLoaderImpl implements FileDescriptorLoader {

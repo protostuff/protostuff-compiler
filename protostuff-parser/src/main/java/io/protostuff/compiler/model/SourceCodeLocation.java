@@ -3,6 +3,9 @@ package io.protostuff.compiler.model;
 import java.io.Serializable;
 
 /**
+ * Location of tree node, represented by file name
+ * and line number.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public class SourceCodeLocation implements Serializable {
