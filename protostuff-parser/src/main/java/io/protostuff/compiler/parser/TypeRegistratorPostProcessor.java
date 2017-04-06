@@ -13,6 +13,9 @@ import java.util.List;
 import java.util.function.Consumer;
 
 /**
+ * Proto file post-processor that registers user-defined types
+ * in a given {@link ProtoContext}.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public class TypeRegistratorPostProcessor implements ProtoContextPostProcessor {

@@ -4,6 +4,8 @@ import com.google.common.base.Preconditions;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
+ * Utility functions for parser.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 @ParametersAreNonnullByDefault
@@ -33,6 +35,7 @@ public class Util {
 
     /**
      * Returns file name by given absolute or relative file location.
+     * TODO: remove unused?
      */
     public static String getFileName(String fullPath) {
         Preconditions.checkNotNull(fullPath, "path can not be null");

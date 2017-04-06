@@ -11,6 +11,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 /**
+ * Composite extension registry - combination of local extenstion registry
+ * and extension registries of all imported files.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public final class ProtoExtensionRegistry extends AbstractExtensionRegistry {

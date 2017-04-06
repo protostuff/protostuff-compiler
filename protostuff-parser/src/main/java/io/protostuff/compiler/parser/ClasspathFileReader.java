@@ -8,12 +8,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * File reader that can load files from classpath.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public class ClasspathFileReader implements FileReader {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ClasspathFileReader.class);
 
+    /**
+     * Load resource from classpath.
+     */
     public static InputStream readResource(String name) {
         String classpath = System.getProperty("java.class.path");
         LOGGER.trace("Reading {} from classpath={}", name, classpath);

@@ -6,6 +6,8 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 /**
+ * Caching implementation of an {@link Importer}.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 @Singleton

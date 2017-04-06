@@ -7,6 +7,8 @@ import io.protostuff.compiler.model.Extension;
 import java.util.Collection;
 
 /**
+ * Extension registry for a single proto file.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public class LocalExtensionRegistry extends AbstractExtensionRegistry {

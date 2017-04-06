@@ -12,6 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Utility for walking over a proto tree and invoking
+ * processors for corresponding tree nodes.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public class ProtoWalker {
@@ -113,6 +116,9 @@ public class ProtoWalker {
         return this;
     }
 
+    /**
+     * Start walking.
+     */
     public void walk() {
         for (Processor<Proto> protoProcessor : protoProcessors) {
             protoProcessor.run(context, proto);

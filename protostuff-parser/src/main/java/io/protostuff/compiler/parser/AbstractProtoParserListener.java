@@ -16,6 +16,8 @@ import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
 
 /**
+ * Base class for proto parse listeners.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public abstract class AbstractProtoParserListener extends ProtoParserBaseListener {

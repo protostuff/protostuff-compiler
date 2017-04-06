@@ -9,6 +9,8 @@ import java.util.Deque;
 import org.antlr.v4.runtime.BufferedTokenStream;
 
 /**
+ * Parse listener that is responsible for parsing options.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public class OptionParseListener extends AbstractProtoParserListener {

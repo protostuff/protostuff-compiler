@@ -6,6 +6,9 @@ import javax.annotation.Nullable;
 import org.antlr.v4.runtime.CharStream;
 
 /**
+ * File reader that can read data from multiple sources -
+ * classpath, local file system, etc.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public class CompositeFileReader implements FileReader {

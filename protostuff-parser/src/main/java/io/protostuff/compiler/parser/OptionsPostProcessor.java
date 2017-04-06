@@ -28,6 +28,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * Proto context post-processor for options.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public class OptionsPostProcessor implements ProtoContextPostProcessor {

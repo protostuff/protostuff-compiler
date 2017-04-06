@@ -4,6 +4,8 @@ import io.protostuff.compiler.model.Import;
 import javax.inject.Inject;
 
 /**
+ * Proto context post-processor for imports.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public class ImportsPostProcessor implements ProtoContextPostProcessor {

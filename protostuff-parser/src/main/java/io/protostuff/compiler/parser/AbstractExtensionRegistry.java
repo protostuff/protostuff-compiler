@@ -10,6 +10,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 /**
+ * Base class for extension registries.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public abstract class AbstractExtensionRegistry implements ExtensionRegistry {

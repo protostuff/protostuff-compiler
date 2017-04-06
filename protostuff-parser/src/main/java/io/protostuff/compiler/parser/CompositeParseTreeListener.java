@@ -9,6 +9,10 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
 /**
+ * Composite parse tree listener.
+ * Created in order to split complex parse tree listeners into
+ * smaller ones, responsible for partial processing of an AST tree.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public class CompositeParseTreeListener {
@@ -17,6 +21,9 @@ public class CompositeParseTreeListener {
         throw new IllegalAccessError("Utility class");
     }
 
+    /**
+     * Create new composite listener for a collection of delegates.
+     */
     @SafeVarargs
     public static <T extends ParseTreeListener> T create(Class<T> type, T... delegates) {
         ImmutableList<T> listeners = ImmutableList.copyOf(delegates);

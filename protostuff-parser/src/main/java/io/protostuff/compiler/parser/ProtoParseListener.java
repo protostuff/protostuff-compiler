@@ -10,6 +10,9 @@ import org.antlr.v4.runtime.BufferedTokenStream;
 import org.antlr.v4.runtime.Token;
 
 /**
+ * Parse listener responsible for partial processing of elements that
+ * can be defined for a proto file - package and imports.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public class ProtoParseListener extends AbstractProtoParserListener {
@@ -81,9 +84,9 @@ public class ProtoParseListener extends AbstractProtoParserListener {
     public void exitPackageStatement(ProtoParser.PackageStatementContext ctx) {
         Proto proto = context.peek(Proto.class);
         String packageName = ctx.packageName().getText();
-        Package aPackage = new Package(proto, packageName);
-        aPackage.setSourceCodeLocation(getSourceCodeLocation(ctx));
-        proto.setPackage(aPackage);
+        Package pkg = new Package(proto, packageName);
+        pkg.setSourceCodeLocation(getSourceCodeLocation(ctx));
+        proto.setPackage(pkg);
     }
 
     @Override

@@ -16,6 +16,8 @@ import java.util.Map;
 import java.util.Set;
 
 /**
+ * Validation post-processor for user types.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public class UserTypeValidationPostProcessor implements ProtoContextPostProcessor {

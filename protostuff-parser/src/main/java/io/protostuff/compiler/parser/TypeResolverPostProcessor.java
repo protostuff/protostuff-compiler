@@ -20,6 +20,8 @@ import java.util.Deque;
 import java.util.List;
 
 /**
+ * Post-processor for resolving type references.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public class TypeResolverPostProcessor implements ProtoContextPostProcessor {

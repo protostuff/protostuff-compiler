@@ -8,6 +8,8 @@ import io.protostuff.compiler.model.UserTypeContainer;
 import java.util.List;
 
 /**
+ * Post-processor that registers extensions in the extension registry.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public class ExtensionRegistratorPostProcessor implements ProtoContextPostProcessor {

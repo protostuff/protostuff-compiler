@@ -6,6 +6,8 @@ import io.protostuff.compiler.model.ServiceMethod;
 import org.antlr.v4.runtime.BufferedTokenStream;
 
 /**
+ * Parse listener for services.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public class ServiceParseListener extends AbstractProtoParserListener {
@@ -42,8 +44,8 @@ public class ServiceParseListener extends AbstractProtoParserListener {
 
     @Override
     public void exitRpcMethod(ProtoParser.RpcMethodContext ctx) {
-        ServiceMethod method = context.pop(ServiceMethod.class);
-        Service service = context.peek(Service.class);
+        final ServiceMethod method = context.pop(ServiceMethod.class);
+        final Service service = context.peek(Service.class);
         String name = ctx.rpcName().getText();
         String arg = ctx.rpcType(0).typeReference().getText();
         boolean argStream = ctx.rpcType(0).STREAM() != null;
