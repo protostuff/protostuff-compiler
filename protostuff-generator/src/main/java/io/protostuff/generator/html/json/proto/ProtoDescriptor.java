@@ -2,14 +2,10 @@ package io.protostuff.generator.html.json.proto;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
-import org.immutables.value.Value;
-
-import javax.annotation.Nullable;
-
 import io.protostuff.generator.html.json.index.NodeType;
-
 import java.util.Map;
+import javax.annotation.Nullable;
+import org.immutables.value.Value;
 
 /**
  * @author Kostiantyn Shchepanovskyi

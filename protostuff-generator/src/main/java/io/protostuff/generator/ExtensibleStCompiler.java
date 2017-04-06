@@ -3,16 +3,15 @@ package io.protostuff.generator;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import io.protostuff.compiler.model.Module;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 import org.stringtemplate.v4.AttributeRenderer;
 import org.stringtemplate.v4.Interpreter;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
 import org.stringtemplate.v4.misc.ObjectModelAdaptor;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
 
 public class ExtensibleStCompiler implements ProtoCompiler {
 

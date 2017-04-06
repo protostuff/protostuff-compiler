@@ -1,17 +1,24 @@
 package io.protostuff.generator.java;
 
+import static io.protostuff.compiler.model.ScalarFieldType.BOOL;
+import static io.protostuff.compiler.model.ScalarFieldType.BYTES;
+import static io.protostuff.compiler.model.ScalarFieldType.STRING;
+import static io.protostuff.compiler.parser.MessageParseListener.MAP_ENTRY_KEY;
+import static io.protostuff.compiler.parser.MessageParseListener.MAP_ENTRY_VALUE;
+
 import com.google.common.collect.ImmutableMap;
 import io.protostuff.compiler.model.Enum;
-import io.protostuff.compiler.model.*;
+import io.protostuff.compiler.model.EnumConstant;
+import io.protostuff.compiler.model.Field;
+import io.protostuff.compiler.model.FieldType;
+import io.protostuff.compiler.model.Message;
+import io.protostuff.compiler.model.ScalarFieldType;
+import io.protostuff.compiler.model.Type;
+import io.protostuff.compiler.model.UserType;
 import io.protostuff.generator.Formatter;
-
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
-
-import static io.protostuff.compiler.model.ScalarFieldType.*;
-import static io.protostuff.compiler.parser.MessageParseListener.MAP_ENTRY_KEY;
-import static io.protostuff.compiler.parser.MessageParseListener.MAP_ENTRY_VALUE;
 
 /**
  * @author Kostiantyn Shchepanovskyi

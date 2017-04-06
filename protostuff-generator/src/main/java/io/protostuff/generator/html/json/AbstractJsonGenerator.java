@@ -8,10 +8,9 @@ import io.protostuff.compiler.model.Module;
 import io.protostuff.generator.GeneratorException;
 import io.protostuff.generator.OutputStreamFactory;
 import io.protostuff.generator.html.HtmlCompiler;
+import java.io.OutputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.OutputStream;
 
 /**
  * @author Kostiantyn Shchepanovskyi

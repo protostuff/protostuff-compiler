@@ -3,7 +3,6 @@ package io.protostuff.generator.java;
 import io.protostuff.compiler.model.Message;
 import io.protostuff.compiler.model.Oneof;
 import io.protostuff.generator.Formatter;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -27,7 +26,7 @@ public class MessageUtil {
             return Collections.emptyList();
         }
         List<String> result = new ArrayList<>();
-        int n = (fieldCount-1) / 32 + 1;
+        int n = (fieldCount - 1) / 32 + 1;
         for (int i = 0; i < n; i++) {
             result.add("__bitField" + i);
         }

@@ -1,6 +1,10 @@
 package io.protostuff.generator.html.uml;
 
 import io.protostuff.generator.GeneratorException;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Map;
 import net.sourceforge.plantuml.FileFormat;
 import net.sourceforge.plantuml.FileFormatOption;
 import net.sourceforge.plantuml.SourceStringReader;
@@ -8,11 +12,6 @@ import org.parboiled.common.Base64;
 import org.pegdown.Printer;
 import org.pegdown.VerbatimSerializer;
 import org.pegdown.ast.VerbatimNode;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.Map;
 
 /**
  * Source: https://bitbucket.org/peachjean/pegdown-uml/src/3e053df209e8?at=default

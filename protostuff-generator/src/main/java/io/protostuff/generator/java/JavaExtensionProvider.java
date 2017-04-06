@@ -1,7 +1,14 @@
 package io.protostuff.generator.java;
 
 import io.protostuff.compiler.model.Enum;
-import io.protostuff.compiler.model.*;
+import io.protostuff.compiler.model.EnumConstant;
+import io.protostuff.compiler.model.Field;
+import io.protostuff.compiler.model.Message;
+import io.protostuff.compiler.model.Oneof;
+import io.protostuff.compiler.model.Proto;
+import io.protostuff.compiler.model.ScalarFieldType;
+import io.protostuff.compiler.model.Service;
+import io.protostuff.compiler.model.ServiceMethod;
 import io.protostuff.generator.AbstractExtensionProvider;
 
 /**

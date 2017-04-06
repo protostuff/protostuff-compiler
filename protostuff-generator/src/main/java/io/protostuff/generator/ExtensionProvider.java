@@ -1,8 +1,7 @@
 package io.protostuff.generator;
 
-import org.stringtemplate.v4.AttributeRenderer;
-
 import java.util.Map;
+import org.stringtemplate.v4.AttributeRenderer;
 
 public interface ExtensionProvider {
 

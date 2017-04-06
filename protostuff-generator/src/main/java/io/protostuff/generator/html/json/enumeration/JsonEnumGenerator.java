@@ -1,9 +1,5 @@
 package io.protostuff.generator.html.json.enumeration;
 
-import java.util.stream.Collectors;
-
-import javax.inject.Inject;
-
 import io.protostuff.compiler.model.Enum;
 import io.protostuff.compiler.model.Module;
 import io.protostuff.compiler.model.UserTypeContainer;
@@ -13,6 +9,8 @@ import io.protostuff.generator.html.json.ImmutableUsageItem;
 import io.protostuff.generator.html.json.UsageType;
 import io.protostuff.generator.html.json.index.NodeType;
 import io.protostuff.generator.html.markdown.MarkdownProcessor;
+import java.util.stream.Collectors;
+import javax.inject.Inject;
 
 /**
  * @author Kostiantyn Shchepanovskyi

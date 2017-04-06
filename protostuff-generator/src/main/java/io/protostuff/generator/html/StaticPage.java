@@ -2,7 +2,6 @@ package io.protostuff.generator.html;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
-
 import java.io.File;
 
 public class StaticPage {

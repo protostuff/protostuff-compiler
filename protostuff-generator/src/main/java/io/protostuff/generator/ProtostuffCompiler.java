@@ -11,11 +11,10 @@ import io.protostuff.compiler.parser.FileReader;
 import io.protostuff.compiler.parser.FileReaderFactory;
 import io.protostuff.compiler.parser.Importer;
 import io.protostuff.compiler.parser.ProtoContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.HashMap;
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Kostiantyn Shchepanovskyi

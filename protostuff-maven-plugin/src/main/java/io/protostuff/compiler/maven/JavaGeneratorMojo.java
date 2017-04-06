@@ -1,19 +1,18 @@
 package io.protostuff.compiler.maven;
 
+import static java.util.Collections.singletonList;
+import static org.apache.maven.plugins.annotations.ResolutionScope.COMPILE_PLUS_RUNTIME;
+
 import io.protostuff.compiler.model.ImmutableModuleConfiguration;
 import io.protostuff.compiler.model.ModuleConfiguration;
 import io.protostuff.generator.ProtostuffCompiler;
+import java.io.File;
+import java.nio.file.Path;
+import java.util.List;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
-
-import java.io.File;
-import java.nio.file.Path;
-import java.util.List;
-
-import static java.util.Collections.singletonList;
-import static org.apache.maven.plugins.annotations.ResolutionScope.COMPILE_PLUS_RUNTIME;
 
 /**
  * @author Kostiantyn Shchepanovskyi

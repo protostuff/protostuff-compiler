@@ -1,23 +1,22 @@
 package io.protostuff.generator.html.json.pages;
 
+import static io.protostuff.generator.html.HtmlGenerator.PAGES;
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.util.Collections.emptyList;
+
 import io.protostuff.compiler.model.Module;
 import io.protostuff.generator.GeneratorException;
 import io.protostuff.generator.OutputStreamFactory;
 import io.protostuff.generator.html.StaticPage;
 import io.protostuff.generator.html.json.AbstractJsonGenerator;
 import io.protostuff.generator.html.markdown.MarkdownProcessor;
-import org.apache.commons.io.FilenameUtils;
-
-import javax.inject.Inject;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
-
-import static io.protostuff.generator.html.HtmlGenerator.PAGES;
-import static java.nio.charset.StandardCharsets.UTF_8;
-import static java.util.Collections.emptyList;
+import javax.inject.Inject;
+import org.apache.commons.io.FilenameUtils;
 
 public class JsonPageGenerator extends AbstractJsonGenerator {
 

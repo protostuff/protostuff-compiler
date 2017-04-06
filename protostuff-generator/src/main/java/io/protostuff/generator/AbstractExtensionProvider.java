@@ -1,11 +1,10 @@
 package io.protostuff.generator;
 
-import org.stringtemplate.v4.AttributeRenderer;
-
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
+import org.stringtemplate.v4.AttributeRenderer;
 
 /**
  * @author Kostiantyn Shchepanovskyi

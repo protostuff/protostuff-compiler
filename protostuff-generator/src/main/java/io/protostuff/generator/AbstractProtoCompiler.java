@@ -1,13 +1,21 @@
 package io.protostuff.generator;
 
 import io.protostuff.compiler.model.Enum;
-import io.protostuff.compiler.model.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.*;
+import io.protostuff.compiler.model.Message;
+import io.protostuff.compiler.model.Module;
+import io.protostuff.compiler.model.Proto;
+import io.protostuff.compiler.model.Service;
+import io.protostuff.compiler.model.UserTypeContainer;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Kostiantyn Shchepanovskyi
