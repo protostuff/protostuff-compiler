@@ -3,13 +3,15 @@ package io.protostuff.generator;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import io.protostuff.compiler.model.Enum;
-import io.protostuff.compiler.model.*;
+import io.protostuff.compiler.model.Message;
+import io.protostuff.compiler.model.Module;
+import io.protostuff.compiler.model.Proto;
+import io.protostuff.compiler.model.Service;
+import java.io.IOException;
+import java.io.Writer;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
 import org.stringtemplate.v4.STGroupFile;
-
-import java.io.IOException;
-import java.io.Writer;
 
 /**
  * Proto compiler based on StringTemplate 4.
@@ -48,6 +50,9 @@ public class StCompiler extends AbstractProtoCompiler {
 
     private final STGroup stGroup;
 
+    /**
+     * Create new {@link StCompiler} instance.
+     */
     @Inject
     public StCompiler(OutputStreamFactory outputStreamFactory,
                       @Assisted String templateFileName) {

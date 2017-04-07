@@ -11,13 +11,14 @@ import io.protostuff.compiler.parser.FileReader;
 import io.protostuff.compiler.parser.FileReaderFactory;
 import io.protostuff.compiler.parser.Importer;
 import io.protostuff.compiler.parser.ProtoContext;
+import java.util.HashMap;
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
+ * Protostuff compiler entry point - used by CLI, maven plugin, etc.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public class ProtostuffCompiler {
@@ -26,12 +27,18 @@ public class ProtostuffCompiler {
 
     protected final Injector injector;
 
+    /**
+     * Create new compiler instance.
+     */
     public ProtostuffCompiler() {
         injector = Guice.createInjector(
                 new ParserModule(),
                 new CompilerModule());
     }
 
+    /**
+     * Compile module - parse source files and generate code using specified outputs.
+     */
     public void compile(ModuleConfiguration configuration) {
         LOGGER.debug("Compiling module {}", configuration);
         FileReaderFactory fileReaderFactory = injector.getInstance(FileReaderFactory.class);

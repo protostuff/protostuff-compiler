@@ -6,11 +6,10 @@ import io.protostuff.compiler.model.Module;
 import io.protostuff.generator.OutputStreamFactory;
 import io.protostuff.generator.html.StaticPage;
 import io.protostuff.generator.html.json.AbstractJsonGenerator;
-import org.apache.commons.io.FilenameUtils;
-
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
+import org.apache.commons.io.FilenameUtils;
 
 public class JsonPagesIndexGenerator extends AbstractJsonGenerator {
 

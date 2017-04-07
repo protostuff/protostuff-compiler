@@ -1,16 +1,16 @@
 package io.protostuff.compiler.parser;
 
-import org.antlr.v4.runtime.BufferedTokenStream;
-
-import java.math.BigInteger;
-import java.util.ArrayDeque;
-import java.util.Deque;
-
 import io.protostuff.compiler.model.AbstractDescriptor;
 import io.protostuff.compiler.model.DynamicMessage;
 import io.protostuff.compiler.model.SourceCodeLocation;
+import java.math.BigInteger;
+import java.util.ArrayDeque;
+import java.util.Deque;
+import org.antlr.v4.runtime.BufferedTokenStream;
 
 /**
+ * Parse listener that is responsible for parsing options.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public class OptionParseListener extends AbstractProtoParserListener {

@@ -1,16 +1,27 @@
 package io.protostuff.generator.html.markdown;
 
+import static org.pegdown.Extensions.ABBREVIATIONS;
+import static org.pegdown.Extensions.ATXHEADERSPACE;
+import static org.pegdown.Extensions.AUTOLINKS;
+import static org.pegdown.Extensions.DEFINITIONS;
+import static org.pegdown.Extensions.FENCED_CODE_BLOCKS;
+import static org.pegdown.Extensions.FORCELISTITEMPARA;
+import static org.pegdown.Extensions.RELAXEDHRULES;
+import static org.pegdown.Extensions.SMARTYPANTS;
+import static org.pegdown.Extensions.STRIKETHROUGH;
+import static org.pegdown.Extensions.SUPPRESS_ALL_HTML;
+import static org.pegdown.Extensions.TABLES;
+import static org.pegdown.Extensions.TASKLISTITEMS;
+import static org.pegdown.Extensions.WIKILINKS;
+
 import io.protostuff.generator.html.uml.PlantUmlVerbatimSerializer;
+import java.util.HashMap;
+import java.util.Map;
 import org.pegdown.LinkRenderer;
 import org.pegdown.PegDownProcessor;
 import org.pegdown.VerbatimSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import static org.pegdown.Extensions.*;
 
 public class PegDownMarkdownProcessor implements MarkdownProcessor {
 

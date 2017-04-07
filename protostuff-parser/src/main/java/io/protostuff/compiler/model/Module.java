@@ -1,11 +1,13 @@
 package io.protostuff.compiler.model;
 
-import org.immutables.value.Value;
-
 import java.util.List;
 import java.util.Map;
+import org.immutables.value.Value;
 
 /**
+ * Module represents a compilation unit - a set of proto files,
+ * generator name and generation options.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 @Value.Immutable

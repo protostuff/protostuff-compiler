@@ -3,19 +3,24 @@ package io.protostuff.compiler.model;
 import java.util.Objects;
 
 /**
+ * Import node of a proto file.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public final class Import extends AbstractElement {
 
     private final Proto parent;
     private final String value;
-    private final boolean aPublic;
+    private final boolean isPublic;
     private Proto proto;
 
-    public Import(Proto parent, String value, boolean aPublic) {
+    /**
+     * Create new import node instance.
+     */
+    public Import(Proto parent, String value, boolean isPublic) {
         this.parent = parent;
         this.value = value;
-        this.aPublic = aPublic;
+        this.isPublic = isPublic;
     }
 
     @Override
@@ -28,7 +33,7 @@ public final class Import extends AbstractElement {
     }
 
     public boolean isPublic() {
-        return aPublic;
+        return isPublic;
     }
 
     public Proto getProto() {
@@ -47,14 +52,14 @@ public final class Import extends AbstractElement {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Import anImport = (Import) o;
-        return Objects.equals(aPublic, anImport.aPublic) &&
-                Objects.equals(value, anImport.value);
+        Import that = (Import) o;
+        return Objects.equals(isPublic, that.isPublic)
+                && Objects.equals(value, that.value);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(value, aPublic);
+        return Objects.hash(value, isPublic);
     }
 
     @Override

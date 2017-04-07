@@ -2,7 +2,6 @@ package io.protostuff.generator.html;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
-
 import java.io.File;
 
 public class StaticPage {
@@ -35,8 +34,8 @@ public class StaticPage {
             return false;
         }
         StaticPage page = (StaticPage) o;
-        return Objects.equal(name, page.name) &&
-                Objects.equal(file, page.file);
+        return Objects.equal(name, page.name)
+                && Objects.equal(file, page.file);
     }
 
     @Override

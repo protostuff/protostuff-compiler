@@ -3,6 +3,8 @@ package io.protostuff.generator;
 import java.util.function.Function;
 
 /**
+ * Custom property provider for proto tree nodes.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public interface PropertyProvider {

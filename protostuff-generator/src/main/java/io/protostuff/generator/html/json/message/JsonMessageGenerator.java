@@ -13,11 +13,12 @@ import io.protostuff.generator.html.json.ImmutableUsageItem;
 import io.protostuff.generator.html.json.UsageType;
 import io.protostuff.generator.html.json.index.NodeType;
 import io.protostuff.generator.html.markdown.MarkdownProcessor;
-
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 
 /**
+ * JSON generator for messages.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public class JsonMessageGenerator extends AbstractJsonGenerator {

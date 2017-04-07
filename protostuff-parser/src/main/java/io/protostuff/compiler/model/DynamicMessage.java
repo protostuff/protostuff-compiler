@@ -4,12 +4,17 @@ import com.google.common.base.MoreObjects;
 import com.google.common.base.Preconditions;
 import io.protostuff.compiler.parser.ParserException;
 import io.protostuff.compiler.parser.Util;
-
-import javax.annotation.Nonnull;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
+import javax.annotation.Nonnull;
 
 /**
+ * Data structure that represents value of an option.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public class DynamicMessage implements Map<String, DynamicMessage.Value> {
@@ -22,6 +27,18 @@ public class DynamicMessage implements Map<String, DynamicMessage.Value> {
 
     public DynamicMessage() {
         this.fields = new HashMap<>();
+    }
+
+    /**
+     * Get option value for a given key (field name or field key - for accessing custom options).
+     */
+    @Override
+    public Value get(Object key) {
+        if (key instanceof String) {
+            String name = (String) key;
+            return get(name);
+        }
+        return fields.get(key);
     }
 
     /**
@@ -60,6 +77,9 @@ public class DynamicMessage implements Map<String, DynamicMessage.Value> {
         set(SourceCodeLocation.UNKNOWN, name, value);
     }
 
+    /**
+     * Set field of an option to a given value.
+     */
     public void set(SourceCodeLocation sourceCodeLocation, String name, Value value) {
         if (name.length() > 1) {
             int dot;
@@ -91,16 +111,6 @@ public class DynamicMessage implements Map<String, DynamicMessage.Value> {
         }
     }
 
-    private DynamicMessage getChildMessage(Value value, Key key) {
-        DynamicMessage msg;
-        Value val = fields.get(key);
-        if (!val.isMessageType()) {
-            throw new ParserException(value, "Can not assign option value: type error");
-        }
-        msg = val.getMessage();
-        return msg;
-    }
-
     private void set(Key key, Value value) {
         if (fields.containsKey(key) && value.isMessageType()) {
             // merge
@@ -115,6 +125,16 @@ public class DynamicMessage implements Map<String, DynamicMessage.Value> {
             // create new or override previous value
             fields.put(key, value);
         }
+    }
+
+    private DynamicMessage getChildMessage(Value value, Key key) {
+        DynamicMessage msg;
+        Value val = fields.get(key);
+        if (!val.isMessageType()) {
+            throw new ParserException(value, "Can not assign option value: type error");
+        }
+        msg = val.getMessage();
+        return msg;
     }
 
     private void merge(DynamicMessage message) {
@@ -171,15 +191,6 @@ public class DynamicMessage implements Map<String, DynamicMessage.Value> {
     }
 
     @Override
-    public Value get(Object key) {
-        if (key instanceof String) {
-            String name = (String) key;
-            return get(name);
-        }
-        return fields.get(key);
-    }
-
-    @Override
     public Value put(String key, Value value) {
         throw new UnsupportedOperationException();
     }
@@ -229,7 +240,7 @@ public class DynamicMessage implements Map<String, DynamicMessage.Value> {
     }
 
     /**
-     * Change option name to its fully qualified name
+     * Change option name to its fully qualified name.
      */
     public void normalizeName(Key key, String fullyQualifiedName) {
         Value value = fields.remove(key);
@@ -278,8 +289,9 @@ public class DynamicMessage implements Map<String, DynamicMessage.Value> {
             case MESSAGE:
                 // TODO
                 return null;
+            default:
+                return value;
         }
-        return value;
     }
 
     public static class Key {
@@ -316,8 +328,8 @@ public class DynamicMessage implements Map<String, DynamicMessage.Value> {
                 return false;
             }
             Key key = (Key) o;
-            return extension == key.extension &&
-                    Objects.equals(name, key.name);
+            return extension == key.extension
+                    && Objects.equals(name, key.name);
         }
 
         @Override
@@ -477,6 +489,9 @@ public class DynamicMessage implements Map<String, DynamicMessage.Value> {
             return number;
         }
 
+        /**
+         * Get option value as {@code int32} number, if option is a numeric value.
+         */
         public int getInt32() {
             Preconditions.checkState(isIntegerType(), "%s is not a number", this);
             Preconditions.checkState(number <= Integer.MAX_VALUE, "%s does not fit into int32", number);

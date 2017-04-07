@@ -7,6 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * Adapter for ANTLR error listener that logs errors.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public class ParseErrorLogger extends BaseErrorListener {

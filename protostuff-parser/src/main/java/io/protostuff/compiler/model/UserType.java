@@ -1,6 +1,9 @@
 package io.protostuff.compiler.model;
 
 /**
+ * User type is a base interface for all types that can be defined
+ * by user - messages, enums and groups.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public interface UserType extends Descriptor, FieldType {

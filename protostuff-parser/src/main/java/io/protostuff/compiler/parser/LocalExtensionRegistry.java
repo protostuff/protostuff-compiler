@@ -3,12 +3,12 @@ package io.protostuff.compiler.parser;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.SetMultimap;
-
+import io.protostuff.compiler.model.Extension;
 import java.util.Collection;
 
-import io.protostuff.compiler.model.Extension;
-
 /**
+ * Extension registry for a single proto file.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public class LocalExtensionRegistry extends AbstractExtensionRegistry {

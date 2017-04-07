@@ -1,5 +1,8 @@
 package io.protostuff.generator;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.inject.multibindings.MapBinder.newMapBinder;
+
 import com.google.inject.AbstractModule;
 import com.google.inject.Provider;
 import com.google.inject.Provides;
@@ -20,8 +23,6 @@ import io.protostuff.generator.html.json.service.JsonServiceGenerator;
 import io.protostuff.generator.html.markdown.MarkdownProcessor;
 import io.protostuff.generator.html.markdown.PegDownMarkdownProcessor;
 import io.protostuff.generator.java.JavaExtensionProvider;
-
-import javax.inject.Inject;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -30,11 +31,11 @@ import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
-
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.inject.multibindings.MapBinder.newMapBinder;
+import javax.inject.Inject;
 
 /**
+ * Guice module for code generators.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public class CompilerModule extends AbstractModule {

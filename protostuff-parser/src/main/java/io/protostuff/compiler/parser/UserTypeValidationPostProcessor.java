@@ -1,12 +1,23 @@
 package io.protostuff.compiler.parser;
 
 import com.google.common.annotations.VisibleForTesting;
-import io.protostuff.compiler.model.*;
+import io.protostuff.compiler.model.DynamicMessage;
 import io.protostuff.compiler.model.Enum;
-
-import java.util.*;
+import io.protostuff.compiler.model.EnumConstant;
+import io.protostuff.compiler.model.Field;
+import io.protostuff.compiler.model.Message;
+import io.protostuff.compiler.model.Range;
+import io.protostuff.compiler.model.Service;
+import io.protostuff.compiler.model.ServiceMethod;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
+ * Validation post-processor for user types.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public class UserTypeValidationPostProcessor implements ProtoContextPostProcessor {

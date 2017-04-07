@@ -3,12 +3,13 @@ package io.protostuff.generator.java;
 import io.protostuff.compiler.model.Message;
 import io.protostuff.compiler.model.Oneof;
 import io.protostuff.generator.Formatter;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 /**
+ * Custom message properties for java code generator.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public class MessageUtil {
@@ -21,13 +22,16 @@ public class MessageUtil {
         return !message.getFields().isEmpty();
     }
 
+    /**
+     * Returns a list of bit fields used for field presence checks.
+     */
     public static List<String> bitFieldNames(Message message) {
         int fieldCount = message.getFieldCount();
         if (fieldCount == 0) {
             return Collections.emptyList();
         }
         List<String> result = new ArrayList<>();
-        int n = (fieldCount-1) / 32 + 1;
+        int n = (fieldCount - 1) / 32 + 1;
         for (int i = 0; i < n; i++) {
             result.add("__bitField" + i);
         }
@@ -39,6 +43,9 @@ public class MessageUtil {
         return Formatter.toPascalCase(name) + "Case";
     }
 
+    /**
+     * Returns a "not set" name for one-of enum constant.
+     */
     public static String getOneofNotSetConstantName(Oneof oneof) {
         String name = oneof.getName();
         String underscored = Formatter.toUnderscoreCase(name);

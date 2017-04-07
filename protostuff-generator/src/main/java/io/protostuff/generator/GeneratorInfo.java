@@ -1,6 +1,8 @@
 package io.protostuff.generator;
 
 /**
+ * Generator information to be used in generated code.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public class GeneratorInfo {

@@ -3,7 +3,6 @@ package io.protostuff.compiler.model;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import io.protostuff.compiler.parser.ProtoWalker;
-
 import java.util.Collection;
 import java.util.Collections;
 
@@ -15,6 +14,9 @@ public class UsageIndex {
         return build(Collections.singletonList(proto));
     }
 
+    /**
+     * Build usage index for given collection of proto files.
+     */
     public static UsageIndex build(Collection<Proto> protos) {
         UsageIndex usageIndex = new UsageIndex();
         for (Proto proto : protos) {

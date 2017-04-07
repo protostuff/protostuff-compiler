@@ -3,6 +3,8 @@ package io.protostuff.generator.java;
 import com.google.common.collect.ImmutableSet;
 
 /**
+ * Java language constants.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public class JavaConstants {

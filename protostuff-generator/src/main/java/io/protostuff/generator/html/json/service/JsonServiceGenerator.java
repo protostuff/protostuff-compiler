@@ -6,11 +6,12 @@ import io.protostuff.generator.OutputStreamFactory;
 import io.protostuff.generator.html.json.AbstractJsonGenerator;
 import io.protostuff.generator.html.json.index.NodeType;
 import io.protostuff.generator.html.markdown.MarkdownProcessor;
-
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 
 /**
+ * JSON service node generator.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public class JsonServiceGenerator extends AbstractJsonGenerator {

@@ -1,10 +1,11 @@
 package io.protostuff.compiler.parser;
 
+import io.protostuff.compiler.model.Import;
 import javax.inject.Inject;
 
-import io.protostuff.compiler.model.Import;
-
 /**
+ * Proto context post-processor for imports.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public class ImportsPostProcessor implements ProtoContextPostProcessor {

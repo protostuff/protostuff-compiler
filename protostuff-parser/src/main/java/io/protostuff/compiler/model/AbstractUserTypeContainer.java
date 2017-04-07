@@ -5,6 +5,9 @@ import java.util.Collections;
 import java.util.List;
 
 /**
+ * Container for user types. Protocol buffers have two main elements that can contain
+ * children - proto file node and message.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public abstract class AbstractUserTypeContainer extends AbstractDescriptor implements UserTypeContainer {

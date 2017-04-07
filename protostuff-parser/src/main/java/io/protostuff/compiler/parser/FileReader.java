@@ -1,10 +1,12 @@
 package io.protostuff.compiler.parser;
 
+import javax.annotation.Nullable;
 import org.antlr.v4.runtime.CharStream;
 
-import javax.annotation.Nullable;
-
 /**
+ * File reader reads a file and returns a character stream,
+ * later consumed by lexer.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public interface FileReader {

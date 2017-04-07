@@ -2,12 +2,13 @@ package io.protostuff.generator.java;
 
 import com.google.common.collect.ImmutableMap;
 import io.protostuff.compiler.model.ScalarFieldType;
-
-import javax.annotation.Nonnull;
 import java.util.EnumMap;
 import java.util.Map;
+import javax.annotation.Nonnull;
 
 /**
+ * Custom scalar fiel type properties for java code generator.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public class ScalarFieldTypeUtil {

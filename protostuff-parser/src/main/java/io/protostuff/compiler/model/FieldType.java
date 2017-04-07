@@ -42,6 +42,7 @@ public interface FieldType extends Type {
      */
     @Override
     String getCanonicalName();
+
     /**
      * Test if this type is scalar.
      */

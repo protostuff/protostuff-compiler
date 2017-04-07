@@ -2,18 +2,16 @@ package io.protostuff.generator.html.json.message;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
 import io.protostuff.generator.html.json.UsageItem;
-import org.immutables.value.Value;
-
+import io.protostuff.generator.html.json.index.NodeType;
 import java.util.List;
 import java.util.Map;
-
 import javax.annotation.Nullable;
-
-import io.protostuff.generator.html.json.index.NodeType;
+import org.immutables.value.Value;
 
 /**
+ * JSON node representing message.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 @Value.Immutable

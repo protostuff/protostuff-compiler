@@ -1,16 +1,32 @@
 package io.protostuff.compiler.parser;
 
-import io.protostuff.compiler.model.*;
+import static io.protostuff.compiler.model.FieldModifier.OPTIONAL;
+import static io.protostuff.compiler.model.FieldModifier.REPEATED;
+import static io.protostuff.compiler.model.FieldModifier.REQUIRED;
+
+import io.protostuff.compiler.model.AbstractUserTypeContainer;
 import io.protostuff.compiler.model.DynamicMessage.Value;
+import io.protostuff.compiler.model.Element;
+import io.protostuff.compiler.model.Extension;
+import io.protostuff.compiler.model.ExtensionContainer;
+import io.protostuff.compiler.model.Field;
+import io.protostuff.compiler.model.FieldContainer;
+import io.protostuff.compiler.model.Group;
+import io.protostuff.compiler.model.GroupContainer;
+import io.protostuff.compiler.model.Message;
+import io.protostuff.compiler.model.MessageContainer;
+import io.protostuff.compiler.model.Oneof;
+import io.protostuff.compiler.model.Range;
+import io.protostuff.compiler.model.SourceCodeLocation;
+import io.protostuff.compiler.model.UserTypeContainer;
+import java.util.ArrayList;
+import java.util.List;
 import org.antlr.v4.runtime.BufferedTokenStream;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static io.protostuff.compiler.model.FieldModifier.*;
-
 /**
+ * Parse listener responsible for processing messages.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public class MessageParseListener extends AbstractProtoParserListener {
@@ -70,14 +86,14 @@ public class MessageParseListener extends AbstractProtoParserListener {
     @Override
     public void exitField(ProtoParser.FieldContext ctx) {
         Field field = context.pop(Field.class);
-        FieldContainer fieldContainer = context.peek(FieldContainer.class);
-        String name = ctx.fieldName().getText();
-        String type = ctx.typeReference().getText();
-        Integer tag = Integer.decode(ctx.tag().getText());
+        final FieldContainer fieldContainer = context.peek(FieldContainer.class);
         updateModifier(ctx.fieldModifier(), field);
+        String name = ctx.fieldName().getText();
         field.setName(name);
+        Integer tag = Integer.decode(ctx.tag().getText());
         field.setTag(tag);
         field.setIndex(fieldContainer.getFieldCount() + 1);
+        String type = ctx.typeReference().getText();
         field.setTypeName(type);
         field.setSourceCodeLocation(getSourceCodeLocation(ctx));
         fieldContainer.addField(field);
@@ -121,8 +137,8 @@ public class MessageParseListener extends AbstractProtoParserListener {
         Group group = context.pop(Group.class);
         group.setName(ctx.groupName().getText());
         group.setSourceCodeLocation(getSourceCodeLocation(ctx));
-        GroupContainer groupContainer = context.peek(GroupContainer.class);
-        FieldContainer fieldContainer = context.peek(FieldContainer.class);
+        final GroupContainer groupContainer = context.peek(GroupContainer.class);
+        final FieldContainer fieldContainer = context.peek(FieldContainer.class);
         Field field = new Field(fieldContainer);
         field.setName(group.getName().toLowerCase()); // same behavior as in protoc
         int tag = Integer.decode(ctx.tag().getText());
@@ -204,19 +220,19 @@ public class MessageParseListener extends AbstractProtoParserListener {
 
     @Override
     public void exitMap(ProtoParser.MapContext ctx) {
-        Field field = context.pop(Field.class);
-        Message message = context.peek(Message.class);
+        final Field field = context.pop(Field.class);
+        final Message message = context.peek(Message.class);
         String name = ctx.fieldName().getText();
-        String keyTypeName = ctx.mapKey().getText();
-        String valueTypeName = ctx.mapValue().getText();
         SourceCodeLocation codeLocation = getSourceCodeLocation(ctx);
         Message map = new Message(message);
         String mapEntryTypeName = name + "_entry";
         map.setName(mapEntryTypeName);
         map.setSourceCodeLocation(codeLocation);
         map.getOptions().set(codeLocation, OPTION_MAP_ENTRY, Value.createBoolean(true));
+        String keyTypeName = ctx.mapKey().getText();
         Field keyField = createMapKeyField(map, keyTypeName, codeLocation);
         map.addField(keyField);
+        String valueTypeName = ctx.mapValue().getText();
         Field valueField = createMapValueField(map, valueTypeName, codeLocation);
         map.addField(valueField);
         Integer tag = Integer.decode(ctx.tag().getText());

@@ -1,16 +1,28 @@
 package io.protostuff.generator.java;
 
 import io.protostuff.compiler.model.Enum;
-import io.protostuff.compiler.model.*;
+import io.protostuff.compiler.model.EnumConstant;
+import io.protostuff.compiler.model.Field;
+import io.protostuff.compiler.model.Message;
+import io.protostuff.compiler.model.Oneof;
+import io.protostuff.compiler.model.Proto;
+import io.protostuff.compiler.model.ScalarFieldType;
+import io.protostuff.compiler.model.Service;
+import io.protostuff.compiler.model.ServiceMethod;
 import io.protostuff.generator.AbstractExtensionProvider;
 
 /**
+ * Extension provider for java code generator.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public class JavaExtensionProvider extends AbstractExtensionProvider {
 
     public static final String JAVA_NAME = "javaName";
 
+    /**
+     * Create new instance of java extension provider.
+     */
     public JavaExtensionProvider() {
         registerProperty(Proto.class, "javaPackage", ProtoUtil::getPackage);
         registerProperty(Proto.class, "javaPackagePath", ProtoUtil::getPackagePath);

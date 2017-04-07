@@ -1,12 +1,13 @@
 package io.protostuff.compiler.model;
 
 import com.google.common.base.MoreObjects;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 /**
+ * Service node.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public class Service extends AbstractDescriptor implements Type {
@@ -14,7 +15,7 @@ public class Service extends AbstractDescriptor implements Type {
     private final Proto parent;
     private Proto proto;
     private String fullyQualifiedName;
-    private List<ServiceMethod> methods;
+    private List<ServiceMethod> methods = new ArrayList<>();
 
     public Service(Proto parent) {
         this.parent = parent;
@@ -48,9 +49,6 @@ public class Service extends AbstractDescriptor implements Type {
     }
 
     public List<ServiceMethod> getMethods() {
-        if (methods == null) {
-            return Collections.emptyList();
-        }
         return methods;
     }
 
@@ -58,6 +56,9 @@ public class Service extends AbstractDescriptor implements Type {
         this.methods = methods;
     }
 
+    /**
+     * Get a service method by it's name.
+     */
     public ServiceMethod getMethod(String name) {
         for (ServiceMethod serviceMethod : getMethods()) {
             if (serviceMethod.getName().equals(name)) {
@@ -68,9 +69,6 @@ public class Service extends AbstractDescriptor implements Type {
     }
 
     public void addMethod(ServiceMethod method) {
-        if (methods == null) {
-            methods = new ArrayList<>();
-        }
         methods.add(method);
     }
 

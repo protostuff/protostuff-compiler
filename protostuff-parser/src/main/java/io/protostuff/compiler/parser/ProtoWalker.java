@@ -1,12 +1,20 @@
 package io.protostuff.compiler.parser;
 
 import io.protostuff.compiler.model.Enum;
-import io.protostuff.compiler.model.*;
-
+import io.protostuff.compiler.model.EnumConstant;
+import io.protostuff.compiler.model.Field;
+import io.protostuff.compiler.model.Message;
+import io.protostuff.compiler.model.Proto;
+import io.protostuff.compiler.model.Service;
+import io.protostuff.compiler.model.ServiceMethod;
+import io.protostuff.compiler.model.UserTypeContainer;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Utility for walking over a proto tree and invoking
+ * processors for corresponding tree nodes.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public class ProtoWalker {
@@ -108,6 +116,9 @@ public class ProtoWalker {
         return this;
     }
 
+    /**
+     * Start walking.
+     */
     public void walk() {
         for (Processor<Proto> protoProcessor : protoProcessors) {
             protoProcessor.run(context, proto);

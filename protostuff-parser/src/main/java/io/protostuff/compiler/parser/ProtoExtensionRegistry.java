@@ -3,7 +3,6 @@ package io.protostuff.compiler.parser;
 import io.protostuff.compiler.model.Extension;
 import io.protostuff.compiler.model.Import;
 import io.protostuff.compiler.model.Proto;
-
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -12,6 +11,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 /**
+ * Composite extension registry - combination of local extenstion registry
+ * and extension registries of all imported files.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public final class ProtoExtensionRegistry extends AbstractExtensionRegistry {

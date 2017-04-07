@@ -1,6 +1,8 @@
 package io.protostuff.compiler.model;
 
 /**
+ * Misc constants for Google Protocol Buffers.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public class ProtobufConstants {

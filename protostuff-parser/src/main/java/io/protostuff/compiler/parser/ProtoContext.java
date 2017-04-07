@@ -3,11 +3,18 @@ package io.protostuff.compiler.parser;
 import io.protostuff.compiler.model.Element;
 import io.protostuff.compiler.model.Proto;
 import io.protostuff.compiler.model.Type;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Deque;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.apache.commons.io.FilenameUtils;
 
-import java.util.*;
-
 /**
+ * Proto context is a holder for proto file and related
+ * infrastructure - symbol tables, extension registry, etc.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public class ProtoContext {
@@ -23,6 +30,9 @@ public class ProtoContext {
     private boolean initialized;
     private FileReader fileReader;
 
+    /**
+     * Create new empty context instance for a given filename.
+     */
     public ProtoContext(String filename) {
         this.filename = filename;
         symbolTable = new HashMap<>();
@@ -42,6 +52,10 @@ public class ProtoContext {
         return FilenameUtils.removeExtension(shortFilename);
     }
 
+    /**
+     * Peek an element from a declaration stack.
+     * Used by parse listeners.
+     */
     @SuppressWarnings("unchecked")
     public <T> T peek(Class<T> declarationClass) {
         Object declaration = declarationStack.peek();
@@ -54,10 +68,18 @@ public class ProtoContext {
         return fail(declaration, declarationClass);
     }
 
+    /**
+     * Push an element to a declaration stack.
+     * Used by parse listeners.
+     */
     public void push(Object declaration) {
         declarationStack.push(declaration);
     }
 
+    /**
+     * Pop an element from from a declaration stack.
+     * Used by parse listeners.
+     */
     @SuppressWarnings("unchecked")
     public <T> T pop(Class<T> declarationClass) {
         Object declaration = declarationStack.pop();
@@ -88,6 +110,9 @@ public class ProtoContext {
         return proto;
     }
 
+    /**
+     * Resolve a type declaration by it's name using this proto context.
+     */
     public <T extends Type> T resolve(String typeName, Class<T> clazz) {
         Type instance = resolve(typeName);
         if (instance == null) {
@@ -101,6 +126,10 @@ public class ProtoContext {
         }
     }
 
+    /**
+     * Resolve a type declaration by it's fully-qualified name
+     * using this proto context.
+     */
     @SuppressWarnings("unchecked")
     public <T extends Type> T resolve(Class<T> typeClass, String fullyQualifiedName) {
         Type result = resolve(fullyQualifiedName);
@@ -113,6 +142,10 @@ public class ProtoContext {
         throw new ClassCastException(result.getClass() + " cannot be cast to " + typeClass);
     }
 
+    /**
+     * Resolve a type declaration by it's fully-qualified name
+     * using this proto context.
+     */
     public Type resolve(String fullyQualifiedName) {
         Type local = symbolTable.get(fullyQualifiedName);
         if (local != null) {
@@ -133,7 +166,7 @@ public class ProtoContext {
         return null;
     }
 
-    public Type resolveImport(String typeName) {
+    private Type resolveImport(String typeName) {
         Type local = symbolTable.get(typeName);
         if (local != null) {
             return local;

@@ -2,13 +2,13 @@ package io.protostuff.generator.html.json.service;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
+import java.util.Map;
+import javax.annotation.Nullable;
 import org.immutables.value.Value;
 
-import javax.annotation.Nullable;
-import java.util.Map;
-
 /**
+ * JSON node representing service method.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 @Value.Immutable

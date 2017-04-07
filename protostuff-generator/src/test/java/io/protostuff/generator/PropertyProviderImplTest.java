@@ -8,15 +8,15 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * @author Kostiantyn Shchepanovskyi
  */
-class SimplePropertyProviderTest {
+class PropertyProviderImplTest {
 
     private static final String PROPERTY = "property";
     private static final String VALUE = "value";
-    private SimplePropertyProvider provider;
+    private PropertyProviderImpl provider;
 
     @BeforeEach
     void setUp() {
-        provider = new SimplePropertyProvider();
+        provider = new PropertyProviderImpl();
     }
 
     @Test

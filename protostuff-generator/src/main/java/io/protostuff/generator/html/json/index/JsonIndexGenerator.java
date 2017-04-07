@@ -5,12 +5,13 @@ import io.protostuff.compiler.model.Proto;
 import io.protostuff.compiler.model.UserTypeContainer;
 import io.protostuff.generator.OutputStreamFactory;
 import io.protostuff.generator.html.json.AbstractJsonGenerator;
-
-import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
+import javax.inject.Inject;
 
 /**
+ * JSON index generator (index is used by left tree panel).
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public class JsonIndexGenerator extends AbstractJsonGenerator {

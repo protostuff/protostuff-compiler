@@ -20,21 +20,21 @@ public class Formatter {
     }
 
     /**
-     * some_foo/SomeFoo becomes someFoo
+     * Format string to camel case - {@code some_foo}/{@code SomeFoo} becomes {@code someFoo}.
      */
     public static String toCamelCase(String source) {
         return toCamelCaseImpl(source).toString();
     }
 
     /**
-     * someFoo/SomeFoo becomes some_foo
+     * Format string to underscore case - {@code someFoo}/{@code SomeFoo} becomes {@code some_foo}.
      */
     public static String toUnderscoreCase(String source) {
         return toUnderscoreCaseImpl(source).toString();
     }
 
     /**
-     * some_foo/someFoo becomes SomeFoo
+     * Format string to pascal case - {@code some_foo}/{@code someFoo} becomes {@code SomeFoo}.
      */
     public static String toPascalCase(String source) {
         return toPascalCaseImpl(source).toString();
@@ -51,7 +51,7 @@ public class Formatter {
                 }
             } else if (toUpper != 0) {
                 if (isLowerCase(c)) {
-                    buffer.append(toUpperCase(c));
+                    buffer.append(toUpperCaseImpl(c));
                     toUpper = 0;
                 } else if (isUpperCase(c)) {
                     buffer.append(c);
@@ -65,7 +65,7 @@ public class Formatter {
                 }
             } else {
                 if (buffer.length() == 0 && isUpperCase(c)) {
-                    buffer.append(toLowerCase(c));
+                    buffer.append(toLowerCaseImpl(c));
                 } else {
                     buffer.append(c);
                 }
@@ -86,13 +86,13 @@ public class Formatter {
         StringBuilder buffer = toCamelCaseImpl(name);
         char c = buffer.charAt(0);
         if (isLowerCase(c)) {
-            buffer.setCharAt(0, toUpperCase(c));
+            buffer.setCharAt(0, toUpperCaseImpl(c));
         }
 
         return buffer;
     }
 
-    private static char toUpperCase(char c) {
+    private static char toUpperCaseImpl(char c) {
         return (char) (c - 32);
     }
 
@@ -124,7 +124,7 @@ public class Formatter {
                     }
                     toLower = false;
                 }
-                buffer.append(toLowerCase(c));
+                buffer.append(toLowerCaseImpl(c));
             } else {
                 buffer.append(c);
                 toLower = false;
@@ -134,7 +134,7 @@ public class Formatter {
         return buffer;
     }
 
-    private static char toLowerCase(char c) {
+    private static char toLowerCaseImpl(char c) {
         return (char) (c + 32);
     }
 

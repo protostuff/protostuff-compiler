@@ -1,19 +1,33 @@
 package io.protostuff.compiler.parser;
 
+import java.io.InputStream;
+import javax.annotation.Nullable;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nullable;
-import java.io.InputStream;
-
 /**
+ * File reader that can load files from classpath.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public class ClasspathFileReader implements FileReader {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ClasspathFileReader.class);
+
+    /**
+     * Load resource from classpath.
+     */
+    public static InputStream readResource(String name) {
+        String classpath = System.getProperty("java.class.path");
+        LOGGER.trace("Reading {} from classpath={}", name, classpath);
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        if (classLoader == null) {
+            throw new IllegalStateException("Can not obtain classloader instance from current thread");
+        }
+        return classLoader.getResourceAsStream(name);
+    }
 
     @Nullable
     @Override
@@ -27,16 +41,6 @@ public class ClasspathFileReader implements FileReader {
             LOGGER.error("Could not read {}", name, e);
         }
         return null;
-    }
-
-    public static InputStream readResource(String name) {
-        String classpath = System.getProperty("java.class.path");
-        LOGGER.trace("Reading {} from classpath={}", name, classpath);
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        if (classLoader == null) {
-            throw new IllegalStateException("Can not obtain classloader instance from current thread");
-        }
-        return classLoader.getResourceAsStream(name);
     }
 
 }

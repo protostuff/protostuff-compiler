@@ -4,6 +4,9 @@ import io.protostuff.compiler.model.Element;
 import io.protostuff.compiler.model.SourceCodeLocation;
 
 /**
+ * Exception for parse errors.
+ * Contains source code location of an error.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public class ParserException extends RuntimeException {

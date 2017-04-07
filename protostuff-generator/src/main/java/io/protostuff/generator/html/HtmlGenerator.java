@@ -3,13 +3,14 @@ package io.protostuff.generator.html;
 import io.protostuff.compiler.model.Module;
 import io.protostuff.generator.CompilerUtils;
 import io.protostuff.generator.ProtoCompiler;
+import java.util.Set;
+import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Inject;
-import java.util.Set;
-
 /**
+ * HTML generator.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public class HtmlGenerator implements ProtoCompiler {

@@ -1,15 +1,16 @@
 package io.protostuff.generator.html.json.proto;
 
-import javax.inject.Inject;
-
 import io.protostuff.compiler.model.Module;
 import io.protostuff.compiler.model.Proto;
 import io.protostuff.generator.OutputStreamFactory;
 import io.protostuff.generator.html.json.AbstractJsonGenerator;
 import io.protostuff.generator.html.json.index.NodeType;
 import io.protostuff.generator.html.markdown.MarkdownProcessor;
+import javax.inject.Inject;
 
 /**
+ * JSON proto descriptor node generator.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public class JsonProtoGenerator extends AbstractJsonGenerator {

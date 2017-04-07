@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.immutables.value.Value;
 
 /**
+ * {@link JsonTreeNode} data.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 @Value.Immutable

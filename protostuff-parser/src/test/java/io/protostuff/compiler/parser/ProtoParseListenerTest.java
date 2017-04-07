@@ -31,8 +31,6 @@ public class ProtoParseListenerTest {
     @Test
     public void parseEmptyFile() throws Exception {
         Proto proto = parseProto("");
-        assertFalse(proto.isSyntaxSet());
-        assertFalse(proto.isPackageSet());
         assertEquals(0, proto.getImports().size());
     }
 

@@ -1,22 +1,23 @@
 package io.protostuff.compiler.parser;
 
-import io.protostuff.compiler.model.AbstractElement;
-import io.protostuff.compiler.model.SourceCodeLocation;
-import org.antlr.v4.runtime.BufferedTokenStream;
-import org.antlr.v4.runtime.ParserRuleContext;
-import org.antlr.v4.runtime.Token;
-
-import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.BitSet;
-import java.util.List;
-import java.util.Optional;
-
 import static io.protostuff.compiler.parser.ProtoLexer.LINE_COMMENT;
 import static io.protostuff.compiler.parser.ProtoLexer.NL;
 import static org.antlr.v4.runtime.Lexer.HIDDEN;
 
+import io.protostuff.compiler.model.AbstractElement;
+import io.protostuff.compiler.model.SourceCodeLocation;
+import java.util.ArrayList;
+import java.util.BitSet;
+import java.util.List;
+import java.util.Optional;
+import javax.annotation.Nullable;
+import org.antlr.v4.runtime.BufferedTokenStream;
+import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.Token;
+
 /**
+ * Base class for proto parse listeners.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public abstract class AbstractProtoParserListener extends ProtoParserBaseListener {

@@ -1,23 +1,21 @@
 package io.protostuff.compiler.model;
 
 import com.google.common.base.Joiner;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 /**
+ * Abstract base class for all proto nodes.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public abstract class AbstractElement implements Element {
-    protected SourceCodeLocation sourceCodeLocation;
-    protected List<String> comments;
+    protected SourceCodeLocation sourceCodeLocation = SourceCodeLocation.UNKNOWN;
+    protected List<String> comments = new ArrayList<>();
 
     @Override
     public SourceCodeLocation getSourceCodeLocation() {
-        if (sourceCodeLocation == null) {
-            return SourceCodeLocation.UNKNOWN;
-        }
         return sourceCodeLocation;
     }
 
@@ -27,9 +25,6 @@ public abstract class AbstractElement implements Element {
 
     @Override
     public List<String> getCommentLines() {
-        if (comments == null) {
-            return Collections.emptyList();
-        }
         return comments;
     }
 
@@ -43,9 +38,6 @@ public abstract class AbstractElement implements Element {
     }
 
     public void addComment(String line) {
-        if (comments == null) {
-            comments = new ArrayList<>();
-        }
         comments.add(line);
     }
 }

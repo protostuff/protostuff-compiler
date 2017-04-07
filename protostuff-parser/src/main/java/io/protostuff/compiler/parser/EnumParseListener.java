@@ -1,13 +1,14 @@
 package io.protostuff.compiler.parser;
 
-import org.antlr.v4.runtime.BufferedTokenStream;
-
 import io.protostuff.compiler.model.Enum;
 import io.protostuff.compiler.model.EnumConstant;
 import io.protostuff.compiler.model.EnumContainer;
 import io.protostuff.compiler.model.UserTypeContainer;
+import org.antlr.v4.runtime.BufferedTokenStream;
 
 /**
+ * Enum parse listener, responsible for processing enums.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public class EnumParseListener extends AbstractProtoParserListener {
@@ -44,7 +45,7 @@ public class EnumParseListener extends AbstractProtoParserListener {
     @Override
     public void exitEnumField(ProtoParser.EnumFieldContext ctx) {
         EnumConstant enumConstant = context.pop(EnumConstant.class);
-        Enum e = context.peek(Enum.class);
+        final Enum e = context.peek(Enum.class);
         String name = ctx.enumFieldName().getText();
         int number = Integer.decode(ctx.enumFieldValue().getText());
         enumConstant.setName(name);
