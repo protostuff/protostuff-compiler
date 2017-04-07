@@ -50,6 +50,9 @@ public class StCompiler extends AbstractProtoCompiler {
 
     private final STGroup stGroup;
 
+    /**
+     * Create new {@link StCompiler} instance.
+     */
     @Inject
     public StCompiler(OutputStreamFactory outputStreamFactory,
                       @Assisted String templateFileName) {

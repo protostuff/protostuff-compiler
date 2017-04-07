@@ -22,9 +22,12 @@ public class AbstractExtensionProvider implements ExtensionProvider {
         attributeRenderers = new HashMap<>();
     }
 
+    /**
+     * Register custom property for specified node type.
+     */
     public final <T> void registerProperty(Class<T> object, String property, Function<T, Object> function) {
         PropertyProvider extender = extenderMap.computeIfAbsent(object,
-                aClass -> new SimplePropertyProvider());
+                aClass -> new PropertyProviderImpl());
         extender.register(property, function);
     }
 

@@ -13,6 +13,8 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 
 /**
+ * JSON enum node generator.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public class JsonEnumGenerator extends AbstractJsonGenerator {

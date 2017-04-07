@@ -9,6 +9,8 @@ import javax.annotation.Nullable;
 import org.immutables.value.Value;
 
 /**
+ * JSON node representing service.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 @Value.Immutable

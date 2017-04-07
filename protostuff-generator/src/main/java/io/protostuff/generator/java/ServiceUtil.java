@@ -5,6 +5,8 @@ import io.protostuff.compiler.model.ServiceMethod;
 import io.protostuff.generator.Formatter;
 
 /**
+ * Custom service properties for java code generator.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public class ServiceUtil {
@@ -18,6 +20,9 @@ public class ServiceUtil {
         return Formatter.toPascalCase(name);
     }
 
+    /**
+     * Returns java method name for corresponding rpc method.
+     */
     public static String getMethodName(ServiceMethod serviceMethod) {
         String name = serviceMethod.getName();
         String formattedName = Formatter.toCamelCase(name);

@@ -146,14 +146,23 @@ public class MessageFieldUtil {
         return field.getType() instanceof Message;
     }
 
+    /**
+     * Returns a java field "has" check name for proto field.
+     */
     public static String getHasMethodName(Field field) {
         return HAS_PREFIX + Formatter.toPascalCase(field.getName());
     }
 
+    /**
+     * Returns a java field builder setter name for proto field.
+     */
     public static String getBuilderSetterName(Field field) {
         return SETTER_PREFIX + Formatter.toPascalCase(field.getName());
     }
 
+    /**
+     * Returns a java field default value for proto field.
+     */
     public static String getDefaultValue(Field field) {
         FieldType type = field.getType();
         if (type instanceof ScalarFieldType) {
@@ -185,6 +194,9 @@ public class MessageFieldUtil {
         return STRING.equals(type) || BYTES.equals(type) || type instanceof io.protostuff.compiler.model.Enum;
     }
 
+    /**
+     * Returns a java field type for proto repeated field.
+     */
     public static String getRepeatedFieldType(Field field) {
         FieldType type = field.getType();
         if (type instanceof ScalarFieldType) {
@@ -198,6 +210,9 @@ public class MessageFieldUtil {
         throw new IllegalArgumentException(field.toString());
     }
 
+    /**
+     * Returns an iterable wrapper for proto repeated field.
+     */
     public static String getIterableFieldType(Field field) {
         FieldType type = field.getType();
         if (type instanceof ScalarFieldType) {
@@ -211,6 +226,9 @@ public class MessageFieldUtil {
         throw new IllegalArgumentException(field.toString());
     }
 
+    /**
+     * Returns a java wrapper field type for proto scalar field.
+     */
     public static String getWrapperFieldType(Field field) {
         FieldType type = field.getType();
         if (type instanceof ScalarFieldType) {
@@ -224,6 +242,9 @@ public class MessageFieldUtil {
         throw new IllegalArgumentException(field.toString());
     }
 
+    /**
+     * Returns a java field getter name for proto repeated field.
+     */
     public static String getRepeatedFieldGetterName(Field field) {
         if (field.isRepeated()) {
             return GETTER_PREFIX + Formatter.toPascalCase(field.getName()) + GETTER_REPEATED_SUFFIX;
@@ -231,6 +252,9 @@ public class MessageFieldUtil {
         throw new IllegalArgumentException(field.toString());
     }
 
+    /**
+     * Returns a field value getter name for proto repeated enum field.
+     */
     public static String getRepeatedEnumFieldValueGetterName(Field field) {
         if (field.isRepeated()) {
             return GETTER_PREFIX + Formatter.toPascalCase(field.getName()) + "ValueList";
@@ -238,6 +262,9 @@ public class MessageFieldUtil {
         throw new IllegalArgumentException(field.toString());
     }
 
+    /**
+     * Returns a field value getter by index name for proto repeated enum field.
+     */
     public static String javaRepeatedEnumValueGetterByIndexName(Field field) {
         if (field.isRepeated()) {
             return GETTER_PREFIX + Formatter.toPascalCase(field.getName()) + VALUE;
@@ -245,6 +272,9 @@ public class MessageFieldUtil {
         throw new IllegalArgumentException(field.toString());
     }
 
+    /**
+     * Returns a field converter class name for proto repeated enum field.
+     */
     public static String getRepeatedEnumConverterName(Field field) {
         if (field.isRepeated()) {
             return "__" + Formatter.toCamelCase(field.getName()) + "Converter";
@@ -252,6 +282,9 @@ public class MessageFieldUtil {
         throw new IllegalArgumentException(field.toString());
     }
 
+    /**
+     * Returns a field setter name for proto repeated field.
+     */
     public static String getRepeatedFieldSetterName(Field field) {
         if (field.isRepeated()) {
             return SETTER_PREFIX + Formatter.toPascalCase(field.getName());
@@ -259,6 +292,9 @@ public class MessageFieldUtil {
         throw new IllegalArgumentException(field.toString());
     }
 
+    /**
+     * Returns a field value setter name for proto repeated enum field.
+     */
     public static String getRepeatedEnumValueSetterName(Field field) {
         if (field.isRepeated()) {
             return SETTER_PREFIX + Formatter.toPascalCase(field.getName()) + VALUE;
@@ -266,6 +302,9 @@ public class MessageFieldUtil {
         throw new IllegalArgumentException(field.toString());
     }
 
+    /**
+     * Returns a element count getter name for proto repeated field.
+     */
     public static String repeatedGetCountMethodName(Field field) {
         if (field.isRepeated()) {
             return GETTER_PREFIX + Formatter.toPascalCase(field.getName()) + "Count";
@@ -273,6 +312,9 @@ public class MessageFieldUtil {
         throw new IllegalArgumentException(field.toString());
     }
 
+    /**
+     * Returns a field getter by index name for proto repeated field.
+     */
     public static String repeatedGetByIndexMethodName(Field field) {
         if (field.isRepeated()) {
             return GETTER_PREFIX + Formatter.toPascalCase(field.getName());
@@ -280,10 +322,16 @@ public class MessageFieldUtil {
         throw new IllegalArgumentException(field.toString());
     }
 
+    /**
+     * Returns a builder field setter name for proto repeated field.
+     */
     public static String getRepeatedBuilderSetterName(Field field) {
         return SETTER_PREFIX + Formatter.toPascalCase(field.getName()) + "List";
     }
 
+    /**
+     * Returns a builder getter name for proto field.
+     */
     public static String getBuilderGetterName(Field field) {
         return GETTER_PREFIX + Formatter.toPascalCase(field.getName());
     }
@@ -304,6 +352,9 @@ public class MessageFieldUtil {
         return "addAll" + Formatter.toPascalCase(field.getName()) + VALUE;
     }
 
+    /**
+     * Generate part of toString method for a single field.
+     */
     public static String toStringPart(Field field) {
         String getterName;
         if (field.isMap()) {
@@ -349,12 +400,18 @@ public class MessageFieldUtil {
         return 1 << bitFieldIndex(field);
     }
 
+    /**
+     * Returns map field type name.
+     */
     public static String getMapFieldType(Field field) {
         String k = getMapFieldKeyType(field);
         String v = getMapFieldValueType(field);
         return "java.util.Map<" + k + ", " + v + ">";
     }
 
+    /**
+     * Returns map field key type name.
+     */
     public static String getMapFieldKeyType(Field field) {
         FieldType type = field.getType();
         if (!(type instanceof Message)) {
@@ -365,6 +422,9 @@ public class MessageFieldUtil {
         return ScalarFieldTypeUtil.getWrapperType(keyType);
     }
 
+    /**
+     * Returns map field value type name.
+     */
     public static String getMapFieldValueType(Field field) {
         FieldType type = field.getType();
         if (!(type instanceof Message)) {
@@ -374,8 +434,8 @@ public class MessageFieldUtil {
         Type valueType = entryType.getField(MAP_ENTRY_VALUE).getType();
         String v;
         if (valueType instanceof ScalarFieldType) {
-            ScalarFieldType vType = (ScalarFieldType) valueType;
-            v = ScalarFieldTypeUtil.getWrapperType(vType);
+            ScalarFieldType scalarValueType = (ScalarFieldType) valueType;
+            v = ScalarFieldTypeUtil.getWrapperType(scalarValueType);
         } else {
             UserType userType = (UserType) valueType;
             v = UserTypeUtil.getCanonicalName(userType);
@@ -383,6 +443,9 @@ public class MessageFieldUtil {
         return v;
     }
 
+    /**
+     * Returns map field getter name.
+     */
     public static String getMapGetterName(Field field) {
         if (field.isMap()) {
             return GETTER_PREFIX + Formatter.toPascalCase(field.getName()) + MAP_SUFFIX;
@@ -390,6 +453,9 @@ public class MessageFieldUtil {
         throw new IllegalArgumentException(field.toString());
     }
 
+    /**
+     * Returns map field setter name.
+     */
     public static String getMapSetterName(Field field) {
         if (field.isMap()) {
             return SETTER_PREFIX + Formatter.toPascalCase(field.getName()) + MAP_SUFFIX;
@@ -397,6 +463,9 @@ public class MessageFieldUtil {
         throw new IllegalArgumentException(field.toString());
     }
 
+    /**
+     * Returns map field getter for particular key method name.
+     */
     public static String mapGetByKeyMethodName(Field field) {
         if (field.isMap()) {
             return GETTER_PREFIX + Formatter.toPascalCase(field.getName());
@@ -404,6 +473,9 @@ public class MessageFieldUtil {
         throw new IllegalArgumentException(field.toString());
     }
 
+    /**
+     * Returns map field "put" method name.
+     */
     public static String getMapFieldAdderName(Field field) {
         if (field.isMap()) {
             return PUT_PREFIX + Formatter.toPascalCase(field.getName());
@@ -411,6 +483,9 @@ public class MessageFieldUtil {
         throw new IllegalArgumentException(field.toString());
     }
 
+    /**
+     * Returns "putAll" method name for map field.
+     */
     public static String getMapFieldAddAllName(Field field) {
         if (field.isMap()) {
             return "putAll" + Formatter.toPascalCase(field.getName());
@@ -418,12 +493,18 @@ public class MessageFieldUtil {
         throw new IllegalArgumentException(field.toString());
     }
 
+    /**
+     * Returns an one-of enum constant name for oneof field.
+     */
     public static String javaOneofConstantName(Field field) {
         String name = field.getName();
         String underscored = Formatter.toUnderscoreCase(name);
         return Formatter.toUpperCase(underscored);
     }
 
+    /**
+     * Check if field type is numeric.
+     */
     public static boolean isNumericType(Field field) {
         FieldType type = field.getType();
         boolean scalar = type instanceof ScalarFieldType;

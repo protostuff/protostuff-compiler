@@ -10,6 +10,8 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 
 /**
+ * JSON service node generator.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public class JsonServiceGenerator extends AbstractJsonGenerator {

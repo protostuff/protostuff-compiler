@@ -21,6 +21,9 @@ import org.pegdown.ast.VerbatimNode;
  */
 public class PlantUmlVerbatimSerializer implements VerbatimSerializer {
 
+    /**
+     * Register an instance of {@link PlantUmlVerbatimSerializer} in the given serializer's map.
+     */
     public static void addToMap(final Map<String, VerbatimSerializer> serializerMap) {
         PlantUmlVerbatimSerializer serializer = new PlantUmlVerbatimSerializer();
         for (Type type : Type.values()) {

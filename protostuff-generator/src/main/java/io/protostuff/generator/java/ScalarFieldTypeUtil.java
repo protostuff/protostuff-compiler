@@ -7,6 +7,8 @@ import java.util.Map;
 import javax.annotation.Nonnull;
 
 /**
+ * Custom scalar fiel type properties for java code generator.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public class ScalarFieldTypeUtil {

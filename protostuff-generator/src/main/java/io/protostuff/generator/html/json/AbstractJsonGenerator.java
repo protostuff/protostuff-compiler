@@ -13,6 +13,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * Base class for JSON generators.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public abstract class AbstractJsonGenerator implements HtmlCompiler {
@@ -22,6 +24,9 @@ public abstract class AbstractJsonGenerator implements HtmlCompiler {
     protected final OutputStreamFactory outputStreamFactory;
     protected final ObjectMapper objectMapper;
 
+    /**
+     * Create new JSON generator instance.
+     */
     public AbstractJsonGenerator(OutputStreamFactory outputStreamFactory) {
         this.outputStreamFactory = outputStreamFactory;
         objectMapper = new ObjectMapper();

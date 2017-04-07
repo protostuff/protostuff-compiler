@@ -10,6 +10,8 @@ import java.util.List;
 import javax.inject.Inject;
 
 /**
+ * JSON index generator (index is used by left tree panel).
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public class JsonIndexGenerator extends AbstractJsonGenerator {

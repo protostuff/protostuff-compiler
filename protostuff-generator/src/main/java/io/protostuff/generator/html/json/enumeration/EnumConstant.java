@@ -7,6 +7,8 @@ import javax.annotation.Nullable;
 import org.immutables.value.Value;
 
 /**
+ * JSON node representing enum constant.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 @Value.Immutable

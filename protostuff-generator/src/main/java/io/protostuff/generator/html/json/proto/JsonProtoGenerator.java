@@ -9,6 +9,8 @@ import io.protostuff.generator.html.markdown.MarkdownProcessor;
 import javax.inject.Inject;
 
 /**
+ * JSON proto descriptor node generator.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public class JsonProtoGenerator extends AbstractJsonGenerator {

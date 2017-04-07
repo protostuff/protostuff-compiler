@@ -8,6 +8,8 @@ import javax.annotation.Nullable;
 import org.immutables.value.Value;
 
 /**
+ * JSON node representing proto file.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 @Value.Immutable

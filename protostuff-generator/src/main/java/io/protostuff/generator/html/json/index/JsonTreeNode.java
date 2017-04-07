@@ -6,6 +6,8 @@ import java.util.List;
 import org.immutables.value.Value;
 
 /**
+ * JSON index node for left tree panel.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 @Value.Immutable

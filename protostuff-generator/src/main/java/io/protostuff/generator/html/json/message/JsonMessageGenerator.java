@@ -17,6 +17,8 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 
 /**
+ * JSON generator for messages.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public class JsonMessageGenerator extends AbstractJsonGenerator {

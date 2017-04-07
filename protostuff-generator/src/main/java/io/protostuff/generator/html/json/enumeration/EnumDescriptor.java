@@ -10,6 +10,8 @@ import javax.annotation.Nullable;
 import org.immutables.value.Value;
 
 /**
+ * JSON node representing enum.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 @Value.Immutable

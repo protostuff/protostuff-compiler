@@ -1,6 +1,8 @@
 package io.protostuff.generator;
 
 /**
+ * Exception that can be thrown by code generators.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public class GeneratorException extends RuntimeException {

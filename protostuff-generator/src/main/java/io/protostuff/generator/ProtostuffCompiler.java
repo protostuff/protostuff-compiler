@@ -17,6 +17,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * Protostuff compiler entry point - used by CLI, maven plugin, etc.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public class ProtostuffCompiler {
@@ -25,12 +27,18 @@ public class ProtostuffCompiler {
 
     protected final Injector injector;
 
+    /**
+     * Create new compiler instance.
+     */
     public ProtostuffCompiler() {
         injector = Guice.createInjector(
                 new ParserModule(),
                 new CompilerModule());
     }
 
+    /**
+     * Compile module - parse source files and generate code using specified outputs.
+     */
     public void compile(ModuleConfiguration configuration) {
         LOGGER.debug("Compiling module {}", configuration);
         FileReaderFactory fileReaderFactory = injector.getInstance(FileReaderFactory.class);

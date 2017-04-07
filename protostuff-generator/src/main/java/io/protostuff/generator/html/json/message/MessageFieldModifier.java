@@ -7,6 +7,8 @@ import com.google.common.collect.ImmutableMap;
 import javax.annotation.Nonnull;
 
 /**
+ * JSON field's modifier.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public enum MessageFieldModifier {
@@ -27,6 +29,9 @@ public enum MessageFieldModifier {
                     .put("repeated", REPEATED)
                     .build();
 
+    /**
+     * Get field modifier by it's name.
+     */
     @Nonnull
     public static MessageFieldModifier fromString(String s) {
         checkNotNull(s);
