@@ -3,6 +3,8 @@ package io.protostuff.generator;
 import java.io.OutputStream;
 
 /**
+ * Factory for creating output streams.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public interface OutputStreamFactory {

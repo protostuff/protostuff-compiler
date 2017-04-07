@@ -7,6 +7,8 @@ import java.util.function.Function;
 import org.stringtemplate.v4.AttributeRenderer;
 
 /**
+ * Base class for extension providers.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public class AbstractExtensionProvider implements ExtensionProvider {

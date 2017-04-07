@@ -21,6 +21,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * Custom properties for extending message field used by java code generator.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public class MessageFieldUtil {
@@ -58,6 +60,9 @@ public class MessageFieldUtil {
         throw new IllegalAccessError("Utility class");
     }
 
+    /**
+     * Returns a java field type for proto field.
+     */
     public static String getFieldType(Field field) {
         FieldType type = field.getType();
         if (type instanceof ScalarFieldType) {
@@ -71,6 +76,9 @@ public class MessageFieldUtil {
         throw new IllegalArgumentException(field.toString());
     }
 
+    /**
+     * Returns a java field name for proto field.
+     */
     public static String getFieldName(Field field) {
         String name = field.getName();
         String formattedName = Formatter.toCamelCase(name);
@@ -80,6 +88,9 @@ public class MessageFieldUtil {
         return formattedName;
     }
 
+    /**
+     * Returns a json field name for proto field.
+     */
     public static String getJsonFieldName(Field field) {
         String name = field.getName();
         return Formatter.toCamelCase(name);
@@ -89,6 +100,9 @@ public class MessageFieldUtil {
         return JavaConstants.RESERVED_KEYWORDS.contains(formattedName);
     }
 
+    /**
+     * Returns a java field getter name for proto field.
+     */
     public static String getFieldGetterName(Field field) {
         String getterName = GETTER_PREFIX + Formatter.toPascalCase(field.getName());
         if ("getClass".equals(getterName)) {
@@ -97,22 +111,37 @@ public class MessageFieldUtil {
         return getterName;
     }
 
+    /**
+     * Returns a java field setter name for proto field.
+     */
     public static String getFieldSetterName(Field field) {
         return SETTER_PREFIX + Formatter.toPascalCase(field.getName());
     }
 
+    /**
+     * Returns a java enum field value getter name for proto field.
+     */
     public static String getEnumFieldValueGetterName(Field field) {
         return GETTER_PREFIX + Formatter.toPascalCase(field.getName()) + VALUE;
     }
 
+    /**
+     * Returns a java enum field value setter name for proto field.
+     */
     public static String getEnumFieldValueSetterName(Field field) {
         return SETTER_PREFIX + Formatter.toPascalCase(field.getName()) + VALUE;
     }
 
+    /**
+     * Returns a java field cleaner name for proto field.
+     */
     public static String getFieldCleanerName(Field field) {
         return "clear" + Formatter.toPascalCase(field.getName());
     }
 
+    /**
+     * Check if field type is a message.
+     */
     public static boolean isMessage(Field field) {
         return field.getType() instanceof Message;
     }

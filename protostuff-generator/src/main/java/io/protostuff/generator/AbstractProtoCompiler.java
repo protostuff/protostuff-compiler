@@ -18,6 +18,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * Base class for proto compilers.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public abstract class AbstractProtoCompiler implements ProtoCompiler {

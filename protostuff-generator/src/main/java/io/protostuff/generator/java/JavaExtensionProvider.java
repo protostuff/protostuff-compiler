@@ -12,12 +12,17 @@ import io.protostuff.compiler.model.ServiceMethod;
 import io.protostuff.generator.AbstractExtensionProvider;
 
 /**
+ * Extension provider for java code generator.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public class JavaExtensionProvider extends AbstractExtensionProvider {
 
     public static final String JAVA_NAME = "javaName";
 
+    /**
+     * Create new instance of java extension provider.
+     */
     public JavaExtensionProvider() {
         registerProperty(Proto.class, "javaPackage", ProtoUtil::getPackage);
         registerProperty(Proto.class, "javaPackagePath", ProtoUtil::getPackagePath);

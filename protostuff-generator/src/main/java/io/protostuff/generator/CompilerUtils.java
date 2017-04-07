@@ -2,7 +2,6 @@ package io.protostuff.generator;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import javax.inject.Inject;
@@ -11,6 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * Utility functions for code generators.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public class CompilerUtils {
@@ -25,34 +26,24 @@ public class CompilerUtils {
     }
 
 
+    /**
+     * Copy a classpath resource to the given location on a filesystem.
+     */
     public void copyResource(String name, String destinationFilename) {
-        OutputStream outputStream = null;
-        try {
-            outputStream = outputStreamFactory.createStream(destinationFilename);
-            ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-            if (classLoader == null) {
-                String error = "Can not obtain classloader instance from current thread";
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        if (classLoader == null) {
+            String error = "Can not obtain classloader instance";
+            throw new IllegalStateException(error);
+        }
+        try (InputStream stream = classLoader.getResourceAsStream(name)) {
+            if (stream == null) {
+                String error = "Could not copy file, source file not found: " + name;
                 throw new IllegalStateException(error);
             }
-            try {
-                InputStream stream = classLoader.getResourceAsStream(name);
-                if (stream == null) {
-                    String error = "Could not copy file, source file not found: " + name;
-                    throw new IllegalStateException(error);
-                }
-                Path path = Paths.get(destinationFilename);
-                FileUtils.copyInputStreamToFile(stream, path.toFile());
-            } catch (IOException e) {
-                throw new GeneratorException("Could not copy %s", e, name);
-            }
-        } finally {
-            if (outputStream != null) {
-                try {
-                    outputStream.close();
-                } catch (IOException e) {
-                    LOGGER.error("Could not close file: " + name, e);
-                }
-            }
+            Path path = Paths.get(destinationFilename);
+            FileUtils.copyInputStreamToFile(stream, path.toFile());
+        } catch (IOException e) {
+            throw new GeneratorException("Could not copy %s", e, name);
         }
     }
 

@@ -34,6 +34,8 @@ import java.util.Map;
 import javax.inject.Inject;
 
 /**
+ * Guice module for code generators.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public class CompilerModule extends AbstractModule {
