@@ -27,6 +27,8 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.impl.StaticLoggerBinder;
 
 /**
+ * Base class for generator MOJOs.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 public abstract class AbstractGeneratorMojo extends AbstractMojo {

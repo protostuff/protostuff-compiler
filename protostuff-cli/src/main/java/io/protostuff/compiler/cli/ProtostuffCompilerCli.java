@@ -30,11 +30,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * Protostuff compiler command-line interface.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
-public class ProtostuffCompilerCLI extends ProtostuffCompiler {
+public class ProtostuffCompilerCli extends ProtostuffCompiler {
 
-    private static final String COMPILER_VERSION = ProtostuffCompilerCLI.class.getPackage().getImplementationVersion();
+    private static final String COMPILER_VERSION = ProtostuffCompilerCli.class.getPackage().getImplementationVersion();
 
     private static final String GENERATOR = "generator";
     private static final String TEMPLATE = "template";
@@ -53,10 +55,10 @@ public class ProtostuffCompilerCLI extends ProtostuffCompiler {
             .put(EXTENSIONS, 6)
             .put(DEBUG, 100)
             .build();
-    private static final Logger LOGGER = LoggerFactory.getLogger(ProtostuffCompilerCLI.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProtostuffCompilerCli.class);
 
     public static void main(String[] args) {
-        new ProtostuffCompilerCLI().run(args);
+        new ProtostuffCompilerCli().run(args);
     }
 
     private static void changeLogLevel(Level newLevel) {
@@ -78,10 +80,10 @@ public class ProtostuffCompilerCLI extends ProtostuffCompiler {
                 .longOpt(PROTO_PATH)
                 .argName("dir")
                 .numberOfArgs(1)
-                .desc("Specify the directory in which to search for " +
-                        "imports.  May be specified multiple times;" +
-                        " directories will be searched in order.  If not" +
-                        " given, the current working directory is used.")
+                .desc("Specify the directory in which to search for "
+                        + "imports.  May be specified multiple times;"
+                        + " directories will be searched in order.  If not"
+                        + " given, the current working directory is used.")
                 .build());
         options.addOption(Option.builder("d")
                 .longOpt(DEBUG)
@@ -125,8 +127,8 @@ public class ProtostuffCompilerCLI extends ProtostuffCompiler {
                 return;
             }
             if (cmd.hasOption(VERSION)) {
-                Package aPackage = ProtostuffCompilerCLI.class.getPackage();
-                String version = aPackage.getImplementationVersion();
+                Package pkg = ProtostuffCompilerCli.class.getPackage();
+                String version = pkg.getImplementationVersion();
                 LOGGER.info("Version = {}", version);
                 return;
             }

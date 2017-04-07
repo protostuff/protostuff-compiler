@@ -18,6 +18,8 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
 /**
+ * StringTemplate 4 generator MOJO.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 @Mojo(name = "st4",

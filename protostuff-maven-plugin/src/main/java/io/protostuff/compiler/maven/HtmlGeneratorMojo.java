@@ -19,6 +19,8 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
 /**
+ * HTML generator MOJO.
+ *
  * @author Kostiantyn Shchepanovskyi
  */
 @Mojo(name = "html",

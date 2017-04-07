@@ -52,13 +52,13 @@ public class IncludeProjectDependenciesComponentConfigurator extends AbstractCom
         }
 
         // Add the project dependencies to the ClassRealm
-        final URL[] urls = buildURLs(runtimeClasspathElements);
+        final URL[] urls = buildUrls(runtimeClasspathElements);
         for (URL url : urls) {
             realm.addURL(url);
         }
     }
 
-    private URL[] buildURLs(List<String> runtimeClasspathElements) throws ComponentConfigurationException {
+    private URL[] buildUrls(List<String> runtimeClasspathElements) throws ComponentConfigurationException {
         // Add the projects classes and dependencies
         List<URL> urls = new ArrayList<>(runtimeClasspathElements.size());
         for (String element : runtimeClasspathElements) {
