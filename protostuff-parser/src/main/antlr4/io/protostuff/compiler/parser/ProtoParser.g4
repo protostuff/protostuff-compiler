@@ -201,11 +201,17 @@ fieldOptions
     : LSQUARE (option (COMMA option)* )? RSQUARE
     ;
 option
-    : optionName ASSIGN optionValue
+    : fieldRerefence ASSIGN optionValue
     ;
-optionName
-    : ident (DOT ident)*
-    | LPAREN typeReference RPAREN (DOT optionName)*    
+fieldRerefence
+    : standardFieldRerefence | LPAREN customFieldReference RPAREN
+    (DOT (standardFieldRerefence | LPAREN customFieldReference RPAREN))*
+    ;
+standardFieldRerefence
+    : ident
+    ;
+customFieldReference
+    : DOT? ident (DOT ident)*
     ;
 optionValue
     : INTEGER_VALUE

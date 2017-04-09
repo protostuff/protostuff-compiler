@@ -34,7 +34,7 @@ public class OptionParseListener extends AbstractProtoParserListener {
         String optionName;
         AbstractDescriptor declaration = context.peek(AbstractDescriptor.class);
         ProtoParser.OptionValueContext optionValueContext = ctx.optionValue();
-        optionName = ctx.optionName().getText();
+        optionName = ctx.fieldRerefence().getText();
         DynamicMessage.Value optionValue = getOptionValue(optionValueContext);
         SourceCodeLocation sourceCodeLocation = getSourceCodeLocation(optionValueContext);
         declaration.getOptions().set(sourceCodeLocation, optionName, optionValue);
