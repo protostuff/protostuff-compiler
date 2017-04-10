@@ -3,6 +3,13 @@ Protocol Buffers parser and code generator
 
 [![Build Status](https://travis-ci.org/protostuff/protostuff-compiler.svg?branch=master)](https://travis-ci.org/protostuff/protostuff-compiler)
 
+This project contains following modules:
+
+1. `protostuff-parser` - ANTLR4-based parser for proto2/proto3 files. Parsing result is represented as an object model, containing all the information from proto files. 
+2. `protostuff-generator` - code generator; current version can generate java code (for `protostuff` runtime library) and HTML documentation.
+4. `protostuff-cli` - command-line interface.
+5. `protostuff-maven-plugin` - maven plugin.
+
 Usage
 -----
 
