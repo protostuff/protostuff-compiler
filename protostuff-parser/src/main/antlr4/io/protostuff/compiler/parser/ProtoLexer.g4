@@ -185,10 +185,10 @@ FLOAT_VALUE
     | NAN
     ;
 fragment DOUBLE_QUOTE_STRING
-    : '"' ( ESC_SEQ | ~('\\'|'"') )* '"'
+    : '"' ( ESC_SEQ | ~('\\' | '"' | '\r' | '\n') )* '"'
     ;
 fragment SINGLE_QUOTE_STRING
-    : '\'' ( ESC_SEQ | ~('\\'|'\'') )* '\''
+    : '\'' ( ESC_SEQ | ~('\\' | '\'' | '\r' | '\n') )* '\''
     ;
 fragment EXPONENT
     : (FLOAT_LIT|DEC_VALUE) EXP DEC_VALUE
