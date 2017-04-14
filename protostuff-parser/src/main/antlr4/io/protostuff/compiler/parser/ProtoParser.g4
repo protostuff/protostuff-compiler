@@ -6,7 +6,7 @@ options {
 
 proto
     // syntax should be first statement in the file
-    : syntax?
+    : syntaxStatement?
         ( packageStatement
         | importStatement
         | optionEntry
@@ -16,8 +16,11 @@ proto
         | serviceBlock)*
     EOF
     ;
-syntax
-    : SYNTAX ASSIGN STRING_VALUE SEMICOLON
+syntaxStatement
+    : SYNTAX ASSIGN syntaxName SEMICOLON
+    ;
+syntaxName
+    : STRING_VALUE
     ;
 packageStatement
     : PACKAGE packageName SEMICOLON

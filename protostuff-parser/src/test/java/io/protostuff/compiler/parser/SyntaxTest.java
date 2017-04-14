@@ -31,7 +31,7 @@ public class SyntaxTest {
         CommonTokenStream tokenStream = new CommonTokenStream(lexer);
         ProtoParser parser = new ProtoParser(tokenStream);
         parser.addErrorListener(TestUtils.ERROR_LISTENER);
-        parser.syntax();
+        parser.syntaxStatement();
     }
 
 

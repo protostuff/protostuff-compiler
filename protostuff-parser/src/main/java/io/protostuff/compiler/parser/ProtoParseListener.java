@@ -71,9 +71,9 @@ public class ProtoParseListener extends AbstractProtoParserListener {
     }
 
     @Override
-    public void exitSyntax(ProtoParser.SyntaxContext ctx) {
+    public void exitSyntaxStatement(ProtoParser.SyntaxStatementContext ctx) {
         Proto proto = context.peek(Proto.class);
-        String text = ctx.STRING_VALUE().getText();
+        String text = ctx.syntaxName().getText();
         String value = Util.removeFirstAndLastChar(text);
         Syntax syntax = new Syntax(proto, value);
         syntax.setSourceCodeLocation(getSourceCodeLocation(ctx));
