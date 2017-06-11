@@ -81,21 +81,23 @@ public abstract class AbstractGeneratorMojo extends AbstractMojo {
 
     List<String> findProtoFiles(final Path sourcePath) {
         List<String> protoFiles = new ArrayList<>();
-        PathMatcher protoMatcher = FileSystems.getDefault().getPathMatcher("glob:**/*.proto");
-        try {
-            Files.walkFileTree(sourcePath, new SimpleFileVisitor<Path>() {
-                @Override
-                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                    if (protoMatcher.matches(file)) {
-                        String protoFile = sourcePath.relativize(file).toString();
-                        String normalizedPath = normalizeProtoPath(protoFile);
-                        protoFiles.add(normalizedPath);
+        if (Files.exists(sourcePath) && Files.isDirectory(sourcePath)) {
+            PathMatcher protoMatcher = FileSystems.getDefault().getPathMatcher("glob:**/*.proto");
+            try {
+                Files.walkFileTree(sourcePath, new SimpleFileVisitor<Path>() {
+                    @Override
+                    public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                        if (protoMatcher.matches(file)) {
+                            String protoFile = sourcePath.relativize(file).toString();
+                            String normalizedPath = normalizeProtoPath(protoFile);
+                            protoFiles.add(normalizedPath);
+                        }
+                        return super.visitFile(file, attrs);
                     }
-                    return super.visitFile(file, attrs);
-                }
-            });
-        } catch (IOException e) {
-            LOGGER.error("Can not build source files list", e);
+                });
+            } catch (IOException e) {
+                LOGGER.error("Can not build source files list", e);
+            }
         }
         return protoFiles;
     }
