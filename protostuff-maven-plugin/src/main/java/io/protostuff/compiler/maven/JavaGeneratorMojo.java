@@ -20,6 +20,7 @@ import org.apache.maven.plugins.annotations.Parameter;
  * @author Kostiantyn Shchepanovskyi
  */
 @Mojo(name = "java",
+        threadSafe = true,
         configurator = "include-project-dependencies",
         requiresDependencyResolution = COMPILE_PLUS_RUNTIME)
 public class JavaGeneratorMojo extends AbstractGeneratorMojo {

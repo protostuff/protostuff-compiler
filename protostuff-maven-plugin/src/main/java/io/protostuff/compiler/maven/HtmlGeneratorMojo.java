@@ -24,6 +24,7 @@ import org.apache.maven.plugins.annotations.Parameter;
  * @author Kostiantyn Shchepanovskyi
  */
 @Mojo(name = "html",
+        threadSafe = true,
         configurator = "include-project-dependencies",
         requiresDependencyResolution = COMPILE_PLUS_RUNTIME)
 public class HtmlGeneratorMojo extends AbstractGeneratorMojo {

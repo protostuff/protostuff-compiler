@@ -23,6 +23,7 @@ import org.apache.maven.plugins.annotations.Parameter;
  * @author Kostiantyn Shchepanovskyi
  */
 @Mojo(name = "st4",
+        threadSafe = true,
         configurator = "include-project-dependencies",
         requiresDependencyResolution = COMPILE_PLUS_RUNTIME)
 public class St4GeneratorMojo extends AbstractGeneratorMojo {
