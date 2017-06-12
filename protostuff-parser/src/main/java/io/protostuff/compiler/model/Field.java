@@ -21,8 +21,17 @@ public class Field extends AbstractDescriptor {
     private FieldContainer parent;
     private Oneof oneof;
 
+    /**
+     * Create a field instance for given parent.
+     * If parent is an oneof, also set field as oneof field.
+     */
     public Field(FieldContainer parent) {
-        this.parent = parent;
+        if (parent instanceof Oneof) {
+            this.oneof = (Oneof) parent;
+            this.parent = this.oneof.parent;
+        } else {
+            this.parent = parent;
+        }
     }
 
     @Override

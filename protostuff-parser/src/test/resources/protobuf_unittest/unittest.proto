@@ -170,7 +170,12 @@ message TestAllTypes {
     optional string default_cord = 85 [ctype = CORD, default = "123"];
 
     // For oneof test
-    oneof oneof_field { uint32 oneof_uint32 = 111; NestedMessage oneof_nested_message = 112; string oneof_string = 113; bytes oneof_bytes = 114; }
+    oneof oneof_field {
+        uint32 oneof_uint32 = 111;
+        NestedMessage oneof_nested_message = 112;
+        string oneof_string = 113;
+        bytes oneof_bytes = 114;
+    }
 }
 
 // This proto includes a recusively nested message.
@@ -384,8 +389,7 @@ message TestEmptyMessageWithExtensions {
 }
 
 message TestMultipleExtensionRanges {
-    extensions 42
-    ;
+    extensions 42;
     extensions 4143 to 4243;
     extensions 65536 to max;
 }
@@ -418,13 +422,13 @@ message TestMutualRecursionB {
 // to compile with proto1, this will emit an error; so we only include it
 // in protobuf_unittest_proto.
 message TestDupFieldNumber { // NO_PROTO1
-    optional int32 a = 1; // NO_PROTO1
-    optional group Foo = 2 {
-        optional int32 a = 1;
-    } // NO_PROTO1
-    optional group Bar = 3 {
-        optional int32 a = 1;
-    } // NO_PROTO1
+                             optional int32 a = 1; // NO_PROTO1
+                             optional group Foo = 2 {
+                                 optional int32 a = 1;
+                             } // NO_PROTO1
+                             optional group Bar = 3 {
+                                 optional int32 a = 1;
+                             } // NO_PROTO1
 } // NO_PROTO1
 
 // Additional messages for testing lazy fields.
@@ -444,7 +448,6 @@ message TestNestedMessageHasBits {
     }
     optional NestedMessage optional_nested_message = 1;
 }
-
 
 // Test an enum that has multiple values with the same number.
 enum TestEnumWithDupValue {
@@ -485,7 +488,6 @@ message TestCamelCaseFieldNames {
     repeated string RepeatedStringPieceField = 11 [ctype = STRING_PIECE];
     repeated string RepeatedCordField = 12 [ctype = CORD];
 }
-
 
 // We list fields out of order, to ensure that we're using field number and not
 // field index to determine serialization order.
@@ -604,8 +606,15 @@ message BoolMessage {
 
 // Test oneofs.
 message TestOneof {
-    oneof foo { int32 foo_int = 1; string foo_string = 2; TestAllTypes foo_message = 3; group FooGroup = 4 { optional int32 a = 5; optional string b = 6; }
-}
+    oneof foo {
+        int32 foo_int = 1;
+        string foo_string = 2;
+        TestAllTypes foo_message = 3;
+        group FooGroup = 4 {
+            optional int32 a = 5;
+            optional string b = 6;
+        }
+    }
 
 }
 
@@ -620,212 +629,60 @@ message TestOneofBackwardsCompatible {
 }
 
 message TestOneof2 {
-    oneof foo { int32 foo_int = 1; string foo_string = 2; string foo_cord = 3 [ ctype = CORD ] ; string foo_string_piece = 4 [ ctype = STRING_PIECE ] ; bytes foo_bytes = 5; NestedEnum foo_enum = 6; NestedMessage foo_message = 7; group FooGroup = 8 { optional int32 a = 9; optional string b = 10; }
-    NestedMessage
-    foo_lazy_message
-    =
-    11
-    [
-    lazy
-    =
-    true
-    ]
-    ;
-}
+    oneof foo {
+        int32 foo_int = 1;
+        string foo_string = 2;
+        string foo_cord = 3 [ctype = CORD];
+        string foo_string_piece = 4 [ctype = STRING_PIECE];
+        bytes foo_bytes = 5;
+        NestedEnum foo_enum = 6;
+        NestedMessage foo_message = 7;
+        group FooGroup = 8 {
+            optional int32 a = 9;
+            optional string b = 10;
+        }
+        NestedMessage foo_lazy_message = 11 [lazy = true];
+    }
 
-oneof
+    oneof bar {
 
-bar
+        int32 bar_int = 12 [default = 5];
 
-{
+        string bar_string = 13 [default = "STRING"];
 
-int32
+        string bar_cord = 14 [ctype = CORD, default = "CORD"];
 
-bar_int
+        string bar_string_piece = 15 [ctype = STRING_PIECE, default = "SPIECE"];
 
-=
+        bytes bar_bytes = 16 [default = "BYTES"];
 
-12
+        NestedEnum bar_enum = 17 [default = BAR];
 
-[
+    }
 
-default
+    optional int32 baz_int = 18;
 
-=
+    optional string baz_string = 19 [default = "BAZ"];
 
-5
+    message NestedMessage {
+        optional int64 qux_int = 1;
+        repeated int32 corge_int = 2;
+    }
 
-]
-
-;
-
-string
-
-bar_string
-
-=
-
-13
-
-[
-
-default
-
-=
-
-"STRING"
-
-]
-
-;
-
-string
-
-bar_cord
-
-=
-
-14
-
-[
-
-ctype
-
-=
-
-CORD
-
-,
-
-default
-
-=
-
-"CORD"
-
-]
-
-;
-
-string
-
-bar_string_piece
-
-=
-
-15
-
-[
-
-ctype
-
-=
-
-STRING_PIECE
-
-,
-
-default
-
-=
-
-"SPIECE"
-
-]
-
-;
-
-bytes
-
-bar_bytes
-
-=
-
-16
-
-[
-
-default
-
-=
-
-"BYTES"
-
-]
-
-;
-
-NestedEnum
-
-bar_enum
-
-=
-
-17
-
-[
-
-default
-
-=
-
-BAR
-
-]
-
-;
-
-}
-
-optional
-
-int32
-
-baz_int
-
-=
-
-18
-
-;
-
-optional
-
-string
-
-baz_string
-
-=
-
-19
-
-[
-
-default
-
-=
-
-"BAZ"
-
-]
-
-;
-
-message NestedMessage {
-    optional int64 qux_int = 1;
-    repeated int32 corge_int = 2;
-}
-
-enum NestedEnum {
-    FOO = 1;
-    BAR = 2;
-    BAZ = 3;
-}
+    enum NestedEnum {
+        FOO = 1;
+        BAR = 2;
+        BAZ = 3;
+    }
 
 }
 
 message TestRequiredOneof {
-    oneof foo { int32 foo_int = 1; string foo_string = 2; NestedMessage foo_message = 3; }
+    oneof foo {
+        int32 foo_int = 1;
+        string foo_string = 2;
+        NestedMessage foo_message = 3;
+    }
     message NestedMessage {
         required double required_double = 1;
     }
@@ -993,7 +850,6 @@ message TestCommentInjectionMessage {
     // */ <- This should not close the generated doc comment
     optional string a = 1 [default = "*/ <- Neither should this."];
 }
-
 
 // Test that RPC services work.
 message FooRequest {

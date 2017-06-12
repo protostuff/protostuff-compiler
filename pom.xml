@@ -121,7 +121,9 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>2.20</version>
+                    <!-- 2.20 leads to OOM on test failure -->
+                    <!-- https://github.com/junit-team/junit5/issues/809 -->
+                    <version>2.19.1</version>
                 </plugin>
 
             </plugins>

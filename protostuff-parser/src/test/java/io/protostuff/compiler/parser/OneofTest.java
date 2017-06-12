@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * @author Kostiantyn Shchepanovskyi
@@ -33,5 +34,15 @@ public class OneofTest extends AbstractParserTest {
         assertEquals(9, subMessage.getTag());
         assertFalse(subMessage.hasModifier());
 
+    }
+
+    @Test
+    public void fieldModifierInsideOneof() throws Exception {
+        String message = "Oneof field cannot have modifier: optional"
+                + " [protostuff_unittest/oneof_illegal_field_modifier.proto:7]";
+        ParserException exception = assertThrows(ParserException.class, () -> {
+            importer.importFile(new ClasspathFileReader(), "protostuff_unittest/oneof_illegal_field_modifier.proto");
+        });
+        assertEquals(message, exception.getMessage());
     }
 }

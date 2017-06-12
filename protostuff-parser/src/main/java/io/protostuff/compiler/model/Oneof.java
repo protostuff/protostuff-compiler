@@ -72,6 +72,7 @@ public class Oneof extends AbstractElement implements FieldContainer, GroupConta
             fields = new ArrayList<>();
         }
         fields.add(field);
+        parent.addField(field);
     }
 
     @Override

@@ -127,6 +127,10 @@ public class MessageParseListener extends AbstractProtoParserListener {
         } else if (parent instanceof UserTypeContainer) {
             Group group = new Group((UserTypeContainer) parent);
             context.push(group);
+        } else if (parent instanceof Oneof) {
+            Oneof oneof = (Oneof) parent;
+            Group group = new Group(oneof.getParent());
+            context.push(group);
         } else {
             throw new IllegalStateException();
         }
@@ -167,48 +171,6 @@ public class MessageParseListener extends AbstractProtoParserListener {
         oneof.setSourceCodeLocation(getSourceCodeLocation(ctx));
         message.addOneof(oneof);
         attachComments(ctx, oneof, false);
-    }
-
-    @Override
-    public void enterOneofField(ProtoParser.OneofFieldContext ctx) {
-        Oneof oneof = context.peek(Oneof.class);
-        Message message = oneof.getParent();
-        Field field = new Field(message);
-        field.setOneof(oneof);
-        context.push(field);
-    }
-
-    @Override
-    public void exitOneofField(ProtoParser.OneofFieldContext ctx) {
-        Field field = context.pop(Field.class);
-        Oneof oneOf = context.peek(Oneof.class);
-        Message message = oneOf.getParent();
-        String name = ctx.fieldName().getText();
-        String type = ctx.typeReference().getText();
-        Integer tag = Integer.decode(ctx.tag().getText());
-        field.setName(name);
-        field.setTag(tag);
-        field.setIndex(message.getFieldCount() + 1);
-        field.setTypeName(type);
-        field.setSourceCodeLocation(getSourceCodeLocation(ctx));
-        oneOf.addField(field);
-        message.addField(field);
-        attachComments(ctx, field, true);
-    }
-
-    @Override
-    public void enterOneofGroup(ProtoParser.OneofGroupContext ctx) {
-        Oneof parent = context.peek(Oneof.class);
-        Group group = new Group(parent.getParent());
-        context.push(group);
-    }
-
-    @Override
-    public void exitOneofGroup(ProtoParser.OneofGroupContext ctx) {
-        Group group = context.pop(Group.class);
-        group.setSourceCodeLocation(getSourceCodeLocation(ctx));
-        GroupContainer container = context.peek(GroupContainer.class);
-        container.addGroup(group);
     }
 
     @Override

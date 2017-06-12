@@ -94,24 +94,10 @@ messageName
     : ident
     ;
 oneof
-    : ONEOF oneofName LCURLY (oneofField | oneofGroup)* RCURLY SEMICOLON?
+    : ONEOF oneofName LCURLY (field | groupBlock)* RCURLY SEMICOLON?
     ;
 oneofName
     : ident
-    ;
-oneofField
-    : typeReference fieldName ASSIGN tag fieldOptions? SEMICOLON
-    ;
-oneofGroup
-    : GROUP fieldName ASSIGN tag LCURLY
-        (field
-        | optionEntry
-        | messageBlock
-        | enumBlock
-        | extensions
-        | extendBlock
-        | groupBlock)*
-    RCURLY SEMICOLON?
     ;
 map
     : MAP LT mapKey COMMA mapValue GT fieldName ASSIGN tag fieldOptions? SEMICOLON
@@ -137,7 +123,7 @@ tag
     : INTEGER_VALUE
     ;
 groupBlock
-    : fieldModifier GROUP groupName ASSIGN tag LCURLY
+    : fieldModifier? GROUP groupName ASSIGN tag LCURLY
         (field
         | optionEntry
         | messageBlock

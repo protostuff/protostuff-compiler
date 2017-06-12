@@ -95,6 +95,15 @@ public class UserTypeValidationPostProcessor implements ProtoContextPostProcesso
         checkDuplicateFieldNames(fields);
         checkReservedFieldTags(message, fields);
         checkReservedFieldNames(message, fields);
+        checkFieldModifier(message, fields);
+    }
+
+    private void checkFieldModifier(Message message, List<Field> fields) {
+        for (Field field : fields) {
+            if (field.isOneofPart() && field.hasModifier()) {
+                throw new ParserException(field, "Oneof field cannot have modifier: %s", field.getModifier());
+            }
+        }
     }
 
     private void checkReservedFieldTags(Message message, List<Field> fields) {
