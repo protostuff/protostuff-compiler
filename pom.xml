@@ -58,7 +58,7 @@
 
     <scm>
         <url>https://github.com/protostuff/protostuff-compiler</url>
-        <connection>scm:git:https://github.com/protostuff/protostuff-compiler.git</connection>
+        <connection>scm:git:git@github.com:protostuff/protostuff-compiler.git</connection>
         <developerConnection>scm:git:git@github.com:protostuff/protostuff-compiler.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
