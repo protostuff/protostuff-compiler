@@ -24,13 +24,15 @@ pipeline {
         }
         stage('Build') {
             steps {
-                sh '''
-                    if [[ "$BRANCH_NAME" =~ ^(master|release/).*$ ]]; then
-                      mvn clean deploy scm:tag -P release                                                              
-                    else
-                      mvn clean package -P release
-                    fi                    
-                '''
+                sshagent(['GITHUB_SSH_KEY']) {
+                    sh '''
+                        if [[ "$BRANCH_NAME" =~ ^(master|release/).*$ ]]; then
+                          mvn clean deploy scm:tag -P release                                                              
+                        else
+                          mvn clean package -P release
+                        fi                    
+                    '''
+                }
             }
             post {
                 always {
