@@ -24,33 +24,18 @@ pipeline {
         }
         stage('Build') {
             steps {
-                sh 'mvn clean package -P release'
+                sh '''
+                    if [[ "$BRANCH_NAME" =~ ^(master|release/).*$ ]]; then
+                      mvn clean deploy scm:tag -P release                                                              
+                    else
+                      mvn clean package -P release
+                    fi                    
+                '''
             }
             post {
                 always {
                     junit '**/target/surefire-reports/**/*.xml'
                 }
-            }
-        }
-        stage('Publish') {
-            // http://www.sonatype.org/nexus/2016/09/14/introducing-the-nexus-jenkins-plugin/
-            when {
-                expression {
-                    return env.BRANCH_NAME =~ /^master|release\/.*$/
-                }
-            }
-            steps {
-                sh 'mvn deploy:deploy'
-            }
-        }
-        stage('Tag') {
-            when {
-                expression {
-                    return env.BRANCH_NAME =~ /^master$|^release\/.*$/
-                }
-            }
-            steps {
-                sh 'mvn scm:tag'
             }
         }
     }
