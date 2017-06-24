@@ -121,6 +121,15 @@ COMMENT
 LINE_COMMENT
     : '//' ~('\r' | '\n')* -> channel(HIDDEN)
     ;
+PLUGIN_DEV_MARKER
+    // Non-protobuf.
+    // Added for convenience of IntelliJ IDEA plugin development
+    : ('<caret>'
+    | '<error ' .*? '>'
+    | '</error>'
+    | '<fold ' .*? '>'
+    | '</fold>') -> channel(HIDDEN)
+    ;
 NL
     : '\r'? '\n' -> channel(HIDDEN)
     ;
