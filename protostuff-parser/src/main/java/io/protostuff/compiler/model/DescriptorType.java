@@ -17,5 +17,6 @@ public enum DescriptorType {
     MAP,
     GROUP,
     SERVICE,
-    SERVICE_METHOD
+    SERVICE_METHOD,
+    ONEOF
 }

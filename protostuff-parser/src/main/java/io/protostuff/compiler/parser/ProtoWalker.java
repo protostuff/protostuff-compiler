@@ -4,6 +4,7 @@ import io.protostuff.compiler.model.Enum;
 import io.protostuff.compiler.model.EnumConstant;
 import io.protostuff.compiler.model.Field;
 import io.protostuff.compiler.model.Message;
+import io.protostuff.compiler.model.Oneof;
 import io.protostuff.compiler.model.Proto;
 import io.protostuff.compiler.model.Service;
 import io.protostuff.compiler.model.ServiceMethod;
@@ -29,6 +30,7 @@ public class ProtoWalker {
     private final List<Processor<EnumConstant>> enumConstantProcessors = new ArrayList<>();
     private final List<Processor<Service>> serviceProcessors = new ArrayList<>();
     private final List<Processor<ServiceMethod>> serviceMethodProcessors = new ArrayList<>();
+    private final List<Processor<Oneof>> oneofProcessors = new ArrayList<>();
 
     public ProtoWalker(ProtoContext protoContext) {
         this.context = protoContext;
@@ -116,6 +118,16 @@ public class ProtoWalker {
         return this;
     }
 
+    public ProtoWalker onOneof(Processor<Oneof> processor) {
+        oneofProcessors.add(processor);
+        return this;
+    }
+
+    public ProtoWalker onOneof(ContextlessProcessor<Oneof> processor) {
+        oneofProcessors.add(wrap(processor));
+        return this;
+    }
+
     /**
      * Start walking.
      */
@@ -175,6 +187,11 @@ public class ProtoWalker {
         for (Processor<Field> fieldProcessor : fieldProcessors) {
             for (Field field : message.getFields()) {
                 fieldProcessor.run(context, field);
+            }
+        }
+        for (Processor<Oneof> processor : oneofProcessors) {
+            for (Oneof oneof : message.getOneofs()) {
+                processor.run(context, oneof);
             }
         }
     }

@@ -1,9 +1,12 @@
 package io.protostuff.compiler.parser;
 
+import io.protostuff.compiler.model.Message;
+import io.protostuff.compiler.model.Oneof;
 import io.protostuff.compiler.model.Proto;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
@@ -25,6 +28,17 @@ public class CustomOptionsTest extends AbstractParserTest {
         assertEquals("B", proto.getOptions().get("(.protostuff_unittest.b)").getString());
         assertEquals("C", proto.getOptions().get("(.protostuff_unittest.c)").getString());
         assertEquals(42, proto.getOptions().get("(.protostuff_unittest.d).f").getInt32());
+    }
+
+    @Test
+    public void oneofCustomOption() throws Exception {
+        ProtoContext protoContext = importer.importFile(new ClasspathFileReader(), "protostuff_unittest/oneof_options.proto");
+        Proto proto = protoContext.getProto();
+        Message message = proto.getMessage("SampleMessage");
+        assertNotNull(message);
+        Oneof oneof = message.getOneof("test_oneof");
+        assertNotNull(oneof);
+        assertEquals(-99, oneof.getOptions().get("(.protostuff_unittest.foo)").getInt32());
     }
 
     @Test

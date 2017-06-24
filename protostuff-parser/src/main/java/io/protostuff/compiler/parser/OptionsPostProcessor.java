@@ -106,6 +106,7 @@ public class OptionsPostProcessor implements ProtoContextPostProcessor {
                 .onEnumConstant(this::processOptions)
                 .onService(this::processOptions)
                 .onServiceMethod(this::processOptions)
+                .onOneof(this::processOptions)
                 .walk();
     }
 
@@ -234,6 +235,9 @@ public class OptionsPostProcessor implements ProtoContextPostProcessor {
     private Message findSourceMessage(ProtoContext context, DescriptorType type) {
         Message message = tryResolveFromContext(context, type);
         if (message == null) {
+            // There might be no import for "google/protobuf/descriptor.proto"
+            // in the source file, so it is not possible to load standard options
+            // descriptors using normal way. We should try to lookup directly.
             ProtoContext descriptorProto = descriptorProtoProvider.get();
             return tryResolveFromContext(descriptorProto, type);
         }
@@ -262,6 +266,8 @@ public class OptionsPostProcessor implements ProtoContextPostProcessor {
                 return context.resolve(Message.class, ProtobufConstants.MSG_SERVICE_OPTIONS);
             case SERVICE_METHOD:
                 return context.resolve(Message.class, ProtobufConstants.MSG_METHOD_OPTIONS);
+            case ONEOF:
+                return context.resolve(Message.class, ProtobufConstants.MSG_ONEOF_OPTIONS);
             default:
                 throw new IllegalStateException("Unknown descriptor type: " + type);
         }

@@ -4,7 +4,7 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 
 /**
- * Provides {@link ProtoContext} for bundled copy of {@code google/protobuf/descriptor.proto}.
+ * Provides a {@link ProtoContext} for {@code google/protobuf/descriptor.proto}.
  *
  * @author Kostiantyn Shchepanovskyi
  */
@@ -21,6 +21,6 @@ public class DefaultDescriptorProtoProvider implements Provider<ProtoContext> {
 
     @Override
     public ProtoContext get() {
-        return importer.importFile(new ClasspathFileReader(), "google/protobuf/__descriptor.proto");
+        return importer.importFile(new ClasspathFileReader(), "google/protobuf/descriptor.proto");
     }
 }

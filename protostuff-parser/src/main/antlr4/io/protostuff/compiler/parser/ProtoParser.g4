@@ -94,7 +94,7 @@ messageName
     : ident
     ;
 oneof
-    : ONEOF oneofName LCURLY (field | groupBlock)* RCURLY SEMICOLON?
+    : ONEOF oneofName LCURLY (field | groupBlock | optionEntry)* RCURLY SEMICOLON?
     ;
 oneofName
     : ident

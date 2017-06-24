@@ -28,6 +28,9 @@ public class FileDescriptorLoaderImpl implements FileDescriptorLoader {
     @Override
     public ProtoContext load(FileReader reader, String filename) {
         CharStream stream = reader.read(filename);
+        if (stream == null && "google/protobuf/descriptor.proto".equals(filename)) {
+            stream = reader.read("google/protobuf/__descriptor.proto");
+        }
         if (stream == null) {
             throw new ParserException("Can not load proto: %s not found", filename);
         }
