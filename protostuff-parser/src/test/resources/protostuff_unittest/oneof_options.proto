@@ -1,0 +1,22 @@
+syntax = "proto2";
+
+package protostuff_unittest;
+
+import "google/protobuf/descriptor.proto";
+
+extend google.protobuf.OneofOptions {
+    optional int32 foo = 50003;
+}
+
+message SampleMessage {
+    oneof test_oneof {
+        option (foo) = -99;
+        string name = 4;
+        SubMessage sub_message = 9;
+    }
+
+    message SubMessage {
+        optional int32 a = 1;
+    }
+}
+

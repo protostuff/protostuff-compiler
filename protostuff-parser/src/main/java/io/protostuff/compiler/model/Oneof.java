@@ -10,10 +10,9 @@ import java.util.List;
  *
  * @author Kostiantyn Shchepanovskyi
  */
-public class Oneof extends AbstractElement implements FieldContainer, GroupContainer {
+public class Oneof extends AbstractDescriptor implements FieldContainer, GroupContainer {
 
     protected final Message parent;
-    protected String name;
     protected List<Field> fields;
     protected List<Group> groups;
 
@@ -23,13 +22,9 @@ public class Oneof extends AbstractElement implements FieldContainer, GroupConta
         this.parent = parent;
     }
 
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    @Override
+    public DescriptorType getDescriptorType() {
+        return DescriptorType.ONEOF;
     }
 
     @Override
@@ -121,7 +116,9 @@ public class Oneof extends AbstractElement implements FieldContainer, GroupConta
         return MoreObjects.toStringHelper(this)
                 .omitNullValues()
                 .add("name", name)
+                .add("namespace", namespace)
                 .add("fields", fields)
+                .add("options", getOptions())
                 .toString();
     }
 

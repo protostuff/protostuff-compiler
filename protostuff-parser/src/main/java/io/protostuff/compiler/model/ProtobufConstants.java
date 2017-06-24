@@ -14,6 +14,7 @@ public class ProtobufConstants {
     public static final String MSG_FIELD_OPTIONS = ".google.protobuf.FieldOptions";
     public static final String MSG_SERVICE_OPTIONS = ".google.protobuf.ServiceOptions";
     public static final String MSG_METHOD_OPTIONS = ".google.protobuf.MethodOptions";
+    public static final String MSG_ONEOF_OPTIONS = ".google.protobuf.OneofOptions";
 
     private ProtobufConstants() {
         throw new IllegalAccessError("Utility class");
