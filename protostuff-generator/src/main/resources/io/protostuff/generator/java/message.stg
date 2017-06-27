@@ -16,7 +16,7 @@ package <message.proto.javaPackage>;
 message_body(message) ::= <<
 <if(!message.nested)><message:generator_annotation()><endif>
 public <if(message.nested)>static <endif>final class <message.javaName>
-        implements io.protostuff.Message\<<message.javaName>\>{
+        <message:message_implements_clause()> {
 
     private static final <message.javaName> DEFAULT_INSTANCE = newBuilder().build();
 
@@ -72,6 +72,10 @@ public <if(message.nested)>static <endif>final class <message.javaName>
     <message.oneofs:one_of(); separator="\n">
 }
 >>
+
+message_implements_clause(message) ::= <%
+implements io.protostuff.Message\<<message.javaName>>
+%>
 
 message_bit_field(name) ::= <<
 private int <name>;
