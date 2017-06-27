@@ -3,7 +3,7 @@ delimiters "<", ">"
 import "io/protostuff/generator/java/message-base.stg"
 
 builder(message) ::= <<
-public static final class Builder {
+public static final class Builder <message:message_builder_implements_clause()> {
 
     <message.fields:field_declaration(); separator="\n">
     <message.javaBitFieldNames:message_bit_field(); separator="\n">
@@ -40,6 +40,9 @@ public static final class Builder {
 
 }
 >>
+
+message_builder_implements_clause(message) ::= <%
+%>
 
 builder_merge_from(field) ::= <<
 <if(field.map)>
