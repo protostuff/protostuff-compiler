@@ -1,9 +1,10 @@
 package io.protostuff.it.java;
 
-import io.protostuff.it.enum_test.NestedEnum;
-import io.protostuff.it.enum_test.ParentEnumMsg;
-import io.protostuff.it.enum_test.Proto2EnumDefaultValueNonZero;
-import io.protostuff.it.enum_test.Proto2Message;
+import io.protostuff.LinkedBuffer;
+import io.protostuff.ProtobufIOUtil;
+import io.protostuff.Schema;
+import io.protostuff.it.enum_test.*;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
@@ -130,5 +131,17 @@ public class EnumTest {
     public void proto2_enumDefaultValue() throws Exception {
         Proto2Message message = Proto2Message.getDefaultInstance();
         assertEquals(Proto2EnumDefaultValueNonZero.FIRST, message.getE());
+    }
+
+    @Test
+    void unknownEnumValue_toString() {
+        TestUnknownEnumValue2 source = TestUnknownEnumValue2.newBuilder()
+                .setField(TestUnknownEnumValue2.E2.C)
+                .build();
+        byte[] data = ProtobufIOUtil.toByteArray(source, TestUnknownEnumValue2.getSchema(), LinkedBuffer.allocate());
+        Schema<TestUnknownEnumValue1> schema = TestUnknownEnumValue1.getSchema();
+        TestUnknownEnumValue1 message = schema.newMessage();
+        ProtobufIOUtil.mergeFrom(data, message, schema);
+        Assertions.assertEquals("TestUnknownEnumValue1{field=UNRECOGNIZED(2)}", message.toString());
     }
 }

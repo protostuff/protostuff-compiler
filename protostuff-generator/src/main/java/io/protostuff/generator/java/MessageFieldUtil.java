@@ -16,6 +16,7 @@ import io.protostuff.compiler.model.ScalarFieldType;
 import io.protostuff.compiler.model.Type;
 import io.protostuff.compiler.model.UserType;
 import io.protostuff.generator.Formatter;
+
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -363,6 +364,9 @@ public class MessageFieldUtil {
             getterName = getRepeatedFieldGetterName(field);
         } else {
             getterName = getFieldGetterName(field);
+        }
+        if (field.getType().isEnum() && !field.isRepeated()) {
+            return "\"" + getFieldName(field) + "=\" + " + getterName + "() + '(' + " + getEnumFieldValueGetterName(field) + "() + ')'";
         }
         return "\"" + getFieldName(field) + "=\" + " + getterName + "()";
     }
