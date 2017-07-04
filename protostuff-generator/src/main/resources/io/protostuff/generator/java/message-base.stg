@@ -93,6 +93,16 @@ to_string(message) ::= <<
 public String toString() {
     java.util.List\<String> parts = new java.util.ArrayList\<>();
     <message.fields:field_toString_part()>
+    StringBuilder sb = new StringBuilder();
+    String delimiter = ", ";
+    java.util.Iterator\<?> it = parts.iterator();
+    if (it.hasNext()) {
+        sb.append(it.next());
+        while (it.hasNext()) {
+            sb.append(delimiter);
+            sb.append(it.next());
+        }
+    }
     return "<message.javaName>{" + String.join(", ", parts) + "}";
 }
 >>
