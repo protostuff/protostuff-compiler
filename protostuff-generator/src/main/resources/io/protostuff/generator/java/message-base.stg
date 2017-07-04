@@ -103,7 +103,7 @@ public String toString() {
             sb.append(it.next());
         }
     }
-    return "<message.javaName>{" + String.join(", ", parts) + "}";
+    return "<message.javaName>{" + sb.toString() + "}";
 }
 >>
 
