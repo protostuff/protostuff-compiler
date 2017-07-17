@@ -110,15 +110,15 @@ public String toString() {
 
 field_equals_part(field) ::= <<
 <if(!field.oneofPart)>
-if (!java.util.Objects.equals(this.<field.javaName>, that.<field.javaName>)) {
+if (!((Object) this.<field.javaName>).equals(that.<field.javaName>)) {
     return false;
 }
 <endif>
 >>
 
 oneof_field_equals_part(oneof) ::= <<
-if (!(java.util.Objects.equals(this.<oneof.javaCaseFieldName>, that.<oneof.javaCaseFieldName>)
-        && java.util.Objects.equals(this.<oneof.javaFieldName>, that.<oneof.javaFieldName>))) {
+if (!(((Object) this.<oneof.javaCaseFieldName>).equals(that.<oneof.javaCaseFieldName>)
+        && ((Object) this.<oneof.javaFieldName>).equals(that.<oneof.javaFieldName>))) {
     return false;
 }
 >>
