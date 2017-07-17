@@ -56,8 +56,6 @@ public static final class Schema implements io.protostuff.Schema\<<message.javaN
             }
     	}
 
-    	instance.__merge_lock = false;
-
         <message.fields:make_unmodifiable(); separator="\n">
     }
 
