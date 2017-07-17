@@ -126,9 +126,9 @@ if (!(java.util.Objects.equals(this.<oneof.javaCaseFieldName>, that.<oneof.javaC
 field_hashCode_part(field) ::= <<
 <if(!field.oneofPart)>
 <if(!field.repeated && (field.javaIsNumericType || field.javaIsBooleanType))>
-result = 31 * result + <field.type.javaWrapperType>.hashCode(this.<field.javaName>);
+result = 31 * result + ((<field.type.javaWrapperType>) this.<field.javaName>).hashCode();
 <elseif(!field.repeated && field.type.enum)>
-result = 31 * result + Integer.hashCode(this.<field.javaName>);
+result = 31 * result + this.<field.javaName>;
 <else>
 result = 31 * result + (this.<field.javaName> == null ? 0 : this.<field.javaName>.hashCode());
 <endif>
