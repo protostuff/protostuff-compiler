@@ -10,6 +10,12 @@ service TestService {
 
     rpc test(RequestMessage) returns(ResponseMessage);
 
+    rpc testServerStream(RequestMessage) returns(stream ResponseMessage);
+
+    rpc testClientStream(stream RequestMessage) returns(ResponseMessage);
+
+    rpc testBidiStream(stream RequestMessage) returns(stream ResponseMessage);
+
     rpc deprecated(RequestMessage) returns(ResponseMessage) {
         option deprecated = true;
     };
