@@ -69,6 +69,24 @@ public class ServiceTest {
         }
 
         @Override
+        public ListenableFuture<ResponseMessage> testServerStream(RequestMessage request) {
+            throw new UnsupportedOperationException("streaming not implemented");
+        }
+
+
+        @Override
+        public ListenableFuture<ResponseMessage> testClientStream(RequestMessage request) {
+            throw new UnsupportedOperationException("streaming not implemented");
+        }
+
+
+        @Override
+        public ListenableFuture<ResponseMessage> testBidiStream(RequestMessage request) {
+            throw new UnsupportedOperationException("streaming not implemented");
+        }
+
+
+        @Override
         public ListenableFuture<ResponseMessage> deprecated(RequestMessage request) {
             return null;
         }

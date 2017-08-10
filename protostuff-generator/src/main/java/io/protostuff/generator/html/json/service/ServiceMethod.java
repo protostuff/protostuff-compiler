@@ -23,7 +23,17 @@ public interface ServiceMethod {
 
     String argTypeId();
 
+    @Value.Default
+    default boolean argStream() {
+        return false;
+    }
+
     String returnTypeId();
+
+    @Value.Default
+    default boolean returnStream() {
+        return false;
+    }
 
     Map<String, Object> options();
 }

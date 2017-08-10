@@ -9,8 +9,8 @@
             </tr>
             <tr>
                 <th>Type</th>
-                <td><type-ref value="method.argTypeId"></type-ref></td>
-                <td><type-ref value="method.returnTypeId"></type-ref></td>
+                <td><strong>{{method.argStream ? "stream" : ""}}</strong> <type-ref value="method.argTypeId"></type-ref></td>
+                <td><strong>{{method.returnStream ? "stream" : ""}}</strong> <type-ref value="method.returnTypeId"></type-ref></td>
             </tr>
         </table>
         <p ng-bind-html="method.description"></p>
