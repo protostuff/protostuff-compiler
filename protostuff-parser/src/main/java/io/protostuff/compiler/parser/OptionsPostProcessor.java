@@ -36,7 +36,7 @@ public class OptionsPostProcessor implements ProtoContextPostProcessor {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OptionsPostProcessor.class);
 
-    private static final String DEFAULT = "default";
+    public static final String DEFAULT = "default";
     private static final Map<ScalarFieldType, ValueChecker> SCALAR_ASSIGNMENT_CHECKS = new EnumMap<>(ImmutableMap.<ScalarFieldType, ValueChecker>builder()
             .put(ScalarFieldType.INT32, OptionsPostProcessor::canAssignInt32)
             .put(ScalarFieldType.INT64, OptionsPostProcessor::canAssignInt64)

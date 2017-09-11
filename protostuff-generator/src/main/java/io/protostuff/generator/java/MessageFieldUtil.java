@@ -5,8 +5,10 @@ import static io.protostuff.compiler.model.ScalarFieldType.BYTES;
 import static io.protostuff.compiler.model.ScalarFieldType.STRING;
 import static io.protostuff.compiler.parser.MessageParseListener.MAP_ENTRY_KEY;
 import static io.protostuff.compiler.parser.MessageParseListener.MAP_ENTRY_VALUE;
+import static io.protostuff.compiler.parser.OptionsPostProcessor.DEFAULT;
 
 import com.google.common.collect.ImmutableMap;
+import io.protostuff.compiler.model.DynamicMessage;
 import io.protostuff.compiler.model.Enum;
 import io.protostuff.compiler.model.EnumConstant;
 import io.protostuff.compiler.model.Field;
@@ -180,7 +182,8 @@ public class MessageFieldUtil {
             if (constants.isEmpty()) {
                 defaultValue = "UNRECOGNIZED";
             } else {
-                defaultValue = constants.get(0).getName();
+                DynamicMessage options = field.getOptions();
+                defaultValue = options.containsKey(DEFAULT) ? options.get(DEFAULT).getEnumName() : constants.get(0).getName();
             }
             return UserTypeUtil.getCanonicalName(anEnum) + "." + defaultValue;
         }
