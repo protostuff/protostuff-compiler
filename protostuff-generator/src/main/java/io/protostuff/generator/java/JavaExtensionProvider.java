@@ -43,6 +43,7 @@ public class JavaExtensionProvider extends AbstractExtensionProvider {
         registerProperty(Field.class, "jsonName", MessageFieldUtil::getJsonFieldName);
         registerProperty(Field.class, "javaGetterName", MessageFieldUtil::getFieldGetterName);
         registerProperty(Field.class, "javaSetterName", MessageFieldUtil::getFieldSetterName);
+        registerProperty(Field.class, "javaWitherName", MessageFieldUtil::getFieldWitherName);
         registerProperty(Field.class, "javaCleanerName", MessageFieldUtil::getFieldCleanerName);
         registerProperty(Field.class, "javaEnumValueGetterName", MessageFieldUtil::getEnumFieldValueGetterName);
         registerProperty(Field.class, "javaEnumValueSetterName", MessageFieldUtil::getEnumFieldValueSetterName);

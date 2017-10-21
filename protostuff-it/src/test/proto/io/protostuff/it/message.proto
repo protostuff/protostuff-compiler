@@ -52,9 +52,13 @@ message SimpleMessage {
     repeated string repeated_string = 13;
     TestMessage message = 14;
     Enum enum = 15;
+    repeated TestMessage repeated_message = 16;
+    repeated Enum repeated_enum = 17;
 
     enum Enum {
         CONSTANT = 0;
+        A = 1;
+        B = 2;
     }
 }
 

@@ -1,13 +1,19 @@
 package io.protostuff.it.java;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import io.protostuff.it.message_test.*;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static io.protostuff.it.message_test.TestOneof.OneofNameCase.FOO_INT;
 import static io.protostuff.it.message_test.TestOneof.OneofNameCase.ONEOF_NAME_NOT_SET;
+import static io.protostuff.it.message_test.TestOneof.OneofNameCase.V1;
+import static io.protostuff.it.message_test.TestOneof.OneofNameCase.V2;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -428,5 +434,77 @@ public class MessageTest {
     public void defaultMessageFieldValue() throws Exception {
         SimpleMessage message = SimpleMessage.newBuilder().build();
         assertSame(TestMessage.getDefaultInstance(), message.getMessage());
+    }
+
+    @Test
+    void copy_withInt32() {
+        SimpleMessage a = A.withInt32(15);
+        Assertions.assertEquals(15, a.getInt32());
+        Assertions.assertEquals("abra", a.getString());
+    }
+
+    @Test
+    void copy_withString() {
+        SimpleMessage a = A.withString("x");
+        Assertions.assertEquals(42, a.getInt32());
+        Assertions.assertEquals("x", a.getString());
+    }
+
+    @Test
+    void copy_withMessage() {
+        TestMessage msg = TestMessage.newBuilder()
+                .setA(11)
+                .build();
+        SimpleMessage a = A.withMessage(msg);
+        Assertions.assertEquals(42, a.getInt32());
+        Assertions.assertEquals("abra", a.getString());
+        Assertions.assertEquals(msg, a.getMessage());
+    }
+
+    @Test
+    void copy_withEnum() {
+        SimpleMessage a = A.withEnum(SimpleMessage.Enum.A);
+        Assertions.assertEquals(42, a.getInt32());
+        Assertions.assertEquals("abra", a.getString());
+        Assertions.assertEquals(SimpleMessage.Enum.A, a.getEnum());
+    }
+
+    @Test
+    void copy_withRepeatedMessage() {
+        TestMessage msg = TestMessage.newBuilder()
+                .setA(11)
+                .build();
+        List<TestMessage> msgList = ImmutableList.of(msg, msg);
+        SimpleMessage a = A.withRepeatedMessage(msgList);
+        Assertions.assertEquals(42, a.getInt32());
+        Assertions.assertEquals("abra", a.getString());
+        Assertions.assertEquals(msgList, a.getRepeatedMessageList());
+    }
+
+    @Test
+    void copy_withRepeatedEnum() {
+        ImmutableList<SimpleMessage.Enum> enumList = ImmutableList.of(SimpleMessage.Enum.A, SimpleMessage.Enum.B);
+        SimpleMessage a = A.withRepeatedEnum(enumList);
+        Assertions.assertEquals(42, a.getInt32());
+        Assertions.assertEquals("abra", a.getString());
+        Assertions.assertEquals(enumList, a.getRepeatedEnumList());
+    }
+
+    @Test
+    void copy_map() {
+        TestMap map = TEST_MAP.withMapStringString(ImmutableMap.of("x", "y"));
+        Assertions.assertEquals("y", map.getMapStringString("x"));
+        Assertions.assertEquals(1, map.getMapStringStringCount());
+    }
+
+    @Test
+    void copy_oneof() {
+        TestOneof src = TestOneof.newBuilder()
+                .setV1("1")
+                .build();
+        Assertions.assertEquals(V1, src.getOneofNameCase());
+        TestOneof copy = src.withV2("2");
+        Assertions.assertEquals("2", copy.getV2());
+        Assertions.assertEquals(V2, copy.getOneofNameCase());
     }
 }

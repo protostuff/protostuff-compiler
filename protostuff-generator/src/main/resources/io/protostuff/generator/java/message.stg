@@ -106,6 +106,13 @@ public <field.javaType> <field.javaGetterName>() {
 }
 <endif>
 
+public <field.parent.javaName> <field.javaWitherName>(<field.javaType> value) {
+    return <message.javaName>.newBuilder()
+        .mergeFrom(this)
+        .<field.javaSetterName>(value)
+        .build();
+}
+
 public boolean <field.javaHasMethodName>() {
     return <field.oneof.javaCaseFieldName> == <field.oneof.javaName>.<field.javaOneofConstantName>;
 }
@@ -120,6 +127,14 @@ public int <field.javaRepeatedGetCountMethodName>() {
 
 public <field.javaMapValueType> <field.javaMapGetByKeyMethodName>(<field.javaMapKeyType> key) {
     return <field.javaName>.get(key);
+}
+
+public <field.parent.javaName> <field.javaWitherName>(<field.javaMapType> value) {
+    return <message.javaName>.newBuilder()
+        .mergeFrom(this)
+        .<field.javaCleanerName>()
+        .<field.javaMapAddAllName>(value)
+        .build();
 }
 <elseif(field.repeated)>
 <if(field.type.enum)>
@@ -142,6 +157,14 @@ public int <field.javaRepeatedEnumValueGetterByIndexName>(int index) {
 public int <field.javaRepeatedGetCountMethodName>() {
     return <field.javaName>.size();
 }
+
+public <field.parent.javaName> <field.javaWitherName>(<field.javaRepeatedType> value) {
+    return <message.javaName>.newBuilder()
+        .mergeFrom(this)
+        .<field.javaCleanerName>()
+        .<field.javaRepeatedAddAllName>(value)
+        .build();
+}
 <else>
 public <field.javaRepeatedType> <field.javaRepeatedGetterName>() {
     return <field.javaName>;
@@ -153,6 +176,14 @@ public int <field.javaRepeatedGetCountMethodName>() {
 
 public <field.javaType> <field.javaRepeatedGetByIndexMethodName>(int index) {
     return <field.javaName>.get(index);
+}
+
+public <field.parent.javaName> <field.javaWitherName>(<field.javaRepeatedType> value) {
+    return <message.javaName>.newBuilder()
+        .mergeFrom(this)
+        .<field.javaCleanerName>()
+        .<field.javaRepeatedAddAllName>(value)
+        .build();
 }
 <endif>
 <elseif(field.type.enum)>
@@ -167,6 +198,13 @@ public int <field.javaEnumValueGetterName>() {
 public boolean <field.javaHasMethodName>() {
     return (<field.javaBitFieldName> & <field.javaBitFieldMask>) == <field.javaBitFieldMask>;
 }
+
+public <field.parent.javaName> <field.javaWitherName>(<field.javaType> value) {
+    return <message.javaName>.newBuilder()
+        .mergeFrom(this)
+        .<field.javaSetterName>(value)
+        .build();
+}
 <else>
 public <field.javaType> <field.javaGetterName>() {
     return <field.javaName>;
@@ -174,6 +212,13 @@ public <field.javaType> <field.javaGetterName>() {
 
 public boolean <field.javaHasMethodName>() {
     return (<field.javaBitFieldName> & <field.javaBitFieldMask>) == <field.javaBitFieldMask>;
+}
+
+public <field.parent.javaName> <field.javaWitherName>(<field.javaType> value) {
+    return <message.javaName>.newBuilder()
+        .mergeFrom(this)
+        .<field.javaSetterName>(value)
+        .build();
 }
 <endif>
 >>

@@ -122,6 +122,13 @@ public class MessageFieldUtil {
     }
 
     /**
+     * with* methods (withers) allow to modify values of attributes by returning a new immutable object with new value applied and the rest of attributes unchanged.
+     */
+    public static String getFieldWitherName(Field field) {
+        return "with" + Formatter.toPascalCase(field.getName());
+    }
+
+    /**
      * Returns a java enum field value getter name for proto field.
      */
     public static String getEnumFieldValueGetterName(Field field) {
