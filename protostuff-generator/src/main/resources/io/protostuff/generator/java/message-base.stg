@@ -88,22 +88,32 @@ to_string(message) ::= <<
 public String toString() {
     java.util.List\<String> parts = new java.util.ArrayList\<>();
     <message.fields:field_toString_part()>
-    return "<message.javaName>{" + String.join(", ", parts) + "}";
+    StringBuilder sb = new StringBuilder();
+    String delimiter = ", ";
+    java.util.Iterator\<?> it = parts.iterator();
+    if (it.hasNext()) {
+        sb.append(it.next());
+        while (it.hasNext()) {
+            sb.append(delimiter);
+            sb.append(it.next());
+        }
+    }
+    return "<message.javaName>{" + sb.toString() + "}";
 }
 >>
 
 
 field_equals_part(field) ::= <<
 <if(!field.oneofPart)>
-if (!java.util.Objects.equals(this.<field.javaName>, that.<field.javaName>)) {
+if (!((Object) this.<field.javaName>).equals(that.<field.javaName>)) {
     return false;
 }
 <endif>
 >>
 
 oneof_field_equals_part(oneof) ::= <<
-if (!(java.util.Objects.equals(this.<oneof.javaCaseFieldName>, that.<oneof.javaCaseFieldName>)
-        && java.util.Objects.equals(this.<oneof.javaFieldName>, that.<oneof.javaFieldName>))) {
+if (!(((Object) this.<oneof.javaCaseFieldName>).equals(that.<oneof.javaCaseFieldName>)
+        && ((Object) this.<oneof.javaFieldName>).equals(that.<oneof.javaFieldName>))) {
     return false;
 }
 >>
@@ -111,9 +121,9 @@ if (!(java.util.Objects.equals(this.<oneof.javaCaseFieldName>, that.<oneof.javaC
 field_hashCode_part(field) ::= <<
 <if(!field.oneofPart)>
 <if(!field.repeated && (field.javaIsNumericType || field.javaIsBooleanType))>
-result = 31 * result + <field.type.javaWrapperType>.hashCode(this.<field.javaName>);
+result = 31 * result + ((<field.type.javaWrapperType>) this.<field.javaName>).hashCode();
 <elseif(!field.repeated && field.type.enum)>
-result = 31 * result + Integer.hashCode(this.<field.javaName>);
+result = 31 * result + this.<field.javaName>;
 <else>
 result = 31 * result + (this.<field.javaName> == null ? 0 : this.<field.javaName>.hashCode());
 <endif>

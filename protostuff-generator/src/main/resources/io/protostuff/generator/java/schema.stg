@@ -55,6 +55,7 @@ public static final class Schema implements io.protostuff.Schema\<<message.javaN
                     input.handleUnknownField(number, this);
             }
     	}
+
         <message.fields:make_unmodifiable(); separator="\n">
     }
 
