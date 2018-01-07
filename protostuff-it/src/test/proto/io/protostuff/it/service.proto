@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 import "io/protostuff/it/options.proto";
+import "io/protostuff/it/complex_options.proto";
 
 package io.protostuff.it;
 
@@ -22,6 +23,18 @@ service TestService {
 
     rpc custom(RequestMessage) returns(ResponseMessage) {
         option (customOption) = "test";
+    };
+
+    rpc testWithComplexOption(RequestMessage) returns(ResponseMessage) {
+        option (io.protostuff.test.it.test_option).s = "test";
+        option (io.protostuff.test.it.test_option).i = 123;
+    };
+
+    rpc testWithComplexOption2(RequestMessage) returns(ResponseMessage) {
+        option (io.protostuff.test.it.test_option) = {
+            s: "test2"
+            i: 124
+        };
     };
 
 }

@@ -63,6 +63,22 @@ public class ServiceTest {
                         .description("")
                         .options(ImmutableMap.of("(io.protostuff.it.customOption)", "test"))
                         .build())
+                .addMethods(ImmutableServiceMethod.builder()
+                        .name("testWithComplexOption")
+                        .argTypeId("io.protostuff.it.RequestMessage")
+                        .returnTypeId("io.protostuff.it.ResponseMessage")
+                        .description("")
+                        .options(ImmutableMap.of("(io.protostuff.test.it.test_option)",
+                                ImmutableMap.of("s", "test", "i", 123)))
+                        .build())
+                .addMethods(ImmutableServiceMethod.builder()
+                        .name("testWithComplexOption2")
+                        .argTypeId("io.protostuff.it.RequestMessage")
+                        .returnTypeId("io.protostuff.it.ResponseMessage")
+                        .description("")
+                        .options(ImmutableMap.of("(io.protostuff.test.it.test_option)",
+                                ImmutableMap.of("s", "test2", "i", 124)))
+                        .build())
                 .build();
         Assertions.assertEquals(expected, service);
     }
