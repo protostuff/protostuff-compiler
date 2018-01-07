@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+// Test different package
+package io.protostuff.test.it;
+
+import "google/protobuf/descriptor.proto";
+
+option java_package = "io.protostuff.test.it";
+
+message TestOption {
+    string s = 1;
+    int64 i = 2;
+}
+
+extend google.protobuf.MethodOptions {
+    TestOption test_option = 234567;
+}

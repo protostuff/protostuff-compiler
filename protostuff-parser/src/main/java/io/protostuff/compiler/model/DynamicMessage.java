@@ -287,8 +287,7 @@ public class DynamicMessage implements Map<String, DynamicMessage.Value> {
             case ENUM:
                 return value.getEnumName();
             case MESSAGE:
-                // TODO
-                return null;
+                return value.getMessage();
             default:
                 return value;
         }
