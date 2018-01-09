@@ -95,5 +95,15 @@ public class ServiceTest {
         public ListenableFuture<ResponseMessage> custom(RequestMessage request) {
             return null;
         }
+
+        @Override
+        public ListenableFuture<ResponseMessage> testWithComplexOption(RequestMessage request) {
+            return null;
+        }
+
+        @Override
+        public ListenableFuture<ResponseMessage> testWithComplexOption2(RequestMessage request) {
+            return null;
+        }
     }
 }
