@@ -15,6 +15,7 @@ Usage
 
 * [maven plugin](https://github.com/protostuff/protostuff-compiler/wiki/Maven-Plugin)
 * [command-line interface](https://github.com/protostuff/protostuff-compiler/wiki/Command-line-interface)
+* [gradle](https://github.com/protostuff/protostuff-compiler/wiki/Gradle)
  
 ```xml
     <build>
