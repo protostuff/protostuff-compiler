@@ -1,0 +1,9 @@
+syntax = "proto2";
+
+package protostuff_unittest;
+
+enum A {
+    X = 0;
+    Y = 1;
+    reserved 1;
+}

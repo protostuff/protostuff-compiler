@@ -27,7 +27,7 @@ message Message {
 // Enum comment
 enum Enum {
     // leading enum constant comment
-    A = 1;
+    A = 0;
     B = 2; // trailing enum constant comment
 }
 

@@ -17,6 +17,8 @@ public class Enum extends AbstractDescriptor implements UserType {
     protected List<EnumConstant> constants = new ArrayList<>();
     protected Proto proto;
     protected String fullyQualifiedName;
+    protected List<Range> reservedFieldRanges = new ArrayList<>();
+    protected List<String> reservedFieldNames = new ArrayList<>();
 
     public Enum(UserTypeContainer parent) {
         this.parent = parent;
@@ -129,5 +131,25 @@ public class Enum extends AbstractDescriptor implements UserType {
     @Override
     public boolean isNested() {
         return getParent().getDescriptorType() != DescriptorType.PROTO;
+    }
+
+    @Override
+    public void addReservedFieldRange(Range range) {
+        reservedFieldRanges.add(range);
+    }
+
+    @Override
+    public void addReservedFieldName(String fieldName) {
+        reservedFieldNames.add(fieldName);
+    }
+
+    @Override
+    public List<Range> getReservedFieldRanges() {
+        return reservedFieldRanges;
+    }
+
+    @Override
+    public List<String> getReservedFieldNames() {
+        return reservedFieldNames;
     }
 }

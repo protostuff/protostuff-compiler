@@ -57,6 +57,30 @@ public class UserTypeValidationPostProcessor implements ProtoContextPostProcesso
         List<EnumConstant> constants = anEnum.getConstants();
         checkDuplicateEnumConstantNames(constants);
         checkDuplicateEnumConstantValues(anEnum, constants);
+        checkReservedEnumTags(anEnum, constants);
+        checkReservedEnumNames(anEnum, constants);
+    }
+
+    private void checkReservedEnumNames(Enum anEnum, List<EnumConstant> constants) {
+        Set<String> names = new HashSet<>(anEnum.getReservedFieldNames());
+        for (EnumConstant constant : constants) {
+            String name = constant.getName();
+            if (names.contains(name)) {
+                throw new ParserException(constant, "Reserved enum name: '%s'", name);
+            }
+        }
+    }
+
+    private void checkReservedEnumTags(Enum anEnum, List<EnumConstant> constants) {
+        List<Range> ranges = anEnum.getReservedFieldRanges();
+        for (EnumConstant constant : constants) {
+            int tag = constant.getValue();
+            for (Range range : ranges) {
+                if (range.contains(tag)) {
+                    throw new ParserException(constant, "Reserved enum tag: %d", tag);
+                }
+            }
+        }
     }
 
     private void checkDuplicateEnumConstantValues(Enum anEnum, List<EnumConstant> constants) {

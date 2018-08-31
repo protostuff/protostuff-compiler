@@ -1,5 +1,7 @@
 package io.protostuff.compiler.model;
 
+import java.util.List;
+
 /**
  * User type is a base interface for all types that can be defined
  * by user - messages, enums and groups.
@@ -36,4 +38,11 @@ public interface UserType extends Descriptor, FieldType {
      */
     boolean isNested();
 
+    void addReservedFieldRange(Range range);
+
+    void addReservedFieldName(String fieldName);
+
+    List<Range> getReservedFieldRanges();
+
+    List<String> getReservedFieldNames();
 }
