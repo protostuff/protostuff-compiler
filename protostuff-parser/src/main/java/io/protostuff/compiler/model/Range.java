@@ -10,7 +10,7 @@ import java.util.Objects;
  */
 public class Range extends AbstractElement {
 
-    private final Message parent;
+    private final UserType parent;
     private final int from;
     private final int to;
 
@@ -21,14 +21,14 @@ public class Range extends AbstractElement {
      * @param from range start, inclusive
      * @param to range end, inclusive
      */
-    public Range(Message parent, int from, int to) {
+    public Range(UserType parent, int from, int to) {
         this.parent = parent;
         this.from = from;
         this.to = to;
     }
 
     @Override
-    public Message getParent() {
+    public UserType getParent() {
         return parent;
     }
 

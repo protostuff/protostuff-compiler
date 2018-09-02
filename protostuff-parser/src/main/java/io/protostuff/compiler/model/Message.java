@@ -195,6 +195,7 @@ public class Message extends AbstractUserTypeContainer
         extensionRanges.add(range);
     }
 
+    @Override
     public List<Range> getReservedFieldRanges() {
         return reservedFieldRanges;
     }
@@ -203,10 +204,12 @@ public class Message extends AbstractUserTypeContainer
         this.reservedFieldRanges = reservedFieldRanges;
     }
 
+    @Override
     public void addReservedFieldRange(Range range) {
         reservedFieldRanges.add(range);
     }
 
+    @Override
     public List<String> getReservedFieldNames() {
         return reservedFieldNames;
     }
@@ -215,6 +218,7 @@ public class Message extends AbstractUserTypeContainer
         this.reservedFieldNames = reservedFieldNames;
     }
 
+    @Override
     public void addReservedFieldName(String name) {
         reservedFieldNames.add(name);
     }

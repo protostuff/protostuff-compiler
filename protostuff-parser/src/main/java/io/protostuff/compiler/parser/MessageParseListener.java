@@ -18,6 +18,7 @@ import io.protostuff.compiler.model.MessageContainer;
 import io.protostuff.compiler.model.Oneof;
 import io.protostuff.compiler.model.Range;
 import io.protostuff.compiler.model.SourceCodeLocation;
+import io.protostuff.compiler.model.UserType;
 import io.protostuff.compiler.model.UserTypeContainer;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,20 +60,20 @@ public class MessageParseListener extends AbstractProtoParserListener {
 
     @Override
     public void exitReservedFieldRanges(ProtoParser.ReservedFieldRangesContext ctx) {
-        Message message = context.peek(Message.class);
-        List<Range> result = getRanges(message, ctx.range());
+        UserType userType = context.peek(UserType.class);
+        List<Range> result = getRanges(userType, ctx.range());
         for (Range range : result) {
-            message.addReservedFieldRange(range);
+            userType.addReservedFieldRange(range);
         }
     }
 
     @Override
     public void exitReservedFieldNames(ProtoParser.ReservedFieldNamesContext ctx) {
-        Message message = context.peek(Message.class);
+        UserType userType = context.peek(UserType.class);
         for (ProtoParser.ReservedFieldNameContext fieldNameContext : ctx.reservedFieldName()) {
             String fieldName = fieldNameContext.getText();
             fieldName = Util.removeFirstAndLastChar(fieldName);
-            message.addReservedFieldName(fieldName);
+            userType.addReservedFieldName(fieldName);
         }
     }
 
@@ -241,7 +242,7 @@ public class MessageParseListener extends AbstractProtoParserListener {
         }
     }
 
-    private List<Range> getRanges(Message message, List<ProtoParser.RangeContext> ranges) {
+    private List<Range> getRanges(UserType message, List<ProtoParser.RangeContext> ranges) {
         List<Range> result = new ArrayList<>();
         for (ProtoParser.RangeContext rangeContext : ranges) {
             ProtoParser.RangeFromContext fromNode = rangeContext.rangeFrom();

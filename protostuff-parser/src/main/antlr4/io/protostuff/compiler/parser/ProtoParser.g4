@@ -38,7 +38,12 @@ optionEntry
     : OPTION option SEMICOLON
     ;
 enumBlock
-    : ENUM enumName LCURLY (enumField | optionEntry)* RCURLY SEMICOLON?
+    : ENUM enumName LCURLY
+        (enumField
+        | optionEntry
+        | reservedFieldRanges
+        | reservedFieldNames)*
+      RCURLY SEMICOLON?
     ;
 enumName
     : ident
@@ -88,7 +93,7 @@ messageBlock
         | map
         | reservedFieldRanges
         | reservedFieldNames)*
-   RCURLY SEMICOLON?
+      RCURLY SEMICOLON?
     ;
 messageName
     : ident

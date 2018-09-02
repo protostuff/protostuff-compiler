@@ -35,4 +35,24 @@ public class EnumTest extends AbstractParserTest {
     public void duplicateConstantValue_allowed() throws Exception {
         importer.importFile(new ClasspathFileReader(), "protostuff_unittest/duplicate_enum_constant_value_allowed.proto");
     }
+
+    @Test
+    public void reserved_field_tag() throws Exception {
+        String message = "Reserved enum tag: 1 " +
+                "[protostuff_unittest/reserved_enum_tag.proto:7]";
+        ParserException exception = assertThrows(ParserException.class, () -> {
+            importer.importFile(new ClasspathFileReader(), "protostuff_unittest/reserved_enum_tag.proto");
+        });
+        assertEquals(message, exception.getMessage());
+    }
+
+    @Test
+    public void reserved_field_name() throws Exception {
+        String message = "Reserved enum name: 'Y' " +
+                "[protostuff_unittest/reserved_enum_name.proto:7]";
+        ParserException exception = assertThrows(ParserException.class, () -> {
+            importer.importFile(new ClasspathFileReader(), "protostuff_unittest/reserved_enum_name.proto");
+        });
+        assertEquals(message, exception.getMessage());
+    }
 }
