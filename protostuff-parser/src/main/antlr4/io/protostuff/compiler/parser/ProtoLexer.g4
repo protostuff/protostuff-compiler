@@ -128,7 +128,10 @@ PLUGIN_DEV_MARKER
     | '<error ' .*? '>'
     | '</error>'
     | '<fold ' .*? '>'
-    | '</fold>') -> channel(HIDDEN)
+    | '</fold>'
+    | '<TYPO ' .*? '>'
+    | '</TYPO>'
+    ) -> channel(HIDDEN)
     ;
 NL
     : '\r'? '\n' -> channel(HIDDEN)
