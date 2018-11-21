@@ -40,7 +40,7 @@ public class LocalFileReader implements FileReader {
         List<Path> result = new ArrayList<>();
         for (Path path : pathList) {
             if (!Files.exists(path)) {
-                LOGGER.warn("'{}' does not exist", path);
+                LOGGER.debug("'{}' does not exist", path);
             } else if (!Files.isDirectory(path)) {
                 LOGGER.warn("'{}' is not directory", path);
             }
