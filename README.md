@@ -43,14 +43,14 @@ Java Source Code Generator
 
 Current status: development in progress.
 
-Generated code API: [draft](http://www.protostuff.io/documentation/compiler/java/generated-code).
+Generated code API: [draft](http://protostuff.github.io/documentation/compiler/java/generated-code).
 
 Documentation Generator
 -----------------------
 
 `protostuff-compiler` can generate html from proto files.
 
-Sample output: http://www.protostuff.io/samples/protostuff-compiler/html/#com.example.Address
+Sample output: http://protostuff.github.io/samples/protostuff-compiler/html/#com.example.Address
 
 This generator is an alternative to https://github.com/estan/protoc-gen-doc
 
