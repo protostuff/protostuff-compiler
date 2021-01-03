@@ -59,7 +59,7 @@ Requirements
 
 | Component                                 | Version   |
 |-------------------------------------------|-----------|
-| JDK                                       | 1+      |  
+| JDK                                       | 11+       |  
 | [Apache Maven](https://maven.apache.org/) | 3.6+       |
 
 Build
