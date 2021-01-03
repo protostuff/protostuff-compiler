@@ -11,7 +11,7 @@
     <name>Protostuff Compiler</name>
 
     <description>Proto parser, code and documentation generator</description>
-    <url>http://www.protostuff.io/</url>
+    <url>https://protostuff.github.io/</url>
     <inceptionYear>2015</inceptionYear>
 
     <properties>
