@@ -190,7 +190,7 @@ public class MessageFieldUtil {
                 defaultValue = "UNRECOGNIZED";
             } else {
                 DynamicMessage options = field.getOptions();
-                defaultValue = options.containsKey(DEFAULT) ? options.get(DEFAULT).getEnumName() : constants.get(0).getName();
+                defaultValue = options.containsKey(DEFAULT) ? options.get(DEFAULT).getEnumName() : EnumUtil.getName(constants.get(0));
             }
             return UserTypeUtil.getCanonicalName(anEnum) + "." + defaultValue;
         }
