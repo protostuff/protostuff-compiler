@@ -10,10 +10,8 @@ import com.vladsch.flexmark.html.renderer.NodeRendererContext;
 import com.vladsch.flexmark.html.renderer.NodeRenderingHandler;
 import com.vladsch.flexmark.util.data.DataHolder;
 import com.vladsch.flexmark.util.sequence.CharSubSequence;
-
 import java.util.HashSet;
 import java.util.Set;
-
 import org.jetbrains.annotations.NotNull;
 
 class TypeLinkAndPlantUmlRenderer implements NodeRenderer {

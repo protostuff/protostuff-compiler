@@ -18,7 +18,6 @@ import io.protostuff.compiler.model.ScalarFieldType;
 import io.protostuff.compiler.model.Type;
 import io.protostuff.compiler.model.UserType;
 import io.protostuff.generator.Formatter;
-
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
