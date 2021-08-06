@@ -19,7 +19,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <antlr4.version>4.9.2</antlr4.version>
         <guice.version>5.0.1</guice.version>
-        <guava.version>21.0</guava.version>
+        <guava.version>30.1.1-jre</guava.version>
         <protostuff.version>1.5.3</protostuff.version>
         <slf4j.version>1.7.25</slf4j.version>
         <junit.jupiter.version>5.5.2</junit.jupiter.version>
@@ -30,7 +30,7 @@
         <maven.version>3.8.1</maven.version>
         <maven-plugin.version>3.6.1</maven-plugin.version>
         <plexus.version>2.1.0</plexus.version>
-        <error-prone.version>2.3.4</error-prone.version>
+        <error-prone.version>2.5.1</error-prone.version>
         <asm.version>9.1</asm.version>
     </properties>
 
